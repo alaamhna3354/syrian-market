@@ -1,0 +1,234 @@
+
+/**Global for this css **/
+#Notiflix-Icon-Info,
+#Notiflix-Icon-Success,
+#Notiflix-Icon-Failure,
+#Notiflix-Icon-Warning {
+    fill: #fff !important;
+}
+
+[v-cloak] {display: none !important;}
+
+#copyBoard {cursor: pointer;color: #fa983a;}
+
+.btn-success {
+    background-color: #2ecc71 !important;
+    border-color: #2ecc71 !important;
+}
+
+.btn-danger {
+    background-color: #e74c3c !important;
+    border-color: #e74c3c !important;
+}
+
+
+
+@media screen and (max-width: 991px) {
+    table {
+        border: 0;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: none;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+
+
+/*Support Ticket*/
+.chat-box.scrollable.position-relative.scroll-height {
+    background: #313552;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+
+.chat-list .chat-item .chat-content .msg {
+    background-color: rgba(255, 255, 255, 0.11);
+    font-size: 14px;
+    max-width: 95%;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+
+li.chat-item.list-style-none.replied.mt-3.text-right {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.chat-img {
+    padding-top: 9px;
+}
+
+.chat-list .chat-item.replied .chat-img {
+    margin-left: 15px;
+}
+
+.chat-list .chat-item.replied .chat-content .msg {
+    text-align: left;
+}
+
+.chat-list .chat-item.replied .w-100.text-right {
+    text-align: right;
+}
+
+.chat-content.d-inline-block.pl-3 h6,
+.chat-content.d-inline-block.pr-3 h6 {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 0;
+}
+
+.chat-content.d-inline-block.pl-3 {
+    padding-left: 12px;
+}
+
+.ticket-link {
+    color: #ffffff;
+    padding: 0 5px;
+    display: block;
+    text-decoration: none;
+    background: #777777;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.button-wrapper span.label {
+    position: relative;
+    z-index: 0;
+    background: #00bfff;
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+}
+
+#upload {
+    opacity: 0;
+    cursor: pointer;
+
+}
+
+.new-file-upload {
+    position: relative;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: initial;
+    overflow: hidden;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #5f76e8;
+    cursor: pointer;
+}
+
+.new-file-upload input[type=file] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.new-file-upload span,
+.new-file-upload span::before {
+    cursor: pointer;
+}
+
+.new-file-upload a {
+    color: #fff;
+}
+
+.upload-btn {
+    position: relative;
+}
+
+.select-files-count {
+    position: absolute;
+    font-size: 12px;
+    white-space: nowrap;
+    bottom: -15px;
+}
+
+.ticket-box {
+    height: 90px !important;
+    max-height: initial;
+    background: #131e51;
+}
+
+button[name="replayTicket"] {
+    border-radius: .2rem;
+}
+
+.card-body-inner {
+    border: 1px solid rgba(0, 0, 0, .125);
+}
+
+.card-body-buttons {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-btn {
+    position: relative;
+}
+
+.submit-btn .cmn-btn .lab.la-telegram-plane {
+    padding-left: 0;
+}
+
+.submit-btn button {
+    position: relative;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: initial;
+    overflow: hidden;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #2ecc71;
+    cursor: pointer;
+}
+
+.chat-time {font-size: 10px;}
+.float-right {float: right;}
+
+.w-15 {width: 15%}
+.w-150px {width: 150px}
+.wh-200-150 {width: 200px;height: 150px;}
