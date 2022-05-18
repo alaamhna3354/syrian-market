@@ -74,24 +74,24 @@
 
         <form action="">
             <div class="row">
-                <div class="col-6">
+                <div class="col-12 col-sm-6">
                     <label for="">quantity</label>
                     <input type="number">
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-sm-6">
                     <label for="">Total</label>
                     <input type="number">
                 </div>
 
-                <div class="col-5">
+                <div class=" col-12 col-sm-5">
                     <label for="">player number</label>
                     <input type="number">
                 </div>
-                <div class="col-5">
+                <div class="col-10 col-sm-5">
                     <label for="">player name</label>
                     <input type="text">
                 </div>
-                <div class="col-2 d-flex align-items-center refresh">
+                <div class="col-2 col-sm-2 d-flex align-items-center refresh">
                     <i class="fas fa-sync-alt"></i>
                 </div>
                 <div class="col-12 mt-4 text-center ">

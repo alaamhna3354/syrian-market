@@ -19,7 +19,7 @@
             <a href="">$0.14</a>
             <i class="fab fa-xbox"></i>
             </div>
-            <div class="push-notification dropdown " id="pushNotificationArea" style="margin: 0 0 0 10px;">
+            <div class="push-notification dropdown " id="pushNotificationArea">
 
                 <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
                    id="bell" role="button" data-toggle="dropdown" aria-haspopup="true"

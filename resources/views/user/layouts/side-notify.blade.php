@@ -1,8 +1,8 @@
-<div class="fixed-icon rfixedicon">
+<div class="fixed-icon ">
     <i class="fa fa-arrow-left"></i>
 </div>
 
-<div class="fixedsidebar rfixed">
+<div class="fixedsidebar ">
     <!--<div class="fs-header d-flex align-items-center justify-content-between">
          <h5 class="text-white">@lang("What's new on $basic->site_title")</h5>
         <div class="btn-close close-sidebar">&times;</div> 
