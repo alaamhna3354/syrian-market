@@ -261,6 +261,7 @@ cardinput{
     background-image: url(../../minimal/imgs/main_header_bg.png);
     background-size: cover;
 }
+
 #navbarSupportedContent{
     display: block;
     height: 100%;
@@ -270,7 +271,7 @@ cardinput{
     margin-top: 10px;
     display: grid;
     align-content: start;
-    justify-items: self-end;
+    justify-items: self-start;
     padding: 0 20px;
 }
 #navbarSupportedContent ul li {
@@ -283,9 +284,16 @@ cardinput{
 #navbarSupportedContent ul li a:hover{
     color: #ff7039;
 }
-#navbarSupportedContent .dropdown-menu a{
-    color: #23262d;
+.dropdown-menu{
+    background-color: #23262d;
+    border-radius: 5px;
+    padding: 10px;
 }
+.dropdown-menu a{
+    color: #fff;
+    border-radius: 5px;
+}
+
 .page-wrapper {
     background-image: url(../../minimal/imgs/battel.jpg);
     padding-bottom: 50px;
