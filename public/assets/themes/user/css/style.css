@@ -348,7 +348,14 @@ cardinput{
     height: auto;
     min-height: 300px;
 }
-
+@media (max-width:420px) {
+.contain-cards-order .cards-order{
+    justify-content: center;
+}
+.contain-cards-order .cards-order .item{
+    margin: 0 5px 20px;
+}
+}
 .contain-cards-order .cards-order .item{
     width: 105px;
     height: 140px;
