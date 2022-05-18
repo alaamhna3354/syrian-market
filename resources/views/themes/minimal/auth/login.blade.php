@@ -16,7 +16,7 @@
 @section('content')
 
     <!-- LOGIN-SIGNUP -->
-    <section id="login-signup">
+    <section class="login-signup">
         <div class="container">
             <div class="row">
                 {{--@if(isset($templates['login'][0]) && $content = $templates['login'][0])--}}

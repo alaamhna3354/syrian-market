@@ -2,7 +2,7 @@
 @section('title','REGISTER')
 @section('content')
     <!-- LOGIN-SIGNUP -->
-    <section id="login-signup">
+    <section class="login-signup">
         <div class="container">
             <div class="row">
 

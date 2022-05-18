@@ -6,16 +6,20 @@
                 <img src="{{ getFile(config('location.logoIcon.path').'logo.png')}}" alt="homepage"
                      class="dark-logo" />
             </a>
-            <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            <!-- <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> -->
 
             
 
 
             <!-- Notification -->
-            <div class="push-notification dropdown " id="pushNotificationArea" style="margin-inline-start: auto;">
+            <div class="account" style="margin-inline-start: auto;">
+            <a href="">$0.14</a>
+            <i class="fab fa-xbox"></i>
+            </div>
+            <div class="push-notification dropdown " id="pushNotificationArea" style="margin: 0 0 0 10px;">
 
                 <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
                    id="bell" role="button" data-toggle="dropdown" aria-haspopup="true"

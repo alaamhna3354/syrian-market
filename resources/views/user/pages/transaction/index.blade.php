@@ -3,7 +3,7 @@
     @lang('Transaction')
 @endsection
 @section('content')
-     <div class="container-fluid px-3 user-service-list">
+     <div class="container px-3 user-service-list">
 
          <div class="row justify-content-between mx-lg-5">
              <div class="col-md-12">

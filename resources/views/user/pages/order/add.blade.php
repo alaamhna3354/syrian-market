@@ -16,11 +16,11 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 class="card-title text-white mb-3">@lang('Add new')</h4>
+                                <h4 class="card-title shadow-h text-white mb-3">@lang('Add new')</h4>
                                 <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
-                                        <label class="control-label" for="category_id">@lang('Category')</label>
+                                        <label class="shadow-h text-white control-label" for="category_id">@lang('Category')</label>
                                         <select id="category" class="form-control" name="category">
                                             <option value="0" hidden>@lang('Select Category')</option>
                                             @foreach($categories as $category)
@@ -32,7 +32,7 @@
                                         @endif
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label " for="service_id">@lang('Service')</label>
+                                        <label class="shadow-h text-white control-label " for="service_id">@lang('Service')</label>
                                         <select id="service" class="form-control" name="service">
                                         </select>
                                         @if($errors->has('service'))
@@ -41,7 +41,8 @@
                                     </div>
 
                                     <div class="form-group ">
-                                        <label>@lang('Link')</label>
+                                        <label"form-group drip_feed">
+                                                    <label class="shadow-h text-white ">@lang('Link')</label>
                                         <input type="text" name="link" value="{{ old('link') }}"
                                                placeholder="Player ID" class="form-control">
                                         @if($errors->has('link'))
@@ -49,7 +50,8 @@
                                         @endif
                                     </div>
                                     <div class="form-group ">
-                                        <label>@lang('Quantity')</label>
+                                        <label"form-group drip_feed">
+                                                    <label class="shadow-h text-white ">@lang('Quantity')</label>
                                         <input type="number" name="quantity" id="quantity" value="{{ old('quantity') ?? 1}}"
                                                class="form-control">
                                         @if($errors->has('quantity'))
@@ -62,7 +64,7 @@
                                         <div class="custom-switch-btn w-md-25">
                                             <input type="checkbox" name="drip_feed" class="custom-switch-checkbox dripfeed"
                                                    id="status" value="0" {!!  old('runs') || old('interval') || $errors->has('runs') || $errors->has('interval') ? '' : 'checked="false"' !!}>
-                                            <label class="custom-switch-checkbox-label" for="status">
+                                            <label class="shadow-h text-white custom-switch-checkbox-label" for="status">
                                                 <span class="custom-switch-checkbox-inner"></span>
                                                 <span class="custom-switch-checkbox-switch"></span>
                                             </label>
@@ -73,7 +75,7 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group drip_feed">
-                                                    <label>@lang('Runs')</label>
+                                                    <label class="shadow-h text-white ">@lang('Runs')</label>
                                                     <input type="number" id="runs" name="runs" class="form-control" value="{{ old('runs') }}">
                                                     @if($errors->has('runs'))
                                                         <div class="error text-danger">@lang($errors->first('runs'))</div>
@@ -82,7 +84,7 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group drip_feed">
-                                                    <label>@lang('Interval (in minutes)')</label>
+                                                    <label class="shadow-h text-white ">@lang('Interval (in minutes)')</label>
                                                     <input type="number" name="interval" class="form-control" value="{{ old('interval') }}">
                                                     @if($errors->has('interval'))
                                                         <div class="error text-danger">@lang($errors->first('interval'))</div>
@@ -92,7 +94,7 @@
                                         </div>
 
                                         <div class="form-group drip_feed">
-                                            <label>@lang('Total Quantity')</label>
+                                            <label class="shadow-h text-white ">@lang('Total Quantity')</label>
                                             <input type="text" class="form-control total_quantity" name="total_quantity"
                                                    disabled>
                                         </div>
@@ -100,14 +102,14 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group price">
-                                                <label>@lang('Price')</label>
+                                                <label class="shadow-h text-white">@lang('Price')</label>
                                                 <input type="number" id="price" name="price" class="form-control" disabled>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="agree" name="check">
-                                        <label class="form-check-label" style="margin-inline-start: 20px;"
+                                        <label class="shadow-h text-white form-check-label" style="margin-inline-start: 20px;"
                                                for="agree">@lang('Yes, i have confirmed the order!')</label>
                                         @if($errors->has('check'))
                                             <div class="error text-danger">@lang($errors->first('check')) </div>
@@ -119,34 +121,34 @@
                                 </form>
                             </div>
                             <div class="col-sm-6">
-                                <h4 class="card-title text-white mb-3">@lang('Order Resume')</h4>
+                                <h4 class="card-title shadow-h text-white mb-3">@lang('Order Resume')</h4>
                                 <form class="form" id="formDescription">
                                     <div class="form-group ">
-                                        <label>@lang('Service name')</label>
+                                        <label class="shadow-h text-white ">@lang('Service name')</label>
                                         <input type="text" class="form-control service_name" disabled>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group ">
-                                                <label>@lang('Minimum Amount')</label>
+                                                <label class="shadow-h text-white ">@lang('Minimum Amount')</label>
                                                 <input class="form-control minimum_amount" name="min_amount" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group ">
-                                                <label>@lang('Maximum Amount')</label>
+                                                <label class="shadow-h text-white ">@lang('Maximum Amount')</label>
                                                 <input type="text" class="form-control maximum_amount" name="max_amount" disabled>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group ">
-                                                <label>@lang("Price")</label>
+                                                <label class="shadow-h text-white ">@lang("Price")</label>
                                                 <input type="text" class="form-control price_per" disabled>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group ">
-                                        <label>@lang('Description')</label>
+                                        <label class="shadow-h text-white ">@lang('Description')</label>
                                         <textarea class="form-control description" disabled rows="12"></textarea>
                                     </div>
                                 </form>

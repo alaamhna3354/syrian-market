@@ -3127,14 +3127,47 @@ ul.minicart .cart-price .new {
     }
 }
 /* new style add by alaa */
-#login-signup{
-    background-image: url(../../imgs/games_bg.jpg);
+.login-signup{
     padding: 50px  0 ;
-    background-position: bottom;
-    background-size: cover;
-
+    position: relative;
+    /* background: linear-gradient(to bottom, #7b7b7b, #000); */
+    background-image: url(../../imgs/Gaming2.jpg);
 }
-#login-signup .btn:hover{
+.login-signup .form-group input{
+    background-color: transparent;
+    border: 1px solid #ff5917;
+}
+.login-signup .form-group input:focus{
+    box-shadow: 0 0 10px .2rem #ff591770;
+}
+.login-signup .form-group select{
+    background-color: transparent;
+    border: 1px solid #ff5917;
+    color: #fff !important;
+}
+.login-signup .form-control::placeholder{
+    color: #fff !important;
+}
+.login-signup .form-group select:focus{
+    box-shadow: 0 0 10px .2rem #ff591770;
+    background: #000c;
+}
+.login-signup .custom-control-label::before{
+    background-color: transparent;
+    border: 1px solid #ff5917;
+    color: #fff;
+}
+.login-signup .custom-control-input:checked ~ .custom-control-label::before{
+    background-color: #ff5917;
+}
+.login-signup .btn-forgetpass{
+    color: #fff;
+    transition: .3s;
+}
+.login-signup .btn-forgetpass:hover{
+    color: #ff5917;
+}
+.login-signup .btn:hover{
     animation: hoverBtn 2s ease-out infinite;
 }
 @keyframes hoverBtn {
