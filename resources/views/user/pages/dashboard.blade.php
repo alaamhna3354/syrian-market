@@ -20,10 +20,10 @@
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
                                 <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-white mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($walletBalance)}}
+                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($walletBalance)}}
                                     </h2>
                                 </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Your Balance')</h6>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Your Balance')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -39,8 +39,8 @@
                     <div class="card-body">
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
-                                <h2 class="text-white mb-1 w-100 text-truncate font-weight-medium">{{number_format($totalTrx)}}</h2>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Total Transaction')
+                                <h2 class="text-white shadow-h  mb-1 w-100 text-truncate font-weight-medium">{{number_format($totalTrx)}}</h2>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Total Transaction')
                                 </h6>
                             </div>
 
@@ -58,9 +58,9 @@
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
                                 <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-white mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($totalDeposit)}}</h2>
+                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($totalDeposit)}}</h2>
                                 </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Total Deposit')</h6>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Total Deposit')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -77,8 +77,8 @@
                     <div class="card-body">
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
-                                <h2 class="text-white mb-1 font-weight-medium">{{getAmount($ticket)}}</h2>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Total Tickets')</h6>
+                                <h2 class="text-white shadow-h  mb-1 font-weight-medium">{{getAmount($ticket)}}</h2>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Total Tickets')</h6>
                             </div>
 
                             <div class="mt-md-3 mt-lg-0">
@@ -95,9 +95,9 @@
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
                                 <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-white mb-1 font-weight-medium">{{getAmount($order['total'])}}</h2>
+                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium">{{getAmount($order['total'])}}</h2>
                                 </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Total Orders')</h6>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Total Orders')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -114,8 +114,8 @@
                     <div class="card-body">
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
-                                <h2 class="text-white mb-1 font-weight-medium">{{getAmount($order['processing'])}}</h2>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Processing Orders')</h6>
+                                <h2 class="text-white shadow-h  mb-1 font-weight-medium">{{getAmount($order['processing'])}}</h2>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Processing Orders')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -132,8 +132,8 @@
                     <div class="card-body">
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
-                                <h2 class="text-white mb-1 font-weight-medium">{{getAmount($order['pending'])}}</h2>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Pending Orders')</h6>
+                                <h2 class="text-white shadow-h  mb-1 font-weight-medium">{{getAmount($order['pending'])}}</h2>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Pending Orders')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -150,8 +150,8 @@
                     <div class="card-body">
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
-                                <h2 class="text-white mb-1 font-weight-medium">{{getAmount($order['completed'])}}</h2>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Completed Orders')</h6>
+                                <h2 class="text-white shadow-h  mb-1 font-weight-medium">{{getAmount($order['completed'])}}</h2>
+                                <h6 class="text-white shadow-h font-weight-normal mb-0 w-100 text-truncate">@lang('Completed Orders')</h6>
                             </div>
 
                             <div class=" mt-md-3 mt-lg-0">
@@ -186,7 +186,7 @@
                                         <td data-label="@lang('Transaction ID')">@lang($transaction->trx_id)</td>
                                         <td data-label="@lang('Amount')">
                                         <span
-                                                class="font-weight-bold text-{{($transaction->trx_type == "+") ? 'success': 'danger'}}">{{($transaction->trx_type == "+") ? '+': '-'}}{{getAmount($transaction->amount, config('basic.fraction_number')). ' ' . trans(config('basic.currency'))}}</span>
+                                            class="font-weight-bold text-{{($transaction->trx_type == "+") ? 'success': 'danger'}}">{{($transaction->trx_type == "+") ? '+': '-'}}{{getAmount($transaction->amount, config('basic.fraction_number')). ' ' . trans(config('basic.currency'))}}</span>
                                         </td>
                                         <td data-label="@lang('Remarks')"> @lang($transaction->remarks)</td>
                                         <td data-label="@lang('Time')">

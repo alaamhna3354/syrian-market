@@ -14,12 +14,12 @@
     <div class="page-wrapper d-block">
         @yield('content')
     </div>
-    <footer class="footer text-center text-muted">
-        <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
-    </footer>
+    
 
 </div>
-
+<footer class="footer text-center text-white">
+        <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
+    </footer>
 
 
 
