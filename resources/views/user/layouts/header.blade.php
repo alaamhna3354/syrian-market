@@ -1,7 +1,7 @@
 <div class="headerNav py-1">
     <div class="container-fluid px-md-5 ">
 
-        <nav class="navbar navbar-expand-xl navbar-light  mx-lg-5" id="boltd"">
+        <nav class="navbar navbar-expand-xl navbar-light  mx-lg-5" id="boltd">
             <a class="navbar-brand" href="{{route('home')}}">
                 <img src="{{ getFile(config('location.logoIcon.path').'logo.png')}}" alt="homepage"
                      class="dark-logo" />
