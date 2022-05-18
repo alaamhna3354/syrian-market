@@ -15,6 +15,9 @@
     margin-right: auto;
 }
 /* Small */
+.right-dropdown {
+    right: -12px !important;
+    }
 .shadow-h{
     text-shadow: 0px 0px 5px #000;
 }
