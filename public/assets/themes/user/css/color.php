@@ -220,11 +220,7 @@ align-items: flex-end !important;
 .headerNav .navbar{
 padding-right: 0px;
 }
-.headerNav .push-notification .right-dropdown {
-max-width: 300px !important;
-right: initial !important;
-left: -150px !important;
-}
+
 
 }
 
@@ -652,7 +648,7 @@ border-bottom: 0;
 .fixedsidebar {
 position: absolute;
 top: 85px;
-right: 0;
+right: -400px;
 width: 250px;
 height: 100%;
 padding: 0;
@@ -668,7 +664,7 @@ z-index: 999;
 transition: all 0.35s ease-in-out;
 }
 .rfixed {
-right: -400px;
+right: 0;
 -webkit-transition: all 0.35s ease-in-out;
 -moz-transition: all 0.35s ease-in-out;
 -ms-transition: all 0.35s ease-in-out;
@@ -679,7 +675,7 @@ transition: all 0.35s ease-in-out;
 .fixed-icon {
 position: fixed;
 top: 84px;
-right: 250px;
+right: 0;
 width: 30px;
 height: 30px;
 display: flex;
@@ -710,7 +706,7 @@ color: <?php echo $subheading;?>;
     color: #fff;
 }
 .rfixedicon {
-right: 0;
+right: 250px;
 -webkit-transition: all 0.35s ease-in-out;
 -moz-transition: all 0.35s ease-in-out;
 -ms-transition: all 0.35s ease-in-out;
@@ -858,17 +854,15 @@ color: #333 !important;
 display: none;
 }
 @media screen and (max-width:575px){
-.headerNav .push-notification .right-dropdown {
-left: -173px !important;
-}
+
 .fixedsidebar{
 max-width: 280px;
 }
 .fixed-icon{
-right:250px;
+right:0;
 }
 .fixed-icon.rfixedicon{
-right:0;
+right:250px;
 }
 .btn-close.close-sidebar {
 position: absolute;
