@@ -39,13 +39,13 @@
                                    @click.prevent="readAt(item.id, item.description.link)"
                                    href="javascript:void(0)"
                                    class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                                <span class="btn btn-success text-white rounded-circle btn-circle">
+                                                <span class="btn-success text-white rounded-circle btn-circle">
                                                     <i :class="item.description.icon" class="text-white"></i>
                                                 </span>
 
                                     <div class="d-inline-block v-middle pl-2">
-                                        <span class="font-12  d-block text-muted"  v-cloak v-html="item.description.text"></span>
-                                        <span class="font-12  d-block text-muted text-truncate"  v-cloak>@{{ item.formatted_date }}</span>
+                                        <span class="font-12  d-block text-white"  v-cloak v-html="item.description.text"></span>
+                                        <span style="opacity: 0.6;" class="font-12  d-block text-white text-truncate" v-cloak>@{{ item.formatted_date }}</span>
                                     </div>
                                 </a>
 
@@ -53,11 +53,11 @@
                         </li>
 
                         <li>
-                            <a class="nav-link pt-3 text-center text-dark notification-clear-btn" href="javascript:void(0);"
+                            <a class="nav-link pt-3 text-center text-white notification-clear-btn" href="javascript:void(0);"
                                v-if="items.length > 0" @click.prevent="readAll">
                                 <strong>@lang('Clear all')</strong>
                             </a>
-                            <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);"
+                            <a class="nav-link pt-3 text-center text-white" href="javascript:void(0);"
                                v-else>
                                 <strong>@lang('No Data found')</strong>
                             </a>
