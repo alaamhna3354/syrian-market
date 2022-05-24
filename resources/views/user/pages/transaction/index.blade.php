@@ -5,7 +5,7 @@
 @section('content')
      <div class="container px-3 user-service-list">
 
-         <div class="row justify-content-between mx-lg-5">
+         <div class="row justify-content-between ">
              <div class="col-md-12">
 
                  <ol class="breadcrumb center-items">
@@ -53,7 +53,7 @@
          </div>
 
 
-        <div class="row my-3 justify-content-between mx-lg-5">
+        <div class="row my-3 justify-content-between">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body ">
