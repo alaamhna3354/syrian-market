@@ -5,10 +5,10 @@
 @section('content')
 
     <div class="contain-cards-order">
-        <h3 class="text-white">Add Order</h3>
+        <h3 class="text-white">@lang('Add Order')</h3>
         <div class="search">
             <input type="text">
-            <button class="btn">search</button>
+            <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order">
             @foreach($categories as $category)

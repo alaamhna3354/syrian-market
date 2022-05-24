@@ -147,5 +147,6 @@
   "Pending Payment": "في انتظار الدفع",
   "Cancel Payment": "الغاء الدفع",
   "Gateway": "بوابة",
-  "Charge": "الشحنة"
+  "Charge": "الشحنة",
+  "Remember me":"تذكرني"
 }

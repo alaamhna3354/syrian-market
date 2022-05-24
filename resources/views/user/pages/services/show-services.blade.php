@@ -33,10 +33,10 @@
     {{--</div>--}}
 
     <div class="contain-cards-order services">
-        <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
+        <h3 class="text-white">@lang('Add Order') <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text">
-            <button class="btn">search</button>
+            <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
@@ -75,20 +75,20 @@
         <form action="">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <label for="">quantity</label>
+                    <label for="">@lang('Quantity')</label>
                     <input type="number">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="">Total</label>
+                    <label for="">@lang('Total')</label>
                     <input type="number">
                 </div>
 
                 <div class=" col-12 col-sm-5">
-                    <label for="">player number</label>
+                    <label for="">@lang('Player number')</label>
                     <input type="number">
                 </div>
                 <div class="col-10 col-sm-5">
-                    <label for="">player name</label>
+                    <label for="">@lang('Player name')</label>
                     <input type="text">
                 </div>
                 <div class="col-2 col-sm-2 d-flex align-items-center refresh">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="col-12 mt-4 text-center add">
-                    <button class="btn">Add</button>
+                    <button class="btn">@lang('Add')</button>
                 </div>
 
             </div>

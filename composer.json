@@ -28,6 +28,7 @@
         "securionpay/securionpay-php": "^2.2.0",
         "stevebauman/purify": "^4.0",
         "swiftmailer/swiftmailer": "^6.0",
+        "weidner/goutte": "^2.1",
         "xsoap/init": "^1.0"
     },
     "require-dev": {
