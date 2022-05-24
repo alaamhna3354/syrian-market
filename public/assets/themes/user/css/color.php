@@ -137,6 +137,7 @@ border-bottom: 1px solid rgba(162,176,190,.15);
 box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
 -webkit-box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
 -moz-box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
+width: 100%;
 }
 .headerNav .navbar {
 display: flex;
@@ -645,55 +646,10 @@ border-bottom: 0;
 
 
 /*---- FIXEDSIDEBAR ----*/
-.fixedsidebar {
-position: absolute;
-top: 85px;
-right: -400px;
-width: 250px;
-height: 100%;
-padding: 0;
-background-color: #000000a6;
-overflow-x: hidden;
-scrollbar-width: none;
-box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
-z-index: 999;
--webkit-transition: all 0.35s ease-in-out;
--moz-transition: all 0.35s ease-in-out;
--ms-transition: all 0.35s ease-in-out;
--o-transition: all 0.35s ease-in-out;
-transition: all 0.35s ease-in-out;
-}
-.rfixed {
-right: 0;
--webkit-transition: all 0.35s ease-in-out;
--moz-transition: all 0.35s ease-in-out;
--ms-transition: all 0.35s ease-in-out;
--o-transition: all 0.35s ease-in-out;
-transition: all 0.35s ease-in-out;
-}
 
-.fixed-icon {
-position: fixed;
-top: 84px;
-right: 0;
-width: 30px;
-height: 30px;
-display: flex;
-align-items: center;
-justify-content: center;
-border: 0;
-background-color: #23262d59;
-box-shadow: 0 0 8px 3px rgba(0, 0, 0, .2);
-z-index: 999;
--webkit-transition: all 0.35s ease-in-out;
--moz-transition: all 0.35s ease-in-out;
--ms-transition: all 0.35s ease-in-out;
--o-transition: all 0.35s ease-in-out;
-transition: all 0.35s ease-in-out;
-cursor: pointer;
-border-radius: 3px;
-color: <?php echo $subheading;?>;
-}
+
+
+
 @media screen and (max-width: 360px){
 .fixedsidebar {
     top: 125px;
@@ -705,14 +661,7 @@ color: <?php echo $subheading;?>;
 .fixed-icon i{
     color: #fff;
 }
-.rfixedicon {
-right: 250px;
--webkit-transition: all 0.35s ease-in-out;
--moz-transition: all 0.35s ease-in-out;
--ms-transition: all 0.35s ease-in-out;
--o-transition: all 0.35s ease-in-out;
-transition: all 0.35s ease-in-out;
-}
+
 
 /* width */
 .fixedsidebar::-webkit-scrollbar {
@@ -858,12 +807,6 @@ display: none;
 .fixedsidebar{
 max-width: 280px;
 }
-.fixed-icon{
-right:0;
-}
-.fixed-icon.rfixedicon{
-right:250px;
-}
 .btn-close.close-sidebar {
 position: absolute;
 top: 0;
@@ -940,7 +883,7 @@ z-index: 1;
 }
 html[dir=rtl] .breadcrumb li.active::before {
 /*display: none;*/
-border-right: 18px solid #d2d7da;
+border-right: 18px solid #fe5917;
 }
 html[dir=rtl] .breadcrumb li.custom-breadcrumb-li::before {
 border-right: 18px solid <?php echo  $subheading;?>;

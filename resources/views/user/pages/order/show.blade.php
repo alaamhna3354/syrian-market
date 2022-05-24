@@ -4,7 +4,7 @@
 
 
     <div class="container px-3 user-service-list ">
-        <div class="row my-3 justify-content-between mx-lg-5">
+        <div class="row my-3 justify-content-between">
             <div class="col-md-12">
                 <ol class="breadcrumb center-items">
                     <li><a href="{{route('user.home')}}">@lang('Home')</a></li>
@@ -75,7 +75,7 @@
         </div>
 
 
-        <div class="row my-3 justify-content-between align-items-center mx-lg-5">
+        <div class="row my-3 justify-content-between align-items-center">
             <div class="col-md-12">
 
                 <div class="card">
