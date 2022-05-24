@@ -153,18 +153,20 @@
                                 <tbody>
                                 @foreach($orders as $key => $order)
                                     <tr>
-                                        <td> {{$order->id}} </td>
-                                        <td class="text-left">
+                                        <td data-label="@lang('Order ID')"> {{$order->id}} </td>
+                                        <td data-label="@lang('Order Details')" >
                                             <h5>@lang(optional($order->service)->service_title)</h5>
-                                            @lang('Link'): @lang($order->link)<br>
-                                            @lang('Quantity'): @lang($order->quantity) <br>
+                                        <span> @lang('Link') : @lang($order->link) </span>
+                                        <br>
+                                        <span>@lang('Quantity') : @lang($order->quantity)</span>
                                         </td>
-                                        <td>@lang($order->price) @lang(config('basic.currency'))</td>
-                                        <td>@lang($order->start_counter?? 'N/A')</td>
-                                        <td>@lang($order->remains ?? 'N/A' )</td>
-                                        <td>@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
+                                      
+                                        <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
+                                        <td data-label="@lang('Start Counter')">@lang($order->start_counter?? 'N/A')</td>
+                                        <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
+                                        <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
 
-                                        <td>
+                                        <td data-label="@lang('Status')">
                                             @if($order->status=='Awaiting') <span
                                                 class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
                                             @elseif($order->status == 'pending') <span
@@ -184,7 +186,7 @@
                                             @endif
 
                                         </td>
-                                        <td>
+                                        <td data-label="@lang('Note')">
 
                                             @if(optional($order->service)->service_status == 1)
                                                 <button type="button"
