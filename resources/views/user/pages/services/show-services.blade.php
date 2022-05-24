@@ -35,19 +35,19 @@
     <div class="contain-cards-order services">
         <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
-            <input type="text">
-            <button class="btn">search</button>
+            <input type="text" id="#myInput">
+            <button class="btn" id="#mybut">search</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-            <div class="item">
-                <div class="pack">
+            <div class="item it" data-title1=" {{$service->service_title }}">
+                <div class="name" data-name="{{$service->service_title }}">
                     {{$service->service_title }}
                     <div class="icon">
                         <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                     </div>
                 </div>
-                <div class="name">
+                <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
                     {{$service->price}} {{config('basic.currency_symbol')}}
                 </div>
                 <div class="fire">
@@ -76,11 +76,11 @@
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <label for="">quantity</label>
-                    <input type="number">
+                    <input type="number" class="quantity">
                 </div>
                 <div class="col-12 col-sm-6">
                     <label for="">Total</label>
-                    <input type="number">
+                    <input type="text" class="total">
                 </div>
 
                 <div class=" col-12 col-sm-5">
@@ -100,9 +100,9 @@
     <img
             src="{{asset($themeTrue.'imgs/tumile.png')}}"
             alt="user"
-    > x1</span>
-                        <span>tumile 1250 coins</span>
-                        <span>$3.34</span>
+    > x<span class="quantity-val"></span></span>
+                        <span class="name-val">tumile 1250 coins</span>
+                        <span class="price-val">$3.34</span>
                     </div>
                 </div>
                 <div class="col-12 mt-4 text-center add">
@@ -115,23 +115,43 @@
 @endsection
 @push('js')
     <script>
-           "use strict";
+          "use strict";  
+          // fun 2
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
                 event.preventDefault();
             }
            else if($(this).hasClass("active")){
                 $(this).removeClass('active');
+                $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
             }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
+                $('.chosen-item').addClass('active');
+                const name =  $(this).children(`.name`).attr("data-name");
+                const price =  $(this).children(`.price`).attr("data-price");
+                $(".name-val").html(name);
+                $(".price-val").html(price);
+                $(".total").val(price);
+                $('.quantity').val('1');
+                $('.quantity-val').html('1');
             }
             
             event.preventDefault();
         });
+            // fun 3
+            $(".quantity").keyup(function(){
+               const valu=  $(this).val();
+               const price =  $(`.price`).attr("data-price").replace('$','');
+               $(".quantity-val").html(valu);
+               $(".total").val(`${valu*price}$`);
+               $(".price-val").html(`${valu*price}$`);
+            });
+          
+
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
         {{--var title = $(this).data('servicetitle');--}}
