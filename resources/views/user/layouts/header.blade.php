@@ -10,14 +10,26 @@
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button> -->
-
-            
-
-
             <!-- Notification -->
             <div class="account" style="margin-inline-start: auto;">
             <a href="">$0.14</a>
-            <i class="fab fa-xbox"></i>
+           
+            <ul class="lang">
+            <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent;">
+                           <i class="fa fa-globe"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            @foreach(getLanguges() as $language)
+                            <a class="dropdown-item" href="{{route('language',[$language->short_name])}}">
+                                {{$language->name}}
+                            </a>
+                            @endforeach
+                        </div>
+            </li>
+            </ul>
+
             </div>
             <div class="push-notification dropdown " id="pushNotificationArea">
 
