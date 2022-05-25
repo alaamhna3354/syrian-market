@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <label>@lang('Select Category')</label>
                             <select class="form-control" id="category_id" name="category_id">
-                                <option disabled value="" selected hidden>@lang('Select category')</option>
+                                <option disabled value="" selected hidden>@lang('Select Category')</option>
                                 @foreach($categories as $categorie)
                                     <option value="{{ $categorie->id  }}">@lang($categorie->category_title)</option>
                                 @endforeach
