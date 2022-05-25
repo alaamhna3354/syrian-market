@@ -213,7 +213,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label>@lang('Status')</label>
                                             <div class="custom-switch-btn w-md-80">
                                                 <input type='hidden' value='1' name='status'>
@@ -227,7 +227,7 @@
                                         </div>
 
 
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label>@lang('Email Verification')</label>
                                             <div class="custom-switch-btn w-md-80">
                                                 <input type='hidden' value='1' name='email_verification'>
@@ -240,7 +240,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <label>@lang('SMS Verification')</label>
                                             <div class="custom-switch-btn w-md-80">
                                                 <input type='hidden' value='1' name='sms_verification'>
@@ -248,6 +248,19 @@
                                                        class="custom-switch-checkbox"
                                                        id="sms_verification" {{ $user->sms_verification == 0 ? 'checked' : '' }}>
                                                 <label class="custom-switch-checkbox-label" for="sms_verification">
+                                                    <span class="custom-switch-checkbox-inner"></span>
+                                                    <span class="custom-switch-checkbox-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label>@lang('Special User')</label>
+                                            <div class="custom-switch-btn w-md-80">
+                                                <input type='hidden' value='1' name='is_special'>
+                                                <input type="checkbox" name="is_special"
+                                                       class="custom-switch-checkbox"
+                                                       id="is_special" {{ $user->is_special == 0 ? 'checked' : '' }}>
+                                                <label class="custom-switch-checkbox-label" for="is_special">
                                                     <span class="custom-switch-checkbox-inner"></span>
                                                     <span class="custom-switch-checkbox-switch"></span>
                                                 </label>

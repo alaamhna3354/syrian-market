@@ -101,6 +101,12 @@ class OrderController extends Controller
     {
         $serid = $request->ser_id;
         $service = Service::where('id', $serid)->userRate()->first();
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                    $service->price = $service->special_price;
+            }
+        }
         return $service;
     }
 
@@ -129,6 +135,12 @@ class OrderController extends Controller
             return back()->withErrors($validator)->withInput();
         }
         $service = Service::userRate()->findOrFail($request->service);
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                    $service->price = $service->special_price;
+            }
+        }
 
 
         $basic = (object) config('basic');
@@ -260,6 +272,12 @@ class OrderController extends Controller
     public function getservice(Request $request)
     {
         $service = Service::where('service_status')->where('service_title', 'LIKE', "%{$request->service}%")->get()->pluck('service_title');
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                    $service->price = $service->special_price;
+            }
+        }
         return response()->json($service);
     }
 
@@ -286,6 +304,12 @@ class OrderController extends Controller
         foreach ($orders as $order) {
             $singleOrder = trim(explode("|", $order));
             $serviceid = Service::userRate()->find($singleOrder[0]);
+            $user = Auth::user();
+            if ($user != null){
+                if ($user->is_special == 1){
+                        $serviceid->price = $serviceid->special_price;
+                }
+            }
             if ($serviceid) {
                 $specificRate = ($serviceid->user_rate) ?? $serviceid->price;
 

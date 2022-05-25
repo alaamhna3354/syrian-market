@@ -6,7 +6,7 @@ use App\Http\Traits\Upload;
 use App\Models\Category;
 use App\Rules\FileTypeValidate;
 use Illuminate\Http\Request;
-use Stevebauman\Purify\Purify;
+use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
@@ -50,6 +50,7 @@ class CategoryController extends Controller
         $rules = [
             'category_title' => 'required',
             'category_description' => 'nullable',
+            'type' => 'required',
             'image' => ['nullable', 'image', new FileTypeValidate(['jpeg','jpg','png'])]
         ];
 
@@ -69,10 +70,21 @@ class CategoryController extends Controller
             }
         }
 
-
         $cat->category_title = $req['category_title'];
         $cat->category_description = $req['category_description'];
         $cat->status = $req['status'];
+        $cat->type = $req['type'];
+        if ($req['type'] == "BALANCE" || $req['type'] == "OTHER"){
+            if ($req['special_field'] != ""){
+                $cat->special_field = $req['special_field'];
+            }else{
+                $cat->special_field = null;
+            }
+        }else{
+            $cat->special_field = null;
+        }
+
+
         $cat->save();
         return back()->with('success', 'Successfully Updated');
     }
@@ -131,6 +143,16 @@ class CategoryController extends Controller
         $cat->category_title = $catData['category_title'];
         $cat->category_description = $catData['category_description'];
         $cat->status = $catData['status'];
+        if ($catData['type'] == "BALANCE" || $catData['type'] == "OTHER"){
+            if ($catData['special_field'] != ""){
+                $cat->special_field = $catData['special_field'];
+            }else{
+                $cat->special_field = null;
+            }
+        }else{
+            $cat->special_field = null;
+        }
+        $cat->type = $catData['type'];
         $cat->save();
         return back()->with('success', 'Successfully Updated');
     }

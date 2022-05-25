@@ -65,6 +65,14 @@
                                 <div class="error text-danger">@lang($errors->first('price')) </div>
                             @endif
                         </div>
+                        <div class="form-group">
+                            <label>@lang('Special Rate per 1000')</label>
+                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"
+                                   value="{{old('special_price',$service->special_price)}}">
+                            @if($errors->has('special_price'))
+                                <div class="error text-danger">@lang($errors->first('special_price')) </div>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
