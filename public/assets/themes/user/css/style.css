@@ -18,7 +18,7 @@
 .fixedsidebar {
     position: absolute;
     top: 85px;
-    right: -400px;
+    left: -400px;
     width: 250px;
     height: 100%;
     padding: 0;
@@ -34,7 +34,7 @@
     transition: all 0.35s ease-in-out;
     }
     .rfixed {
-        right: 0;
+        left: 0;
         -webkit-transition: all 0.35s ease-in-out;
         -moz-transition: all 0.35s ease-in-out;
         -ms-transition: all 0.35s ease-in-out;
@@ -45,7 +45,7 @@
 .fixed-icon {
     position: fixed;
     top: 84px;
-    right: 0;
+    left: 0;
     width: 30px;
     height: 30px;
     display: flex;
@@ -55,6 +55,7 @@
     background-color: #23262d59;
     box-shadow: 0 0 8px 3px rgba(0, 0, 0, .2);
     z-index: 999;
+    transform: rotateZ(180deg);
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -64,7 +65,7 @@
     border-radius: 3px;
     }
 .rfixedicon {
-    right: 250px;
+    left: 250px;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -73,10 +74,10 @@
     }
 @media screen and (max-width:575px){
     .fixed-icon{
-    right:0;
+    left:0;
     }
     .fixed-icon.rfixedicon{
-    right:250px;
+    left:250px;
     }
 }
 /* end side bar */

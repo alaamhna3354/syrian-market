@@ -9,11 +9,12 @@
 
     @include('user.layouts.header')
 
+   
     @include('user.layouts.side-notify')
-
     <div class="page-wrapper main-page d-block" style="width:100%">
         @yield('content')
     </div>
+   
     
 
 </div>
@@ -79,10 +80,13 @@
 <style>
 .wid-res{
     width: calc(100% - 250px) !important;
+    margin-inline-start: 250px !important;
 }
 @media (max-width:768px) {
     .wid-res{
         width: 100%  !important;
+    margin-inline-start: 0 !important;
+
     }
 }
 </style>
