@@ -51,6 +51,30 @@
                 <li class="list-divider"></li>
 
 
+                {{--Manage Category--}}
+                <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Service Codes')</span></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.service_codes.add')}}" aria-expanded="false">
+                        <i data-feather="plus-circle" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Add Service Code')</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.service_codes.add-multi')}}" aria-expanded="false">
+                        <i data-feather="plus-circle" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Add Multiple Service Code')</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.service_codes.show')}}"
+                       aria-expanded="false">
+                        <i data-feather="list" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Show Service Code')</span>
+                    </a>
+                </li>
+                <li class="list-divider"></li>
+
+
                 {{--Manage API Providers--}}
                 <li class="nav-small-cap"><span class="hide-menu">@lang('Api Providers')</span></li>
                 <li class="sidebar-item">

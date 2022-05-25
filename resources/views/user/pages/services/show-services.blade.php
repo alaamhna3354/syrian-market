@@ -33,42 +33,44 @@
     {{--</div>--}}
 
     <div class="contain-cards-order services">
-        <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
+        <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i
+                    class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text">
             <button class="btn">search</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-            <div class="item">
-                <div class="pack">
-                    {{$service->service_title }}
-                    <div class="icon">
-                        <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
+                <div class="item">
+                    <div class="pack">
+                        {{$service->service_title }}
+                        <div class="icon">
+                            <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
+                        </div>
+                    </div>
+                    <div class="name">
+                        {{$service->price}}
+                        {{--                    {{auth()->user()->is_special == 0 ?$service->price :$service->special_price}} {{config('basic.currency_symbol')}}--}}
+                    </div>
+                    <div class="fire">
+                        <img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">
                     </div>
                 </div>
-                <div class="name">
-                    {{$service->price}} {{config('basic.currency_symbol')}}
-                </div>
-                <div class="fire">
-                    <img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">
-                </div>
-            </div>
 
-            {{--<div class="item disable">--}}
+                {{--<div class="item disable">--}}
                 {{--<div class="pack">--}}
-                    {{--‏tumile 1250 coins--}}
-                    {{--<div class="icon">--}}
-                        {{--<img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">--}}
-                    {{--</div>--}}
+                {{--‏tumile 1250 coins--}}
+                {{--<div class="icon">--}}
+                {{--<img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">--}}
+                {{--</div>--}}
                 {{--</div>--}}
                 {{--<div class="name">--}}
-                    {{--$3.34--}}
+                {{--$3.34--}}
                 {{--</div>--}}
                 {{--<div class="fire">--}}
-                    {{--<img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">--}}
+                {{--<img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">--}}
                 {{--</div>--}}
-            {{--</div>--}}
+                {{--</div>--}}
             @endforeach
         </div>
 
@@ -82,24 +84,32 @@
                     <label for="">Total</label>
                     <input type="number">
                 </div>
+                @if($category->type == "GAME")
+                    <div class=" col-12 col-sm-5">
+                        <label for="player_number">player number</label>
+                        <input type="number" name="player_number" id="player_number">
+                    </div>
+                    <div class="col-10 col-sm-5">
+                        <label for="player_name">player name</label>
+                        <input type="text" name="player_name" id="player_name">>
+                    </div>
+                    <div class="col-2 col-sm-2 d-flex align-items-center refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                @elseif($category->type == "BALANCE" || $category->type == "OTHER")
+                    <div class="col-12 col-sm-10">
+                        <label for="special_field">{{$category->special_field}}</label>
+                        <input type="text" name="special_field"
+                               placeholder="@lang('add') {{$category->special_field}}">
+                    </div>
+                @endif
 
-                <div class=" col-12 col-sm-5">
-                    <label for="">player number</label>
-                    <input type="number">
-                </div>
-                <div class="col-10 col-sm-5">
-                    <label for="">player name</label>
-                    <input type="text">
-                </div>
-                <div class="col-2 col-sm-2 d-flex align-items-center refresh">
-                    <i class="fas fa-sync-alt"></i>
-                </div>
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
-    <span>
+                        <span>
     <img
-            src="{{asset($themeTrue.'imgs/tumile.png')}}"
-            alt="user"
+        src="{{asset($themeTrue.'imgs/tumile.png')}}"
+        alt="user"
     > x1</span>
                         <span>tumile 1250 coins</span>
                         <span>$3.34</span>
@@ -115,21 +125,19 @@
 @endsection
 @push('js')
     <script>
-           "use strict";
+        "use strict";
         $('#cards-services .item').on('click', function (event) {
-            if($(this).hasClass("disable")){
+            if ($(this).hasClass("disable")) {
                 event.preventDefault();
-            }
-           else if($(this).hasClass("active")){
+            } else if ($(this).hasClass("active")) {
                 $(this).removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
-            }
-            else{
+            } else {
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
             }
-            
+
             event.preventDefault();
         });
         {{--"use strict";--}}

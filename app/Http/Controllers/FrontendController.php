@@ -70,7 +70,7 @@ class FrontendController extends Controller
         return view($this->theme . 'blog', $data);
     }
 
-    public function blogDetails($slug = null, $id)
+    public function blogDetails($slug, $id)
     {
         $getData = Content::findOrFail($id);
 
@@ -151,6 +151,14 @@ class FrontendController extends Controller
             ->with(['category', 'provider'])
             ->get()
             ->groupBy('category.category_title');
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                foreach ($services as $service){
+                    $service->price = $service->special_price;
+                }
+            }
+        }
 
         return view($this->theme . 'services.search-service', compact('services', 'categories'));
     }
@@ -234,8 +242,8 @@ class FrontendController extends Controller
 
         return back()->with('success', 'Mail has been sent');
     }
-
-    public function getLink($getLink = null, $id)
+//$2y$10$fI4stKwL9RqRUOVai8vKm.3XWE.xrvjEmuBiQGn.Md3chHG78.PvO
+    public function getLink($getLink, $id)
     {
         $getData = Content::findOrFail($id);
 
