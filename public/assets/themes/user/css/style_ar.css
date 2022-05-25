@@ -18,7 +18,7 @@
 .fixedsidebar {
     position: absolute;
     top: 85px;
-    left: -400px;
+    right: -400px;
     width: 250px;
     height: 100%;
     padding: 0;
@@ -34,7 +34,7 @@
     transition: all 0.35s ease-in-out;
     }
 .rfixed {
-    left: 0;
+    right: 0;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -44,7 +44,7 @@
 .fixed-icon {
     position: fixed;
     top: 84px;
-    left: 0;
+    right: 0;
     width: 30px;
     height: 30px;
     display: flex;
@@ -54,7 +54,6 @@
     background-color: #23262d59;
     box-shadow: 0 0 8px 3px rgba(0, 0, 0, .2);
     z-index: 999;
-    transform: rotateZ(180deg);
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -64,7 +63,7 @@
     border-radius: 3px;
     }
 .rfixedicon {
-    left: 250px;
+    right: 250px;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -73,10 +72,10 @@
     }
 @media screen and (max-width:575px){
     .fixed-icon{
-    left:0;
+    right:0;
     }
     .fixed-icon.rfixedicon{
-    left:250px;
+    right:250px;
     }
 }
 /* end side bar */
@@ -565,6 +564,10 @@
     justify-content: space-around;
     color: #fff;
     height: 48px;
+    display: none;
+}
+.services form .chosen-item.active{
+    display: flex;
 }
 .services form .chosen-item span img{
     width: 20px;

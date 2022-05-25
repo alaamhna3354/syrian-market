@@ -33,14 +33,14 @@
     {{--</div>--}}
 
     <div class="contain-cards-order services">
-        <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
+        <h3 class="text-white">@lang('Add Order') <a href="{{ route('user.service.show') }}"><i class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
-            <input type="text" id="#myInput">
-            <button class="btn" id="#mybut">search</button>
+            <input type="text" class="myInput">
+            <button class="btn">@lang('search')</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-            <div class="item it" data-title1=" {{$service->service_title }}">
+            <div class="item it" data-title=" {{$service->service_title }}">
                 <div class="name" data-name="{{$service->service_title }}">
                     {{$service->service_title }}
                     <div class="icon">
@@ -75,20 +75,20 @@
         <form action="">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <label for="">quantity</label>
+                    <label for="">@lang('quantity')</label>
                     <input type="number" class="quantity">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="">Total</label>
-                    <input type="text" class="total">
+                    <label for="">@lang('Total')</label>
+                    <input type="text" class="total" readonly>
                 </div>
 
                 <div class=" col-12 col-sm-5">
-                    <label for="">player number</label>
+                    <label for="">@lang('player number')</label>
                     <input type="number">
                 </div>
                 <div class="col-10 col-sm-5">
-                    <label for="">player name</label>
+                    <label for="">@lang('player name')</label>
                     <input type="text">
                 </div>
                 <div class="col-2 col-sm-2 d-flex align-items-center refresh">
@@ -101,12 +101,12 @@
             src="{{asset($themeTrue.'imgs/tumile.png')}}"
             alt="user"
     > x<span class="quantity-val"></span></span>
-                        <span class="name-val">tumile 1250 coins</span>
-                        <span class="price-val">$3.34</span>
+                        <span class="name-val"></span>
+                        <span class="price-val"></span>
                     </div>
                 </div>
                 <div class="col-12 mt-4 text-center add">
-                    <button class="btn">Add</button>
+                    <button class="btn">@lang('Add')</button>
                 </div>
 
             </div>
@@ -115,7 +115,14 @@
 @endsection
 @push('js')
     <script>
-          "use strict";  
+          "use strict"; 
+           // fun 1
+           $(".myInput").on("keyup", function() {
+            var value = this.value.toLowerCase().trim();
+            $(".it").show().filter(function() {
+                return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
+            }).hide();
+            });
           // fun 2
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
@@ -125,33 +132,34 @@
                 $(this).removeClass('active');
                 $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
+                $(".total").val(`0`);
+                $('.quantity').val('0');
+
             }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
-                const name =  $(this).children(`.name`).attr("data-name");
-                const price =  $(this).children(`.price`).attr("data-price");
+                var name =  $(this).children(`.name`).attr("data-name");
+                var price =  $(this).children(`.price`).attr("data-price").replace('$','');
                 $(".name-val").html(name);
-                $(".price-val").html(price);
-                $(".total").val(price);
+                $(".price-val").html(`${price}$`);
+                $(".total").val(`${price}$`);
                 $('.quantity').val('1');
                 $('.quantity-val').html('1');
-            }
-            
-            event.preventDefault();
-        });
-            // fun 3
-            $(".quantity").keyup(function(){
-               const valu=  $(this).val();
-               const price =  $(`.price`).attr("data-price").replace('$','');
+
+                $(".quantity").keyup(function(){
+                var valu =  $(this).val();
                $(".quantity-val").html(valu);
                $(".total").val(`${valu*price}$`);
                $(".price-val").html(`${valu*price}$`);
             });
-          
-
+            }
+            
+            event.preventDefault();
+        });
+            
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
         {{--var title = $(this).data('servicetitle');--}}
