@@ -131,13 +131,13 @@
                         <div class="popular-game-thumb">
                             <a href="{{route("user.services.show",$category->id)}}"><img src="{{ getFile(config('location.category.path').$category->image) }}" alt=""></a>
                         </div>
-                        <div class="shop-item-bottom">
+                        <!-- <div class="shop-item-bottom">
                             <div class="content">
                                 <h4><a href="{{route("user.services.show",$category->id)}}">{{$category->category_title}}</a></h4>
                                 {{--<a href="#" class="cat">{{$category->category_title}}</a>--}}
                             </div>
                             {{--<div class="price">{{count($category->service)}} @lang('Services')</div>--}}
-                        </div>
+                        </div> -->
                         <a href="{{route("user.services.show",$category->id)}}">
                         <div class="popular-game-overlay">
                             <h6><span>{{$category->category_title}}</span></h6>

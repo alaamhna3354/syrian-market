@@ -4,16 +4,17 @@
     @include('user.layouts.head')
 </head>
 <body>
-<div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+<div id="main-wrapper" class="d-flex flex-wrap" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
      data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full" class="mini-sidebar ">
 
     @include('user.layouts.header')
 
+   
     @include('user.layouts.side-notify')
-
-    <div class="page-wrapper d-block">
+    <div class="page-wrapper main-page d-block" style="width:100%">
         @yield('content')
     </div>
+   
     
 
 </div>
@@ -52,11 +53,13 @@
     if(!localStorage.sidenote || localStorage.sidenote == 'true'){
         $('.fixed-icon').removeClass('rfixedicon');
         $('.fixedsidebar').removeClass('rfixed');
+        $('.main-page').removeClass('wid-res');
     }
 
     $(document).on('click', '.close-sidebar',function () {
         $('.fixed-icon').addClass('rfixedicon');
         $('.fixedsidebar').addClass('rfixed');
+        $('.main-page').addClass('wid-res');
         localStorage.setItem("sidenote", false);
     });
 
@@ -64,7 +67,7 @@
 
         $('.fixed-icon').toggleClass('rfixedicon');
         $('.fixedsidebar').toggleClass('rfixed');
-
+        $('.main-page').toggleClass('wid-res');
         if (typeof(Storage) !== "undefined") {
             if(localStorage.sidenote == 'true'){
                 localStorage.setItem("sidenote", false);
@@ -74,7 +77,19 @@
         }
     });
 </script>
+<style>
+.wid-res{
+    width: calc(100% - 250px) !important;
+    margin-inline-start: 250px !important;
+}
+@media (max-width:768px) {
+    .wid-res{
+        width: 100%  !important;
+    margin-inline-start: 0 !important;
 
+    }
+}
+</style>
 
 <script>
     'use strict';

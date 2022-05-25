@@ -7,7 +7,7 @@
 
 
 
-        <div class="row justify-content-between mx-lg-5">
+        <div class="row justify-content-between">
             <div class="col-md-12">
 
                 <ol class="breadcrumb center-items">

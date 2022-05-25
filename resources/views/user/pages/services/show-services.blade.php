@@ -33,24 +33,23 @@
     {{--</div>--}}
 
     <div class="contain-cards-order services">
-        <h3 class="text-white">Add Order <a href="{{ route('user.service.show') }}"><i
+        <h3 class="text-white">@lang('Add Order') <a href="{{ route('user.service.show') }}"><i
                     class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
-            <input type="text">
-            <button class="btn">search</button>
+            <input type="text" class="myInput">
+            <button class="btn">@lang('search')</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-                <div class="item">
-                    <div class="pack">
+                <div class="item it" data-title=" {{$service->service_title }}">
+                    <div class="name" data-name="{{$service->service_title }}">
                         {{$service->service_title }}
                         <div class="icon">
                             <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                         </div>
                     </div>
-                    <div class="name">
-                        {{$service->price}}
-                        {{--                    {{auth()->user()->is_special == 0 ?$service->price :$service->special_price}} {{config('basic.currency_symbol')}}--}}
+                    <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
+                        {{$service->price}} {{config('basic.currency_symbol')}}
                     </div>
                     <div class="fire">
                         <img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">
@@ -77,20 +76,20 @@
         <form action="">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <label for="">quantity</label>
-                    <input type="number">
+                    <label for="">@lang('quantity')</label>
+                    <input type="number" class="quantity">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="">Total</label>
-                    <input type="number">
+                    <label for="">@lang('Total')</label>
+                    <input type="text" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
                     <div class=" col-12 col-sm-5">
-                        <label for="player_number">player number</label>
+                        <label for="player_number">@lang('Player number')</label>
                         <input type="number" name="player_number" id="player_number">
                     </div>
                     <div class="col-10 col-sm-5">
-                        <label for="player_name">player name</label>
+                        <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">>
                     </div>
                     <div class="col-2 col-sm-2 d-flex align-items-center refresh">
@@ -103,20 +102,19 @@
                                placeholder="@lang('add') {{$category->special_field}}">
                     </div>
                 @endif
-
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
                         <span>
     <img
         src="{{asset($themeTrue.'imgs/tumile.png')}}"
         alt="user"
-    > x1</span>
-                        <span>tumile 1250 coins</span>
-                        <span>$3.34</span>
+    > x<span class="quantity-val"></span></span>
+                        <span class="name-val"></span>
+                        <span class="price-val"></span>
                     </div>
                 </div>
                 <div class="col-12 mt-4 text-center add">
-                    <button class="btn">Add</button>
+                    <button class="btn">@lang('Add')</button>
                 </div>
 
             </div>
@@ -126,33 +124,58 @@
 @push('js')
     <script>
         "use strict";
+        // fun 1
+        $(".myInput").on("keyup", function() {
+            var value = this.value.toLowerCase().trim();
+            $(".it").show().filter(function() {
+                return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
+            }).hide();
+        });
+        // fun 2
         $('#cards-services .item').on('click', function (event) {
-            if ($(this).hasClass("disable")) {
+            if($(this).hasClass("disable")){
                 event.preventDefault();
-            } else if ($(this).hasClass("active")) {
+            }
+            else if($(this).hasClass("active")){
                 $(this).removeClass('active');
+                $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
-            } else {
+                $(".total").val(`0`);
+                $('.quantity').val('0');
+            }
+            else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
+                $('.chosen-item').addClass('active');
+                var name =  $(this).children(`.name`).attr("data-name");
+                var price =  $(this).children(`.price`).attr("data-price").replace('$','');
+                $(".name-val").html(name);
+                $(".price-val").html(`${price}$`);
+                $(".total").val(`${price}$`);
+                $('.quantity').val('1');
+                $('.quantity-val').html('1');
+                $(".quantity").keyup(function(){
+                    var valu =  $(this).val();
+                    $(".quantity-val").html(valu);
+                    $(".total").val(`${valu*price}$`);
+                    $(".price-val").html(`${valu*price}$`);
+                });
             }
 
             event.preventDefault();
         });
+
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
         {{--var title = $(this).data('servicetitle');--}}
         {{--var id = $(this).data('id');--}}
-
         {{--var orderRoute = "{{route('user.order.create')}}" + '?serviceId=' + id;--}}
         {{--$('.order-now').attr('href', orderRoute);--}}
-
         {{--var description = $(this).data('description');--}}
         {{--$('#title').text(title);--}}
         {{--$('#servicedescription').text(description);--}}
         {{--});--}}
-
         // // Add active class to the current side-bar item
         // var cards = document.getElementById("cards");
         // var li = cards.getElementsByClassName("card-item");

@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-md-7 col-md-offset-2">
             <h1 class="text-center text-warning" style="margin-top: 30px;"><i class="fa fa-warning"></i>
-                Warning
+            @lang('Warning')   
             </h1>
-            <h4 class="text-center">Uh-ho! We are unable to process your Payment by this method.
-                <br>This method is under construction!!
+            <h4 class="text-center">@lang('Uh-ho! We are unable to process your Payment by this method.')   
+                <br>@lang('This method is under construction!!')
             </h4>
             <br>
-            <h4 class="text-center">Select <b>bkash</b> as your payment method.</h4>
+            <h4 class="text-center">@lang('Select')<b>@lang('bkash')</b>@lang('as your payment method.')</h4>
             <div class="col-md-8 col-md-offset-2">
 
 
