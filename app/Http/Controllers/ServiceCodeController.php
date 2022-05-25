@@ -130,7 +130,7 @@ class ServiceCodeController extends Controller
         $codes = explode("\r\n", $req['code']);
 
         foreach ($codes as $code) {
-            
+
             $service_code = new ServiceCode();
             $service_code->code = $code;
             $service_code->service_id = $req['service_id'];
