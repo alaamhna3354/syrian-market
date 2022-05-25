@@ -84,11 +84,11 @@
                 </div>
 
                 <div class=" col-12 col-sm-5">
-                    <label for="">@lang('player number')</label>
+                    <label for="">@lang('Player number')</label>
                     <input type="number">
                 </div>
                 <div class="col-10 col-sm-5">
-                    <label for="">@lang('player name')</label>
+                    <label for="">@lang('Player name')</label>
                     <input type="text">
                 </div>
                 <div class="col-2 col-sm-2 d-flex align-items-center refresh">
