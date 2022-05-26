@@ -167,5 +167,15 @@
     "Edit Service Code" : "Edit Service Code",
     "Add Multiple Service Code" : "Add Multiple Service Code",
     "Codes" : "Codes",
-    "Each Code On New Line" : "Each Code On New Line"
+    "Each Code On New Line" : "Each Code On New Line",
+    "Manage Balance Coupon" : "Manage Balance Coupon",
+    "Add Balance Coupon" : "Add Balance Coupon",
+    "Show Balance Coupon" : "Show Balance Coupon",
+    "QR Code" : "QR Code",
+    "Balance" : "Balance",
+    "Balance Coupon Show" : "Balance Coupon Show",
+    "Coupon Code" : "Coupon Code",
+    "Please fill in the Code" : "Please fill in the Code",
+    "Please fill in the Balance" : "Please fill in the Balance",
+    "Add Coupon" : "Add Coupon"
 }

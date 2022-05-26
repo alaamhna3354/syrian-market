@@ -51,7 +51,7 @@
                 <li class="list-divider"></li>
 
 
-                {{--Manage Category--}}
+                {{--Manage Service Codes--}}
                 <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Service Codes')</span></li>
                 <li class="sidebar-item">
                     <a class="sidebar-link sidebar-link" href="{{route('admin.service_codes.add')}}" aria-expanded="false">
@@ -70,6 +70,25 @@
                        aria-expanded="false">
                         <i data-feather="list" class="feather-icon"></i>
                         <span class="hide-menu">@lang('Show Service Code')</span>
+                    </a>
+                </li>
+                <li class="list-divider"></li>
+
+
+                {{--Manage Balance Coupon--}}
+                <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Balance Coupon')</span></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.balance-coupon.create')}}" aria-expanded="false">
+                        <i data-feather="plus-circle" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Add Balance Coupon')</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.balance-coupon')}}"
+                       aria-expanded="false">
+                        <i data-feather="list" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Show Balance Coupon')</span>
                     </a>
                 </li>
                 <li class="list-divider"></li>
