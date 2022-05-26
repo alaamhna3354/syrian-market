@@ -65,7 +65,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a  class="dropdown-item"
-                                            href="{{route('admin.category.edit',['id'=>$coupon->id])}}">
+                                            href="{{route('admin.balance-coupon.edit',['id'=>$coupon->id])}}">
                                             <i class="fa fa-edit text-warning pr-2"
                                                aria-hidden="true"></i> @lang('Edit')</a>
 

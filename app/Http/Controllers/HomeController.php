@@ -66,6 +66,12 @@ class HomeController extends Controller
         return view('user.pages.transaction.index', compact('transactions'));
     }
 
+    public function useBalanceCoupon()
+    {
+        $transactions = $this->user->transaction()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view('user.pages.use_balance_coupon', compact('transactions'));
+    }
+
     public function transactionSearch(Request $request)
     {
         $search = $request->all();
