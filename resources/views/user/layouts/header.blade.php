@@ -12,7 +12,7 @@
             </button> -->
             <!-- Notification -->
             <div class="account" style="margin-inline-start: auto;">
-            <a href="">$0.14</a>
+            <a href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>
            
             <ul class="lang">
             <li class="nav-item dropdown ">

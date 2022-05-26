@@ -79,4 +79,9 @@ class ServiceController extends Controller
         }
         return view('user.pages.services.search-service', compact('services', 'categories'));
     }
+
+    public function getPlayerName($req)
+    {
+
+    }
 }
