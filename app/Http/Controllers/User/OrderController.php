@@ -189,6 +189,7 @@ class OrderController extends Controller
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
 
+
             if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
