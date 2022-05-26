@@ -50,7 +50,7 @@
                                         @endif
                                     </div>
                                     <div class="form-group ">
-                                        <label"form-group drip_feed">
+                                        <label class="form-group drip_feed">
                                                     <label class="shadow-h text-white ">@lang('Quantity')</label>
                                         <input type="number" name="quantity" id="quantity" value="{{ old('quantity') ?? 1}}"
                                                class="form-control">

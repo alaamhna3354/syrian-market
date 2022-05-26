@@ -73,15 +73,16 @@
             @endforeach
         </div>
 
-        <form action="">
+        <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
+            @csrf
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <label for="">@lang('quantity')</label>
-                    <input type="number" class="quantity">
+                    <input type="number" name="quantity" class="quantity">
                 </div>
                 <div class="col-12 col-sm-6">
                     <label for="">@lang('Total')</label>
-                    <input type="text" class="total" readonly>
+                    <input type="text" name="total" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
                     <div class=" col-12 col-sm-5">
@@ -90,11 +91,12 @@
                     </div>
                     <div class="col-10 col-sm-5">
                         <label for="player_name">@lang('Player name')</label>
-                        <input type="text" name="player_name" id="player_name">>
+                        <input type="text" name="link" id="player_name">
                     </div>
                     <div class="col-2 col-sm-2 d-flex align-items-center refresh">
                         <i class="fas fa-sync-alt"></i>
                     </div>
+
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
@@ -113,8 +115,10 @@
                         <span class="price-val"></span>
                     </div>
                 </div>
+                <input type="text" name="service" value="{{$category->id}}" hidden>
+                <input type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
-                    <button class="btn">@lang('Add')</button>
+                    <button type="submit" class="btn">@lang('Add')</button>
                 </div>
 
             </div>

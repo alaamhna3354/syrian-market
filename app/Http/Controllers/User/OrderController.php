@@ -118,23 +118,24 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+//        dd($request);
         $req = Purify::clean($request->all());
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
             'service' => 'required|integer|min:1|not_in:0',
-            'link' => 'required',
-            'quantity' => 'required|integer',
-            'check' => 'required',
+//            'link' => 'required',
+//            'quantity' => 'required|integer',
+//            'check' => 'required',
         ];
         if (!isset($request->drip_feed)) {
             $rules['runs'] = 'required|integer|not_in:0';
             $rules['interval'] = 'required|integer|not_in:0';
         }
-        $validator = Validator::make($req, $rules);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+//        $validator = Validator::make($req, $rules);
+//        if ($validator->fails()) {
+//            return back()->withErrors($validator)->withInput();
+//        }
+
         $service = Service::userRate()->findOrFail($request->service);
         $user = Auth::user();
         if ($user != null){
@@ -179,18 +180,18 @@ class OrderController extends Controller
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
 
-            if (isset($service->api_provider_id)) {
-                $apiproviderdata = ApiProvider::find($service->api_provider_id);
-                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'add', 'service' => $service->api_service_id, 'link' => $req['link'], 'quantity' => $req['quantity'], 'runs' => $req['runs'], 'interval' => $req['interval']])->post();
-                $apidata = json_decode($apiservicedata);
-
-                if (isset($apidata->order)) {
-                    $order->status_description = "order: {$apidata->order}";
-                    $order->api_order_id = $apidata->order;
-                } else {
-                    $order->status_description = "error: {$apidata->error}";
-                }
-            }
+//            if (isset($service->api_provider_id)) {
+//                $apiproviderdata = ApiProvider::find($service->api_provider_id);
+//                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'add', 'service' => $service->api_service_id, 'link' => $req['link'], 'quantity' => $req['quantity'], 'runs' => $req['runs'], 'interval' => $req['interval']])->post();
+//                $apidata = json_decode($apiservicedata);
+//
+//                if (isset($apidata->order)) {
+//                    $order->status_description = "order: {$apidata->order}";
+//                    $order->api_order_id = $apidata->order;
+//                } else {
+//                    $order->status_description = "error: {$apidata->error}";
+//                }
+//            }
             $order->save();
             $user->balance -= $price;
             $user->save();
