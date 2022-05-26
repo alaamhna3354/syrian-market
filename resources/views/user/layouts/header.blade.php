@@ -13,7 +13,7 @@
             <!-- Notification -->
             <div class="account" style="margin-inline-start: auto;">
             <a href="">$0.14</a>
-           
+
             <ul class="lang">
             <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

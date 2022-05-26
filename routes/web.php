@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('fund-history', 'HomeController@fundHistory')->name('fund-history');
         Route::get('fund-history-search', 'HomeController@fundHistorySearch')->name('fund-history.search');
         Route::get('/use-balance-coupon', 'HomeController@useBalanceCoupon')->name('use-balance-coupon');
+        Route::Post('/add-balance-coupon', 'HomeController@addBalanceCoupon')->name('add-balance-coupon');
 
         Route::get('/profile', 'HomeController@profile')->name('profile');
         Route::post('/updateProfile', 'HomeController@updateProfile')->name('updateProfile');

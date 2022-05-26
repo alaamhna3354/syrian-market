@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="card-title shadow-h text-white mb-3">@lang('Add new')</h4>
-                                <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
+                                <form class="form" method="post" action="{{route('user.add-balance-coupon')}}" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="row">

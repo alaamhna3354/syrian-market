@@ -15,7 +15,7 @@
                                 <label for="image-upload" id="image-label"><i class="fas fa-upload"></i></label>
                                 <input type="file" name="image" placeholder="Choose image" id="image">
                                 <img id="image_preview_container" class="preview-image"
-                                     src="{{ getFile(config('location.category.path').$coupon->qr_code)}}"
+                                     src="{{ getFile(config('location.qr.path').$coupon->qr_code)}}"
                                      alt="preview image">
                             </div>
 

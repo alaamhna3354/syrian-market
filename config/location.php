@@ -17,6 +17,11 @@ return [
         'path' => 'assets/uploads/categories/',
         'size' => '250x250'
     ],
+
+    'qr' => [
+        'path' => 'assets/images/qr.png',
+        'size' => '250x250'
+    ],
     'ticket' => [
         'path' => 'assets/uploads/ticket/'
     ],

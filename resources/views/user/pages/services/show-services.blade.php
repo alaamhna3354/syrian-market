@@ -41,7 +41,7 @@
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-                <div class="item it" data-title=" {{$service->service_title }}">
+                <div class="item it {{$service->is_available == 0 ? 'disable' : ''}}" data-title=" {{$service->service_title }}">
                     <div class="name" data-name="{{$service->service_title }}">
                         {{$service->service_title }}
                         <div class="icon">

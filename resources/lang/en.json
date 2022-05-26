@@ -179,5 +179,7 @@
     "Please fill in the Balance" : "Please fill in the Balance",
     "Add Coupon" : "Add Coupon",
     "Update Coupon" : "Update Coupon",
-    "Use Balance Coupon" : "Use Balance Coupon"
+    "Use Balance Coupon" : "Use Balance Coupon",
+    "Sold" : "Sold",
+    "Available" : "Available"
 }
