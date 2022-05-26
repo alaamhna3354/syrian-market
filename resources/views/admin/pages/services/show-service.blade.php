@@ -113,6 +113,7 @@
                             <th scope="col" >@lang('Price')</th>
                             <th scope="col" >@lang('Special Price')</th>
                             <th scope="col" >@lang('Status')</th>
+                            <th scope="col" >@lang('Available')</th>
                             <th scope="col" >@lang('Action')</th>
                         </tr>
                         </thead>
@@ -144,6 +145,10 @@
                                 <td data-label="@lang('Status')" >
                                     <span
                                         class="badge badge-pill {{ $service->service_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->service_status == 0 ? 'غير فعال' : 'فعال' }}</span>
+                                </td>
+                                <td data-label="@lang('Available')" >
+                                    <span
+                                        class="badge badge-pill {{ $service->is_available == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->is_available == 0 ? 'Not Available' : 'Available' }}</span>
                                 </td>
                                 <td data-label="@lang('Action')" >
                                        <a href="{{route('admin.service.edit',['id'=>$service->id])}}"  class="btn btn-primary btn-rounded btn-sm" title="@lang('Edit')">

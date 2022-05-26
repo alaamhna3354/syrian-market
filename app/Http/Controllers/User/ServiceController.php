@@ -35,7 +35,7 @@ class ServiceController extends Controller
     {
 
         $category=Category::find($id);
-        $services=Service::where('category_id', $id)->get();
+        $services=Service::where('category_id', $id)->where('service_status',1)->get();
         $user = Auth::user();
         if ($user != null){
             if ($user->is_special == 1){

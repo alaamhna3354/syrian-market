@@ -86,7 +86,8 @@ class BalanceCouponController extends Controller
      */
     public function edit($id)
     {
-        //
+        $coupon = BalanceCoupon::find($id);
+        return view('admin.pages.balance_coupon.edit-coupon', compact('coupon'));
     }
 
     /**
@@ -98,7 +99,32 @@ class BalanceCouponController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $req = Purify::clean($request->all());
+        $coupon = BalanceCoupon::find($request->id);
+        $rules = [
+            'code' => 'required|string|max:20',
+            'code' => Rule::unique('balance_coupons')->ignore($id),
+            'balance' => 'required|numeric',
+        ];
+        $validator = Validator::make($req, $rules);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if ($request->hasFile('image')) {
+            try {
+                $old = $coupon->qr_code;
+                $coupon->qr_code = $this->uploadImage($request->image, config('location.category.path'), config('location.category.size'), $old);
+            } catch (\Exception $exp) {
+                return back()->with('error', 'Image could not be uploaded.');
+            }
+        }
+        $coupon->code = $req['code'];
+        $coupon->balance = $req['balance'];
+        $coupon->status = $req['status'];
+        $coupon->save();
+        return back()->with('success', 'Successfully Updated');
     }
 
     /**
