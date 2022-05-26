@@ -18,6 +18,7 @@ use Stevebauman\Purify\Facades\Purify;
 class OrderController extends Controller
 {
     use Notify;
+
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
@@ -33,7 +34,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with([ 'users','service'])->latest()->where('user_id', Auth::id())->paginate();
+        $orders = Order::with(['users', 'service'])->latest()->where('user_id', Auth::id())->paginate();
         return view('user.pages.order.show', compact('orders'));
     }
 
@@ -102,9 +103,9 @@ class OrderController extends Controller
         $serid = $request->ser_id;
         $service = Service::where('id', $serid)->userRate()->first();
         $user = Auth::user();
-        if ($user != null){
-            if ($user->is_special == 1  && $service->special_price != null){
-                    $service->price = $service->special_price;
+        if ($user != null) {
+            if ($user->is_special == 1 && $service->special_price != null) {
+                $service->price = $service->special_price;
             }
         }
         return $service;
@@ -137,15 +138,21 @@ class OrderController extends Controller
 //        }
 
         $service = Service::userRate()->findOrFail($request->service);
+        if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+            $serviceCode = $service->service_code->where('is_used', 0)->first();
+            if ($serviceCode == null) {
+                return back()->with('error', "No Code Available ,Please Contact with Support To Order Code.")->withInput();
+            }
+        }
         $user = Auth::user();
-        if ($user != null){
-            if ($user->is_special == 1  && $service->special_price != null){
-                    $service->price = $service->special_price;
+        if ($user != null) {
+            if ($user->is_special == 1 && $service->special_price != null) {
+                $service->price = $service->special_price;
             }
         }
 
 
-        $basic = (object) config('basic');
+        $basic = (object)config('basic');
 
         $quantity = $request->quantity;
 
@@ -164,7 +171,7 @@ class OrderController extends Controller
             $userRate = ($service->user_rate) ?? $service->price;
             $price = round(($quantity * $userRate) / 1000, 2);
 
-
+//dd($price);
             $user = Auth::user();
             if ($user->balance < $price) {
                 return back()->with('error', "Insufficient balance in your wallet.")->withInput();
@@ -173,13 +180,22 @@ class OrderController extends Controller
             $order->user_id = $user->id;
             $order->category_id = $req['category'];
             $order->service_id = $req['service'];
+
             $order->link = $req['link'];
+//            dd($order);
             $order->quantity = $req['quantity'];
             $order->status = 'processing';
             $order->price = $price;
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
 
+
+            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+                $serviceCode = $service->service_code->where('is_used', 0)->first();
+                if ($serviceCode != null) {
+                    $order->details = 'Service code is : '.$serviceCode->code.', and id is '.$serviceCode->id;
+                }
+            }
 //            if (isset($service->api_provider_id)) {
 //                $apiproviderdata = ApiProvider::find($service->api_provider_id);
 //                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'add', 'service' => $service->api_service_id, 'link' => $req['link'], 'quantity' => $req['quantity'], 'runs' => $req['runs'], 'interval' => $req['interval']])->post();
@@ -206,32 +222,55 @@ class OrderController extends Controller
             $transaction->save();
 
 
-
             $msg = [
                 'username' => $user->username,
                 'price' => $price,
                 'currency' => $basic->currency
             ];
             $action = [
-                "link" => route('admin.order.edit',$order->id),
+                "link" => route('admin.order.edit', $order->id),
                 "icon" => "fas fa-cart-plus text-white"
             ];
             $this->adminPushNotification('ORDER_CREATE', $msg, $action);
 
+            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+                $serviceCode = $service->service_code->where('is_used', 0)->first();
+                if ($serviceCode != null) {
+                    $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
+                        'order_id' => $order->id,
+                        'order_at' => $order->created_at,
+                        'service' => optional($order->service)->service_title,
+                        'status' => $order->status,
+                        'paid_amount' => $price,
+                        'remaining_balance' => $user->balance,
+                        'currency' => $basic->currency,
+                        'transaction' => $transaction->trx_id,
+                        'code' => $serviceCode->code,
+
+                    ]);
+                    $serviceCode->is_used = 1;
+                    $serviceCode->save();
+                    return back()->with('success', 'Your order has been submitted');
+                } else {
+                    return back()->with('error', "No Code Available ,Please Contact with Support To Order Code.")->withInput();
+                }
+            }else{
+                $this->sendMailSms($user, 'ORDER_CONFIRM', [
+                    'order_id' => $order->id,
+                    'order_at' => $order->created_at,
+                    'service' => optional($order->service)->service_title,
+                    'status' => $order->status,
+                    'paid_amount' => $price,
+                    'remaining_balance' => $user->balance,
+                    'currency' => $basic->currency,
+                    'transaction' => $transaction->trx_id,
+                ]);
+                return back()->with('success', 'Your order has been submitted');
+            }
 
 
-            $this->sendMailSms($user, 'ORDER_CONFIRM', [
-                'order_id' => $order->id,
-                'order_at' => $order->created_at,
-                'service' => optional($order->service)->service_title,
-                'status' => $order->status,
-                'paid_amount' => $price,
-                'remaining_balance' => $user->balance,
-                'currency' => $basic->currency,
-                'transaction' => $transaction->trx_id,
-            ]);
 
-            return back()->with('success', 'Your order has been submitted');
+
 
         } else {
             return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
@@ -275,9 +314,9 @@ class OrderController extends Controller
     {
         $service = Service::where('service_status')->where('service_title', 'LIKE', "%{$request->service}%")->get()->pluck('service_title');
         $user = Auth::user();
-        if ($user != null){
-            if ($user->is_special == 1  && $service->special_price != null){
-                    $service->price = $service->special_price;
+        if ($user != null) {
+            if ($user->is_special == 1 && $service->special_price != null) {
+                $service->price = $service->special_price;
             }
         }
         return response()->json($service);
@@ -301,15 +340,15 @@ class OrderController extends Controller
         }
         $orders = explode("\n", $req['mass_order']);
 
-        $basic = (object) config('basic');
+        $basic = (object)config('basic');
 
         foreach ($orders as $order) {
             $singleOrder = trim(explode("|", $order));
             $serviceid = Service::userRate()->find($singleOrder[0]);
             $user = Auth::user();
-            if ($user != null){
-                if ($user->is_special == 1 && $serviceid->special_price != null){
-                        $serviceid->price = $serviceid->special_price;
+            if ($user != null) {
+                if ($user->is_special == 1 && $serviceid->special_price != null) {
+                    $serviceid->price = $serviceid->special_price;
                 }
             }
             if ($serviceid) {
@@ -371,10 +410,9 @@ class OrderController extends Controller
                                     ]);
 
 
-
-                                    $msg = ['username' => $user->username,'price' => $orderM->price,'currency' => $basic->currency];
+                                    $msg = ['username' => $user->username, 'price' => $orderM->price, 'currency' => $basic->currency];
                                     $action = [
-                                        "link" => route('admin.order.edit',$orderM->id),
+                                        "link" => route('admin.order.edit', $orderM->id),
                                         "icon" => "fas fa-cart-plus text-white"
                                     ];
                                     $this->adminPushNotification('ORDER_CREATE', $msg, $action);
