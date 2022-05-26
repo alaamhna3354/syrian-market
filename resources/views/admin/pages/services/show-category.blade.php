@@ -109,7 +109,7 @@
                             </td>
                             <td data-label="@lang('Status')">
                                 <span
-                                    class="badge badge-pill {{ $category->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $category->status == 0 ? 'Inactive' : 'Active' }}</span>
+                                    class="badge badge-pill {{ $category->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $category->status == 0 ? 'غير فعال' : 'فعال' }}</span>
                             </td>
                             <td data-label="@lang('Action')">
 
@@ -134,7 +134,7 @@
                                            data-route="{{route('admin.category.status.change',['id'=>$category->id])}}">
                                             <i class="fa fa-check "
                                                aria-hidden="true"></i>
-                                            {{ $category->status == 0 ? 'Activate' : 'Deactivate' }}
+                                            {{ $category->status == 0 ? 'تفعيل' : 'تعطيل' }}
                                         </a>
                                     </div>
                                 </div>

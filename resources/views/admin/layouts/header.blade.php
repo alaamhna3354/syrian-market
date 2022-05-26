@@ -84,7 +84,7 @@
                             <div class="customize-input">
                                 <input class="form-control custom-shadow custom-radius border-0 bg-white"
                                        type="search" name="navbar_search" id="navbar_search" autocomplete="off"
-                                       placeholder="Search" aria-label="Search">
+                                       placeholder="@lang('Search')" aria-label="Search">
                                 <i class="form-control-icon" data-feather="search"></i>
                             </div>
 
