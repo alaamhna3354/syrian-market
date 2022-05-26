@@ -155,7 +155,10 @@ class FrontendController extends Controller
         if ($user != null){
             if ($user->is_special == 1){
                 foreach ($services as $service){
-                    $service->price = $service->special_price;
+                    if ($service->special_price != null){
+                        $service->price = $service->special_price;
+                    }
+
                 }
             }
         }

@@ -103,7 +103,7 @@ class OrderController extends Controller
         $service = Service::where('id', $serid)->userRate()->first();
         $user = Auth::user();
         if ($user != null){
-            if ($user->is_special == 1){
+            if ($user->is_special == 1  && $service->special_price != null){
                     $service->price = $service->special_price;
             }
         }
@@ -137,7 +137,7 @@ class OrderController extends Controller
         $service = Service::userRate()->findOrFail($request->service);
         $user = Auth::user();
         if ($user != null){
-            if ($user->is_special == 1){
+            if ($user->is_special == 1  && $service->special_price != null){
                     $service->price = $service->special_price;
             }
         }
@@ -274,7 +274,7 @@ class OrderController extends Controller
         $service = Service::where('service_status')->where('service_title', 'LIKE', "%{$request->service}%")->get()->pluck('service_title');
         $user = Auth::user();
         if ($user != null){
-            if ($user->is_special == 1){
+            if ($user->is_special == 1  && $service->special_price != null){
                     $service->price = $service->special_price;
             }
         }
@@ -306,7 +306,7 @@ class OrderController extends Controller
             $serviceid = Service::userRate()->find($singleOrder[0]);
             $user = Auth::user();
             if ($user != null){
-                if ($user->is_special == 1){
+                if ($user->is_special == 1 && $serviceid->special_price != null){
                         $serviceid->price = $serviceid->special_price;
                 }
             }
