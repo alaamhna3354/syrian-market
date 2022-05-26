@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
@@ -32,8 +33,19 @@ class ServiceController extends Controller
     }
     public function service($id)
     {
+
         $category=Category::find($id);
         $services=Service::where('category_id', $id)->get();
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                foreach ($services as $service){
+                    $service->price = $service->special_price;
+                }
+            }
+        }
+
+
         return view('user.pages.services.show-services', compact('services','category'));
     }
     public function servicesearch(Request $request)
@@ -51,6 +63,14 @@ class ServiceController extends Controller
             ->with(['category'])
             ->get()
             ->groupBy('category.category_title');
+        $user = Auth::user();
+        if ($user != null){
+            if ($user->is_special == 1){
+                foreach ($services as $service){
+                    $service->price = $service->special_price;
+                }
+            }
+        }
         return view('user.pages.services.search-service', compact('services', 'categories'));
     }
 }

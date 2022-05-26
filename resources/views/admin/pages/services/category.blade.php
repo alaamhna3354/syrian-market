@@ -25,6 +25,21 @@
 
                     </div>
                     <div class="col-sm-6 col-md-8">
+                            <div class="form-group">
+                                <label>@lang('Select Type')</label>
+                                <select class="form-control" id="type" name="type" onchange="showExtraField()">
+                                    <option disabled value="" selected hidden>@lang('Select Type')</option>
+
+                                        <option value="GAME">@lang('GAME')</option>
+                                    <option value="CODE">@lang('CODE')</option>
+                                    <option value="BALANCE">@lang('BALANCE')</option>
+                                    <option value="OTHER">@lang('OTHER')</option>
+
+                                </select>
+                                @if($errors->has('type'))
+                                    <div class="error text-danger">@lang($errors->first('type')) </div>
+                                @endif
+                            </div>
                         <div class="form-group ">
                             <label>@lang('Category Title')</label>
                             <input type="text" name="category_title" value="{{old('category_title')}}"  class="form-control form-control-sm">
@@ -41,6 +56,16 @@
                             <div class="invalid-feedback">@lang('Please fill in the category description')</div>
 
                             @error('category_description')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group" id="extra-field" style="display: none">
+                            <label>@lang('Special Field')</label>
+                            <input type="text" name="special_field" value="{{old('special_field')}}"  class="form-control form-control-sm" placeholder="@lang('Insert Special Field Name')">
+                            <div class="invalid-feedback">@lang('Please fill in the category title')</div>
+
+
+                            @error('special_field')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
@@ -69,8 +94,21 @@
 @endsection
 @push('js')
      <script>
+         function showExtraField(){
+             var opt = document.getElementById('type').value;
+             if (opt == "BALANCE" || opt == "OTHER" ){
+               $('#extra-field').attr('style','display : block;')
+
+             }else {
+                 $('#extra-field').attr('style','display : none;')
+             }
+             console.log(opt)
+         }
          "use strict";
         $(document).ready(function (e) {
+            $('#type').select2({
+                selectOnClose: true
+            });
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -151,6 +151,7 @@ class UsersController extends Controller
         $user->status = ($userData['status'] == 'on') ? 0 : 1;
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
         $user->sms_verification = ($userData['sms_verification'] == 'on') ? 0 : 1;
+        $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;
 
         if (isset($userData['language_id'])) {
             $user->language_id = @$userData['language_id'];

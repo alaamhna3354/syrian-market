@@ -19,6 +19,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
+//        dd('dddddddd');
         $categories = Category::with('service', 'service.provider')->has('service')->paginate(config('basic.paginate'));
         $apiProviders = ApiProvider::all();
         return view('admin.pages.services.show-service', compact('categories', 'apiProviders'));
@@ -78,6 +79,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request);
         $req = Purify::clean($request->all());
         $rules = [
             'service_title' => 'required|string|max:150',
@@ -85,6 +87,7 @@ class ServiceController extends Controller
             'min_amount' => 'required|numeric',
             'max_amount' => 'required|numeric',
             'price' => 'required|numeric',
+            'special_price' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
@@ -97,6 +100,7 @@ class ServiceController extends Controller
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
         $service->price = $req['price'];
+        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
         $service->api_provider_id = ($req['api_provider_id'] == 0) ? null : $req['api_provider_id'];
         $service->api_service_id = (empty($req['api_service_id'])) ? 0 : $req['api_service_id'];
@@ -174,6 +178,7 @@ class ServiceController extends Controller
             'min_amount' => 'required',
             'price' => 'required',
             'max_amount' => 'required',
+            'special_price' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
@@ -185,6 +190,7 @@ class ServiceController extends Controller
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
         $service->price = $req['price'];
+        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
         $service->api_provider_id = $req['api_provider_id'];
         $service->api_service_id = $req['api_service_id'];

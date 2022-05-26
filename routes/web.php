@@ -198,9 +198,23 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/service-multiple-deActive', 'ServiceController@deactiveMultiple')->name('service-multiple-deactive');
 
 
+        // service Codes
+        Route::get('/service_codes', 'ServiceCodeController@index')->name('service_codes.show');
+        Route::get('/service_codes/add', 'ServiceCodeController@create')->name('service_codes.add');
+        Route::post('/service_codes', 'ServiceCodeController@store')->name('service_codes.store');
+        Route::get('/search-service_codes', 'ServiceCodeController@search')->name('service_codes-search');
+        Route::get('/service_codes-active', 'ServiceCodeController@serviceCodeActive')->name('service_codes-active');
+        Route::get('/service_codes-deActive', 'ServiceCodeController@serviceCodeDeActive')->name('service_codes-deactive');
+        Route::get('/service_codes/edit/{id}', 'ServiceCodeController@edit')->name('service_codes.edit');
+        Route::post('/service_codes/update', 'ServiceCodeController@update')->name('service_codes.update');
+        Route::get('/service_codes/add-multi', 'ServiceCodeController@addMulti')->name('service_codes.add-multi');
+        Route::post('/service_codes/add-multiple', 'ServiceCodeController@storeMulti')->name('service_codes.store-multi');
+
+
+
+
         Route::get('/category/add', 'CategoryController@create')->name('category.add');
         Route::post('/category', 'CategoryController@store')->name('category.store');
-
         Route::get('/category-active', 'CategoryController@categoryActive')->name('category-active');
         Route::get('/category-deactive', 'CategoryController@categoryDeactive')->name('category-deactive');
         Route::get('/category/{id}', 'CategoryController@edit')->name('category.edit');

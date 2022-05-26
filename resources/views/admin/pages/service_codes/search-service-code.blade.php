@@ -2,10 +2,15 @@
 @section('title')
     @lang('Service Show')
 @endsection
+@push('style-lib')
+    <link href="{{ asset('assets/admin/css/select.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('assets/admin/css/jquery-ui.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 
 
-    <div class="page-header card card-primary m-0 m-md-4 my-4 m-md-0 p-5 shadow">
+    <div class="page-header card card-primary m-0 m-md-4 my-4 m-md-0 p-5">
         <div class="row ">
             <div class="col-xl-10">
                 <form action="{{ route('admin.service-search') }}" method="get">
@@ -58,10 +63,9 @@
                 </form>
             </div>
 
-            <div class="col-xl-2">
+            <div class="col-xl-2 ">
 
                 <div class="d-flex justify-content-start justify-content-xl-end">
-
                     <button type="button" class="btn btn-sm btn-primary  mr-3" data-toggle="modal"
                             data-target="#importServiceModal">
                         <span> @lang('Import Services')</span>
@@ -79,10 +83,6 @@
                                     data-target="#all_deactive">@lang('Inactive')</button>
                         </div>
                     </div>
-
-
-
-
                 </div>
 
             </div>
@@ -91,110 +91,109 @@
     </div>
 
 
-    @foreach($categories as $key =>  $category)
+
+    @forelse($services as $key => $service)
+            <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
+                <div class="card-body">
+                <h4 class="card-title">@lang($key)</h4>
+                    <div class="table-responsive">
+                        <table class="categories-show-table table table-hover table-striped table-bordered text-right text-lg-center">
+                            <thead class="thead-primary">
+                                <tr class="text-center">
+                                    <th scope="col">
+                                        <input type="checkbox"
+                                               class="form-check-input check-all tic-check check-all-tic" id="cat-tic-{{ $key }}"
+                                               name="check-all">
+                                        <label for="cat-tic-{{ $key }}"></label>
+                                    </th>
+                                    <th scope="col" >@lang('ID')</th>
+                                    <th scope="col" class="text-left">@lang('Name')</th>
+                                    <th scope="col" >@lang('Provider')</th>
+                                    <th scope="col" >@lang('Drip-Feed')</th>
+                                    <th scope="col" >@lang('Status')</th>
+                                    <th scope="col" >@lang('Action')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($service as $row)
+                                <tr>
+                                    <td class="text-center check-box-width-50">
+                                        <input type="checkbox"
+                                               class="form-check-input row-tic tic-check row-tic-check" id="service-tic-{{ $row->id }}"
+                                               name="check" value="{{ $row->id }}" data-id="{{ $row->id }}">
+                                        <label for="service-tic-{{ $row->id }}"></label>
+                                    </td>
+                                    <td data-label="@lang('ID')">{{$row->id }}</td>
+                                    <td data-label="@lang('Name')"  class="text-right text-lg-left">
+                                        <a href="javascript:void(0)" data-container="body"  data-toggle="popover" data-placement="top" data-content="{{$row->service_title}}">
+                                            {{\Str::limit($row->service_title, 30)}}
+                                        </a>
+                                    </td>
+                                    <td data-label="@lang('Provider')" >
+                                        {{ optional($row->provider)->api_name ?? 'N/A' }}
+                                    </td>
+
+
+                                    <td data-label="@lang('Drip-Feed')">
+                                        <span class="badge badge-pill {{ $row->drip_feed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $row->drip_feed == 0 ? 'Inactive' : 'Active' }}</span>
+                                    </td>
+                                    <td data-label="@lang('Status')">
+                                        <span class="badge badge-pill {{ $row->service_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $row->service_status == 0 ? 'Inactive' : 'Active' }}</span>
+                                    </td>
+
+
+                                    <td data-label="@lang('Action')">
+                                        <a href="{{route('admin.service.edit',['id'=>$row->id])}}"  class="btn btn-primary btn-rounded btn-sm" title="@lang('Edit')">
+                                            <i class="fa fa-edit"
+                                               aria-hidden="true"></i>
+                                        </a>
+
+                                        @if($row->service_status == 0)
+                                            <a href="javascript:void(0)" class="btn btn-success btn-rounded btn-sm status-change" data-toggle="modal"
+                                               data-target="#statusMoldal"
+                                               data-route="{{route('admin.category.status.change',['id'=>$row->id])}}">
+                                                <i class="fa fa-check-circle  "
+                                                   aria-hidden="true"></i>
+                                            </a>
+                                        @else
+                                            <a href="javascript:void(0)" class="btn btn-danger btn-rounded btn-sm status-change" data-toggle="modal"
+                                               data-target="#statusMoldal"
+                                               data-route="{{route('admin.category.status.change',['id'=>$row->id])}}">
+                                                <i class="fa fa-times-circle  "
+                                                   aria-hidden="true"></i>
+                                            </a>
+
+                                        @endif
+
+
+                                        <button type="button" class="btn btn-secondary btn-rounded btn-sm"
+                                                data-toggle="modal" data-target="#description" id="details"
+                                                data-toggle="tooltip" title="Details"
+                                                data-servicetitle="{{$row->service_title}}"
+                                                data-description="{{$row->description}}"
+                                                data-rateper="{{$row->api_provider_price}}"
+                                                data-orderlimit="{{$row->min_amount .' - ' .$row->max_amount}}">
+                                            <i class="fa fa-info-circle"></i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+    @empty
+
         <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
             <div class="card-body">
-                <h4 class="card-title"> @lang($category->category_title)</h4>
+                <h4 class="card-title">@lang('No Data Found!')</h4>
 
-                <div class="table-responsive">
-
-                    <table class="categories-show-table table table-hover  table-striped table-bordered  text-right text-lg-center">
-                        <thead class="thead-primary">
-                        <tr>
-                            <th scope="col" >
-                                <input type="checkbox"
-                                       class="form-check-input check-all tic-check check-all-tic" id="cat-tic-{{ $key}}"
-                                       name="check-all">
-                                <label for="cat-tic-{{ $key }}"></label>
-                            </th>
-
-                            <th scope="col" >@lang('ID')</th>
-                            <th scope="col" class="text-left">@lang('Name')</th>
-                            <th scope="col" >@lang('Price')</th>
-                            <th scope="col" >@lang('Special Price')</th>
-                            <th scope="col" >@lang('Status')</th>
-                            <th scope="col" >@lang('Action')</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($category->service as $service)
-                            <tr>
-                                <td class="text-center check-box-width-50">
-                                    <input type="checkbox"
-                                           class="form-check-input row-tic tic-check row-tic-check" id="service-tic-{{ $service->id }}"
-                                           name="check" value="{{ $service->id }}" data-id="{{ $service->id }}">
-                                    <label for="service-tic-{{ $service->id }}"></label>
-                                </td>
-
-                                <td data-label="@lang('ID')" >@lang($service->id)</td>
-
-                                <td data-label="@lang('Name')" class="text-right text-lg-left" >
-                                    <a href="javascript:void(0)" data-container="body"  data-toggle="popover" data-placement="top" data-content="{{$service->service_title}}">
-                                        {{\Str::limit($service->service_title, 30)}}
-                                    </a>
-                                </td>
-
-                                <td data-label="@lang('Price')" >
-                                    {{ $service->price  }}
-                                </td>
-                                <td data-label="@lang('Special Price')" >
-
-                                       {{  $service->special_price ?? 'N/A'  }}
-                                </td>
-                                <td data-label="@lang('Status')" >
-                                    <span
-                                        class="badge badge-pill {{ $service->service_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->service_status == 0 ? 'غير فعال' : 'فعال' }}</span>
-                                </td>
-                                <td data-label="@lang('Action')" >
-                                       <a href="{{route('admin.service.edit',['id'=>$service->id])}}"  class="btn btn-primary btn-rounded btn-sm" title="@lang('Edit')">
-                                           <i class="fa fa-edit"
-                                              aria-hidden="true"></i>
-                                       </a>
-
-                                    @if($service->service_status == 0)
-                                        <a href="javascript:void(0)" class="btn btn-success btn-rounded btn-sm status-change" data-toggle="modal"
-                                           data-target="#statusMoldal"
-                                           data-route="{{route('admin.category.status.change',['id'=>$service->id])}}">
-                                            <i class="fa fa-check-circle  "
-                                               aria-hidden="true"></i>
-                                        </a>
-                                    @else
-                                        <a href="javascript:void(0)" class="btn btn-danger btn-rounded btn-sm status-change" data-toggle="modal"
-                                           data-target="#statusMoldal"
-                                           data-route="{{route('admin.category.status.change',['id'=>$service->id])}}">
-                                            <i class="fa fa-times-circle  "
-                                               aria-hidden="true"></i>
-                                        </a>
-
-                                    @endif
-
-                                       <button type="button" class="btn btn-secondary btn-rounded btn-sm" data-toggle="modal"
-                                               data-target="#description" id="details"
-                                               data-toggle="tooltip" title="@lang('Details')"
-                                               data-servicetitle="{{$service->service_title}}"
-                                               data-description="{{$service->description}}"
-                                               data-rateper="{{$service->api_provider_price}}"
-                                               data-orderlimit="{{$service->min_amount .' - ' .$service->max_amount}}">
-                                           <i class="fa fa-info-circle"></i>
-                                       </button>
-
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
-    @endforeach
+    @endforelse
 
-    @if($categories->total() > config('basic.paginate'))
-    <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
-        <div class="card-body">
-        {{ $categories->links() }}
-        </div>
-    </div>
-    @endif
 
     <div class="modal fade" id="statusMoldal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog " role="document">
@@ -208,21 +207,16 @@
                 <form action="" method="post" id="statusForm">
                     @csrf
                     <div class="modal-body">
-                        <h2><i class="fas fa-sync-alt position-absolute"></i></h2>
-                        <div class="body-centent pl-5">
-                            <p>@lang('Are you want to change the current status')</p>
-                        </div>
-
+                        <p>@lang('Are you really want to change the current status of the category')</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal"><span>@lang('No')</span></button>
-                        <button type="submit" class="btn btn-primary"><span>@lang('Yes')</span></button>
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
+                        <button type="submit" class="btn btn-primary"><span>  @lang('Change Status')</span> </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="importServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog " role="document">
             <div class="modal-content">
@@ -235,33 +229,23 @@
                 <form action="{{ route('admin.api.services') }}" method="post" id="getServicesForm">
                     @csrf
                     <div class="modal-body">
-                        <div class="body-centent">
-                            <div class="dropdown">
-                                <select class="form-control" name="api_provider_id">
-                                    <option selected="" disabled>@lang('Select API Provider')</option>
-                                    @foreach($apiProviders as $apiProvider)
-                                        <option value="{{ $apiProvider->id }}">{{ $apiProvider->api_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <select class="form-control" name="api_provider_id">
+                                <option selected="" disabled>@lang('Select API Provider')</option>
+                                @foreach($apiProviders as $apiProvider)
+                                    <option value="{{ $apiProvider->id }}" >@lang($apiProvider->api_name)</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
-
-                        <button type="button" class="btn btn-light" data-dismiss="modal">
-                            <span><i class="fas fa-power-off"></i> @lang('Cancel')</span>
-                        </button>
-
-                        <button type="submit" class="btn btn-primary">
-                            <span><i class="fas fa-search"></i> @lang('Get Services')</span>
-                        </button>
-
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
+                        <button type="submit" class="btn btn-primary"><span>  @lang('Get Services')</span> </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="description">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -269,6 +253,7 @@
                     <h4 class="modal-title" id="title"></h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+
                 <div class="modal-body">
                     <p id="servicedescription"></p>
                     <p><strong>{{trans('Rate Per 1k')}} :</strong> <span id="rateper"></span> {{config('basic.currency')}} </p>
@@ -277,6 +262,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">@lang('Close')</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -289,7 +275,6 @@
                     <h4 class="modal-title" id="title">@lang('Active Confirmation')</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-
                 <div class="modal-body">
                     <h2><i class="fas fa-sync-alt position-absolute"></i></h2>
                     <div class="body-centent pl-5">
@@ -312,7 +297,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-colored-header bg-primary">
-                    <h4 class="modal-title" id="title">@lang('Inactive Confirmation')</h4>
+                    <h4 class="modal-title" id="title">@lang('DeActive Confirmation')</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -332,12 +317,16 @@
             </div>
         </div>
     </div>
+
 @endsection
 
+@push('js-lib')
+    <script src="{{ asset('assets/global/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/global/js/jquery-ui.min.js') }}"></script>
+@endpush
 
 @push('js')
     <script>
-
         $(document).ready(function () {
             "use strict";
             $(document).on('click', '.check-all-tic', function () {
@@ -352,13 +341,11 @@
                 }
             });
 
-            $(document).on('click', '.status-change', function () {
-                let route = $(this).data('route');
+            $(document).on('click', '.status-change', function (){
+                let route =$(this).data('route');
                 $('#statusForm').attr('action', route);
             });
-
-            //modal show
-            $(document).on('click', '#details', function () {
+            $(document).on('click','#details',function(){
                 var title = $(this).data('servicetitle');
                 var description = $(this).data('description');
                 var rateper = $(this).data('rateper');
@@ -368,11 +355,11 @@
                 $('#rateper').text(rateper);
                 $('#orderlimit').text(orderlimit);
             });
-
-            //dropdown menu is not working
-            $(document).on('click', '.dropdown-menu', function (e) {
+            $(document).on('click','.dropdown-menu',function(e){
                 e.stopPropagation();
             });
+
+            $('.statusfield').select2({'width': '100%'});
 
 
             //multiple active
@@ -382,6 +369,7 @@
                 $(".row-tic:checked").each(function () {
                     allVals.push($(this).attr('data-id'));
                 });
+
                 if (allVals.length > 0) {
                     var strIds = allVals.join(",");
                     $.ajax({
@@ -451,21 +439,8 @@
                 }
             });
 
-
-
-            $('#category').select2({
-                selectOnClose: true
-            });
-
-            $('#provider').select2({
-                selectOnClose: true
-            });
-
-            $('select[name=status]').select2({
-                selectOnClose: true
-            });
-
         });
     </script>
 @endpush
+
 

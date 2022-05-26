@@ -16,6 +16,10 @@ class Service extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function service_code()
+    {
+        return $this->hasMany(ServiceCode::class, 'service_id', 'id');
+    }
     public function provider()
     {
         return $this->belongsTo(ApiProvider::class, 'api_provider_id', 'id');
