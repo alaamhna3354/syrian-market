@@ -41,7 +41,7 @@
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
-                <div class="item it" data-title=" {{$service->service_title }}">
+                <div class="item it {{$service->is_available == 0 ? 'disable' : ''}}" data-title=" {{$service->service_title }}">
                     <div class="name" data-name="{{$service->service_title }}">
                         {{$service->service_title }}
                         <div class="icon">
@@ -87,14 +87,14 @@
                 @if($category->type == "GAME")
                     <div class=" col-12 col-sm-5">
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="number" name="player_number" id="player_number">
+                        <input type="number" name="link" id="player_number">
                     </div>
                     <div class="col-10 col-sm-5">
                         <label for="player_name">@lang('Player name')</label>
-                        <input type="text" name="link" id="player_name">
+                        <input type="text" name="player_name" id="player_name">
                     </div>
                     <div class="col-2 col-sm-2 d-flex align-items-center refresh">
-                        <i class="fas fa-sync-alt"></i>
+                        <i class="fas fa-sync-alt" onclick="getPlayerName()"></i>
                     </div>
 
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
@@ -103,6 +103,8 @@
                         <input type="text" name="special_field"
                                placeholder="@lang('add') {{$category->special_field}}">
                     </div>
+                @else
+                    <input type="hidden" name="link" value="">
                 @endif
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
@@ -127,6 +129,10 @@
 @endsection
 @push('js')
     <script>
+        function getPlayerName(){
+            var x = document.getElementById()
+            console.log($('#player_number').value)
+        }
         "use strict";
         // fun 1
         $(".myInput").on("keyup", function() {

@@ -13,8 +13,7 @@
             <!-- Notification -->
             <div class="account" style="margin-inline-start: auto;">
             <a href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>
-           
-            <ul class="lang">
+                <ul class="lang">
             <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent;">

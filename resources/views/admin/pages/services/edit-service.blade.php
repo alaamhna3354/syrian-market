@@ -84,14 +84,14 @@
                             @endif
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Status')</label>
                                     <div class="custom-switch-btn">
                                         <input type='hidden' value='1' name='service_status'>
                                         <input type="checkbox" name="service_status" class="custom-switch-checkbox"
                                                id="service_status"
-                                               value="0" {{ $service->status == 0 ? 'checked': '' }} >
+                                               value="0" {{ $service->service_status == 0 ? 'checked': '' }} >
                                         <label class="custom-switch-checkbox-label" for="service_status">
                                             <span class="custom-switch-checkbox-inner"></span>
                                             <span class="custom-switch-checkbox-switch"></span>
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Drip feed')</label>
                                     <div class="custom-switch-btn">
@@ -107,6 +107,20 @@
                                         <input type="checkbox" name="drip_feed" class="custom-switch-checkbox"
                                                id="drip_feed" value="0" {{ $service->drip_feed == 0 ? 'checked': '' }} >
                                         <label class="custom-switch-checkbox-label" for="drip_feed">
+                                            <span class="custom-switch-checkbox-inner"></span>
+                                            <span class="custom-switch-checkbox-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group ">
+                                    <label class="d-block">@lang('Available')</label>
+                                    <div class="custom-switch-btn">
+                                        <input type='hidden' value='1' name='is_available'>
+                                        <input type="checkbox" name="is_available" class="custom-switch-checkbox"
+                                               id="is_available" value="0" {{ $service->is_available == 0 ? 'checked': '' }} >
+                                        <label class="custom-switch-checkbox-label" for="is_available">
                                             <span class="custom-switch-checkbox-inner"></span>
                                             <span class="custom-switch-checkbox-switch"></span>
                                         </label>

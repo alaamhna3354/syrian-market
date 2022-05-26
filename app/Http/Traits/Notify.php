@@ -18,7 +18,7 @@ trait Notify
     public function sendMailSms($user, $templateKey, $params = [], $subject = null, $requestMessage = null)
     {
         $this->mail($user, $templateKey, $params, $subject, $requestMessage);
-        $this->sms($user, $templateKey, $params, $requestMessage = null);
+//        $this->sms($user, $templateKey, $params, $requestMessage = null);
     }
 
     public function mail($user, $templateKey = null, $params = [], $subject = null, $requestMessage = null)
