@@ -455,6 +455,11 @@
 .services input[type=number] {
     -moz-appearance: textfield;
   }
+.services input::-webkit-outer-spin-button,
+.services input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .services h3{
     display: flex;
     justify-content: space-between;
