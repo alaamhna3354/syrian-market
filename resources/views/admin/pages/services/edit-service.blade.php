@@ -58,7 +58,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label>@lang('Rate per 1000') </label>
+                            <label>@lang('Price') </label>
                             <input type="text" class="form-control square" name="price" placeholder="50.25"
                                    value="{{old('price',$service->price)}}">
                             @if($errors->has('price'))
@@ -66,7 +66,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label>@lang('Special Rate per 1000')</label>
+                            <label>@lang('Special Price')</label>
                             <input type="text" class="form-control square" name="special_price" placeholder="0.00"
                                    value="{{old('special_price',$service->special_price)}}">
                             @if($errors->has('special_price'))

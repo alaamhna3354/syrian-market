@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <label>@lang('Select Category')</label>
                             <select class="form-control" id="category_id" name="category_id">
-                                <option disabled value="" selected hidden>@lang('Select category')</option>
+                                <option disabled value="" selected hidden>@lang('Select Category')</option>
                                 @foreach($categories as $categorie)
                                     <option value="{{ $categorie->id  }}">@lang($categorie->category_title)</option>
                                 @endforeach
@@ -49,7 +49,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label>@lang('Rate per 1000')</label>
+                            <label>@lang('Price')</label>
                             <input type="text" class="form-control square" name="price" placeholder="0.00"
                                    value="{{ old('price') }}">
                             @if($errors->has('price'))
@@ -57,7 +57,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label>@lang('Special Rate per 1000')</label>
+                            <label>@lang('Special Price')</label>
                             <input type="text" class="form-control square" name="special_price" placeholder="0.00"
                                    value="{{ old('special_price') }}">
                             @if($errors->has('special_price'))
@@ -142,14 +142,14 @@
                             <div class="form-group">
                                 <label>@lang('API Service ID')</label>
                                 <input type="text" class="form-control square" name="api_service_id"
-                                       value="{{ old('api_service_id') }}" placeholder="Api Service ID">
+                                       value="{{ old('api_service_id') }}" placeholder="@lang('API Service ID')">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label " for="fieldone">@lang('Description')</label>
-                    <textarea class="form-control" rows="4" placeholder="Description " name="description"></textarea>
+                    <textarea class="form-control" rows="4" placeholder="@lang('Description') " name="description"></textarea>
 
                     @if($errors->has('description'))
                         <div class="error text-danger">@lang($errors->first('description')) </div>

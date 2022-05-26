@@ -110,8 +110,8 @@
 
                             <th scope="col" >@lang('ID')</th>
                             <th scope="col" class="text-left">@lang('Name')</th>
-                            <th scope="col" >@lang('Provider')</th>
-                            <th scope="col" >@lang('Drip-Feed')</th>
+                            <th scope="col" >@lang('Price')</th>
+                            <th scope="col" >@lang('Special Price')</th>
                             <th scope="col" >@lang('Status')</th>
                             <th scope="col" >@lang('Action')</th>
                         </tr>
@@ -134,16 +134,16 @@
                                     </a>
                                 </td>
 
-                                <td data-label="@lang('Provider')" >
-                                    {{ optional($service->provider)->api_name ?? 'N/A' }}
+                                <td data-label="@lang('Price')" >
+                                    {{ $service->price  }}
                                 </td>
-                                <td data-label="@lang('Drip-Feed')" >
-                                    <span
-                                        class="badge badge-pill {{ $service->drip_feed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->drip_feed == 0 ? 'Inactive' : 'Active' }}</span>
+                                <td data-label="@lang('Special Price')" >
+
+                                       {{  $service->special_price ?? 'N/A'  }}
                                 </td>
                                 <td data-label="@lang('Status')" >
                                     <span
-                                        class="badge badge-pill {{ $service->service_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->service_status == 0 ? 'Inactive' : 'Active' }}</span>
+                                        class="badge badge-pill {{ $service->service_status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->service_status == 0 ? 'غير فعال' : 'فعال' }}</span>
                                 </td>
                                 <td data-label="@lang('Action')" >
                                        <a href="{{route('admin.service.edit',['id'=>$service->id])}}"  class="btn btn-primary btn-rounded btn-sm" title="@lang('Edit')">
