@@ -80,8 +80,8 @@ class ServiceController extends Controller
         return view('user.pages.services.search-service', compact('services', 'categories'));
     }
 
-    public function getPlayerName($req)
+    public function getPlayerName($serviceid,$playerid)
     {
-
+        $service=Service::select('api')->where('id',$serviceid)->get();
     }
 }
