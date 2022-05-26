@@ -33,8 +33,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
     Route::post('/sms-verify', 'VerificationController@smsVerify')->name('smsVerify');
     Route::middleware('userCheck')->group(function () {
 
-        Route::get('/dashboard', 'HomeController@index')->name('home');
-
+        Route::get('/dashboard', 'User\ServiceController@index')->name('home');
+//        Route::get('/dashboard', 'HomeController@index')->name('home');
         Route::get('add-fund', 'HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');

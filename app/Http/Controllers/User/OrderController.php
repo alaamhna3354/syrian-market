@@ -118,6 +118,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $req = Purify::clean($request->all());
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
