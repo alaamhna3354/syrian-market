@@ -371,6 +371,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('content-show/{content}', 'Admin\ContentController@show')->name('content.show');
         Route::put('content-update/{content}/{language?}', 'Admin\ContentController@update')->name('content.update');
         Route::delete('contents/{id}', 'Admin\ContentController@contentDelete')->name('content.delete');
+
+
+        // Balance Coupon
+        Route::get('balance-coupon', 'BalanceCouponController@index')->name('balance-coupon');
+        Route::get('balance-coupon/create', 'BalanceCouponController@create')->name('balance-coupon.create');
+        Route::post('balance-coupon/create', 'BalanceCouponController@store')->name('balance-coupon.store');
+        Route::get('balance-coupon/edit/{id}', 'BalanceCouponController@edit')->name('balance-coupon.edit');
+        Route::put('balance-coupon/edit/{id}', 'BalanceCouponController@update')->name('balance-coupon.update');
+        Route::delete('balance-coupon/delete/{id}', 'BalanceCouponController@delete')->name('balance-coupon.delete');
+
     });
 
 });
