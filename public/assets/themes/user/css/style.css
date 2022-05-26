@@ -130,7 +130,8 @@
 }
 .headerNav .account a{
     padding: 5px 10px;
-    width: 70px;
+    width: auto;
+    min-width: 70px;
     text-align: center;
     background-color: #fe5917;
     color: #fff;
@@ -462,6 +463,11 @@
 .services input[type=number] {
     -moz-appearance: textfield;
   }
+.services input::-webkit-outer-spin-button,
+.services input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .services h3{
     display: flex;
     justify-content: space-between;
@@ -555,7 +561,7 @@
 }
 .services form .refresh i{
     font-size: 25px;
-    margin-top: 30px;
+    margin-top: 25px;
     color: #fd5716;
     cursor: pointer;
     transition: 7s;
@@ -578,8 +584,30 @@
 .services form .chosen-item span img{
     width: 20px;
 }
+.services .vald-player-number{
+    font-size: 15px;
+    color: #dc3545 ;
+    font-weight: bold;
+    margin: 5px;
+    position: absolute;
+    display: none;
+}
+@media (max-width:568px) {
+    .services .vald-player-number{
+        position: relative;
+    }   
+}
+.services .vald-player-number.active{
+    display: block;
+}
 .services form .add .btn{
     width: 100%;
+}
+.services form .add .btn.disble{
+    cursor: no-drop;
+    background-image: none;
+    background-color: #ddd;
+    color: #7c8798;
 }
 #service-table thead{
     color: #fff;

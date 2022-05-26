@@ -3132,6 +3132,15 @@ ul.minicart .cart-price .new {
     position: relative;
     /* background: linear-gradient(to bottom, #7b7b7b, #000); */
     background-image: url(../../imgs/Gaming2.jpg);
+    min-height: 500px;
+}
+@media (max-width:568px) {
+    .login-signup{
+        min-height: 400px;
+    }
+}
+.login-signup .custom-control-label{
+    color: #fff;
 }
 .login-signup .form-group input{
     background-color: transparent;
