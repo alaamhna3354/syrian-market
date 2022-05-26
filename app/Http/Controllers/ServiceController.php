@@ -102,6 +102,7 @@ class ServiceController extends Controller
         $service->price = $req['price'];
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
+        $service->is_available = $req['is_available'];
         $service->api_provider_id = ($req['api_provider_id'] == 0) ? null : $req['api_provider_id'];
         $service->api_service_id = (empty($req['api_service_id'])) ? 0 : $req['api_service_id'];
         $service->drip_feed = $req['drip_feed'];
@@ -192,6 +193,8 @@ class ServiceController extends Controller
         $service->price = $req['price'];
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
+
+        $service->is_available = $req['is_available'];
         $service->api_provider_id = $req['api_provider_id'];
         $service->api_service_id = $req['api_service_id'];
         $service->drip_feed = $req['drip_feed'];
@@ -213,6 +216,8 @@ class ServiceController extends Controller
         else:
             $success = "Successfully Updated";
         endif;
+
+//        dd($service);
         $service->save();
         return back()->with('success', $success);
     }

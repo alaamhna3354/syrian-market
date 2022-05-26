@@ -5,7 +5,7 @@
 <div class="fixedsidebar ">
     <!--<div class="fs-header d-flex align-items-center justify-content-between">
          <h5 class="text-white">@lang("What's new on $basic->site_title")</h5>
-        <div class="btn-close close-sidebar">&times;</div> 
+        <div class="btn-close close-sidebar">&times;</div>
     </div>-->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
@@ -48,6 +48,11 @@
                     <li class="nav-item ">
                         <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                            href="{{ route('user.transaction') }}">@lang('Transactions') </a>
+                    </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
+                           href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
                     </li>
 
 

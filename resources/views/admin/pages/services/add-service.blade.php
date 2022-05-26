@@ -75,7 +75,7 @@
                             @endif
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Status')</label>
                                     <div class="custom-switch-btn">
@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Drip feed')</label>
                                     <div class="custom-switch-btn">
@@ -97,6 +97,20 @@
                                         <input type="checkbox" name="drip_feed" class="custom-switch-checkbox"
                                                id="drip_feed" value="0" checked>
                                         <label class="custom-switch-checkbox-label" for="drip_feed">
+                                            <span class="custom-switch-checkbox-inner"></span>
+                                            <span class="custom-switch-checkbox-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    <label class="d-block">@lang('Available')</label>
+                                    <div class="custom-switch-btn">
+                                        <input type='hidden' value='1' name='is_available'>
+                                        <input type="checkbox" name="is_available" class="custom-switch-checkbox"
+                                               id="is_available" value="0">
+                                        <label class="custom-switch-checkbox-label" for="is_available">
                                             <span class="custom-switch-checkbox-inner"></span>
                                             <span class="custom-switch-checkbox-switch"></span>
                                         </label>

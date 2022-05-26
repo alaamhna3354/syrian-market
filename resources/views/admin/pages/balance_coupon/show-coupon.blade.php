@@ -23,6 +23,7 @@
                         <th scope="col">@lang('CODE')</th>
                         <th scope="col">@lang('Balance')</th>
                         <th scope="col">@lang('Status')</th>
+                        <th scope="col">@lang('Sold')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -39,7 +40,7 @@
 
                                 <div class="chat-img d-inline-block">
 
-                                    <img src="{{ getFile(config('location.category.path').$coupon->qr_code) }}"
+                                    <img src="{{ getFile(config('location.qr.path').$coupon->qr_code) }}"
                                          alt="user" class="rounded-circle" width="45">
                                 </div>
                             </td>
@@ -53,6 +54,10 @@
                                 <span
                                     class="badge badge-pill {{ $coupon->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $coupon->status == 0 ? 'Inactive' : 'Active' }}</span>
                             </td>
+                            <td data-label="@lang('Sold')">
+                                <span
+                                    class="badge badge-pill {{ $coupon->is_sold == 1 ? 'badge-danger' : 'badge-success' }}">{{ $coupon->is_sold == 1 ? 'Sold' : 'Not Sold' }}</span>
+                            </td>
                             <td data-label="@lang('Action')">
 
 
@@ -65,7 +70,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a  class="dropdown-item"
-                                            href="{{route('admin.category.edit',['id'=>$coupon->id])}}">
+                                            href="{{route('admin.balance-coupon.edit',['id'=>$coupon->id])}}">
                                             <i class="fa fa-edit text-warning pr-2"
                                                aria-hidden="true"></i> @lang('Edit')</a>
 

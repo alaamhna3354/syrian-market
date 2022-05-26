@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\Notify;
 use App\Http\Traits\Upload;
+use App\Models\BalanceCoupon;
 use App\Models\Category;
 use App\Models\Fund;
 use App\Models\Gateway;
@@ -64,6 +65,37 @@ class HomeController extends Controller
     {
         $transactions = $this->user->transaction()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
         return view('user.pages.transaction.index', compact('transactions'));
+    }
+
+    public function useBalanceCoupon()
+    {
+        $transactions = $this->user->transaction()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view('user.pages.use_balance_coupon', compact('transactions'));
+    }
+
+    public function addBalanceCoupon(Request $request)
+    {
+
+        $this->validate($request, [
+            'code' => 'required'
+        ]);
+        $user = Auth::user();
+//        dd($user);
+        $coupon = BalanceCoupon::where('code',$request['code'])->first();
+//        dd($coupon);
+        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+
+            $user->balance += $coupon->balance;
+            if ($user->save()){
+                $coupon->is_sold = 1;
+                $coupon->save();
+                return back()->with('success', 'Balance Is Updated Successfully.');
+            }else{
+                return back()->with('error', 'Please Try Again There Are An Error');
+            }
+        }else{
+            return back()->with('error', 'Coupon Is Not Found.');
+        }
     }
 
     public function transactionSearch(Request $request)
