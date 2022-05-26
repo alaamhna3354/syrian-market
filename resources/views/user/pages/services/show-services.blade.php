@@ -42,8 +42,8 @@
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
                 <div class="item it {{$service->is_available == 0 ? 'disable' : ''}}" data-title=" {{$service->service_title }}">
-                    <div class="name" data-name="{{$service->service_title }}">
-                        {{$service->service_title }}
+                    <div class="name" data-id="{{$service->id }}" data-name="{{$service->service_title }}">
+                        {{$service->service_title }} 
                         <div class="icon">
                             <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                         </div>
@@ -76,25 +76,28 @@
         <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-6 mb-2">
                     <label for="">@lang('quantity')</label>
                     <input type="number" name="quantity" class="quantity">
                 </div>
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-6 mb-2">
                     <label for="">@lang('Total')</label>
                     <input type="text" name="total" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
-                    <div class=" col-12 col-sm-5">
+                    <div class=" col-12 col-sm-5 mb-2" >
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="number" name="link" id="player_number">
+                        <input type="number" name="link" id="player_number" placeholder="">
+                        <div class="vald-player-number"></div>
+                        <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
+                        
                     </div>
-                    <div class="col-10 col-sm-5">
+                    <div class="col-10 col-sm-5 mb-2">
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    <div class="col-2 col-sm-2 d-flex align-items-center refresh">
-                        <i class="fas fa-sync-alt" onclick="getPlayerName()"></i>
+                    <div class="col-2 col-sm-2 d-flex align-items-center refresh mb-2">
+                        <i class="fas fa-sync-alt get-name"></i>
                     </div>
 
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
@@ -117,10 +120,10 @@
                         <span class="price-val"></span>
                     </div>
                 </div>
-                <input type="text" name="service" value="{{$category->id}}" hidden>
-                <input type="text" name="category" value="{{$category->id}}" hidden>
+                <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
+                <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
-                    <button type="submit" class="btn">@lang('Add')</button>
+                    <button type="" id="btn-add" class="btn disble">@lang('Add')</button>
                 </div>
 
             </div>
@@ -129,19 +132,37 @@
 @endsection
 @push('js')
     <script>
-        function getPlayerName(){
-            var x = document.getElementById()
-            console.log($('#player_number').value)
-        }
         "use strict";
+       
         // fun 1
+        $(".get-name").on("click", function() {
+            var category_id = $('.inp-hid-catg').val();
+            var player_number = $('#player_number').val();
+            var result ;
+            if(player_number == ""){
+            $('.vald-player-number').addClass('active');
+            }
+           else{
+            $('#player_name').val(result);
+           }
+        });
+        // fun 2
+        $("#player_number").on("keyup", function() {
+                    if(player_number != ""){
+                        $('.vald-player-number').removeClass('active');
+                    }
+                    else{
+                        $('.vald-player-number').addClass('active');
+                    }
+                });
+        // fun 3
         $(".myInput").on("keyup", function() {
             var value = this.value.toLowerCase().trim();
             $(".it").show().filter(function() {
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
-        // fun 2
+        // fun 4
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
                 event.preventDefault();
@@ -152,14 +173,22 @@
                 $('#cards-services .item').removeClass('un-active');
                 $(".total").val(`0`);
                 $('.quantity').val('0');
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("type","");
             }
             else{
                 $('#cards-services .item').removeClass('active');
+                $('#btn-add').removeClass('disble');
+                $('#btn-add').attr("type","submit");
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
                 var name =  $(this).children(`.name`).attr("data-name");
                 var price =  $(this).children(`.price`).attr("data-price").replace('$','');
+                // get & set id 
+                var id =  $(this).children(`.name`).attr("data-id");
+                $('.inp-hid-serv').val(id);
+                
                 $(".name-val").html(name);
                 $(".price-val").html(`${price}$`);
                 $(".total").val(`${price}$`);
