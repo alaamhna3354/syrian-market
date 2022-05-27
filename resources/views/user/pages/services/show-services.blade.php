@@ -118,6 +118,11 @@
                         <span class="price-val"></span>
                     </div>
                 </div>
+                <div class="col-12 mt-4 text-center ">
+                    <label for="special_field">@lang('Coupon')</label>
+                    <input type="text" name="coupon"
+                           placeholder="@lang('add Coupon') {{$category->special_field}}">
+                </div>
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
                 <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
