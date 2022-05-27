@@ -137,14 +137,25 @@
         $(".get-name").on("click", function() {
             var category_id = $('.inp-hid-catg').val();
             var player_number = $('#player_number').val();
-            var result ;
             if(player_number == ""){
-            $('.vald-player-number').addClass('active');
+                $('.vald-player-number').addClass('active');
             }
-           else{
-            $('#player_name').val(result);
-           }
+            else{
+                $.ajax({
+                    url:'/user/player/'+category_id+'/'+player_number,
+                    type:"GET",
+                    success:function(response){
+                        console.log(response)
+                    },
+                })
+                $('#player_name').val(result);
+            }
+
+
+
+
         });
+
         // fun 2
         $("#player_number").on("keyup", function() {
                     if(player_number != ""){
