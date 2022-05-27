@@ -126,7 +126,7 @@
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
                 <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
-                    <button type="" id="btn-add" class="btn disble">@lang('Add')</button>
+                    <button type="" id="btn-add" class="btn disble" disable>@lang('Add')</button>
                 </div>
 
             </div>
@@ -136,7 +136,6 @@
 @push('js')
     <script>
         "use strict";
-
         // fun 1
         $(".get-name").on("click", function() {
             var category_id = $('.inp-hid-catg').val();
