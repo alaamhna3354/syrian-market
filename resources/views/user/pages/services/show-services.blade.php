@@ -5,8 +5,6 @@
 
 @section('styles')
     <style>
-
-
     </style>
 @endsection
 
@@ -147,26 +145,20 @@
                     type:"GET",
                     success:function(response){
                         console.log(response)
-                        $('#player_name').val(response);
                     },
                 })
-
+                $('#player_name').val(result);
             }
-
-
-
-
         });
-
         // fun 2
         $("#player_number").on("keyup", function() {
-                    if(player_number != ""){
-                        $('.vald-player-number').removeClass('active');
-                    }
-                    else{
-                        $('.vald-player-number').addClass('active');
-                    }
-                });
+            if(player_number != ""){
+                $('.vald-player-number').removeClass('active');
+            }
+            else{
+                $('.vald-player-number').addClass('active');
+            }
+        });
         // fun 3
         $(".myInput").on("keyup", function() {
             var value = this.value.toLowerCase().trim();
@@ -213,10 +205,8 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
             }
-
             event.preventDefault();
         });
-
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
         {{--var title = $(this).data('servicetitle');--}}
@@ -244,4 +234,3 @@
         // }
     </script>
 @endpush
-
