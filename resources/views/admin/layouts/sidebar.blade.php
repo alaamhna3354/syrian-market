@@ -94,6 +94,25 @@
                 <li class="list-divider"></li>
 
 
+                {{--Manage Coupon--}}
+{{--                <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Coupon')</span></li>--}}
+{{--                <li class="sidebar-item">--}}
+{{--                    <a class="sidebar-link sidebar-link" href="{{route('admin.coupon.create')}}" aria-expanded="false">--}}
+{{--                        <i data-feather="plus-circle" class="feather-icon"></i>--}}
+{{--                        <span class="hide-menu">@lang('Add Coupon')</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+
+{{--                <li class="sidebar-item">--}}
+{{--                    <a class="sidebar-link sidebar-link" href="{{route('admin.coupon')}}"--}}
+{{--                       aria-expanded="false">--}}
+{{--                        <i data-feather="list" class="feather-icon"></i>--}}
+{{--                        <span class="hide-menu">@lang('Show Coupon')</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--                <li class="list-divider"></li>--}}
+
+
                 {{--Manage API Providers--}}
                 <li class="nav-small-cap"><span class="hide-menu">@lang('Api Providers')</span></li>
                 <li class="sidebar-item">

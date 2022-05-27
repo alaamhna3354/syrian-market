@@ -5,8 +5,6 @@
 
 @section('styles')
     <style>
-
-
     </style>
 @endsection
 
@@ -43,7 +41,7 @@
             @foreach($services as $service)
                 <div class="item it {{$service->is_available == 0 ? 'disable' : ''}}" data-title=" {{$service->service_title }}">
                     <div class="name" data-id="{{$service->id }}" data-name="{{$service->service_title }}">
-                        {{$service->service_title }} 
+                        {{$service->service_title }}
                         <div class="icon">
                             <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                         </div>
@@ -90,7 +88,7 @@
                         <input type="number" name="link" id="player_number" placeholder="">
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
-                        
+
                     </div>
                     <div class="col-10 col-sm-5 mb-2">
                         <label for="player_name">@lang('Player name')</label>
@@ -120,6 +118,11 @@
                         <span class="price-val"></span>
                     </div>
                 </div>
+{{--                <div class="col-12 mt-4 text-center ">--}}
+{{--                    <label for="special_field">@lang('Coupon')</label>--}}
+{{--                    <input type="text" name="coupon"--}}
+{{--                           placeholder="@lang('add Coupon')">--}}
+{{--                </div>--}}
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
                 <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
@@ -150,21 +153,16 @@
                     },
                 })
             }
-
-
-
-
         });
-
         // fun 2
         $("#player_number").on("keyup", function() {
-                    if(player_number != ""){
-                        $('.vald-player-number').removeClass('active');
-                    }
-                    else{
-                        $('.vald-player-number').addClass('active');
-                    }
-                });
+            if(player_number != ""){
+                $('.vald-player-number').removeClass('active');
+            }
+            else{
+                $('.vald-player-number').addClass('active');
+            }
+        });
         // fun 3
         $(".myInput").on("keyup", function() {
             var value = this.value.toLowerCase().trim();
@@ -195,10 +193,10 @@
                 $('.chosen-item').addClass('active');
                 var name =  $(this).children(`.name`).attr("data-name");
                 var price =  $(this).children(`.price`).attr("data-price").replace('$','');
-                // get & set id 
+                // get & set id
                 var id =  $(this).children(`.name`).attr("data-id");
                 $('.inp-hid-serv').val(id);
-                
+
                 $(".name-val").html(name);
                 $(".price-val").html(`${price}$`);
                 $(".total").val(`${price}$`);
@@ -211,10 +209,8 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
             }
-
             event.preventDefault();
         });
-
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
         {{--var title = $(this).data('servicetitle');--}}
@@ -242,4 +238,3 @@
         // }
     </script>
 @endpush
-

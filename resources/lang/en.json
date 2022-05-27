@@ -181,5 +181,16 @@
     "Update Coupon" : "Update Coupon",
     "Use Balance Coupon" : "Use Balance Coupon",
     "Sold" : "Sold",
-    "Available" : "Available"
+    "Available" : "Available",
+    "Manage Coupon" : "Manage Coupon",
+    "Show Coupon": "Show Coupon",
+    "Sale" : "Sale",
+    "From" : "From",
+    "To" : "To",
+    "Number Of Beneficiaries" : "Number Of Beneficiaries",
+    "Percentage" : "Percentage",
+    "Coupon" : "Coupon",
+    "Number Of Use" : "Number Of Use",
+    "Coupon Show" : "Coupon Show",
+    "add Coupon" : "Add Coupon"
 }
