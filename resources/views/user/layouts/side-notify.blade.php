@@ -13,32 +13,39 @@
                 <ul class="navbar-nav ml-auto  align-items-end align-items-sm-center">
                     <li class="nav-item">
                         <a class="nav-link {{ Request::routeIs('user.home')  ? 'active' : '' }}"
-                           href="{{ route('user.home') }}">@lang('Dashboard') </a>
+                           href="{{ route('user.home') }}">@lang('Home') </a>
                     </li>
 
-                    <li class="nav-item dropdown {{ Request::routeIs('user.order*') ? 'active' : '' }}">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @lang('Order')
-                            <i data-feather="chevron-down" class="svg-icon"></i>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item {{menuActive('user.order.create')}}" href="{{ route('user.order.create') }}">@lang('New Order')</a>
+                    <li class="nav-item  ">
+                        <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
+                           href="{{route('user.order.index')}}">@lang('Orders')</a>
+                    </li>
+                    {{--<li class="nav-item dropdown {{ Request::routeIs('user.order*') ? 'active' : '' }}">--}}
+                        {{--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"--}}
+                           {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                            {{--@lang('Order')--}}
+                            {{--<i data-feather="chevron-down" class="svg-icon"></i>--}}
+                        {{--</a>--}}
+                        {{--<div class="dropdown-menu" aria-labelledby="navbarDropdown">--}}
+                            {{--<a class="dropdown-item {{menuActive('user.order.create')}}" href="{{ route('user.order.create') }}">@lang('New Order')</a>--}}
                             {{--<a class="dropdown-item {{menuActive('user.order.mass')}}" href="{{ route('user.order.mass') }}">@lang('Mass Order')</a>--}}
-                            <a class="dropdown-item {{menuActive('user.order.index')}}" href="{{ route('user.order.index') }}">@lang('All Order')</a>
-                        </div>
-                    </li>
+                            {{--<a class="dropdown-item {{menuActive('user.order.index')}}" href="{{ route('user.order.index') }}">@lang('All Order')</a>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::routeIs('user.service*')  ? 'active' : '' }}"
-                           href="{{ route('user.service.show') }}">@lang('Services') </a>
-                    </li>
+                    {{--<li class="nav-item">--}}
+                        {{--<a class="nav-link {{ Request::routeIs('user.service*')  ? 'active' : '' }}"--}}
+                           {{--href="{{ route('user.service.show') }}">@lang('Services') </a>--}}
+                    {{--</li>--}}
                     <li class="nav-item  ">
                         <a class="nav-link {{ Request::routeIs('user.addFund*')  ? 'active' : '' }}"
                            href="{{route('user.addFund')}}">@lang('Add Fund')</a>
                     </li>
 
-
+                    <li class="nav-item ">
+                        <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
+                           href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
+                    </li>
 
                     <li class="nav-item ">
                         <a class="nav-link {{ Request::routeIs('user.fund-history') ? 'active' : '' }}"
@@ -50,10 +57,10 @@
                            href="{{ route('user.transaction') }}">@lang('Transactions') </a>
                     </li>
 
-                    <li class="nav-item ">
-                        <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
-                           href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
-                    </li>
+                    {{--<li class="nav-item ">--}}
+                        {{--<a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"--}}
+                           {{--href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>--}}
+                    {{--</li>--}}
 
 
                     <li class="nav-item dropdown {{ (Request::routeIs('user.profile') || Request::routeIs('user.api.docs') || Request::routeIs('user.ticket*')) ? 'active' : '' }}">

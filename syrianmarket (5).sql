@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2022 at 01:48 PM
+-- Generation Time: May 27, 2022 at 07:55 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -430,6 +430,33 @@ INSERT INTO `content_media` (`id`, `content_id`, `description`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sale` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `number_of_beneficiaries` int(11) DEFAULT NULL,
+  `number_of_use` int(11) DEFAULT NULL,
+  `is_percent` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `from` datetime DEFAULT NULL,
+  `to` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`id`, `code`, `sale`, `number_of_beneficiaries`, `number_of_use`, `is_percent`, `status`, `from`, `to`, `created_at`, `updated_at`) VALUES
+(1, '8ec97d53', '333', 33, 0, 0, 1, '2022-05-27 17:14:00', '2022-05-31 16:52:00', '2022-05-27 10:57:10', '2022-05-27 11:14:49');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `email_templates`
 --
 
@@ -674,7 +701,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (36, '2022_05_25_124155_create_balance_coupons_table', 8),
 (37, '2022_05_25_181430_update_coupon_balance_table', 9),
 (38, '2022_05_26_091122_update_service_table', 10),
-(39, '2022_05_26_113831_update_orders_table', 11);
+(39, '2022_05_26_113831_update_orders_table', 11),
+(40, '2022_05_26_212446_create_coupons_table', 12);
 
 -- --------------------------------------------------------
 
@@ -790,7 +818,10 @@ INSERT INTO `orders` (`id`, `user_id`, `category_id`, `service_id`, `api_order_i
 (24, 2, 4, 4, NULL, '', 500, 20.00, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-26 11:29:29', '2022-05-26 08:29:29', '2022-05-26 08:29:29', NULL),
 (25, 2, 4, 4, NULL, '', 500, 20.00, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-26 11:29:58', '2022-05-26 08:29:58', '2022-05-26 08:29:58', NULL),
 (32, 2, 4, 4, NULL, '', 500, 20.00, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-26 11:45:13', '2022-05-26 08:45:13', '2022-05-26 08:45:13', 'Service code is : wgewegwegw, and id is 3'),
-(33, 2, 2, 2, NULL, '878787', 2, 1.40, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-26 11:45:46', '2022-05-26 08:45:46', '2022-05-26 08:45:46', NULL);
+(33, 2, 2, 2, NULL, '878787', 2, 1.40, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-26 11:45:46', '2022-05-26 08:45:46', '2022-05-26 08:45:46', NULL),
+(34, 1, 2, 1, NULL, '', 1, 0.04, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-27 17:25:03', '2022-05-27 14:25:03', '2022-05-27 14:25:03', NULL),
+(35, 1, 2, 1, NULL, '', 1, 0.04, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-27 17:25:30', '2022-05-27 14:25:30', '2022-05-27 14:25:30', NULL),
+(36, 1, 2, 1, NULL, '46546', 1, 0.04, 'processing', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-05-27 17:54:50', '2022-05-27 14:54:50', '2022-05-27 14:54:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -1140,7 +1171,10 @@ INSERT INTO `transactions` (`id`, `user_id`, `trx_type`, `amount`, `charge`, `re
 (35, 2, '-', '20.00', '0.00', 'Place order', 'T3BEMDX78V3F', '2022-05-26 08:43:54', '2022-05-26 08:43:54'),
 (36, 2, '-', '20.00', '0.00', 'Place order', 'BBFPOYTAOG94', '2022-05-26 08:44:02', '2022-05-26 08:44:02'),
 (37, 2, '-', '20.00', '0.00', 'Place order', 'SZJKPTZ476JD', '2022-05-26 08:45:13', '2022-05-26 08:45:13'),
-(38, 2, '-', '1.40', '0.00', 'Place order', 'ATRQZQAJPHK5', '2022-05-26 08:45:46', '2022-05-26 08:45:46');
+(38, 2, '-', '1.40', '0.00', 'Place order', 'ATRQZQAJPHK5', '2022-05-26 08:45:46', '2022-05-26 08:45:46'),
+(39, 1, '-', '0.04', '0.00', 'Place order', 'R61XUHY7F16Y', '2022-05-27 14:25:03', '2022-05-27 14:25:03'),
+(40, 1, '-', '0.04', '0.00', 'Place order', '7RBTDOHRUW3K', '2022-05-27 14:25:30', '2022-05-27 14:25:30'),
+(41, 1, '-', '0.04', '0.00', 'Place order', '8J7RD2PQS36W', '2022-05-27 14:54:50', '2022-05-27 14:54:50');
 
 -- --------------------------------------------------------
 
@@ -1180,7 +1214,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `language_id`, `email`, `phone_code`, `phone`, `balance`, `api_token`, `image`, `address`, `status`, `email_verification`, `sms_verification`, `verify_code`, `sent_at`, `last_login`, `password`, `email_verified_at`, `remember_token`, `created_at`, `updated_at`, `is_special`) VALUES
-(1, 'test', 'test', 'test123', 1, 'test@test.com', '+93', '8522847035', '492.00', 'HIT6kp1ngJUd1Gkm1EHR9YCwiAmRF69CPWzFlHQ7E0pnvll7qmBdZjo0hPSg', NULL, '', 1, 1, 1, NULL, NULL, '2022-05-26 04:40:28', '$2y$10$KbPNjKMIYvyE4DwRnfhWPuHXHBu8tu3jM2rbeCQ6nNMIyax/Gtalm', NULL, NULL, '2022-03-03 05:57:20', '2022-05-26 04:40:28', 1),
+(1, 'test', 'test', 'test123', 1, 'test@test.com', '+93', '8522847035', '491.88', 'HIT6kp1ngJUd1Gkm1EHR9YCwiAmRF69CPWzFlHQ7E0pnvll7qmBdZjo0hPSg', NULL, '', 1, 1, 1, NULL, NULL, '2022-05-27 14:24:35', '$2y$10$KbPNjKMIYvyE4DwRnfhWPuHXHBu8tu3jM2rbeCQ6nNMIyax/Gtalm', NULL, NULL, '2022-03-03 05:57:20', '2022-05-27 14:54:50', 1),
 (2, 'Hammam', 'Zarefa', 'Hammam', 1, 'hammamzarefa@gmail.com', '+93', '+558522847035', '4858.60', 'djGMFMw3Vsi1UxPyHTe5HA5EPTZyHmBJJ7nUgdYQRUMizG9MIBpYjcuGOAGS', '62658b1b923281650821915.jpg', '', 1, 1, 1, NULL, NULL, '2022-05-26 04:42:10', '$2y$10$KbPNjKMIYvyE4DwRnfhWPuHXHBu8tu3jM2rbeCQ6nNMIyax/Gtalm', NULL, NULL, '2022-04-22 13:02:23', '2022-05-26 08:45:46', 1);
 
 -- --------------------------------------------------------
@@ -1256,6 +1290,12 @@ ALTER TABLE `content_details`
 -- Indexes for table `content_media`
 --
 ALTER TABLE `content_media`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1464,6 +1504,12 @@ ALTER TABLE `content_media`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `email_templates`
 --
 ALTER TABLE `email_templates`
@@ -1503,7 +1549,7 @@ ALTER TABLE `languages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `notices`
@@ -1521,7 +1567,7 @@ ALTER TABLE `notify_templates`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -1587,7 +1633,7 @@ ALTER TABLE `ticket_messages`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
 use App\Models\ApiProvider;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
@@ -136,6 +137,7 @@ class OrderController extends Controller
 //        if ($validator->fails()) {
 //            return back()->withErrors($validator)->withInput();
 //        }
+//        $coupon = Coupon::where('code',$request->coupon)->where('status',1)->get()->first();
 
         $service = Service::userRate()->findOrFail($request->service);
         if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
@@ -169,9 +171,18 @@ class OrderController extends Controller
         }
         if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
             $userRate = ($service->user_rate) ?? $service->price;
-            $price = round(($quantity * $userRate) / 1000, 2);
+//            if ($coupon != null && $coupon->number_of_beneficiaries != null && $coupon->number_of_use != $coupon->number_of_beneficiaries){
+//                $price = round(($quantity * $userRate) / 1000, 2);
+//                if ($coupon->is_percent == 1){
+//                    $price = $price * $coupon->sale /100;
+//                }else{
+//                    $price -= $coupon->sale;
+//                }
+//            }else{
+//
+//            }
 
-//dd($price);
+            $price = round(($quantity * $userRate) / 1000, 2);
             $user = Auth::user();
             if ($user->balance < $price) {
                 return back()->with('error', "Insufficient balance in your wallet.")->withInput();
