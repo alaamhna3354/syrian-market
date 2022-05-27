@@ -655,3 +655,6 @@
 .lang .dropdown-menu{
     min-width: 100px !important;
 }
+.hidden{
+    display: none !important;
+}
