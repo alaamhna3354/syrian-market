@@ -172,7 +172,7 @@ class OrderController extends Controller
         if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
             $userRate = ($service->user_rate) ?? $service->price;
 //            if ($coupon != null && $coupon->number_of_beneficiaries != null && $coupon->number_of_use != $coupon->number_of_beneficiaries){
-//                $price = round(($quantity * $userRate) / 1000, 2);
+//                $price = round(($quantity * $userRate), 2);
 //                if ($coupon->is_percent == 1){
 //                    $price = $price * $coupon->sale /100;
 //                }else{
@@ -182,7 +182,7 @@ class OrderController extends Controller
 //
 //            }
 
-            $price = round(($quantity * $userRate) / 1000, 2);
+            $price = round(($quantity * $userRate), 2);
             $user = Auth::user();
             if ($user->balance < $price) {
                 return back()->with('error', "Insufficient balance in your wallet.")->withInput();
@@ -371,7 +371,7 @@ class OrderController extends Controller
                 $orderM->link = $singleOrder[2];
 
 
-                $orderM->price = round(($singleOrder[1] * $specificRate) / 1000, 2);
+                $orderM->price = round(($singleOrder[1] * $specificRate), 2);
                 if ($serviceid->service_status == 1) {
 
                     $user = $this->user;
