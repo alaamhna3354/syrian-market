@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BalanceCoupon;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Stevebauman\Purify\Facades\Purify;
 
 class CouponController extends Controller
 {
@@ -25,7 +29,7 @@ class CouponController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.pages.coupon.add-coupon');
     }
 
     /**
@@ -36,7 +40,28 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        //
+//        dd($request);
+        $req = Purify::clean($request->all());
+        $rules = [
+            'code' => 'required|string|max:20',
+            'code' => Rule::unique('coupons'),
+            'sale' => 'required|numeric',
+        ];
+        $validator = Validator::make($req, $rules);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        $coupon = new Coupon();
+        $coupon->code = $req['code'];
+        $coupon->sale = $req['sale'];
+        $coupon->number_of_beneficiaries = $req['number_of_beneficiaries'];
+        $coupon->from = $req['from'];
+        $coupon->to = $req['to'];
+        $coupon->number_of_use = 0;
+        $coupon->is_percent = $req['is_percent'];
+        $coupon->status = $req['status'];
+        $coupon->save();
+        return back()->with('success', 'Successfully Updated');
     }
 
     /**
@@ -58,7 +83,8 @@ class CouponController extends Controller
      */
     public function edit($id)
     {
-        //
+        $coupon = Coupon::find($id);
+        return view('admin.pages.coupon.edit-coupon', compact('coupon'));
     }
 
     /**
@@ -70,7 +96,29 @@ class CouponController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+//       dd($request);
+        $req = Purify::clean($request->all());
+        $coupon = Coupon::find($request->id);
+        $rules = [
+            'code' => 'required|string|max:20',
+            'code' => Rule::unique('coupons')->ignore($id),
+            'sale' => 'required|numeric',
+        ];
+        $validator = Validator::make($req, $rules);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+
+        $coupon->code = $req['code'];
+        $coupon->sale = $req['sale'];
+        $coupon->number_of_beneficiaries = $req['number_of_beneficiaries'];
+        $coupon->from = $req['from'];
+        $coupon->to = $req['to'];
+        $coupon->is_percent = $req['is_percent'];
+        $coupon->status = $req['status'];
+        $coupon->save();
+        return back()->with('success', 'Successfully Updated');
     }
 
     /**

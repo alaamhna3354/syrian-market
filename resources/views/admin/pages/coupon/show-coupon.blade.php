@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('title')
-    @lang('Balance Coupon Show')
+    @lang('Coupon Show')
 @endsection
 
 @section('content')
@@ -19,11 +19,13 @@
                                    id="check-all">
                             <label for="check-all"></label>
                         </th>
-                        <th scope="col">@lang('QR Code')</th>
                         <th scope="col">@lang('CODE')</th>
-                        <th scope="col">@lang('Balance')</th>
+                        <th scope="col">@lang('Sale')</th>
+                        <th scope="col">@lang('Number Of Beneficiaries')</th>
+                        <th scope="col">@lang('Number Of Use')</th>
                         <th scope="col">@lang('Status')</th>
-                        <th scope="col">@lang('Sold')</th>
+                        <th scope="col">@lang('From')</th>
+                        <th scope="col">@lang('To')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -36,33 +38,36 @@
                                        name="check[]" value="{{ $coupon->id }}" data-id="{{ $coupon->id }}">
                                 <label for="chk-{{$coupon->id}}"></label>
                             </td>
-                            <td data-label="@lang('QR Code')">
+                            <td data-label="@lang('CODE')">
 
                                 <div class="chat-img d-inline-block">
-
-                                    <img src="{{ getFile(config('location.qr.path').$coupon->qr_code) }}"
-                                         alt="user" class="rounded-circle" width="45">
+                                    @lang($coupon->code)
                                 </div>
                             </td>
-                            <td data-label="@lang('CODE')">
-                                @lang($coupon->code)
+                            <td data-label="@lang('Sale')">
+                                @if($coupon->is_percent == 1)
+                                @lang($coupon->sale) %
+                                @else
+                                @lang($coupon->sale){{config('basic.currency_symbol')}}
+                                @endif
                             </td>
-                            <td data-label="@lang('Balance')">
-                                {{ $coupon->balance}}
+                            <td data-label="@lang('Number Of Beneficiaries')">
+                                {{ $coupon->number_of_beneficiaries}}
+                            </td>
+                            <td data-label="@lang('Number Of Use')">
+                                {{ $coupon->number_of_use}}
                             </td>
                             <td data-label="@lang('Status')">
                                 <span
                                     class="badge badge-pill {{ $coupon->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $coupon->status == 0 ? 'Inactive' : 'Active' }}</span>
                             </td>
-                            <td data-label="@lang('Sold')">
-                                <span
-                                    class="badge badge-pill {{ $coupon->is_sold == 1 ? 'badge-danger' : 'badge-success' }}">{{ $coupon->is_sold == 1 ? 'Sold' : 'Not Sold' }}</span>
+                            <td data-label="@lang('From')">
+                                {{date('d/m/Y H:i:s',strtotime($coupon->from))}}
+                            </td>
+                            <td data-label="@lang('To')">
+                                {{date('d/m/Y H:i:s',strtotime($coupon->to))}}
                             </td>
                             <td data-label="@lang('Action')">
-
-
-
-
                                 <div class="dropdown show">
                                     <a class="dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown"
                                        aria-haspopup="true" aria-expanded="false">
@@ -70,7 +75,7 @@
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a  class="dropdown-item"
-                                            href="{{route('admin.balance-coupon.edit',['id'=>$coupon->id])}}">
+                                            href="{{route('admin.coupon.edit',['id'=>$coupon->id])}}">
                                             <i class="fa fa-edit text-warning pr-2"
                                                aria-hidden="true"></i> @lang('Edit')</a>
 
