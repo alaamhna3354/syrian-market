@@ -12,7 +12,7 @@
                 </ol>
 
                 <div class="card my-3">
-                    <div class="card-body">
+                    <div class="card-body" >
                         <form action="{{ route('user.order.search') }}" method="get">
                             <div class="row">
                                 <div class="col-md-3">
@@ -79,7 +79,7 @@
             <div class="col-md-12">
 
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body pb-4">
 
                         <div class="row justify-content-between align-items-start">
                             <div class="col-sm-12">
@@ -212,9 +212,9 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            {{ $orders->appends($_GET)->links() }}
                         </div>
-
+                        {{ $orders->appends($_GET)->links() }}
+                      
                     </div>
                 </div>
             </div>
