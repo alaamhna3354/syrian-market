@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
@@ -82,6 +84,12 @@ class ServiceController extends Controller
 
     public function getPlayerName($serviceid,$playerid)
     {
-        $service=Service::select('api')->where('id',$serviceid)->get();
+        $category=Category::select('slug')->where('id',$serviceid)->get();
+
+        $categoryapi='https://as7abcard.com/pubg-files/pubg.php?action=getPlayerName&game=pubg&playerID='.$playerid;
+//        dd($categoryapi);
+        $header= ["ct"=>"ql18TgDgBmsvEu5aAJkypBwDgyHyjV8iJYJSmq1E4Kf9DS20PBpkjx3kDwrkPLc9v7o2NJ0LnrkVQNCwC0FQ+4/VaGKGdk60NOtd7ExY8zI=","iv"=>"0f4e33d8213109fa64a412cb07b2659d","s"=>"c5f09a65b90f316a"];
+        $getPlayer = Http::post($categoryapi, ["ct"=>"ql18TgDgBmsvEu5aAJkypBwDgyHyjV8iJYJSmq1E4Kf9DS20PBpkjx3kDwrkPLc9v7o2NJ0LnrkVQNCwC0FQ+4/VaGKGdk60NOtd7ExY8zI=","iv"=>"0f4e33d8213109fa64a412cb07b2659d","s"=>"c5f09a65b90f316a"]);
+        return $getPlayer;
     }
 }

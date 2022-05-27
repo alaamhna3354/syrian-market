@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('/services', 'User\ServiceController@index')->name('service.show');
         Route::get('/service-search', 'User\ServiceController@search')->name('service.search');
         Route::get('/services/{id}', 'User\ServiceController@service')->name('services.show');
-        Route::get('/player', 'User\ServiceController@getPlayerName')->name('service.player');
+        Route::get('/player/{serviceid}/{playerid}', 'User\ServiceController@getPlayerName')->name('service.player');
 
         Route::get('/api/docs', 'User\ApiController@index')->name('api.docs');
         Route::post('/keyGenerate', 'User\ApiController@apiGenerate')->name('keyGenerate');
