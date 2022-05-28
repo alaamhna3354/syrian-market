@@ -652,10 +652,10 @@ border-bottom: 0;
 
 @media screen and (max-width: 360px){
 .fixedsidebar {
-    top: 125px;
+    top: 135px;
 }
 .fixed-icon {
-    top: 125px;
+    top: 135px;
 }
 }
 .fixed-icon i{
