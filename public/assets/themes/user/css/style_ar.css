@@ -95,14 +95,12 @@
         #pushNotificationArea{
             margin: 10px 0 0 0;
         }
+        .headerNav .push-notification .right-dropdown {
+            right: -220px  !important;
+            }
 }
-@media screen and (max-width:350px){
-    .headerNav .push-notification .right-dropdown {
-    right: 0 !important;
-    }
-   
-}
-@media screen and (max-width:360px){
+
+@media screen and (max-width:568px){
     .navbar-brand{
         width: 100%;
         display: flex;
@@ -114,6 +112,12 @@
     #pushNotificationArea{
         margin: 10px auto 0;
     }
+    .fixed-icon {
+        top: 135px;
+      }
+      .fixedsidebar {
+        top: 135px;
+      }
 }
 .shadow-h{
     text-shadow: 0px 0px 5px #000;
