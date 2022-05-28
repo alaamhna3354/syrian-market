@@ -598,11 +598,12 @@
     width: 100%;
     font-size: 18px;
 }
+.services form .add .btn::after{
+    bottom: 0px;
+}
 .services form .add .btn.disble{
     cursor: no-drop;
-    background-image: none;
-    background-color: #ddd;
-    color: #7c8798;
+    color: #fff;
 }
 #service-table thead{
     color: #fff;
