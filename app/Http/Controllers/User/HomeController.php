@@ -71,12 +71,12 @@ class HomeController extends Controller
         if ($request->has('sendCountry')) {
             $sendCountry = $country->where('id', $request->sendCountry)->first();
             if (!$sendCountry) {
-                session()->flash('error', 'Sender Country Not Found');
+                session()->flash('error',trans( 'Sender Country Not Found'));
                 return back()->withInput();
             }
 
            if($request->amount < $sendCountry->minimum_amount ){
-               session()->flash('error', 'Minimum amount '.getAmount($sendCountry->minimum_amount,config('basic.fraction_number')). " ".$sendCountry->code);
+               session()->flash('error', trans('Minimum amount ').getAmount($sendCountry->minimum_amount,config('basic.fraction_number')). " ".$sendCountry->code);
                return back()->withInput();
            }
         }
@@ -84,7 +84,7 @@ class HomeController extends Controller
         if ($request->has('getCountry')) {
             $receiveCountry = $country->where('id', $request->getCountry)->first();
             if (!$receiveCountry) {
-                session()->flash('error', 'Receiver Country Not Found');
+                session()->flash('error', trans('Receiver Country Not Found'));
                 return back()->withInput();
             }
             if (!$receiveCountry->facilities) {

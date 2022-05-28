@@ -58,7 +58,7 @@ class SupportController extends Controller
                 try {
                     $this->saveAttachment($message, $image, $path);
                 } catch (\Exception $exp) {
-                    return back()->withInput()->with('error', 'Could not upload your ' . $image);
+                    return back()->withInput()->with('error', trans('Could not upload your ') . $image);
                 }
             }
         }
@@ -75,7 +75,7 @@ class SupportController extends Controller
         $this->adminPushNotification('SUPPORT_TICKET_CREATE', $msg, $action);
 
 
-        return redirect()->route('user.ticket.list')->with('success', 'Your Ticket has been pending');
+        return redirect()->route('user.ticket.list')->with('success', trans('Your Ticket has been pending'));
     }
 
     public function view($ticketId)

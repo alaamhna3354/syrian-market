@@ -143,7 +143,7 @@ class OrderController extends Controller
         if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
             $serviceCode = $service->service_code->where('is_used', 0)->first();
             if ($serviceCode == null) {
-                return back()->with('error', "No Code Available ,Please Contact with Support To Order Code.")->withInput();
+                return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
             }
         }
         $user = Auth::user();
@@ -185,7 +185,7 @@ class OrderController extends Controller
             $price = round(($quantity * $userRate), 2);
             $user = Auth::user();
             if ($user->balance < $price) {
-                return back()->with('error', "Insufficient balance in your wallet.")->withInput();
+                return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
             $order = new Order();
             $order->user_id = $user->id;
@@ -204,7 +204,7 @@ class OrderController extends Controller
             if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-                    $order->details = 'Service code is : '.$serviceCode->code.', and id is '.$serviceCode->id;
+                    $order->details = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
                 }
             }
 //            if (isset($service->api_provider_id)) {
@@ -261,9 +261,9 @@ class OrderController extends Controller
                     ]);
                     $serviceCode->is_used = 1;
                     $serviceCode->save();
-                    return back()->with('success', 'Your order has been submitted');
+                    return back()->with('success', trans('Your order has been submitted'));
                 } else {
-                    return back()->with('error', "No Code Available ,Please Contact with Support To Order Code.")->withInput();
+                    return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
             }else{
                 $this->sendMailSms($user, 'ORDER_CONFIRM', [
@@ -276,7 +276,7 @@ class OrderController extends Controller
                     'currency' => $basic->currency,
                     'transaction' => $transaction->trx_id,
                 ]);
-                return back()->with('success', 'Your order has been submitted');
+                return back()->with('success', trans('Your order has been submitted'));
             }
 
 
@@ -309,7 +309,7 @@ class OrderController extends Controller
     {
         $order = Order::find($order->id);
         $order->delete();
-        return back()->with('success', 'Successfully Deleted');
+        return back()->with('success', trans('Successfully Deleted'));
     }
 
     public function statusChange(Request $request)
@@ -318,7 +318,7 @@ class OrderController extends Controller
         $order = Order::find($request->id);
         $order->status = $req['statusChange'];
         $order->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     public function getservice(Request $request)
@@ -430,32 +430,32 @@ class OrderController extends Controller
 
 
                                 } else {
-                                    $orderM->reason = "Insufficient balance in your wallet";
-                                    $orderM->status = 'canceled';
+                                    $orderM->reason = trans("Insufficient balance in your wallet");
+                                    $orderM->status = trans('canceled');
                                 }
                             } else {
-                                $orderM->reason = "Link is Invalid";
-                                $orderM->status = 'canceled';
+                                $orderM->reason = trans("Link is Invalid");
+                                $orderM->status =trans( 'canceled');
                             }
 
                         } else {
                             $orderM->reason = "Order quantity should be minimum {$serviceid->min_amount} and maximum {$serviceid->max_amount}";
-                            $orderM->status = 'canceled';
+                            $orderM->status = trans( 'canceled');
                         }
                     } else {
-                        $orderM->reason = "Invalid Quantity";
-                        $orderM->status = 'canceled';
+                        $orderM->reason = trans( "Invalid Quantity");
+                        $orderM->status = trans( 'canceled');
                     }
 
                 } else {
-                    $orderM->reason = "Service not available";
-                    $orderM->status = 'canceled';
+                    $orderM->reason = trans( "Service not available");
+                    $orderM->status = trans( 'canceled');
                 }
                 $orderM->save();
             }
 
         }
-        return back()->with('success', 'Successfully Added');
+        return back()->with('success', trans('Successfully Added'));
     }
 
 }

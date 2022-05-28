@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-4" hidden>
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Drip feed')</label>
                                     <div class="custom-switch-btn">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="divider"></div>
                 <h5 class="table-group-title text-primary mb-2 mb-md-3"><span>@lang('Type & Details')</span></h5>
-                <div class="form-group ">
+                <div class="form-group " hidden>
                     <div class="switch-field d-flex">
                         <div class="form-check p-0">
                             <input class="form-check-input" type="radio" name="manual_api" id="less"
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="moreField d-none">
+                <div id="moreField d-none" hidden>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

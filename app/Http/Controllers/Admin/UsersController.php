@@ -302,8 +302,8 @@ class UsersController extends Controller
             return back()->withErrors($validator)->withInput();
         }
         $user = User::findOrFail($id);
-        $this->mail($user, null, [], $req['subject'], $req['message']);
 
+        $state=$this->mail($user, null, [], $req['subject'], $req['message']);
         return back()->with('success', 'Mail Send Successfully');
     }
 
