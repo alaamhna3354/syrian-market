@@ -166,7 +166,7 @@ class CategoryController extends Controller
             $re->status = 1;
             $re->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 

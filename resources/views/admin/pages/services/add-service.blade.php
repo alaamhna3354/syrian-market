@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <label>@lang('Minimum Amount')</label>
                             <input type="number" class="form-control square" name="min_amount"
-                                   value="{{ old('min_amount',500) }}">
+                                   value="{{ old('min_amount',1) }}">
                             @if($errors->has('min_amount'))
                                 <div class="error text-danger">@lang($errors->first('min_amount')) </div>
                             @endif
@@ -69,7 +69,7 @@
                         <div class="form-group">
                             <label>@lang('Maximum Amount')</label>
                             <input type="number" class="form-control square" name="max_amount"
-                                   value="{{ old('max_amount',5000) }}">
+                                   value="{{ old('max_amount',500) }}">
                             @if($errors->has('max_amount'))
                                 <div class="error text-danger">@lang($errors->first('max_amount')) </div>
                             @endif
@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" hidden>
                                 <div class="form-group ">
                                     <label class="d-block">@lang('Drip feed')</label>
                                     <div class="custom-switch-btn">
@@ -120,10 +120,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="divider"></div>
-                <h5 class="table-group-title text-primary mb-2 mb-md-3"><span>@lang('Type & Details')</span></h5>
+                {{--<div class="divider"></div>--}}
+                {{--<h5 class="table-group-title text-primary mb-2 mb-md-3"><span>@lang('Type & Details')</span></h5>--}}
 
-                <div class="form-group ">
+                <div class="form-group " hidden>
                     <div class="switch-field d-flex">
                         <div class="form-check p-0">
                             <input class="form-check-input" type="radio" name="manual_api" id="less" value="0" checked>
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="moreField d-none" >
+                <div id="moreField d-none" hidden >
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
