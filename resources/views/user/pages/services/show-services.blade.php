@@ -85,7 +85,7 @@
                 @if($category->type == "GAME")
                     <div class=" col-12 col-sm-5 mb-2" >
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="number" name="link" id="player_number" placeholder="">
+                        <input type="number" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
 
@@ -126,7 +126,7 @@
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
                 <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
                 <div class="col-12 mt-4 text-center add">
-                    <button type="" id="btn-add" class="btn disble" disable>@lang('Add')</button>
+                    <button type="" id="btn-add" class="btn disble" disabled>@lang('Add')</button>
                 </div>
 
             </div>
@@ -182,12 +182,12 @@
                 $(".total").val(`0`);
                 $('.quantity').val('0');
                 $('#btn-add').addClass('disble');
-                $('#btn-add').attr("type","");
+                $('#btn-add').attr("disabled","");
             }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#btn-add').removeClass('disble');
-                $('#btn-add').attr("type","submit");
+                $('#btn-add').removeAttr("disabled");
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');

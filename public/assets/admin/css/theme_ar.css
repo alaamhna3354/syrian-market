@@ -9463,10 +9463,14 @@ fieldset:disabled a.btn {
 }
 
 .dropdown-menu-right {
-    right: 0;
-    left: auto
+    left: 10px;
+    text-align: start;
 }
-
+@media (max-width:768px) {
+    .dropdown-menu-right {
+        left: 0;
+    }
+}
 @media (min-width:576px) {
     .dropdown-menu-sm-left {
         right: auto;
