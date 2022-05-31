@@ -15,6 +15,7 @@
     margin-right: auto;
 }
 /* side bar */
+
 .logo-side{
     padding:12px
 }
@@ -39,7 +40,7 @@
 .fixedsidebar {
     position: fixed;
     top: 0;
-    right: -400px;
+    right: 0;
     width: 250px;
     height: 100%;
     padding: 0;
@@ -53,7 +54,7 @@
     transition: all 0.35s ease-in-out;
     }
 .rfixed {
-    right: 0;
+    right: 0 !important;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -61,9 +62,9 @@
     transition: all 0.35s ease-in-out;
     }
 .fixed-icon {
-    position: fixed;
-    top: 84px;
-    right: 0;
+    position: relative;
+    /* top: -2px; */
+    /* right: 0; */
     width: 30px;
     height: 30px;
     display: flex;
@@ -80,9 +81,10 @@
     transition: all 0.35s ease-in-out;
     cursor: pointer;
     border-radius: 3px;
+    display: none;
     }
 .rfixedicon {
-    right: 250px;
+    /* right: 250px; */
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -97,16 +99,18 @@
         padding:9px
     }
     .fixed-icon {
-        top: 78px;
+        /* top: 78px; */
+        display: flex;
       }
       .fixedsidebar {
         top: 0;
+        right: -400px;
       }
     .fixed-icon{
     right:0;
     }
     .fixed-icon.rfixedicon{
-    right:250px;
+    /* right:250px; */
     }
 }
 /* end side bar */
@@ -170,9 +174,9 @@
     .headerNav .account .lin{
         font-size: 14px;
     }
-    .headerNav .account i {
+    /* .headerNav .account i {
         font-size: 20px !important;
-    }
+    } */
     #pushNotificationArea{
         width: 40px;
     }

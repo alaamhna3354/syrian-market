@@ -26,8 +26,12 @@
                             </a>
                             @endforeach
                         </div>
+                        
             </li>
             </ul>
+            <div class="fixed-icon rfixedicon ">
+                            <i class="fa fa-bars"></i>
+                        </div>
             <!-- <div class="push-notification dropdown " id="pushNotificationArea">
 
 <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
