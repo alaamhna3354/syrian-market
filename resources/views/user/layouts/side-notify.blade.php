@@ -1,8 +1,8 @@
-<div class="fixed-icon ">
+<!-- <div class="fixed-icon rfixedicon ">
     <i class="fa fa-bars"></i>
-</div>
+</div> -->
 
-<div class="fixedsidebar ">
+<div class="fixedsidebar rfixed">
     <!--<div class="fs-header d-flex align-items-center justify-content-between">
          <h5 class="text-white">@lang("What's new on $basic->site_title")</h5>
         <div class="btn-close close-sidebar">&times;</div>
@@ -129,10 +129,10 @@
                                 <i data-feather="user" class="svg-icon mr-2 ml-1"></i>
                                 <!-- @lang('My Profile') -->
             </a>
-            <a class="logout-item {{menuActive('user.ticket.create')}}" href="{{ route('user.ticket.create') }}">
+            <!-- <a class="logout-item {{menuActive('user.ticket.create')}}" href="{{ route('user.ticket.create') }}">
                 <i class="fab fa-hire-a-helper mr-2 ml-1 icon-color"></i>
-                <!-- @lang('Open Ticket') -->
-            </a>
+                @lang('Open Ticket')
+            </a> -->
             <a class="logout-item {{menuActive('user.ticket.list')}}" href="{{ route('user.ticket.list') }}">
                 <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> 
                 <!-- @lang('Show Ticket') -->

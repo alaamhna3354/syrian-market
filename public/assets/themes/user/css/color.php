@@ -661,10 +661,6 @@ border-bottom: 0;
 
 
 @media screen and (max-width: 360px){
-
-.fixed-icon {
-    top: 78px;
-}
 }
 .fixed-icon i{
     color: #fff;
