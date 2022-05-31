@@ -15,16 +15,37 @@
     margin-right: auto;
 }
 /* side bar */
-.fixedsidebar {
+.logo-side{
+    padding:12px
+}
+.side-fotter{
     position: absolute;
-    top: 85px;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 1px 0px 5px #000;
+    padding: 6px 0;
+}
+.fixedsidebar hr {
+    background-color: #808080;
+    margin: 0;
+}
+.fixedsidebar i {
+    color: #fff;
+    transition: .3s;
+}
+#navbarSupportedContent ul li:hover i,#navbarSupportedContent ul li:hover a{
+    color: #ff7039;
+  }
+.fixedsidebar {
+    position: fixed;
+    top: 0;
     left: -400px;
     width: 250px;
     height: 100%;
     padding: 0;
     background-color: #24272e;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
-    z-index: 999;
+    z-index: 1000;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -71,6 +92,15 @@
     transition: all 0.35s ease-in-out;
     }
 @media screen and (max-width:575px){
+    .logo-side{
+        padding:9px
+    }
+    .fixed-icon {
+        top: 78px;
+      }
+      .fixedsidebar {
+        top: 0;
+      }
     .fixed-icon{
     left:0;
     }
@@ -87,10 +117,10 @@
     margin: 10px 0 0 0;
 }
 #pushNotificationArea .right-dropdown {
-    top: 40px !important;
+    top: -160px !important;
     transform: none !important;
     left: none !important;
-    width: 100% !important;
+    width: 230px !important;
     }
 #pushNotificationArea .badge {
     position: absolute;
@@ -135,12 +165,7 @@
     #pushNotificationArea{
         margin: 10px 0 0;
     }
-    .fixed-icon {
-        top: 78px;
-      }
-      .fixedsidebar {
-        top: 78px;
-      }
+   
       #navbarDropdown{
         padding: 0;
         min-width: 25px;    
@@ -183,7 +208,7 @@
     font-size: 25px;
 }
 .page-wrapper{
-    min-height: 100vh;
+    min-height: 88vh;
 }
 @media (min-width: 768px) {
     .cardcontainer {
@@ -374,7 +399,6 @@
 
 #navbarSupportedContent{
     display: block;
-    height: 100%;
 }
 #navbarSupportedContent ul{
     height: 100%;
@@ -713,4 +737,9 @@
 }
 .hidden{
     display: none !important;
+}
+@media (max-width:568px) {
+    .lang .dropdown-menu{
+        left: -50px;
+    }
 }

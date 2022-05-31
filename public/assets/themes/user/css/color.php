@@ -661,9 +661,7 @@ border-bottom: 0;
 
 
 @media screen and (max-width: 360px){
-.fixedsidebar {
-    top:78px;
-}
+
 .fixed-icon {
     top: 78px;
 }
