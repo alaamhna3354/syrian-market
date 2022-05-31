@@ -138,6 +138,9 @@ box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
 -webkit-box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
 -moz-box-shadow: 0 10px 10px 0 rgba(0,0,0,.15);
 width: 100%;
+position: fixed;
+z-index: 1000;
+top: 0;
 }
 .headerNav .navbar {
 display: flex;
@@ -331,8 +334,15 @@ margin:0;
 .footer{
 position:relative;
 }
+.navbar-brand img {
+max-height: 40px !important;
 }
-
+}
+@media screen and (max-width:340px){
+    .navbar-brand img {
+max-height: 35px !important;
+} 
+}
 
 .breadcrumb.center-items{
 display:inline-block;
@@ -651,11 +661,9 @@ border-bottom: 0;
 
 
 @media screen and (max-width: 360px){
-.fixedsidebar {
-    top: 135px;
-}
+
 .fixed-icon {
-    top: 135px;
+    top: 78px;
 }
 }
 .fixed-icon i{

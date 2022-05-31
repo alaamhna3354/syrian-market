@@ -10,17 +10,18 @@
     @include('user.layouts.header')
 
    
-    @include('user.layouts.side-notify')
+@include('user.layouts.side-notify')
+ 
     <div class="page-wrapper main-page d-block" style="width:100%">
         @yield('content')
     </div>
    
-    
-
-</div>
-<footer class="footer text-center text-white">
+    <footer class="footer text-center text-white">
         <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
     </footer>
+
+</div>
+
 
 
 
