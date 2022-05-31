@@ -10,6 +10,7 @@ class PaymentController extends Controller
 {
     public function addFundRequest(Request $request)
     {
+
         $validator = validator()->make($request->all(), [
             'gateway' => 'required',
             'amount' => 'required'
