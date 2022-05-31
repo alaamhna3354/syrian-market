@@ -155,9 +155,9 @@ trait Notify
     {
 
         $basic = (object) config('basic');
-        if ($basic->push_notification != 1) {
-            return false;
-        }
+//        if ($basic->push_notification != 1) {
+//            return false;
+//        }
 
         $templateObj = NotifyTemplate::where('template_key', $templateKey)->where('status', 1)->first();
 

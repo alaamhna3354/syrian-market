@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
 
         $page_title = "All Orders";
-        $orders = Order::with('service', 'users')->has('service')->paginate(config('basic..paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->has('service')->paginate(config('basic..paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
@@ -65,56 +65,56 @@ class OrderController extends Controller
     public function awaiting(Request $request, $name = 'awaiting')
     {
         $page_title = "Awaiting Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function pending(Request $request, $name = 'pending')
     {
         $page_title = "Pending Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function processing(Request $request, $name = 'processing')
     {
         $page_title = "Processing Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function progress(Request $request, $name = 'progress')
     {
         $page_title = "Progress Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function completed(Request $request, $name = 'completed')
     {
         $page_title = "Completed Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function partial(Request $request, $name = 'partial')
     {
         $page_title = "Partial Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function canceled(Request $request, $name = 'canceled')
     {
         $page_title = "Canceled Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function refunded(Request $request, $name = 'refunded')
     {
         $page_title = "Refunded Orders";
-        $orders = Order::with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
