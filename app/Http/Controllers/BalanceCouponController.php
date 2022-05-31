@@ -63,6 +63,7 @@ class BalanceCouponController extends Controller
         $balance->code = $req['code'];
         $balance->balance = $req['balance'];
         $balance->status = $req['status'];
+        $balance->user_id = 0;
         $balance->save();
         return back()->with('success', 'Successfully Updated');
     }

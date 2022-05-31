@@ -10,17 +10,18 @@
     @include('user.layouts.header')
 
    
-    @include('user.layouts.side-notify')
-    <div class="page-wrapper main-page d-block" style="width:100%">
+@include('user.layouts.side-notify')
+ 
+    <div class="page-wrapper main-page d-block wid-res" style="width:100%">
         @yield('content')
     </div>
    
-    
-
-</div>
-<footer class="footer text-center text-white">
+    <footer class="footer text-center text-white">
         <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
     </footer>
+
+</div>
+
 
 
 
@@ -53,13 +54,13 @@
     if(!localStorage.sidenote || localStorage.sidenote == 'true'){
         $('.fixed-icon').removeClass('rfixedicon');
         $('.fixedsidebar').removeClass('rfixed');
-        $('.main-page').removeClass('wid-res');
+        // $('.main-page').removeClass('wid-res');
     }
 
     $(document).on('click', '.close-sidebar',function () {
         $('.fixed-icon').addClass('rfixedicon');
         $('.fixedsidebar').addClass('rfixed');
-        $('.main-page').addClass('wid-res');
+        // $('.main-page').addClass('wid-res');
         localStorage.setItem("sidenote", false);
     });
 

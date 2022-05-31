@@ -88,8 +88,40 @@ class HomeController extends Controller
             $user->balance += $coupon->balance;
             if ($user->save()){
                 $coupon->is_sold = 1;
-                $coupon->save();
-                return back()->with('success', 'Balance Is Updated Successfully.');
+                $coupon->user_id = $user->id;
+                if ($coupon->save()){
+                    $transaction = new Transaction();
+                    $transaction->user_id = $user->id;
+                    $transaction->trx_type = '+';
+                    $transaction->amount = $coupon->balance;
+                    $transaction->remarks = 'Use Balance Coupon';
+                    $transaction->trx_id = strRandom();
+                    $transaction->charge = 0;
+
+
+                    $fund = new Fund();
+                    $fund->user_id = $user->id;
+                    $fund->gateway_id = null;
+                    $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+                    $fund->amount = $coupon->balance;
+                    $fund->charge = 0;
+                    $fund->rate = 0;
+                    $fund->final_amount = $coupon->balance;
+                    $fund->btc_amount = 0;
+                    $fund->btc_wallet = "";
+                    $fund->transaction = strRandom();
+                    $fund->try = 0;
+                    $fund->status = 1;
+
+
+                    if ($transaction->save() && $fund->save()){
+                        return back()->with('success', 'Balance Is Updated Successfully.');
+                    }else{
+                        return back()->with('error', 'Please Try Again There Are An Error');
+                    }
+                }else{
+                    return back()->with('error', 'Please Try Again There Are An Error');
+                }
             }else{
                 return back()->with('error', 'Please Try Again There Are An Error');
             }
