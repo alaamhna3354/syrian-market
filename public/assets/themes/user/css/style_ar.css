@@ -72,7 +72,7 @@
     border: 0;
     background-color: #23262d59;
     box-shadow: 0 0 8px 3px rgba(0, 0, 0, .2);
-    z-index: 999;
+    z-index: 1000;
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -89,6 +89,9 @@
     -o-transition: all 0.35s ease-in-out;
     transition: all 0.35s ease-in-out;
     }
+.rfixedicon i{
+    color: #fe5818 !important;
+}
 @media screen and (max-width:575px){
     .logo-side{
         padding:9px
@@ -579,7 +582,7 @@
 .services .item .fire{
     display: none;
     position: absolute;
-    bottom: -45px;
+    bottom: -53px;
 }
 .services .item.un-active{
     opacity: .7;

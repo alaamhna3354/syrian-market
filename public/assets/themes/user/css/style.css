@@ -73,7 +73,7 @@
     border: 0;
     background-color: #23262d59;
     box-shadow: 0 0 8px 3px rgba(0, 0, 0, .2);
-    z-index: 999;
+    z-index: 1000;
     transform: rotateZ(180deg);
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
@@ -91,6 +91,9 @@
     -o-transition: all 0.35s ease-in-out;
     transition: all 0.35s ease-in-out;
     }
+.rfixedicon i{
+    color: #fe5818 !important;
+}
 @media screen and (max-width:575px){
     .logo-side{
         padding:9px
@@ -117,9 +120,8 @@
     margin: 10px 0 0 0;
 }
 #pushNotificationArea .right-dropdown {
-    top: -160px !important;
-    transform: none !important;
-    left: none !important;
+    top: -25px !important;
+ 
     width: 230px !important;
     }
 #pushNotificationArea .badge {
@@ -406,7 +408,7 @@
     display: grid;
     align-content: start;
     justify-items: self-start;
-    padding: 0 30px;
+    padding: 0 20px;
 }
 #navbarSupportedContent ul li {
     margin: 10px 0;
@@ -587,7 +589,7 @@
 .services .item .fire{
     display: none;
     position: absolute;
-    bottom: -45px;
+    bottom: -53px;
 }
 .services .item.un-active{
     opacity: .7;

@@ -1,5 +1,5 @@
 <div class="fixed-icon ">
-    <i class="fa fa-arrow-left"></i>
+    <i class="fa fa-bars"></i>
 </div>
 
 <div class="fixedsidebar ">
