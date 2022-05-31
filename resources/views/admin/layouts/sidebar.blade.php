@@ -168,11 +168,11 @@
                                 <span class="hide-menu">@lang('Processing')</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="{{route('admin.progress')}}" class="sidebar-link">
-                                <span class="hide-menu">@lang('In progress')</span>
-                            </a>
-                        </li>
+                        {{--<li class="sidebar-item">--}}
+                            {{--<a href="{{route('admin.progress')}}" class="sidebar-link">--}}
+                                {{--<span class="hide-menu">@lang('In progress')</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
 
                         <li class="sidebar-item">
                             <a href="{{route('admin.completed')}}" class="sidebar-link">
@@ -180,11 +180,11 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item">
-                            <a href="{{route('admin.partial')}}" class="sidebar-link">
-                                <span class="hide-menu">@lang('Partial')</span>
-                            </a>
-                        </li>
+                        {{--<li class="sidebar-item">--}}
+                            {{--<a href="{{route('admin.partial')}}" class="sidebar-link">--}}
+                                {{--<span class="hide-menu">@lang('Partial')</span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
 
                         <li class="sidebar-item">
                             <a href="{{route('admin.canceled')}}" class="sidebar-link">

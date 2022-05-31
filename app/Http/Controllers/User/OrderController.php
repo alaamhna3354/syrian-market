@@ -256,7 +256,7 @@ class OrderController extends Controller
                         'remaining_balance' => $user->balance,
                         'currency' => $basic->currency,
                         'transaction' => $transaction->trx_id,
-                        'code' => $serviceCode->code,
+                        'your-code' => $serviceCode->code,
 
                     ]);
                     $serviceCode->is_used = 1;
