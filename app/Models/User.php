@@ -72,6 +72,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Order::class)->latest();
     }
 
+    public function balanceCoupons()
+    {
+        return $this->hasMany(BalanceCoupon::class)->latest();
+    }
+
     public function transaction()
     {
         return $this->hasOne(Transaction::class)->latest();
