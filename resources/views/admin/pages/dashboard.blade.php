@@ -244,61 +244,61 @@
             </div>
 
 
-            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                <div class="card shadow border-right">
-                    <div class="card-body">
-                        <div class="d-flex d-lg-flex d-md-block align-items-center">
-                            <div>
-                                <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['pending'])}}</h2>
-                                </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Pending')</h6>
-                            </div>
-                            <div class="ml-auto mt-md-3 mt-lg-0">
-                                <span class="opacity-7 text-muted"><i class="fa fa-spinner fa-2x"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{--<div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">--}}
+                {{--<div class="card shadow border-right">--}}
+                    {{--<div class="card-body">--}}
+                        {{--<div class="d-flex d-lg-flex d-md-block align-items-center">--}}
+                            {{--<div>--}}
+                                {{--<div class="d-inline-flex align-items-center">--}}
+                                    {{--<h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['pending'])}}</h2>--}}
+                                {{--</div>--}}
+                                {{--<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Pending')</h6>--}}
+                            {{--</div>--}}
+                            {{--<div class="ml-auto mt-md-3 mt-lg-0">--}}
+                                {{--<span class="opacity-7 text-muted"><i class="fa fa-spinner fa-2x"></i></span>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
 
-            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                <div class="card shadow border-right">
-                    <div class="card-body">
-                        <div class="d-flex d-lg-flex d-md-block align-items-center">
-                            <div>
-                                <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['inProgress'])}}</h2>
-                                </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('In Progress')</h6>
-                            </div>
-                            <div class="ml-auto mt-md-3 mt-lg-0">
-                                <span class="opacity-7 text-muted"><i class="fa fa-arrow-left fa-2x"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{--<div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">--}}
+                {{--<div class="card shadow border-right">--}}
+                    {{--<div class="card-body">--}}
+                        {{--<div class="d-flex d-lg-flex d-md-block align-items-center">--}}
+                            {{--<div>--}}
+                                {{--<div class="d-inline-flex align-items-center">--}}
+                                    {{--<h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['inProgress'])}}</h2>--}}
+                                {{--</div>--}}
+                                {{--<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('In Progress')</h6>--}}
+                            {{--</div>--}}
+                            {{--<div class="ml-auto mt-md-3 mt-lg-0">--}}
+                                {{--<span class="opacity-7 text-muted"><i class="fa fa-arrow-left fa-2x"></i></span>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
 
-            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                <div class="card shadow border-right">
-                    <div class="card-body">
-                        <div class="d-flex d-lg-flex d-md-block align-items-center">
-                            <div>
-                                <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['partial'])}}</h2>
-                                </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Partial')</h6>
-                            </div>
-                            <div class="ml-auto mt-md-3 mt-lg-0">
-                                <span class="opacity-7 text-muted"><i class="fa fa-inbox fa-2x"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{--<div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">--}}
+                {{--<div class="card shadow border-right">--}}
+                    {{--<div class="card-body">--}}
+                        {{--<div class="d-flex d-lg-flex d-md-block align-items-center">--}}
+                            {{--<div>--}}
+                                {{--<div class="d-inline-flex align-items-center">--}}
+                                    {{--<h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['partial'])}}</h2>--}}
+                                {{--</div>--}}
+                                {{--<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Partial')</h6>--}}
+                            {{--</div>--}}
+                            {{--<div class="ml-auto mt-md-3 mt-lg-0">--}}
+                                {{--<span class="opacity-7 text-muted"><i class="fa fa-inbox fa-2x"></i></span>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
                 <div class="card shadow border-right">
@@ -318,23 +318,23 @@
                 </div>
             </div>
 
-            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                <div class="card shadow border-right">
-                    <div class="card-body">
-                        <div class="d-flex d-lg-flex d-md-block align-items-center">
-                            <div>
-                                <div class="d-inline-flex align-items-center">
-                                    <h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['refunded'])}}</h2>
-                                </div>
-                                <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Refunded')</h6>
-                            </div>
-                            <div class="ml-auto mt-md-3 mt-lg-0">
-                                <span class="opacity-7 text-muted"><i class="fa fa-arrow-right fa-2x"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{--<div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">--}}
+                {{--<div class="card shadow border-right">--}}
+                    {{--<div class="card-body">--}}
+                        {{--<div class="d-flex d-lg-flex d-md-block align-items-center">--}}
+                            {{--<div>--}}
+                                {{--<div class="d-inline-flex align-items-center">--}}
+                                    {{--<h2 class="text-dark mb-1 font-weight-medium">{{number_format($orders['records']['refunded'])}}</h2>--}}
+                                {{--</div>--}}
+                                {{--<h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">@lang('Refunded')</h6>--}}
+                            {{--</div>--}}
+                            {{--<div class="ml-auto mt-md-3 mt-lg-0">--}}
+                                {{--<span class="opacity-7 text-muted"><i class="fa fa-arrow-right fa-2x"></i></span>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
 
 
         </div>
