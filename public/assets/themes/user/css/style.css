@@ -496,6 +496,9 @@
     width: 100%;
     height: 85px;
 }
+.services .cards-order .item img{
+    height: 100%;
+}
 .contain-cards-order .cards-order .item .price{
     display: grid;
     place-content: center;
