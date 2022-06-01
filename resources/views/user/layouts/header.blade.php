@@ -29,7 +29,8 @@
                         
             </li>
             </ul>
-            <div class="fixed-icon rfixedicon ">
+            <div class="fixed-icon  ">
+                <!-- rfixedicon -->
                             <i class="fa fa-bars"></i>
                         </div>
             <!-- <div class="push-notification dropdown " id="pushNotificationArea">
