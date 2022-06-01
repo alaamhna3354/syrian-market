@@ -88,7 +88,7 @@
                             </table>
 
                             </div>
-                            {{ $transactions->appends($_GET)->links() }}
+                            <!-- {{ $transactions->appends($_GET)->links() }} -->
 
 
                     </div>

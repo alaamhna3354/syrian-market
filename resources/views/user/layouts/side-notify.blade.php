@@ -117,7 +117,7 @@
                     </li> -->
                 </ul>
                     <div class="side-fotter d-flex justify-content-around">
-              
+                    <div class="dropdown-divider"></div>
             <a class="logout-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
@@ -125,6 +125,9 @@
                                        
                 <!-- {{ __('Logout') }} -->
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
             <a class="logout-item {{menuActive('user.profile')}}" href="{{ route('user.profile') }}">
                                 <i data-feather="user" class="svg-icon mr-2 ml-1"></i>
                                 <!-- @lang('My Profile') -->
