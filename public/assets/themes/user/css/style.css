@@ -494,7 +494,7 @@
 }
 .contain-cards-order .cards-order .item img{
     width: 100%;
-    height: 100%;
+    height: 85px;
 }
 .contain-cards-order .cards-order .item .price{
     display: grid;
