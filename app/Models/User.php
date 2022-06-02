@@ -77,6 +77,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(BalanceCoupon::class)->latest();
     }
 
+    public function serviceCodes()
+    {
+        return $this->hasMany(ServiceCode::class)->latest();
+    }
+
     public function transaction()
     {
         return $this->hasOne(Transaction::class)->latest();

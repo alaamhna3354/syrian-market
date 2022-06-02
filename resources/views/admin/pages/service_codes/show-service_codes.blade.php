@@ -101,6 +101,8 @@
                             <th scope="col" >@lang('ID')</th>
                             <th scope="col" class="text-left">@lang('Code')</th>
                             <th scope="col" >@lang('Status')</th>
+                            <th scope="col" >@lang('Used')</th>
+                            <th scope="col" >@lang('User')</th>
                             <th scope="col" >@lang('Action')</th>
                         </tr>
                         </thead>
@@ -124,6 +126,15 @@
                                 <td data-label="@lang('Status')" >
                                     <span
                                         class="badge badge-pill {{ $service_code->is_active == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service_code->is_active== 0 ? 'Inactive' : 'Active' }}</span>
+                                </td>
+                                <td data-label="@lang('Used')" >
+                                    <span
+                                        class="badge badge-pill {{ $service_code->is_used == 1 ? 'badge-danger' : 'badge-success' }}">{{ $service_code->is_used== 1 ? 'Used' : 'Not Used' }}</span>
+                                </td>
+                                <td data-label="@lang('User')" >
+                                    @if($service_code->user != null)
+                                        {{ $service_code->user->username}}
+                                    @endif
                                 </td>
                                 <td data-label="@lang('Action')" >
                                        <a href="{{route('admin.service_codes.edit',['id'=>$service_code->id])}}"  class="btn btn-primary btn-rounded btn-sm" title="@lang('Edit')">

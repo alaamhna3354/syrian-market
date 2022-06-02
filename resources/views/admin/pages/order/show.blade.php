@@ -21,6 +21,8 @@
                         <th scope="col">@lang('Order No.')</th>
                         <th scope="col">@lang('User')</th>
                         <th scope="col">@lang('Order Details')</th>
+                        <th scope="col">@lang('Codes')</th>
+                        <th scope="col">@lang('Details')</th>
                         <th scope="col">@lang('Created')</th>
                         <th scope="col">@lang('Status')</th>
                         <th scope="col">@lang('Action')</th>
@@ -49,6 +51,9 @@
                                 @lang('Start counter'):<br>
                                 @lang('Start counter'):
                             </td>
+
+                            <td data-label="@lang('Codes')">{{$order->codes}}</td>
+                            <td data-label="@lang('Details')">{{$order->details}}</td>
                             <td data-label="@lang('Created')">{{dateTime($order->created_at , 'd M Y, h:i A')}} </td>
                             <td data-label="@lang('Status')">
                                 @if($order->status=='awaiting') <span

@@ -146,6 +146,7 @@
                                     <th scope="col">@lang('Start Counter')</th>
                                     <th scope="col">@lang('Remains')</th>
                                     <th scope="col">@lang('Order AT')</th>
+                                    <th scope="col">@lang('Codes')</th>
                                     <th scope="col">@lang('Status')</th>
                                     <th scope="col" >@lang('Note')</th>
                                 </tr>
@@ -160,11 +161,13 @@
                                         <br>
                                         <span>@lang('Quantity') : @lang($order->quantity)</span>
                                         </td>
-                                      
+
                                         <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
                                         <td data-label="@lang('Start Counter')">@lang($order->start_counter?? 'N/A')</td>
                                         <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
+
                                         <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
+                                        <td data-label="@lang('Codes')">@lang($order->codes)</td>
 
                                         <td data-label="@lang('Status')">
                                             @if($order->status=='Awaiting') <span
@@ -214,7 +217,7 @@
                             </table>
                         </div>
                         <!-- {{ $orders->appends($_GET)->links() }} -->
-                      
+
                     </div>
                 </div>
             </div>

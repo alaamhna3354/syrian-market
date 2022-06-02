@@ -36,6 +36,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with(['users', 'service'])->latest()->where('user_id', Auth::id())->paginate();
+//        dd($orders);
         return view('user.pages.order.show', compact('orders'));
     }
 
@@ -62,7 +63,6 @@ class OrderController extends Controller
             ->with('service', 'service.category', 'users')
             ->latest()
             ->paginate(config('basic.paginate'));
-
         return view('user.pages.order.show', compact('orders'));
     }
 
@@ -204,8 +204,10 @@ class OrderController extends Controller
             if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-                    $order->details = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
+                    $order->codes = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
                 }
+            }elseif ($service->category->type == 'GAME'){
+                $order->details = trans('Player Id is : ').$req['link'].trans(', and Name is ').$req['player_name'].trans(', and Service Id is ').$req['service'];
             }
 //            if (isset($service->api_provider_id)) {
 //                $apiproviderdata = ApiProvider::find($service->api_provider_id);
@@ -260,6 +262,7 @@ class OrderController extends Controller
 
                     ]);
                     $serviceCode->is_used = 1;
+                    $serviceCode->user_id = $user->id;
                     $serviceCode->save();
                     return back()->with('success', trans('Your order has been submitted'));
                 } else {
