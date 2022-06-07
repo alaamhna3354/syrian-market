@@ -340,4 +340,16 @@ class ApiProviderController extends Controller
         $api_providers->append($search);
         return view('admin.pages.api_providers.show', compact('api_providers'));
     }
+
+    public function fivesim()
+    {
+
+//        $apiProviderData = Purify::clean($request->all());
+        $ApiProvider = new ApiProvider();
+        $ApiProvider->api_name = $apiProviderData['user/profile'];
+        $ApiProvider->api_key = $apiProviderData['84e6d09de6504debbc69275c30cb381e'];
+        $ApiProvider->url = $apiProviderData['https://5sim.net/v1/'];
+        $apiLiveData = Curl::to($apiProviderData['url'])->withData(['key'=>$apiProviderData['api_key'], 'action'=>'balance'])->post();
+        $currencyData = json_decode($apiLiveData);
+    }
 }

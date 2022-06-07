@@ -19,7 +19,6 @@ class ServiceController extends Controller
      */
     public function index()
     {
-//        dd('dddddddd');
         $categories = Category::with('service', 'service.provider')->has('service')->paginate(config('basic.paginate'));
         $apiProviders = ApiProvider::all();
         return view('admin.pages.services.show-service', compact('categories', 'apiProviders'));

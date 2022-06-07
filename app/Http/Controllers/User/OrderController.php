@@ -260,6 +260,7 @@ class OrderController extends Controller
 
                     ]);
                     $serviceCode->is_used = 1;
+                    $serviceCode->user=$user->id;
                     $serviceCode->save();
                     return back()->with('success', trans('Your order has been submitted'));
                 } else {
