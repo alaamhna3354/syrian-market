@@ -47,8 +47,11 @@
                         </div>
                     </div>
                     <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
-                        {{$service->price}} {{config('basic.currency_symbol')}}
+                      <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
+                      <span>‎₺194.80</span>
                     </div>
+                    
+                   
                     <div class="fire">
                         <img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">
                     </div>
