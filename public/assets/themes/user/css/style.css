@@ -501,12 +501,45 @@
     height: 100%;
 }
 .contain-cards-order .cards-order .item .price{
-    display: grid;
-    place-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: #08090d;
     height: 45px;
     transition: .3s;
-    background-color: #00000014;
+    background-color: #fff;
+}
+.contain-cards-order .cards-order .item .price span{
+    font-size: 14px;
+    padding: 0 4px;
+    position: relative;
+}
+.contain-cards-order .cards-order .item .price span:last-child{
+    font-size: 12px;
+}
+.services .item .fire{
+    display: none;
+    position: absolute;
+    bottom: -50px;
+    height: 60px;
+    width: 100%;
+}
+@media (max-width:568px) {
+    .contain-cards-order .cards-order .item .price span{
+        font-size: 13px; 
+    }
+    .contain-cards-order .cards-order .item .price span:last-child{
+        font-size: 11px;
+    }
+    }
+.contain-cards-order .cards-order .item .price span:first-child::after{
+    content: '';
+    width: 2px;
+    height: 80%;
+    background-color: #c44b1b;
+    position: absolute;
+    right: -1px;
+    top: 1px;
 }
 .contain-cards-order .cards-order .item:hover .price{
     background-color: #fc5714;
@@ -591,11 +624,6 @@
 .services .item:hover .price{
     background-color: #fff !important;
     color: #08090d !important;
-}
-.services .item .fire{
-    display: none;
-    position: absolute;
-    bottom: -53px;
 }
 .services .item.un-active{
     opacity: .7;
