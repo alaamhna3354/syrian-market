@@ -16,9 +16,10 @@
         @yield('content')
     </div>
    
-    <footer class="footer text-center text-white">
+    <footer class="footer text-center text-white wid-res">
         <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
     </footer>
+  
 
 </div>
 
@@ -69,6 +70,7 @@
         $('.fixed-icon').toggleClass('rfixedicon');
         $('.fixedsidebar').toggleClass('rfixed');
         $('.main-page').toggleClass('wid-res');
+        $('.footer').toggleClass('wid-res');
         if (typeof(Storage) !== "undefined") {
             if(localStorage.sidenote == 'true'){
                 localStorage.setItem("sidenote", false);
