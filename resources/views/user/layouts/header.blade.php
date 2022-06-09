@@ -64,12 +64,12 @@
 
 
 </div>
+            
+
+            </div>
             <div class="fixed-icon  ">
                 <i class="fa fa-bars"></i>
             </div>
-
-            </div>
-         
             <!-- End Notification -->
 
 
