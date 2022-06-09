@@ -21,7 +21,7 @@
                     <i class="fa fa-home m-2"></i>
                         <a class="nav-link {{ Request::routeIs('user.home')  ? 'active' : '' }}"
                            href="{{ route('user.home') }}">@lang('Home') </a>
-                         
+
                     </li>
 
                     <li class="nav-item d-flex align-items-center">
@@ -123,7 +123,7 @@
                 onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
                                         <i data-feather="power" class="fa fa-power-off"></i>
-                                       
+
                 <!-- {{ __('Logout') }} -->
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -138,7 +138,7 @@
                 @lang('Open Ticket')
             </a> -->
             <a class="logout-item {{menuActive('user.ticket.list')}}" href="{{ route('user.ticket.list') }}">
-                <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> 
+                <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i>
                 <!-- @lang('Show Ticket') -->
             </a>
             <div class="push-notification dropdown " id="pushNotificationArea">
@@ -183,7 +183,7 @@
                v-else>
                 <strong>@lang('No Data found')</strong>
             </a>
-            
+
 
         </li>
     </ul>
@@ -194,6 +194,7 @@
             </div>
     <!-- <div class="fs-wrapper">
         @foreach($notices as $notice)
+
         <div class="content">
             <div class="featureDate">
                 <div class="category categoryNew new">

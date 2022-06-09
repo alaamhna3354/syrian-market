@@ -77,6 +77,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(BalanceCoupon::class)->latest();
     }
 
+    public function children()
+    {
+        return $this->hasMany(User::class,'user_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
     public function serviceCodes()
     {
         return $this->hasMany(ServiceCode::class)->latest();
@@ -85,6 +95,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function transaction()
     {
         return $this->hasOne(Transaction::class)->latest();
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     public function ticket()
@@ -102,6 +116,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function siteNotificational()
     {
         return $this->morphOne(SiteNotification::class, 'siteNotificational', 'site_notificational_type', 'site_notificational_id');
+    }
+
+    public function agentCommissionRate()
+    {
+        return $this->belongsTo(AgentCommissionRate::class,'user_id','id');
     }
 
 

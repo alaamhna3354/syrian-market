@@ -1,0 +1,224 @@
+ public function store(Request $request)
+    {
+        $req = Purify::clean($request->all());
+        $rules = [
+            'category' => 'required|integer|min:1|not_in:0',
+            'service' => 'required|integer|min:1|not_in:0',
+//            'link' => 'required',
+//            'quantity' => 'required|integer',
+//            'check' => 'required',
+        ];
+        if (!isset($request->drip_feed)) {
+            $rules['runs'] = 'required|integer|not_in:0';
+            $rules['interval'] = 'required|integer|not_in:0';
+        }
+//        $validator = Validator::make($req, $rules);
+//        if ($validator->fails()) {
+//            return back()->withErrors($validator)->withInput();
+//        }
+//        $coupon = Coupon::where('code',$request->coupon)->where('status',1)->get()->first();
+
+        $service = Service::userRate()->findOrFail($request->service);
+        if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+            $serviceCode = $service->service_code->where('is_used', 0)->first();
+            if ($serviceCode == null) {
+                return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
+            }
+        }
+        $user = Auth::user();
+        if ($user != null) {
+            if ($user->is_special == 1 && $service->special_price != null) {
+                $service->price = $service->special_price;
+            }
+        }
+
+
+        $basic = (object)config('basic');
+
+        $quantity = $request->quantity;
+
+        if ($service->drip_feed == 1) {
+            if (!isset($request->drip_feed)) {
+                $rules['runs'] = 'required|integer|not_in:0';
+                $rules['interval'] = 'required|integer|not_in:0';
+                $validator = Validator::make($req, $rules);
+                if ($validator->fails()) {
+                    return back()->withErrors($validator)->withInput();
+                }
+                $quantity = $request->quantity * $request->runs;
+            }
+        }
+        if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
+            $userRate = ($service->user_rate) ?? $service->price;
+//            if ($coupon != null && $coupon->number_of_beneficiaries != null && $coupon->number_of_use != $coupon->number_of_beneficiaries){
+//                $price = round(($quantity * $userRate), 2);
+//                if ($coupon->is_percent == 1){
+//                    $price = $price * $coupon->sale /100;
+//                }else{
+//                    $price -= $coupon->sale;
+//                }
+//            }else{
+//
+//            }
+
+            $price = round(($quantity * $userRate), 2);
+            $user = Auth::user();
+            if ($user->balance < $price) {
+//                if ($user->is_debt != 1 || $user->balance + $user->debt_balance < $price){
+//                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+//                }
+                if ($user->user_id == null || $user->parent->is_agent != 1 || $user->parent->is_approved != 1 || $user->is_debt != 1 || $user->balance + $user->debt_balance < $price) {
+
+                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                }else{
+
+//                    if ($user->parent->balance + $user->balance < $price || $user->parent->is_debt != 1 || $user->parent->balance +$user->parent->balance + $user->balance < $price){
+//                        dd('111111111');
+//                    }else{
+//                        dd('2222222222');
+//                    }
+                }
+            }
+            $order = new Order();
+            $order->user_id = $user->id;
+            $order->category_id = $req['category'];
+            $order->service_id = $req['service'];
+
+            $order->link = $req['link'];
+//            dd($order);
+            $order->quantity = $req['quantity'];
+            $order->status = 'processing';
+            $order->price = $price;
+            $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
+            $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
+
+
+            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+                $serviceCode = $service->service_code->where('is_used', 0)->first();
+                if ($serviceCode != null) {
+                    $order->codes = trans('Service code is : ') . $serviceCode->code . trans(', and id is ') . $serviceCode->id;
+                }
+            } elseif ($service->category->type == 'GAME') {
+                $order->details = trans('Player Id is : ') . $req['link'] . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
+            }
+//            if (isset($service->api_provider_id)) {
+//                $apiproviderdata = ApiProvider::find($service->api_provider_id);
+//                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'add', 'service' => $service->api_service_id, 'link' => $req['link'], 'quantity' => $req['quantity'], 'runs' => $req['runs'], 'interval' => $req['interval']])->post();
+//                $apidata = json_decode($apiservicedata);
+//
+//                if (isset($apidata->order)) {
+//                    $order->status_description = "order: {$apidata->order}";
+//                    $order->api_order_id = $apidata->order;
+//                } else {
+//                    $order->status_description = "error: {$apidata->error}";
+//                }
+//            }
+            $order->save();
+
+            if ($user->balance < $price) {
+
+//                if ($user->is_debt != 1 || $user->balance + $user->debt_balance < $price){
+//                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+//                }
+                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1 && $user->is_debt == 1 && $user->balance + $user->debt_balance >= $price) {
+
+                    if ($user->parent->balance + $user->balance >= $price) {
+                        $agentdiscount = $price - $user->balance;
+                        $user->balance -= $price;
+                        $user->parent->balance -= $agentdiscount;
+                        $user->save();
+                        $user->parent->save();
+
+                    } else {
+//                        dd($user->parent->is_debt);
+                        if ($user->parent->is_debt == 1 && $user->parent->debt_balance + $user->parent->balance + $user->balance + $user->debt_balance >= $price) {
+//                           dd('1111111');
+                            $agentdiscount = $price - $user->balance;
+//                            $userdicount = $agentdiscount - $user->parent->balance;
+                            $user->balance -= $price;
+                            $user->parent->balance -= $agentdiscount;
+                            $user->save();
+                            $user->parent->save();
+                        }else{
+//                            dd('22222222222222');
+                            return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                        }
+                    }
+                } else {
+                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                }
+            }
+            $user->save();
+
+            $transaction = new Transaction();
+            $transaction->user_id = $user->id;
+            $transaction->trx_type = '-';
+            $transaction->amount = $price;
+            $transaction->remarks = 'Place order';
+            $transaction->trx_id = strRandom();
+            $transaction->charge = 0;
+            $transaction->save();
+
+            if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
+                $commision = new AgentCommissionRate();
+                $rate = $service->agent_commission_rate;
+                $commision->user_id = $user->id;
+                $commision->order_id = $order->id;
+                $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
+                $commision->save();
+
+            }
+
+
+            $msg = [
+                'username' => $user->username,
+                'price' => $price,
+                'currency' => $basic->currency
+            ];
+            $action = [
+                "link" => route('admin.order.edit', $order->id),
+                "icon" => "fas fa-cart-plus text-white"
+            ];
+            $this->adminPushNotification('ORDER_CREATE', $msg, $action);
+
+            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+                $serviceCode = $service->service_code->where('is_used', 0)->first();
+                if ($serviceCode != null) {
+//                    $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
+//                        'order_id' => $order->id,
+//                        'order_at' => $order->created_at,
+//                        'service' => optional($order->service)->service_title,
+//                        'status' => $order->status,
+//                        'paid_amount' => $price,
+//                        'remaining_balance' => $user->balance,
+//                        'currency' => $basic->currency,
+//                        'transaction' => $transaction->trx_id,
+//                        'your-code' => $serviceCode->code,
+//
+//                    ]);
+                    $serviceCode->is_used = 1;
+                    $serviceCode->user_id = $user->id;
+                    $serviceCode->save();
+                    return back()->with('success', trans('Your order has been submitted'));
+                } else {
+                    return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
+                }
+            } else {
+                $this->sendMailSms($user, 'ORDER_CONFIRM', [
+                    'order_id' => $order->id,
+                    'order_at' => $order->created_at,
+                    'service' => optional($order->service)->service_title,
+                    'status' => $order->status,
+                    'paid_amount' => $price,
+                    'remaining_balance' => $user->balance,
+                    'currency' => $basic->currency,
+                    'transaction' => $transaction->trx_id,
+                ]);
+                return back()->with('success', trans('Your order has been submitted'));
+            }
+
+
+        } else {
+            return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
+        }
+    }

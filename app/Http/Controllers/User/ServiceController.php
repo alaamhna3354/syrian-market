@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentCommissionRate;
 use App\Models\Category;
 use App\Models\Service;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +21,23 @@ class ServiceController extends Controller
         }])
             ->where('status', 1)
             ->get();
-        return view('user.pages.services.show-service', compact('categories'));
+        $user = Auth::user();
+        if ($user->is_agent == 1 && $user->is_approved == 1){
+            $transactions = Transaction::where('user_id',$user->id)->get();
+            $commissions = AgentCommissionRate::whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->get();
+            $commission_rate = 0;
+            foreach ($commissions as $commission){
+                $commission_rate +=  $commission->commission_rate;
+            }
+            return view('agent.pages.dashboard',compact('transactions','commission_rate'));
+        }elseif ($user->is_agent == 1 && $user->is_approved == 0){
+            return view('user.pages.waitForApproved', compact('categories'));
+        }else{
+            return view('user.pages.services.show-service', compact('categories'));
+        }
+
     }
 
 

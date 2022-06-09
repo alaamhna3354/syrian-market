@@ -4,12 +4,14 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
+use App\Models\AgentCommissionRate;
 use App\Models\ApiProvider;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -120,7 +122,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
         $req = Purify::clean($request->all());
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
@@ -185,7 +186,10 @@ class OrderController extends Controller
             $price = round(($quantity * $userRate), 2);
             $user = Auth::user();
             if ($user->balance < $price) {
-                return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                if ($user->is_debt != 1 || $user->balance + $user->debt_balance < $price){
+                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                }
+
             }
             $order = new Order();
             $order->user_id = $user->id;
@@ -222,9 +226,26 @@ class OrderController extends Controller
 //                }
 //            }
             $order->save();
-            $user->balance -= $price;
-            $user->save();
+            if ($user->balance < $price) {
+                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1 && $user->is_debt == 1 && $user->balance + $user->debt_balance >= $price){
+                    if ($user->balance >= 0){
+                        $agentDiscount = $price - $user->balance;
+                    }else{
+                        $agentDiscount = $price ;
+                    }
 
+                    $user->balance -= $price;
+                    $user->parent->balance -= $agentDiscount;
+                    $user->save();
+                    $user->parent->save();
+                }else{
+                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                }
+
+            }else{
+                $user->balance -= $price;
+                $user->save();
+            }
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
             $transaction->trx_type = '-';
@@ -233,6 +254,16 @@ class OrderController extends Controller
             $transaction->trx_id = strRandom();
             $transaction->charge = 0;
             $transaction->save();
+
+            if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1){
+                $commision = new AgentCommissionRate();
+                $rate = $service->agent_commission_rate ;
+                $commision->user_id = $user->id;
+                $commision->order_id = $order->id;
+                $commision->commission_rate = ($service->price * $rate / 100) * $quantity ;
+                $commision->save();
+
+            }
 
 
             $msg = [
@@ -249,18 +280,18 @@ class OrderController extends Controller
             if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-                    $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
-                        'order_id' => $order->id,
-                        'order_at' => $order->created_at,
-                        'service' => optional($order->service)->service_title,
-                        'status' => $order->status,
-                        'paid_amount' => $price,
-                        'remaining_balance' => $user->balance,
-                        'currency' => $basic->currency,
-                        'transaction' => $transaction->trx_id,
-                        'your-code' => $serviceCode->code,
-
-                    ]);
+//                    $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
+//                        'order_id' => $order->id,
+//                        'order_at' => $order->created_at,
+//                        'service' => optional($order->service)->service_title,
+//                        'status' => $order->status,
+//                        'paid_amount' => $price,
+//                        'remaining_balance' => $user->balance,
+//                        'currency' => $basic->currency,
+//                        'transaction' => $transaction->trx_id,
+//                        'your-code' => $serviceCode->code,
+//
+//                    ]);
                     $serviceCode->is_used = 1;
                     $serviceCode->user_id = $user->id;
                     $serviceCode->save();

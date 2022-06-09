@@ -24,6 +24,7 @@ Route::get('cron', 'FrontendController@cron')->name('cron');
 
 Route::get('/user', 'Auth\LoginController@showLoginForm')->name('login');
 Auth::routes(['verify' => true]);
+Route::get('/registerAsAgent', 'Auth\RegisterController@showAgentRegistrationForm')->name('registerAsAgent');
 
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], function () {
@@ -98,7 +99,21 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
     });
 });
+Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
+    Route::middleware('userCheck')->group(function () {
+        Route::get('/users', 'Agent\UserController@index')->name('users');
+        Route::get('/users/search', 'Agent\UserController@search')->name('users.search');
+        Route::get('/user/create', 'Agent\UserController@create')->name('user.create');
+        Route::post('/user/create', 'Agent\UserController@store')->name('user.store');
+        Route::get('/user/edit/{id}', 'Agent\UserController@userEdit')->name('user.edit');
+        Route::post('/user/update/{id}', 'Agent\UserController@userUpdate')->name('user.update');
+        Route::get('/user/add-balance', 'Agent\UserController@addBalance')->name('user.add-balance');
+        Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
 
+        Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
+    });
+
+});
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/', 'Admin\LoginController@showLoginForm')->name('login');
@@ -152,6 +167,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('/user/balance-update/{id}', 'Admin\UsersController@userBalanceUpdate')->name('user-balance-update');
         Route::get('/user/send-email/{id}', 'Admin\UsersController@sendEmail')->name('send-email');
         Route::post('/user/send-email/{id}', 'Admin\UsersController@sendMailUser')->name('user.email-send');
+        Route::post('/user/approve/{id?}', 'Admin\UsersController@approve')->name('user.approve');
 
         Route::get('/user/custom-rate/{id}', 'Admin\UsersController@customRate')->name('user.customRate');
         Route::get('/user/getService', 'Admin\UsersController@getService')->name('user.getService');

@@ -88,6 +88,7 @@ class ServiceController extends Controller
             'max_amount' => 'required|numeric',
             'price' => 'required|numeric',
             'special_price' => 'required|numeric',
+            'agent_commission_rate' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
@@ -99,6 +100,7 @@ class ServiceController extends Controller
         $service->category_id = $req['category_id'];
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
+        $service->agent_commission_rate = $req['agent_commission_rate'];
         $service->price = $req['price'];
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
@@ -180,6 +182,7 @@ class ServiceController extends Controller
             'price' => 'required',
             'max_amount' => 'required',
             'special_price' => 'required|numeric',
+            'agent_commission_rate' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
@@ -194,6 +197,7 @@ class ServiceController extends Controller
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
 
+        $service->agent_commission_rate = $req['agent_commission_rate'];
         $service->is_available = $req['is_available'];
         $service->api_provider_id = $req['api_provider_id'];
         $service->api_service_id = $req['api_service_id'];

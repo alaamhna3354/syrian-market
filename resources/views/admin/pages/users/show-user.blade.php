@@ -59,6 +59,90 @@
         </div>
     </div>
 
+    <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
+        <div class="card-body">
+
+            <div class="dropdown mb-2 text-right">
+                <button class="btn btn-sm  btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span> @lang('Agents')</span>
+                </button>
+
+            </div>
+
+            <div class="table-responsive">
+                <table class="categories-show-table table table-hover table-striped table-bordered">
+                    <thead class="thead-primary">
+                    <tr>
+                        <th scope="col" class="text-center">
+                            <input type="checkbox" class="form-check-input check-all tic-check" name="check-all"
+                                   id="check-all">
+                            <label for="check-all"></label>
+                        </th>
+                        <th scope="col">@lang('No.')</th>
+                        <th scope="col">@lang('Username')</th>
+                        <th scope="col">@lang('Email')</th>
+                        <th scope="col">@lang('Phone')</th>
+                        <th scope="col">@lang('Balance')</th>
+                        <th scope="col">@lang('Status')</th>
+                        <th scope="col">@lang('Approved')</th>
+                        <th scope="col">@lang('Action')</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($users->where('is_agent',1) as $user)
+                        <tr>
+                            <td class="text-center">
+                                <input type="checkbox" id="chk-{{ $user->id }}"
+                                       class="form-check-input row-tic tic-check" name="check" value="{{$user->id}}"
+                                       data-id="{{ $user->id }}">
+                                <label for="chk-{{ $user->id }}"></label>
+                            </td>
+                            <td data-label="@lang('No.')">{{loopIndex($users) + $loop->index	 }}</td>
+                            <td data-label="@lang('Username')">@lang($user->username)</td>
+                            <td data-label="@lang('Email')">@lang($user->email)</td>
+                            <td data-label="@lang('Phone')">@lang(($user->phone)? : 'N/A')</td>
+                            <td data-label="@lang('Balance')">{{getAmount($user->balance, config('basic.fraction_number'))}} {{trans(config('basic.currency'))}}</td>
+                            <td data-label="@lang('Status')">
+                                <span
+                                    class="badge badge-pill {{ $user->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $user->status == 0 ? 'Inactive' : 'Active' }}</span>
+                            </td>
+                            <td data-label="@lang('Approved')">
+                                <span
+                                    class="badge badge-pill {{ $user->is_approved == 0 ? 'badge-danger' : 'badge-success' }}">{{ $user->is_approved == 0 ? 'Not Approve' : 'Approve' }}</span>
+                            </td>
+                            <td data-label="@lang('Action')">
+                                <div class="dropdown show">
+                                    <a class="dropdown-toggle p-3" href="#" id="dropdownMenuLink" data-toggle="dropdown"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a href="javascript:void(0)"
+                                           class="dropdown-item status-change {{ $user->is_approved == 0 ? 'text-success' : 'text-danger' }}"
+                                           data-toggle="modal"
+                                           data-target="#statusMoldal"
+                                           data-route="{{route('admin.user.approve',['id'=>$user->id])}}">
+                                            <i class="fa fa-check "
+                                               aria-hidden="true"></i>
+                                            {{ $user->is_approved == 0 ? 'قبول' : 'رفض' }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td class="text-center text-danger" colspan="9">@lang('No User Data')</td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                {{$users->appends(@$_GET)->links()}}
+
+            </div>
+        </div>
+    </div>
 
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
         <div class="card-body">
@@ -153,7 +237,28 @@
     </div>
 
 
-
+    <div class="modal fade" id="statusMoldal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">@lang('Confirm Approve')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post" id="statusForm">
+                    @csrf
+                    <div class="modal-body">
+                        <p>@lang('Are you really want to approve this agent')</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
+                        <button type="submit" class="btn btn-primary"><span> @lang('Approve')</span> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="all_active" role="dialog">
         <div class="modal-dialog">
@@ -224,6 +329,10 @@
                 } else {
                     $('#check-all').prop('checked', false);
                 }
+            });
+            $(document).on('click', '.status-change', function () {
+                let route = $(this).data('route');
+                $('#statusForm').attr('action', route);
             });
 
             //dropdown menu is not working

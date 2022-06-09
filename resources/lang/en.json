@@ -192,5 +192,12 @@
     "Coupon" : "Coupon",
     "Number Of Use" : "Number Of Use",
     "Coupon Show" : "Coupon Show",
-    "add Coupon" : "Add Coupon"
+    "add Coupon" : "Add Coupon",
+    "We will review and approve your application as soon as possible if it meets the required conditions" : "We will review and approve your application as soon as possible if it meets the required conditions",
+    "Agents" : "Agents",
+    "Approved" : "Approved",
+    "Confirm Approve" : "Confirm Approve",
+    "Are you really want to approve this agent" : "Are you really want to approve this agent",
+    "Approve" : "Approve",
+    "Sign up As Agent":"Agent"
 }

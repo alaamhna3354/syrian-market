@@ -128,6 +128,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label>@lang('Agent Commission Rate')</label>
+                            <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"
+                                   value="{{old('agent_commission_rate',$service->agent_commission_rate)}}">
+                            @if($errors->has('agent_commission_rate'))
+                                <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="divider"></div>

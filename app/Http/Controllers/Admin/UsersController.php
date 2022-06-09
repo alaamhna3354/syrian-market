@@ -50,6 +50,19 @@ class UsersController extends Controller
         return view('admin.pages.users.show-user', compact('users', 'search'));
     }
 
+    public function approve(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user['is_approved'] == 0) {
+            $is_approved = 1;
+        } else {
+            $is_approved = 0;
+        }
+        $user->is_approved = $is_approved;
+        $user->save();
+        return back()->with('success', 'Successfully Updated');
+    }
+
     public function transaction($id)
     {
         $user = User::findOrFail($id);
@@ -119,6 +132,7 @@ class UsersController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'phone' => 'sometimes|required',
             'language_id' => 'required|sometimes',
+            'debt_balance' => 'numeric',
             'image' => ['nullable', 'image', new FileTypeValidate(['jpeg', 'jpg', 'png'])]
         ];
         $message = [
@@ -148,7 +162,9 @@ class UsersController extends Controller
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
+        $user->debt_balance = $userData['debt_balance'];
         $user->status = ($userData['status'] == 'on') ? 0 : 1;
+        $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
         $user->sms_verification = ($userData['sms_verification'] == 'on') ? 0 : 1;
         $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;
