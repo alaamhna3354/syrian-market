@@ -209,7 +209,7 @@ class OrderController extends Controller
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-                    $order->codes = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
+                    $order->code = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
                 }
             }elseif ($service->category->type == 'GAME'){
                 $order->details = trans('Player Id is : ').$req['link'].trans(', and Name is ').$req['player_name'].trans(', and Service Id is ').$req['service'];

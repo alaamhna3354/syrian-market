@@ -170,7 +170,7 @@
                                             @if($order->verify )
                                                     {{ $order->verify }}
                                                 @elseif($order->category->type=='5SIM')
-                                                    <i class="fa fa-cart-plus" onclick="checksms({{ $order->id }})" ></i>
+                                                    <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
                                                 @endif
                                             </span >
                                         </td>
