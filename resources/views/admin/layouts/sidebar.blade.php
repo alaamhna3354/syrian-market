@@ -448,7 +448,22 @@
                     {{--</ul>--}}
                 {{--</li>--}}
 
-
+                <li class="sidebar-menu-item">
+                    <a class="nav-link " onclick="showRate()">
+                        <i class="menu-icon la la-list"></i>
+                        <span class="menu-title">@lang('Exchange Rate')</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="col-sm-12" id="rate" style="display: none" >
+                        <form name="add-blog-post-form" id="add-blog-post-form" method="post" action="{{route('admin.basic-controls.exchange_rate')}}">
+                            @csrf
+                            <input type="text" class="form-control has-error bold " name="rate" required placeholder="@lang('Enter Rate')"
+                                   value="{{config('basic.exchange_rate')}}">
+                            <button  class="btn btn--dark" type="submit"  >@lang('Update')</button>
+                        </form>
+                    </div>
+                </li>
                 <li class="list-divider"></li>
 
 
@@ -458,3 +473,8 @@
     </div>
     <!-- End Sidebar scroll-->
 </aside>
+<script>
+    function showRate() {
+        document.getElementById("rate").style.display = "block";
+    }
+</script>

@@ -60,7 +60,14 @@ class ServiceCodeController extends Controller
      */
     public function create()
     {
+
         $services = Service::orderBy('id', 'DESC')->where('service_status', 1)->get();
+        foreach ($services as $key=>$service){
+            if($service->category->type != 'CODE'){
+                $services->forget($key);
+            }
+        }
+//        dd($services);
         return view('admin.pages.service_codes.add-service-code', compact('services'));
     }
 

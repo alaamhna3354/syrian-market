@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ApiProvider;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
@@ -341,15 +342,86 @@ class ApiProviderController extends Controller
         return view('admin.pages.api_providers.show', compact('api_providers'));
     }
 
-    public function fivesim()
+    public function fivesim($params)
     {
 
-//        $apiProviderData = Purify::clean($request->all());
-        $ApiProvider = new ApiProvider();
-        $ApiProvider->api_name = $apiProviderData['user/profile'];
-        $ApiProvider->api_key = $apiProviderData['84e6d09de6504debbc69275c30cb381e'];
-        $ApiProvider->url = $apiProviderData['https://5sim.net/v1/'];
-        $apiLiveData = Curl::to($apiProviderData['url'])->withData(['key'=>$apiProviderData['api_key'], 'action'=>'balance'])->post();
-        $currencyData = json_decode($apiLiveData);
+        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $ch = curl_init();
+        $url = 'https://5sim.net/v1/user/buy/activation/' . $params;
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $token;
+        $headers[] = 'Accept: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpcode!=200) {
+           return 0;
+        }
+        curl_close($ch);
+
+        $result = json_decode($result, True);
+        return $result;
     }
+
+    public function checkSMS($orderID)
+    {
+        $order=Order::find($orderID);
+        $id=$order->order_id_api;
+        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://5sim.net/v1/user/check/' . $id);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $token;
+        $headers[] = 'Accept: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        $result = json_decode($result, True);
+        if (isset($result['sms'][0])) {
+            $code = $result['sms'][0]['code'];
+            if (isset($code)) {
+                return   $this->finishOrder($id, $orderID);
+            }
+        }
+        else return '0';
+
+    }
+
+    public function finishOrder($id,$orderid)
+    {
+        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $ch = curl_init();
+        $finishOrderUrl = 'https://5sim.net/v1/user/finish/' . $id;
+        curl_setopt($ch, CURLOPT_URL, $finishOrderUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $token;
+        $headers[] = 'Accept: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+        $result = json_decode($result, True);
+        $res= (new user\OrderController())->finish5SImOrder($orderid,$result);
+        return $res;
+    }
+
+
 }

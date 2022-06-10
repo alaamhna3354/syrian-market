@@ -24,6 +24,7 @@
                         <th scope="col">@lang('Balance')</th>
                         <th scope="col">@lang('Status')</th>
                         <th scope="col">@lang('Sold')</th>
+                        <th scope="col">@lang('User')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -57,6 +58,11 @@
                             <td data-label="@lang('Sold')">
                                 <span
                                     class="badge badge-pill {{ $coupon->is_sold == 1 ? 'badge-danger' : 'badge-success' }}">{{ $coupon->is_sold == 1 ? 'Sold' : 'Not Sold' }}</span>
+                            </td>
+                            <td data-label="@lang('User')">
+                                @if($coupon->user != null)
+                                {{ $coupon->user->username}}
+                                @endif
                             </td>
                             <td data-label="@lang('Action')">
 

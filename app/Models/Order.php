@@ -24,4 +24,9 @@ class Order extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id','id');
+    }
 }

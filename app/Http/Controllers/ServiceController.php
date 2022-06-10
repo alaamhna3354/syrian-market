@@ -106,9 +106,8 @@ class ServiceController extends Controller
         $service->api_service_id = (empty($req['api_service_id'])) ? 0 : $req['api_service_id'];
         $service->drip_feed = $req['drip_feed'];
         $service->description = $req['description'];
-
-
-
+        if ($req['country'] && $req['product'] )
+            $service->api_service_params=$req['country'].'/any/'.$req['product'];
 
         $provider = ApiProvider::find($req['api_provider_id']);
         if ($req['manual_api'] == 1):
@@ -192,7 +191,8 @@ class ServiceController extends Controller
         $service->price = $req['price'];
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
-
+        if ($req['country'] && $req['product'] )
+            $service->api_service_params=$req['country'].'/any/'.$req['product'];
         $service->is_available = $req['is_available'];
         $service->api_provider_id = $req['api_provider_id'];
         $service->api_service_id = $req['api_service_id'];

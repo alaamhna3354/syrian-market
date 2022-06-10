@@ -311,7 +311,6 @@ width: 100%;
 padding: .5rem 10px;
 }
 #main-wrapper {
-min-height: 100vh;
 background: white;
 }
 .page-wrapper {
@@ -638,11 +637,12 @@ border-bottom: none;
 display: block;
 font-size: .8em;
 text-align: right;
+display: flex;
+justify-content: space-between;
 }
 
 table td::before {
 content: attr(data-label);
-float: left;
 font-weight: bold;
 }
 

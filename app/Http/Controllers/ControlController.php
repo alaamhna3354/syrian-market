@@ -234,4 +234,20 @@ class ControlController extends Controller
         return back()->with('success', 'Favicon has been updated.');
 
     }
+    public function setExchangerate(Request $request)
+    {
+        $configure = Configure::firstOrNew();
+        $reqData = Purify::clean($request->except('_token', '_method'));
+        $request->validate([
+            'rate' => 'required',
+
+        ]);
+        config(['basic.exchange_rate' => $reqData['rate']]);
+        $fp = fopen(base_path() . '/config/basic.php', 'w');
+        fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
+        fclose($fp);
+        $configure->exchange_rate=$reqData['rate'];
+        $configure->save();
+        return back()->with('success', 'Exchange Rate has been updated.');
+    }
 }
