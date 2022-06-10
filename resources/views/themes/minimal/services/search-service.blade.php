@@ -78,7 +78,7 @@
                                                     @lang($row->service_title)
                                                 </td>
                                                 <td data-label="@lang('Rate Per 1000('.config('basic.currency_symbol').')')" class="text-right text-md-center">
-                                                    {{($row->user_rate) ??$row->price}}{{config('basic.currency')}}
+                                                    {{($row->user_rate) ?? $row->price}}{{config('basic.currency')}}
 
                                                 </td>
                                                 <td data-label="@lang('Min')" class="text-right text-md-center">

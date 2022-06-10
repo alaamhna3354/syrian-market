@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\ApiProviderController;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
 use App\Models\ApiProvider;
@@ -129,10 +130,10 @@ class OrderController extends Controller
 //            'quantity' => 'required|integer',
 //            'check' => 'required',
         ];
-        if (!isset($request->drip_feed)) {
-            $rules['runs'] = 'required|integer|not_in:0';
-            $rules['interval'] = 'required|integer|not_in:0';
-        }
+//        if (!isset($request->drip_feed)) {
+//            $rules['runs'] = 'required|integer|not_in:0';
+//            $rules['interval'] = 'required|integer|not_in:0';
+//        }
 //        $validator = Validator::make($req, $rules);
 //        if ($validator->fails()) {
 //            return back()->withErrors($validator)->withInput();
@@ -140,12 +141,13 @@ class OrderController extends Controller
 //        $coupon = Coupon::where('code',$request->coupon)->where('status',1)->get()->first();
 
         $service = Service::userRate()->findOrFail($request->service);
-        if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+        if ($service->category->type == 'CODE') {
             $serviceCode = $service->service_code->where('is_used', 0)->first();
             if ($serviceCode == null) {
                 return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
             }
         }
+
         $user = Auth::user();
         if ($user != null) {
             if ($user->is_special == 1 && $service->special_price != null) {
@@ -155,20 +157,22 @@ class OrderController extends Controller
 
 
         $basic = (object)config('basic');
+        if ($service->category->type == 'CODE' || $service->category->type == '5SIM')
+            $quantity=1;
+        else
+            $quantity = $request->quantity;
 
-        $quantity = $request->quantity;
-
-        if ($service->drip_feed == 1) {
-            if (!isset($request->drip_feed)) {
-                $rules['runs'] = 'required|integer|not_in:0';
-                $rules['interval'] = 'required|integer|not_in:0';
-                $validator = Validator::make($req, $rules);
-                if ($validator->fails()) {
-                    return back()->withErrors($validator)->withInput();
-                }
-                $quantity = $request->quantity * $request->runs;
-            }
-        }
+//        if ($service->drip_feed == 1) {
+//            if (!isset($request->drip_feed)) {
+//                $rules['runs'] = 'required|integer|not_in:0';
+//                $rules['interval'] = 'required|integer|not_in:0';
+//                $validator = Validator::make($req, $rules);
+//                if ($validator->fails()) {
+//                    return back()->withErrors($validator)->withInput();
+//                }
+//                $quantity = $request->quantity * $request->runs;
+//            }
+//        }
         if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
             $userRate = ($service->user_rate) ?? $service->price;
 //            if ($coupon != null && $coupon->number_of_beneficiaries != null && $coupon->number_of_use != $coupon->number_of_beneficiaries){
@@ -187,6 +191,7 @@ class OrderController extends Controller
             if ($user->balance < $price) {
                 return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
+
             $order = new Order();
             $order->user_id = $user->id;
             $order->category_id = $req['category'];
@@ -201,7 +206,7 @@ class OrderController extends Controller
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
 
 
-            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+            if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
                     $order->codes = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
@@ -209,31 +214,32 @@ class OrderController extends Controller
             }elseif ($service->category->type == 'GAME'){
                 $order->details = trans('Player Id is : ').$req['link'].trans(', and Name is ').$req['player_name'].trans(', and Service Id is ').$req['service'];
             }
-//            if (isset($service->api_provider_id)) {
-//                $apiproviderdata = ApiProvider::find($service->api_provider_id);
-//                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'add', 'service' => $service->api_service_id, 'link' => $req['link'], 'quantity' => $req['quantity'], 'runs' => $req['runs'], 'interval' => $req['interval']])->post();
-//                $apidata = json_decode($apiservicedata);
-//
-//                if (isset($apidata->order)) {
-//                    $order->status_description = "order: {$apidata->order}";
-//                    $order->api_order_id = $apidata->order;
-//                } else {
-//                    $order->status_description = "error: {$apidata->error}";
-//                }
-//            }
+
+            elseif ($service->category->type == '5SIM') {
+                $codes = (new ApiProviderController)->fivesim($service->api_service_params);
+                if($codes ==0)
+                    return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
+                else {
+                    $order->code = $codes['phone'];
+                    $order->order_id_api = $codes['id'];
+                    $order->status = 5;
+                }
+            }
             $order->save();
-            $user->balance -= $price;
-            $user->save();
 
-            $transaction = new Transaction();
-            $transaction->user_id = $user->id;
-            $transaction->trx_type = '-';
-            $transaction->amount = $price;
-            $transaction->remarks = 'Place order';
-            $transaction->trx_id = strRandom();
-            $transaction->charge = 0;
-            $transaction->save();
+            if ($service->category->type != '5SIM') {
+                $user->balance -= $price;
+                $user->save();
 
+                $transaction = new Transaction();
+                $transaction->user_id = $user->id;
+                $transaction->trx_type = '-';
+                $transaction->amount = $price;
+                $transaction->remarks = 'Place order';
+                $transaction->trx_id = strRandom();
+                $transaction->charge = 0;
+                $transaction->save();
+            }
 
             $msg = [
                 'username' => $user->username,
@@ -246,7 +252,7 @@ class OrderController extends Controller
             ];
             $this->adminPushNotification('ORDER_CREATE', $msg, $action);
 
-            if ($service->category->type == 'CODE' || $service->category->type == 'OTHER') {
+            if ($service->category->type == 'CODE' ) {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
                     $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
@@ -262,13 +268,26 @@ class OrderController extends Controller
 
                     ]);
                     $serviceCode->is_used = 1;
-                    $serviceCode->user_id = $user->id;
+                    $serviceCode->user=$user->id;
                     $serviceCode->save();
                     return back()->with('success', trans('Your order has been submitted'));
                 } else {
                     return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
-            }else{
+            }elseif ($service->category->type == '5SIM') {
+
+                $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
+                    'order_id' => $order->id,
+                    'order_at' => $order->created_at,
+                    'service' => optional($order->service)->service_title,
+                    'status' => $order->status,
+                    'currency' => $basic->currency,
+                    'your-code' => $order->code,
+
+                ]);
+
+            }
+            else{
                 $this->sendMailSms($user, 'ORDER_CONFIRM', [
                     'order_id' => $order->id,
                     'order_at' => $order->created_at,
@@ -281,10 +300,6 @@ class OrderController extends Controller
                 ]);
                 return back()->with('success', trans('Your order has been submitted'));
             }
-
-
-
-
 
         } else {
             return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
@@ -459,6 +474,36 @@ class OrderController extends Controller
 
         }
         return back()->with('success', trans('Successfully Added'));
+    }
+
+    public function finish5SImOrder($id,$result)
+    {
+        $order=Order::find($id);
+        $user = auth()->user();
+        if ($user->balance < $order->price) {
+            $notify[] = ['error', 'Insufficient balance. Please deposit and try again!'];
+            return back()->withNotify($notify);
+        }
+        $user->balance -= $order->price;
+
+        $user->save();
+        $order->status=2;
+        $order->verify=$result['sms'][0]['code'];
+        $order->save();
+
+        //Create Transaction
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->trx_type = '-';
+        $transaction->amount = $order->price;
+        $transaction->remarks = 'Place order';
+        $transaction->trx_id = strRandom();
+        $transaction->charge = 0;
+        $transaction->save();
+        return $result['sms'][0]['code'];
+//        $notify[] = ['success', 'Successfully placed your order!'];
+//        return back()->withNotify($notify);
+
     }
 
 }

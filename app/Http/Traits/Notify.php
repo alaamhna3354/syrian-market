@@ -126,10 +126,10 @@ trait Notify
 
     public function userPushNotification($user, $templateKey, $params = [], $action = [])
     {
-        $basic = (object) config('basic');
-        if ($basic->push_notification != 1) {
-            return false;
-        }
+//        $basic = (object) config('basic');
+//        if ($basic->push_notification != 1) {
+//            return false;
+//        }
 
         $templateObj = NotifyTemplate::where('template_key', $templateKey)->where('language_id', $user->language_id)->where('status', 1)->first();
         if (!$templateObj) {
@@ -144,6 +144,7 @@ trait Notify
             }
             $action['text'] = $template;
         }
+
         $siteNotification = new SiteNotification();
         $siteNotification->description = $action;
         $user->siteNotificational()->save($siteNotification);
@@ -154,7 +155,7 @@ trait Notify
     public function adminPushNotification($templateKey, $params = [], $action = [])
     {
 
-        $basic = (object) config('basic');
+//        $basic = (object) config('basic');
 //        if ($basic->push_notification != 1) {
 //            return false;
 //        }
