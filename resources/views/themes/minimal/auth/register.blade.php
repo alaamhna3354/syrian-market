@@ -2,7 +2,11 @@
 @section('title','REGISTER')
 @section('content')
     <!-- LOGIN-SIGNUP -->
+    @if(session()->get('rtl') == 1)
+    <section class="login-signup login-signup-ar">
+    @else
     <section class="login-signup">
+    @endif
         <div class="container">
             <div class="row">
 

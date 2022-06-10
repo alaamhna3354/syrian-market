@@ -3139,6 +3139,9 @@ ul.minicart .cart-price .new {
     height: 100%;
     z-index: 1000;
 }
+.login-signup-ar{
+    background-position-x: right;
+}
 @media (max-width:568px) {
     .login-signup{
         min-height: 400px;
