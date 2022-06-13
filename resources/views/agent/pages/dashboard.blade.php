@@ -58,7 +58,7 @@
                         <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
                             <div>
                                 <div class="d-inline-flex align-items-center">
-{{--                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($totalDeposit)}}</h2>--}}
+                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium"><sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{getAmount($total)}}</h2>
                                 </div>
                                 <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Total Deposit')</h6>
                             </div>

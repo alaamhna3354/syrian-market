@@ -87,6 +87,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(User::class,'user_id');
     }
 
+    public function agent()
+    {
+        return $this->hasOne(Agent::class,'user_id');
+    }
+
     public function serviceCodes()
     {
         return $this->hasMany(ServiceCode::class)->latest();

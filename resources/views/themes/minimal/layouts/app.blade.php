@@ -81,7 +81,7 @@
                                 <li class="or">@lang('OR')</li>
                                 <li><a href="{{route('login')}}"><i class="far fa-edit"></i>@lang('Login')</a></li>
 {{--                                <li class="or">@lang('OR')</li>--}}
-                                <li><a href="{{route('registerAsAgent')}}"><i class="far fa-edit"></i>@lang('Sign up As Agent')</a></li>
+{{--                                <li><a href="{{route('registerAsAgent')}}"><i class="far fa-edit"></i>@lang('Sign up As Agent')</a></li>--}}
                             @endguest
                             @auth
                                 <li class="nav-item mr-5">

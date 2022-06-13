@@ -70,6 +70,12 @@
                            href="{{ route('user.transaction') }}">@lang('Transactions') </a>
                     </li>
 
+                    <li class="nav-item d-flex align-items-center">
+                        <i class="fas fa-edit m-2"></i>
+                        <a class="nav-link {{ Request::routeIs('registerAsAgent') ? 'active' : '' }}"
+                           href="{{ route('registerAsAgent') }}">@lang('Sign up As Agent') </a>
+                    </li>
+
                     {{--<li class="nav-item ">--}}
                         {{--<a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"--}}
                            {{--href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>--}}

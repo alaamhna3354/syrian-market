@@ -19,7 +19,9 @@ trait Upload
 
     public function uploadImage($file, $location, $size = null, $old = null, $thumb = null, $filename = null)
     {
+
         $path = $this->makeDirectory($location);
+
         if (!$path) throw new \Exception('File could not been created.');
 
         if (!empty($old)) {
@@ -34,8 +36,8 @@ trait Upload
         if(strtolower($file->getClientOriginalExtension()) == 'pdf'){
             $file->move($location, $filename);
         }else{
-            $image = Image::make($file);
 
+            $image = Image::make($file);
             if (!empty($size)) {
                 $size = explode('x', strtolower($size));
                 $image->resize($size[0], $size[1]);

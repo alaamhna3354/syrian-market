@@ -24,7 +24,8 @@ Route::get('cron', 'FrontendController@cron')->name('cron');
 
 Route::get('/user', 'Auth\LoginController@showLoginForm')->name('login');
 Auth::routes(['verify' => true]);
-Route::get('/registerAsAgent', 'Auth\RegisterController@showAgentRegistrationForm')->name('registerAsAgent');
+Route::get('/registerAsAgent', 'Agent\HomeController@showAgentRegistrationForm')->name('registerAsAgent');
+Route::Post('/registerAsAgent/{user}', 'Agent\HomeController@registerAsAgent')->name('addAgent');
 
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], function () {
@@ -111,6 +112,41 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
 
         Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
+
+        Route::get('/profile', 'Agent\HomeController@profile')->name('profile');
+        Route::post('/updateProfile', 'Agent\HomeController@updateProfile')->name('updateProfile');
+        Route::put('/updateInformation', 'Agent\HomeController@updateInformation')->name('updateInformation');
+        Route::post('/updatePassword', 'Agent\HomeController@updatePassword')->name('updatePassword');
+
+        Route::group(['prefix' => 'ticket', 'as' => 'ticket.'], function () {
+            Route::get('/', 'Agent\SupportController@index')->name('list');
+            Route::get('/create', 'Agent\SupportController@create')->name('create');
+            Route::post('/create', 'Agent\SupportController@store')->name('store');
+            Route::get('/view/{ticket}', 'Agent\SupportController@view')->name('view');
+            Route::put('/reply/{ticket}', 'Agent\SupportController@reply')->name('reply');
+            Route::get('/download/{ticket}', 'Agent\SupportController@download')->name('download');
+        });
+
+        Route::resource('order', 'Agent\OrderController');
+        Route::get('/orders', 'Agent\OrderController@search')->name('order.search');
+        Route::post('/order/status', 'Agent\OrderController@statusChange')->name('order.status.change');
+        Route::get('/orders/{status}', 'Agent\OrderController@statusSearch')->name('order.status.search');
+        Route::get('/mass/orders', 'Agent\OrderController@massOrder')->name('order.mass');
+        Route::post('/mass/orders', 'Agent\OrderController@masOrderStore')->name('order.mass.store');
+        Route::get('/get-service', 'ServiceController@getservice')->name('get.service');
+
+        Route::get('add-fund', 'Agent\HomeController@addFund')->name('addFund');
+        Route::post('add-fund', 'Agent\PaymentController@addFundRequest')->name('addFund.request');
+        Route::get('addFundConfirm', 'Agent\PaymentController@depositConfirm')->name('addFund.confirm');
+
+        Route::get('/use-balance-coupon', 'Agent\HomeController@useBalanceCoupon')->name('use-balance-coupon');
+        Route::Post('/add-balance-coupon', 'Agent\HomeController@addBalanceCoupon')->name('add-balance-coupon');
+        Route::get('fund-history', 'Agent\HomeController@fundHistory')->name('fund-history');
+        Route::get('fund-history-search', 'Agent\HomeController@fundHistorySearch')->name('fund-history.search');
+        Route::get('/transaction', 'Agent\HomeController@transaction')->name('transaction');
+        Route::get('/transaction-search', 'Agent\HomeController@transactionSearch')->name('transaction.search');
+
+
     });
 
 });
