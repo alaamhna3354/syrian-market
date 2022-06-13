@@ -29,11 +29,11 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>@lang('Select Category')</label>
-                            <select class="form-control" id="category_id" name="category_id">
+                            <select class="form-control" id="category_id" name="category_id" onchange="showExtraField()">
                                 <option value="{{old('category_id',$service->category_id)}}" selected
                                         hidden>@lang('Change Category')</option>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id  }}" @if($service->category_id == $category->id ) selected @endif>{{ $category->category_title  }}</option>
+                                    <option value="{{ $category->id  }}" @if($service->category_id == $category->id ) selected @endif id="{{$category->type}}">{{ $category->category_title  }}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('category_id'))
@@ -127,6 +127,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group" id="extra" style="display: none;">
+                                <label>@lang('Select Country')</label>
+                                <select class="form-control" id="country" name="country">
+                                    <option disabled value="" selected hidden>@lang('Select Country')</option>
+                                    @foreach(get5SimCountries() as $key=> $country)
+                                        <option value="{{$key}}">{{$country}}</option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('type'))
+                                    <div class="error text-danger">@lang($errors->first('type')) </div>
+                                @endif
+                                <label>@lang('Select Product')</label>
+                                <select class="form-control" id="product" name="product">
+                                    <option disabled value="" selected hidden>@lang('Select Product')</option>
+                                    @foreach(get5SimProducts() as  $product)
+                                        <option value="{{$product}}">{{$product}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>@lang('Agent Commission Rate')</label>
@@ -196,8 +215,34 @@
 @endsection
 @push('js')
     <script>
+        function showExtraField(){
+            var opti = document.getElementById('category_id').options;
+            opt=opti[opti.selectedIndex].id;
+            // opt=opt.options[opt.selectedIndex].id;
+
+            if (opt == "5SIM" ){
+                $('#extra').attr('style','display : block;');
+                $('#country').attr('require');
+                $('#product').attr('product');
+            }
+            else {
+                $('#extra').attr('style','display : none;')
+            }
+
+            console.log(opt)
+        }
+
         "use strict";
         $(document).ready(function (e) {
+            var opti = document.getElementById('category_id').options;
+            opt=opti[opti.selectedIndex].id;
+            // opt=opt.options[opt.selectedIndex].id;
+
+            if (opt == "5SIM" ){
+                $('#extra').attr('style','display : block;');
+                $('#country').attr('require');
+                $('#product').attr('product');
+            }
 
             $(document).on('click', '#more', function () {
                 $("#moreField").fadeIn(1000);

@@ -33,7 +33,7 @@
                                         <option value="GAME">@lang('GAME')</option>
                                     <option value="CODE">@lang('CODE')</option>
                                     <option value="BALANCE">@lang('BALANCE')</option>
-                                    <option value="OTHER">@lang('OTHER')</option>
+                                    <option value="5SIM">@lang('5SIM')</option>
 
                                 </select>
                                 @if($errors->has('type'))
@@ -96,7 +96,7 @@
      <script>
          function showExtraField(){
              var opt = document.getElementById('type').value;
-             if (opt == "BALANCE" || opt == "OTHER" ){
+             if (opt == "BALANCE" ){
                $('#extra-field').attr('style','display : block;')
 
              }else {

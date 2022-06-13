@@ -23,4 +23,5 @@
     'smtp_password' => 'Admin@123',
   ),
   'push_notification' => 0,
+  'exchange_rate' => '10',
 );

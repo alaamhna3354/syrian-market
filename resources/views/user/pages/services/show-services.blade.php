@@ -48,7 +48,7 @@
                     </div>
                     <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
                       <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
-                      <span>‎₺194.80</span>
+                      <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
                     
                    

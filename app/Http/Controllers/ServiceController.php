@@ -19,7 +19,6 @@ class ServiceController extends Controller
      */
     public function index()
     {
-//        dd('dddddddd');
         $categories = Category::with('service', 'service.provider')->has('service')->paginate(config('basic.paginate'));
         $apiProviders = ApiProvider::all();
         return view('admin.pages.services.show-service', compact('categories', 'apiProviders'));
@@ -109,9 +108,8 @@ class ServiceController extends Controller
         $service->api_service_id = (empty($req['api_service_id'])) ? 0 : $req['api_service_id'];
         $service->drip_feed = $req['drip_feed'];
         $service->description = $req['description'];
-
-
-
+        if (isset($req['country']) && isset($req['product'] ))
+            $service->api_service_params=$req['country'].'/any/'.$req['product'];
 
         $provider = ApiProvider::find($req['api_provider_id']);
         if ($req['manual_api'] == 1):
@@ -196,8 +194,9 @@ class ServiceController extends Controller
         $service->price = $req['price'];
         $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
-
         $service->agent_commission_rate = $req['agent_commission_rate'];
+        if (isset($req['country']) && isset($req['product'] ))
+            $service->api_service_params=$req['country'].'/any/'.$req['product'];
         $service->is_available = $req['is_available'];
         $service->api_provider_id = $req['api_provider_id'];
         $service->api_service_id = $req['api_service_id'];

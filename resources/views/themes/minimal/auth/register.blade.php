@@ -4,7 +4,7 @@
     <!-- LOGIN-SIGNUP -->
     <section class="login-signup">
         <div class="container">
-            <div class="row">
+            <div class="row" style="justify-content: center;">
 
                 {{--@if(isset($templates['register'][0]) && $content = $templates['register'][0])--}}
                     {{--<div class="col-lg-5">--}}

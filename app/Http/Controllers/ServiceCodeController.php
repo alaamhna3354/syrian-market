@@ -30,7 +30,7 @@ class ServiceCodeController extends Controller
      */
     public function search(Request $request)
     {
-        dd($request);
+
         $services = Service::with('service_code')->get();
 
         $search = $request->all();
