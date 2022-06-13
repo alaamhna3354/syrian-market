@@ -152,7 +152,7 @@
                     type:"GET",
                     success:function(response){
                         console.log(response)
-                        $('#player_name').val(response);
+                        $('#player_name').val(response.name);
                     },
                 })
             }
