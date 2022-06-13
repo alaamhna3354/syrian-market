@@ -182,7 +182,7 @@
                 $(this).removeClass('active');
                 $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
-                $(".total").val(`0`);
+                $(".total").val('0');
                 $('.quantity').val('0');
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");

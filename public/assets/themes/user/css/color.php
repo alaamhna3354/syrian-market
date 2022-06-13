@@ -651,7 +651,24 @@ border-bottom: 0;
 }
 }
 
-
+@media (max-width:568px) {
+    .un-td{
+    display: flex;
+    flex-wrap: wrap;
+}
+.un-td h5{
+    width:50%;
+    text-align: end;
+}
+.un-td span{
+    width:100%;
+    text-align: end;
+}
+.un-td::before{
+   width:50%;
+   text-align: start;
+}
+}
 
 
 
