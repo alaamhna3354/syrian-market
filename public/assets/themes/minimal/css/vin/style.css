@@ -3205,3 +3205,6 @@ ul.minicart .cart-price .new {
                     0 -20px 10px 0 rgba(255, 160, 10, 0);
     }
 }
+.logo img{
+    width: 150px;
+}

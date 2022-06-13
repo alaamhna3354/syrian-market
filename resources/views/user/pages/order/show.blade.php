@@ -155,8 +155,8 @@
                                 @foreach($orders as $key => $order)
                                     <tr>
                                         <td data-label="@lang('Order ID')"> {{$order->id}} </td>
-                                        <td data-label="@lang('Order Details')" >
-                                            <h5>@lang(optional($order->service)->service_title)</h5>
+                                        <td  data-label="@lang('Order Details')" class="un-td">
+                                        <h5>@lang(optional($order->service)->service_title)</h5>
                                         <span> @lang('Link') : @lang($order->link) </span>
                                         <br>
                                         <span>@lang('Quantity') : @lang($order->quantity)</span>
