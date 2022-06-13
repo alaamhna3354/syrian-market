@@ -155,10 +155,9 @@ class OrderController extends Controller
             }
         }
 
-
         $basic = (object)config('basic');
         if ($service->category->type == 'CODE' || $service->category->type == '5SIM')
-            $quantity=1;
+            $quantity = 1;
         else
             $quantity = $request->quantity;
 
@@ -209,15 +208,13 @@ class OrderController extends Controller
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-                    $order->code = trans('Service code is : ').$serviceCode->code.trans(', and id is ').$serviceCode->id;
+                    $order->code = trans('Service code is : ') . $serviceCode->code . trans(', and id is ') . $serviceCode->id;
                 }
-            }elseif ($service->category->type == 'GAME'){
-                $order->details = trans('Player Id is : ').$req['link'].trans(', and Name is ').$req['player_name'].trans(', and Service Id is ').$req['service'];
-            }
-
-            elseif ($service->category->type == '5SIM') {
+            } elseif ($service->category->type == 'GAME') {
+                $order->details = trans('Player Id is : ') . $req['link'] . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
+            } elseif ($service->category->type == '5SIM') {
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);
-                if($codes ==0)
+                if ($codes == 0)
                     return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
                 else {
                     $order->code = $codes['phone'];
@@ -251,8 +248,17 @@ class OrderController extends Controller
                 "icon" => "fas fa-cart-plus text-white"
             ];
             $this->adminPushNotification('ORDER_CREATE', $msg, $action);
+            $usermsg = [
+                'order_id' => $order->id,
+                'status' => $order->status
+            ];
+            $useraction = [
+                "link" => '#',
+                "icon" => "fas fa-cart-plus text-white"
+            ];
+            $this->userPushNotification($user, 'ORDER_CREATE', $usermsg, $useraction);
 
-            if ($service->category->type == 'CODE' ) {
+            if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
                     $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
@@ -268,13 +274,15 @@ class OrderController extends Controller
 
                     ]);
                     $serviceCode->is_used = 1;
-                    $serviceCode->user=$user->id;
+                    $serviceCode->user = $user->id;
                     $serviceCode->save();
                     return back()->with('success', trans('Your order has been submitted'));
-                } else {
+                }
+                else {
                     return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
-            }elseif ($service->category->type == '5SIM') {
+            }
+            elseif ($service->category->type == '5SIM') {
 
                 $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
                     'order_id' => $order->id,
@@ -285,9 +293,10 @@ class OrderController extends Controller
                     'your-code' => $order->code,
 
                 ]);
+                return back()->with('success', trans('Your order has been submitted'));
 
             }
-            else{
+            else {
                 $this->sendMailSms($user, 'ORDER_CONFIRM', [
                     'order_id' => $order->id,
                     'order_at' => $order->created_at,
@@ -453,21 +462,21 @@ class OrderController extends Controller
                                 }
                             } else {
                                 $orderM->reason = trans("Link is Invalid");
-                                $orderM->status =trans( 'canceled');
+                                $orderM->status = trans('canceled');
                             }
 
                         } else {
                             $orderM->reason = "Order quantity should be minimum {$serviceid->min_amount} and maximum {$serviceid->max_amount}";
-                            $orderM->status = trans( 'canceled');
+                            $orderM->status = trans('canceled');
                         }
                     } else {
-                        $orderM->reason = trans( "Invalid Quantity");
-                        $orderM->status = trans( 'canceled');
+                        $orderM->reason = trans("Invalid Quantity");
+                        $orderM->status = trans('canceled');
                     }
 
                 } else {
-                    $orderM->reason = trans( "Service not available");
-                    $orderM->status = trans( 'canceled');
+                    $orderM->reason = trans("Service not available");
+                    $orderM->status = trans('canceled');
                 }
                 $orderM->save();
             }
@@ -476,19 +485,19 @@ class OrderController extends Controller
         return back()->with('success', trans('Successfully Added'));
     }
 
-    public function finish5SImOrder($id,$result)
+    public function finish5SImOrder($id, $result)
     {
-        $order=Order::find($id);
+
+        $order = Order::find($id);
         $user = auth()->user();
         if ($user->balance < $order->price) {
             $notify[] = ['error', 'Insufficient balance. Please deposit and try again!'];
             return back()->withNotify($notify);
         }
         $user->balance -= $order->price;
-
         $user->save();
-        $order->status=2;
-        $order->verify=$result['sms'][0]['code'];
+        $order->status = 'completed';
+        $order->verify = $result['sms'][0]['code'];
         $order->save();
 
         //Create Transaction

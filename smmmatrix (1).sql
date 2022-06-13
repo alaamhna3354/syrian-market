@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `smmmatrix`
+-- Database: `Syria Market`
 --
 
 -- --------------------------------------------------------
@@ -242,13 +242,13 @@ INSERT INTO `content_details` (`id`, `content_id`, `language_id`, `description`,
 (19, 9, 5, '{\"title\":\"ASESORAS DE EQUIPO\",\"number_of_data\":\"28\"}', '2021-01-31 23:50:42', '2021-01-31 23:50:42'),
 (20, 10, 5, '{\"title\":\"A\\u00d1OS GLORIOSOS\",\"number_of_data\":\"8\"}', '2021-01-31 23:51:05', '2021-01-31 23:51:05'),
 (22, 12, 1, '{\"title\":\"Link Building\",\"short_description\":\"We are providing an Opportunity to make handsome amount of money by reselling our social media services on your own social media marketing or by selling them on Various Marketplace.\"}', '2021-02-01 02:08:00', '2021-10-20 11:52:53'),
-(23, 13, 1, '{\"title\":\"Customer Support\",\"short_description\":\"SMM Matrix comes with a dedicated team to drive a world-class customer\\u2019s support. we will Add Daily new service,offer and improving support system for fast support\"}', '2021-02-01 02:08:29', '2021-10-20 11:54:08'),
-(24, 14, 1, '{\"title\":\"Automatic Payments\",\"short_description\":\"<span>Most SMM Panels make you input payment information every time you make an order. Set up an automatic payment method with\\u00a0 SMM Matrix.<\\/span>\"}', '2021-02-01 02:08:58', '2021-10-20 11:54:41'),
-(25, 12, 5, '{\"title\":\"Construcci\\u00f3n de enlaces\",\"short_description\":\"<p>Construya su enlace con todos los servicios SMM en Binary SMM.<br \\/><\\/p>\"}', '2021-02-01 02:09:31', '2021-03-09 11:15:15'),
-(26, 13, 5, '{\"title\":\"Construcci\\u00f3n de enlaces\",\"short_description\":\"Binary SMM viene con un equipo dedicado para impulsar un soporte al cliente de clase mundial.\"}', '2021-02-01 02:09:48', '2021-03-09 11:18:37'),
-(27, 14, 5, '{\"title\":\"Pagos autom\\u00e1ticos\",\"short_description\":\"La mayor\\u00eda de los paneles SMM le obligan a ingresar informaci\\u00f3n de pago cada vez que realiza un pedido. Configure un m\\u00e9todo de pago autom\\u00e1tico con Binary SMM.\"}', '2021-02-01 02:10:14', '2021-03-09 11:25:21'),
-(28, 15, 1, '{\"title\":\"Best SMM Panel\",\"short_description\":\"Bug Finder provides the highest quality of promotions. We are one of the best SMM reseller panels including some special services out there online.\",\"button_name\":\"Read More\"}', '2021-02-01 02:11:04', '2021-10-20 12:00:49'),
-(29, 16, 1, '{\"title\":\"Website Growth\",\"short_description\":\"<span>SMM Matrix is a modern and efficient wholesale panel. We try to provide you instant promotions on different social media platforms.<\\/span>\",\"button_name\":\"Read More\"}', '2021-02-01 02:11:31', '2021-10-20 12:01:55'),
+(23, 13, 1, '{\"title\":\"Customer Support\",\"short_description\":\"Syria Market team to drive a world-class customer\\u2019s support. we will Add Daily new service,offer and improving support system for fast support\"}', '2021-02-01 02:08:29', '2021-10-20 11:54:08'),
+(24, 14, 1, '{\"title\":\"Automatic Payments\",\"short_description\":\"<span>Syria Marketinput payment information every time you make an order. Set up an automatic payment method with\\u00a0 SMM Matrix.<\\/span>\"}', '2021-02-01 02:08:58', '2021-10-20 11:54:41'),
+(25, 12, 5, '{\"title\":\"Construcci\\u00f3n de enlaces\",\"short_description\":\"<p>Construya su enlace con todos los servicios Syria Market en Binary Syria Market.<br \\/><\\/p>\"}', '2021-02-01 02:09:31', '2021-03-09 11:15:15'),
+(26, 13, 5, '{\"title\":\"Construcci\\u00f3n de enlaces\",\"short_description\":\"Binary Syria Market viene con un equipo dedicado para impulsar un soporte al cliente de clase mundial.\"}', '2021-02-01 02:09:48', '2021-03-09 11:18:37'),
+(27, 14, 5, '{\"title\":\"Pagos autom\\u00e1ticos\",\"short_description\":\"La mayor\\u00eda de los paneles Syria Market le obligan a ingresar informaci\\u00f3n de pago cada vez que realiza un pedido. Configure un m\\u00e9todo de pago autom\\u00e1tico con Binary Syria Market.\"}', '2021-02-01 02:10:14', '2021-03-09 11:25:21'),
+(28, 15, 1, '{\"title\":\"Best Syria Market\",\"short_description\":\"Bug Finder provides the highest quality of promotions. We are one of the best Syria Market reseller panels including some special services out there online.\",\"button_name\":\"Read More\"}', '2021-02-01 02:11:04', '2021-10-20 12:00:49'),
+(29, 16, 1, '{\"title\":\"Website Growth\",\"short_description\":\"<span>Syria Market is a modern and efficient wholesale panel. We try to provide you instant promotions on different social media platforms.<\\/span>\",\"button_name\":\"Read More\"}', '2021-02-01 02:11:31', '2021-10-20 12:01:55'),
 (30, 17, 1, '{\"title\":\"Smm Ranking\",\"short_description\":\"<span>We provide guaranteed service on our website SMM server. All the service will be no drop service.<\\/span>\",\"button_name\":\"Read More\"}', '2021-02-01 02:11:44', '2021-03-09 14:40:43'),
 (31, 15, 5, '{\"title\":\"An\\u00e1lisis de datos\",\"short_description\":\"Las operaciones binarias ofrecen promociones de la m\\u00e1s alta calidad. Somos uno de los mejores paneles de revendedores de SMM, incluidos algunos servicios especiales que existen en l\\u00ednea.\",\"button_name\":\"Lee mas\"}', '2021-02-01 02:12:43', '2021-03-09 11:33:16'),
 (32, 17, 5, '{\"title\":\"Clasificaci\\u00f3n SMM\",\"short_description\":\"Brindamos un servicio garantizado en nuestro servidor SMM del sitio web. Todo el servicio ser\\u00e1 sin drop service.\",\"button_name\":\"Lee mas\"}', '2021-02-01 02:14:03', '2021-03-09 14:40:55'),

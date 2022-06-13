@@ -146,9 +146,13 @@
                 let channel = pusher.subscribe('user-notification.' + "{{ Auth::id() }}");
                 channel.bind('App\\Events\\UserNotification', function (data) {
                     app.items.unshift(data.message);
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
                 channel.bind('App\\Events\\UpdateUserNotification', function (data) {
                     app.getNotifications();
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
             }
         }
