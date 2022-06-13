@@ -383,7 +383,7 @@ class ApiProviderController extends Controller
         $headers[] = 'Accept: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if (curl_errno($ch)) {
             echo 'Error:' . curl_error($ch);
         }
@@ -396,7 +396,6 @@ class ApiProviderController extends Controller
             }
         }
         else return '0';
-
     }
 
     public function finishOrder($id,$orderid)
@@ -412,10 +411,10 @@ class ApiProviderController extends Controller
         $headers[] = 'Authorization: Bearer ' . $token;
         $headers[] = 'Accept: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
         $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpcode!=200) {
+            return 0;
         }
         curl_close($ch);
         $result = json_decode($result, True);

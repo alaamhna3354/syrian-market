@@ -130,7 +130,6 @@ trait Notify
 //        if ($basic->push_notification != 1) {
 //            return false;
 //        }
-
         $templateObj = NotifyTemplate::where('template_key', $templateKey)->where('language_id', $user->language_id)->where('status', 1)->first();
         if (!$templateObj) {
             $templateObj = NotifyTemplate::where('template_key', $templateKey)->where('status', 1)->first();
@@ -149,6 +148,7 @@ trait Notify
         $siteNotification->description = $action;
         $user->siteNotificational()->save($siteNotification);
         event(new \App\Events\UserNotification($siteNotification, $user->id));
+
     }
 
 

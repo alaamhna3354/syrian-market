@@ -17,12 +17,12 @@ class Payment
             'key' => $gateway->parameters->merchant_key ?? '',
             'txnid' => $order->transaction,
             'amount' => round($order->final_amount,2),
-            'firstname' => optional($order->user)->username ?? 'SMM Panel',
+            'firstname' => optional($order->user)->username ?? 'Syria Market',
             'email' => optional($order->user)->email ?? '',
             'productinfo' => $order->transaction ?? 'Order',
             'surl' => route('ipn', [$gateway->code, $order->transaction]),
             'furl' => route('failed'),
-            'service_provider' => $basic->site_title ?? 'SMM Panel',
+            'service_provider' => $basic->site_title ?? 'Syria Market',
         ];
         foreach ($hashVarsSeq as $hash_var) {
             $hash_string .= $send['val'][$hash_var] ?? '';
