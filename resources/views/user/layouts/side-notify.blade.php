@@ -79,7 +79,7 @@
                     <i class="fa fa-globe m-2"></i>
                                 <a class="nav-link dropdown-toggle lin" href="#" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent;">
-                                @lang('languages')
+                                @lang('Languages')
                                 <i data-feather="chevron-down" class="svg-icon m-1"></i>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">

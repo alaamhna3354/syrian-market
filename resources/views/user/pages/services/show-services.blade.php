@@ -35,7 +35,7 @@
                     class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text" class="myInput">
-            <button class="btn">@lang('search')</button>
+            <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)

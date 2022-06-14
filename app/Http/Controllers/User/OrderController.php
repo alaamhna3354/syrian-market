@@ -248,15 +248,15 @@ class OrderController extends Controller
                 "icon" => "fas fa-cart-plus text-white"
             ];
             $this->adminPushNotification('ORDER_CREATE', $msg, $action);
-            $usermsg = [
-                'order_id' => $order->id,
-                'status' => $order->status
-            ];
-            $useraction = [
-                "link" => '#',
-                "icon" => "fas fa-cart-plus text-white"
-            ];
-            $this->userPushNotification($user, 'ORDER_CREATE', $usermsg, $useraction);
+//            $usermsg = [
+//                'order_id' => $order->id,
+//                'status' => $order->status
+//            ];
+//            $useraction = [
+//                "link" => '#',
+//                "icon" => "fas fa-cart-plus text-white"
+//            ];
+//            $this->userPushNotification($user, 'ORDER_CREATE', $usermsg, $useraction);
 
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
