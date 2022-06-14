@@ -64,17 +64,11 @@
 
 
 </div>
-            
-
             </div>
             <div class="fixed-icon  ">
                 <i class="fa fa-bars"></i>
             </div>
             <!-- End Notification -->
-
-
         </nav>
-
     </div>
-
 </div>

@@ -4,7 +4,7 @@
 @section('content')
 
     <div class="breadcrumb-content text-center">
-        <h2> <span>Shop</span></h2>
+        <h2> <span>@lang('Shop')</span></h2>
     </div>
     <!-- shop-area -->
     <section class="shop-area shop-bg pt-120 pb-120" data-background="{{asset($themeTrue.'imgs/shop_bg.jpg')}}">
@@ -12,16 +12,16 @@
             <div class="shop-top-meta mb-30">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <p class="show-result">Showing 1–12 of 10 Results</p>
+                        <p class="show-result">@lang('Showing 1–12 of 10 Results')</p>
                     </div>
                     <div class="col-sm-6">
                         <div class="shop-filter">
                             <form action="#">
                                 <select class="custom-select">
-                                    <option selected="">sort by latest</option>
-                                    <option>Best match</option>
-                                    <option>Price high to low</option>
-                                    <option>price low to high</option>
+                                    <option selected="">@lang('sort by latest')</option>
+                                    <option>@lang('Best match')</option>
+                                    <option>@lang('Price high to low')</option>
+                                    <option>@lang('price low to high')</option>
                                 </select>
                             </form>
                         </div>
