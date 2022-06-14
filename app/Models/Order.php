@@ -30,6 +30,11 @@ class Order extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function debt()
+    {
+        return $this->hasMany(Debt::class,'order_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id','id');

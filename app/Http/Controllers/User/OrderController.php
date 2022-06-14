@@ -9,6 +9,7 @@ use App\Models\AgentCommissionRate;
 use App\Models\ApiProvider;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Debt;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
@@ -250,7 +251,12 @@ class OrderController extends Controller
                     }else{
                         $agentDiscount = $price ;
                     }
-
+                    $debt = New Debt();
+                    $debt->debt = $agentDiscount;
+                    $debt->order_id = $order->id;
+                    $debt->user_id = $user->id;
+                    $debt->agent_id = $user->parent->id;
+                    $debt->save();
                     $user->balance -= $price;
                     $user->parent->balance -= $agentDiscount;
                     $user->save();
@@ -309,7 +315,7 @@ class OrderController extends Controller
 //
 //                    ]);
                     $serviceCode->is_used = 1;
-                    $serviceCode->user=$user->id;
+                    $serviceCode->user_id=$user->id;
                     $serviceCode->save();
                     return back()->with('success', trans('Your order has been submitted'));
                 } else {

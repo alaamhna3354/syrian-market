@@ -8,7 +8,7 @@
     <div class="page-header card card-primary m-0 m-md-4 my-4 m-md-0 p-5 shadow">
         <div class="row justify-content-between">
             <div class="col-md-12">
-                <form action="{{ route('admin.users.search') }}" method="get">
+                <form action="{{ route('admin.agents.search') }}" method="get">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -44,6 +44,17 @@
                                             @if(@request()->status == '1') selected @endif>@lang('Active User')</option>
                                     <option value="0"
                                             @if(@request()->status == '0') selected @endif>@lang('Inactive User')</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select name="is_approved" class="form-control">
+                                    <option value="">@lang('All User')</option>
+                                    <option value="1"
+                                            @if(@request()->status == '1') selected @endif>@lang('Approve User')</option>
+                                    <option value="0"
+                                            @if(@request()->status == '0') selected @endif>@lang('Not Approve User')</option>
                                 </select>
                             </div>
                         </div>
@@ -90,6 +101,7 @@
                         <th scope="col">@lang('Phone')</th>
                         <th scope="col">@lang('Balance')</th>
                         <th scope="col">@lang('Status')</th>
+                        <th scope="col">@lang('Approved')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -111,6 +123,10 @@
                                 <span
                                     class="badge badge-pill {{ $user->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $user->status == 0 ? 'Inactive' : 'Active' }}</span>
                             </td>
+                            <td data-label="@lang('Approved')">
+                                <span
+                                    class="badge badge-pill {{ $user->is_approved == 0 ? 'badge-danger' : 'badge-success' }}">{{ $user->is_approved == 0 ? 'Not Approve' : 'Approve' }}</span>
+                            </td>
                             <td data-label="@lang('Action')">
                                 <div class="dropdown show">
                                     <a class="dropdown-toggle p-3" href="#" id="dropdownMenuLink" data-toggle="dropdown"
@@ -118,9 +134,23 @@
                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a href="javascript:void(0)"
+                                           class="dropdown-item status-change {{ $user->is_approved == 0 ? 'text-success' : 'text-danger' }}"
+                                           data-toggle="modal"
+                                           data-target="#statusMoldal"
+                                           data-route="{{route('admin.user.approve',['id'=>$user->id])}}">
+                                            <i class="fa fa-check "
+                                               aria-hidden="true"></i>
+                                            {{ $user->is_approved == 0 ? 'قبول' : 'رفض' }}
+                                        </a>
                                         <a class="dropdown-item" href="{{ route('admin.user-edit',$user->id) }}">
                                             <i class="fa fa-edit text-warning pr-2"
                                                aria-hidden="true"></i> @lang('Edit')
+                                        </a>
+
+                                        <a class="dropdown-item" href="{{ route('admin.user-info',$user->id) }}">
+                                            <i class="fa fa-eye text-warning pr-2"
+                                               aria-hidden="true"></i> @lang('Information')
                                         </a>
                                         <a class="dropdown-item" href="{{ route('admin.user.customRate',$user->id) }}">
                                             <i class="fa fa-money-bill-alt text-dark pr-2"
@@ -134,6 +164,7 @@
                                             <i class="fa fa-envelope text-success pr-2"
                                                aria-hidden="true"></i> @lang('Send Email')
                                         </a>
+
                                     </div>
                                 </div>
                             </td>

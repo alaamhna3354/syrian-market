@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
+use App\Models\AgentCommissionRate;
 use App\Models\Category;
 use App\Models\Language;
+use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserServiceRate;
 use App\Rules\FileTypeValidate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -23,6 +26,12 @@ class UsersController extends Controller
     {
         $users = User::orderBy('id', 'DESC')->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-user', compact('users'));
+    }
+
+    public function agents()
+    {
+        $users = User::orderBy('id', 'DESC')->where('is_agent',1)->paginate(config('basic.paginate'));
+        return view('admin.pages.users.show-agent', compact('users'));
     }
 
     public function search(Request $request)
@@ -48,6 +57,35 @@ class UsersController extends Controller
             })
             ->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-user', compact('users', 'search'));
+    }
+
+    public function agentsSearch(Request $request)
+    {
+        $search = $request->all();
+        $dateSearch = $request->date_time;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $users = User::when(isset($search['username']), function ($query) use ($search) {
+            return $query->where('username', 'LIKE', "%{$search['username']}%");
+        })
+            ->when(isset($search['email']), function ($query) use ($search) {
+                return $query->where('email', 'LIKE', "%{$search['email']}%");
+            })
+            ->when(isset($search['phone']), function ($query) use ($search) {
+                return $query->where('phone', 'LIKE', "%{$search['phone']}%");
+            })
+
+            ->when($date == 1, function ($query) use ($dateSearch) {
+                return $query->whereDate("created_at", $dateSearch);
+            })
+            ->when(isset($search['status']), function ($query) use ($search) {
+                return $query->where('status', $search['status']);
+            })
+            ->when(isset($search['is_approved']), function ($query) use ($search) {
+                return $query->where('is_approved', $search['is_approved']);
+            })
+            ->where('is_agent',1)
+            ->paginate(config('basic.paginate'));
+        return view('admin.pages.users.show-agent', compact('users', 'search'));
     }
 
     public function approve(Request $request, $id)
@@ -78,6 +116,62 @@ class UsersController extends Controller
 
         $funds = $user->funds()->paginate(config('basic.paginate'));
         return view('admin.pages.users.fund-log', compact('user', 'userid', 'funds'));
+    }
+
+    public function transfer($id)
+    {
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', date('Y'))
+            ->paginate(config('basic.paginate'));
+        $commission_rate = 0;
+        foreach ($commissions as $key=>$commission){
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid){
+                $commission_rate +=  $commission->commission_rate;
+            }else{
+                $commissions->forget($key);
+            }
+        }
+
+        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
+    }
+
+    public function transferEarn(Request $request)
+    {
+        $id = $request->id;
+
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', date('Y'))
+            ->where('is_paid',0)
+            ->paginate(config('basic.paginate'));
+        $commission_rate = 0;
+        if (count($commissions) == 0){
+            return back()->with('error', 'All Earnings of last month was been transfer before');
+        }
+        foreach ($commissions as $key=>$commission){
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid){
+                $commission_rate +=  $commission->commission_rate;
+                $commission->is_paid = 1;
+            }else{
+                $commissions->forget($key);
+            }
+        }
+        $user->balance += $commission_rate;
+        if ($user->save()){
+            foreach ($commissions as $commission){
+                $commission->save();
+            }
+            return back()->with('success', 'Successfully Added Earnings to Agent Balance');
+        }else{
+            return back()->with('error', 'Try Again Later there was an error now');
+        }
+//        dd($commission_rate);
+//        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
     }
 
     public function activeMultiple(Request $request)
@@ -119,6 +213,30 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
         return view('admin.pages.users.edit-user', compact('user', 'languages'));
+    }
+
+    public function info($id)
+    {
+        $user = User::findOrFail($id);
+        $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
+//        dd($user->children);
+        $total = 0 ;
+        foreach ($user->children as $child){
+            $orders = $child->order;
+            foreach ($orders as $order){
+                $total += $order->price;
+            }
+
+
+//            dd($total);
+        }
+        foreach ($user->order as $ord){
+
+            $total += $ord->price;
+//                dd($total);
+        }
+        return view('admin.pages.users.agent-info', compact('user', 'languages','total'));
+
     }
 
     public function userUpdate(Request $request, $id)

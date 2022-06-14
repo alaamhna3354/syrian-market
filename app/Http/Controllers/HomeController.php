@@ -6,6 +6,7 @@ use App\Http\Traits\Notify;
 use App\Http\Traits\Upload;
 use App\Models\BalanceCoupon;
 use App\Models\Category;
+use App\Models\Debt;
 use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Language;
@@ -80,12 +81,55 @@ class HomeController extends Controller
             'code' => 'required'
         ]);
         $user = Auth::user();
+
+        $x = 0 ;
 //        dd($user);
         $coupon = BalanceCoupon::where('code',$request['code'])->first();
 //        dd($coupon);
         if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+            if ($user->balance < 0){
+                $debts = Debt::where('user_id',$user->id)->where('is_paid',0)->sum('debt');
+                $allDebts = Debt::where('user_id',$user->id)->where('is_paid',0)->get();
+                if ($debts <= $coupon->balance){
+                    $balance = $coupon->balance;
+                    foreach ($allDebts as $debt){
+                        $debt->is_paid = 1;
+                        $user->parent->balance += $debt->debt;
+                        $debt->save();
+                        $user->parent->save();
+                        $balance -= $debt->debt;
+                    }
 
-            $user->balance += $coupon->balance;
+                }else{
+
+                    $balance = $coupon->balance;
+                    foreach ($allDebts as $debt){
+
+                        if ($balance > 0 && $balance - $debt->debt >= 0){
+                            $debt->is_paid = 1;
+                            $user->parent->balance += $debt->debt;
+                            $debt->save();
+                            $user->parent->save();
+                            $balance -= $debt->debt;
+                            $x += $debt->debt;
+                        }
+                    }
+
+                    if ($balance > 0){
+                        $minDebt = Debt::where('debt', '<=' ,$balance)->where('is_paid',0)->first();
+                        $minDebt->is_paid = 1;
+                        $user->parent->balance += $minDebt->debt;
+                        $minDebt->save();
+                        $user->parent->save();
+                        $balance -= $minDebt->debt;
+                        $x += $minDebt->debt;
+                    }
+                }
+            }
+
+            $user->balance += $balance;
+            $user->balance += $x;
+
             if ($user->save()){
                 $coupon->is_sold = 1;
                 $coupon->user_id = $user->id;

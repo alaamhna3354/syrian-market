@@ -218,6 +218,13 @@
                 </li>
 
                 <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{ route('admin.agents') }}" aria-expanded="false">
+                        <i class="fas fa-users"></i>
+                        <span class="hide-menu">@lang('All Agents')</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
                     <a class="sidebar-link sidebar-link" href="{{ route('admin.users.email-send') }}"
                        aria-expanded="false">
                         <i class="fas fa-envelope-open"></i>

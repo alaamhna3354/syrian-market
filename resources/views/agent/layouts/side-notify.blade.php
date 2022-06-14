@@ -45,6 +45,11 @@
                    href="{{route('agent.order.index')}}">@lang('Orders')</a>
             </li>
             <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-shopping-cart m-2"></i>
+                <a class="nav-link {{ Request::routeIs('agent.debt.index*')  ? 'active' : '' }}"
+                   href="{{route('agent.debt.index')}}">@lang('Debts')</a>
+            </li>
+            <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-piggy-bank m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.addFund*')  ? 'active' : '' }}"
                    href="{{route('agent.addFund')}}">@lang('Add Fund')</a>

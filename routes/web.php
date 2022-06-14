@@ -135,6 +135,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::post('/mass/orders', 'Agent\OrderController@masOrderStore')->name('order.mass.store');
         Route::get('/get-service', 'ServiceController@getservice')->name('get.service');
 
+
+        Route::resource('debt', 'Agent\DebtController');
+        Route::get('/debts', 'Agent\DebtController@search')->name('debt.search');
+
+
         Route::get('add-fund', 'Agent\HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'Agent\PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'Agent\PaymentController@depositConfirm')->name('addFund.confirm');
@@ -192,7 +197,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('payment/search', 'Admin\PaymentLogController@search')->name('payment.search');
 
         Route::get('/users', 'Admin\UsersController@index')->name('users');
+        Route::get('/agents', 'Admin\UsersController@agents')->name('agents');
         Route::get('/users/search', 'Admin\UsersController@search')->name('users.search');
+        Route::get('/agents/search', 'Admin\UsersController@agentsSearch')->name('agents.search');
         Route::post('/users-active', 'Admin\UsersController@activeMultiple')->name('user-multiple-active');
         Route::post('/users-inactive', 'Admin\UsersController@inactiveMultiple')->name('user-multiple-inactive');
         Route::get('/email-send', 'Admin\UsersController@sendMailUsers')->name('users.email-send');
@@ -204,6 +211,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/user/send-email/{id}', 'Admin\UsersController@sendEmail')->name('send-email');
         Route::post('/user/send-email/{id}', 'Admin\UsersController@sendMailUser')->name('user.email-send');
         Route::post('/user/approve/{id?}', 'Admin\UsersController@approve')->name('user.approve');
+        Route::get('/user/info/{id}', 'Admin\UsersController@info')->name('user-info');
 
         Route::get('/user/custom-rate/{id}', 'Admin\UsersController@customRate')->name('user.customRate');
         Route::get('/user/getService', 'Admin\UsersController@getService')->name('user.getService');
@@ -216,6 +224,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         Route::get('/user/transaction/{id}', 'Admin\UsersController@transaction')->name('user.transaction');
         Route::get('/user/fundLog/{id}', 'Admin\UsersController@funds')->name('user.fundLog');
+
+        Route::get('/agent/transfer/{id}', 'Admin\UsersController@transfer')->name('agent.transfer');
+        Route::post('/agent/transfer', 'Admin\UsersController@transferEarn')->name('agent.transfer');
 
 
         Route::get('/get-user-name', 'Admin\OrderManageController@getUsername')->name('get.user-name');

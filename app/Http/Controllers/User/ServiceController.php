@@ -29,6 +29,7 @@ class ServiceController extends Controller
             $commissions = AgentCommissionRate::whereMonth('created_at', date('m'))
                 ->whereYear('created_at', date('Y'))
                 ->get();
+//            dd($commissions);
             $commission_rate = 0;
             foreach ($commissions as $commission){
                 $commission_rate +=  $commission->commission_rate;
