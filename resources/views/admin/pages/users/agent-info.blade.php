@@ -44,11 +44,11 @@
                             </button>
 
 
-                            <a href="{{ route('admin.user.customRate',$user->id) }}"
-                               class="btn btn-info waves-effect waves-light">
-                                <span class="btn-label"><i class="fa fa-tags"></i></span>
-                                @lang('Custom Rate')
-                            </a>
+{{--                            <a href="{{ route('admin.user.customRate',$user->id) }}"--}}
+{{--                               class="btn btn-info waves-effect waves-light">--}}
+{{--                                <span class="btn-label"><i class="fa fa-tags"></i></span>--}}
+{{--                                @lang('Custom Rate')--}}
+{{--                            </a>--}}
 
 
                             <a href="{{ route('admin.user-order',$user->id) }}"
