@@ -8,7 +8,7 @@
         <h3 class="text-white">@lang('Add Order')</h3>
         <div class="search">
             <input type="text" id="myInput">
-            <button class="btn">@lang('search')</button>
+            <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order" >
             @foreach($categories as $category)

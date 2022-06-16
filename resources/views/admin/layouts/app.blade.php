@@ -125,6 +125,7 @@
                     })
             },
             pushNewItem() {
+
                 let app = this;
                 // Pusher.logToConsole = true;
                 let pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
@@ -134,10 +135,15 @@
                 let channel = pusher.subscribe('admin-notification.' + "{{ Auth::guard('admin')->id() }}");
                 channel.bind('App\\Events\\AdminNotification', function (data) {
                     app.items.unshift(data.message);
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
                 channel.bind('App\\Events\\UpdateAdminNotification', function (data) {
                     app.getNotifications();
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
+
             }
         }
     });

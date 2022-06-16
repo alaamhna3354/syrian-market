@@ -35,7 +35,7 @@
                     class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text" class="myInput">
-            <button class="btn">@lang('search')</button>
+            <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order" id="cards-services">
             @foreach($services as $service)
@@ -152,7 +152,7 @@
                     type:"GET",
                     success:function(response){
                         console.log(response)
-                        $('#player_name').val(response);
+                        $('#player_name').val(response.name);
                     },
                 })
             }
@@ -182,7 +182,7 @@
                 $(this).removeClass('active');
                 $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
-                $(".total").val(`0`);
+                $(".total").val('0');
                 $('.quantity').val('0');
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
