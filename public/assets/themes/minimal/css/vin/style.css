@@ -1029,7 +1029,8 @@ ul.minicart .cart-price .new {
 .slider-bg-1 {
     background-image: url(../../imgs/slider_bg.jpg);
     background-position: center;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     min-height: 501px;
     display: flex !important;
     align-items: center;

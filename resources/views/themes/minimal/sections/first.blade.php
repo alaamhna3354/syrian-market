@@ -2,13 +2,13 @@
 <!-- section-wrap -->
 <div class="section-bg-wrap">
     <div class="section-bg-img"></div>
-
     <!-- slider-area -->
     <section class="slider-area">
         <div class="container">
             <div class="slider-active">
-
-                <div class="single-slider slider-bg-1" style="background-image: url(/assets/themes/minimal/imgs/banner4.jpg)">
+           
+                <div class="single-slider slider-bg-1" 
+                style="background-image: url(/assets/themes/minimal/imgs/banner4.jpg)">
                     <div class="row justify-content-end">
                         <div class="col-xl-6 col-lg-7">
                             <div class="slider-content">
@@ -20,14 +20,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="single-slider slider-bg-1" style="background-image: url(/assets/themes/minimal/imgs/banner2.jpg)">
+                <div class="single-slider slider-bg-1" 
+                style="background-image: url(/assets/themes/minimal/imgs/banner2.jpg)">
                     <div class="row justify-content-end">
                         <div class="col-xl-6 col-lg-7">
                             <div class="slider-content">
-                                <h6 data-animation="fadeInUp" data-delay=".3s">CREATE AND <span>game</span></h6>
-                                <h2 data-animation="fadeInUp" data-delay=".6s">online Matches</h2>
-                                <p data-animation="fadeInUp" data-delay=".9s">Largest and most trusted top-up websites for games and online entertainment in Asia and beyond.</p>
-                                <a href="uc-overview.html" class="btn" data-animation="fadeInUp" data-delay="1.2s">Read more</a>
+                                {{--<h6 data-animation="fadeInUp" data-delay=".3s">CREATE AND <span>game</span></h6>--}}
+                                {{--<h2 data-animation="fadeInUp" data-delay=".6s">online Matches</h2>--}}
+                                {{--<p data-animation="fadeInUp" data-delay=".9s">Largest and most trusted top-up websites for games and online entertainment in Asia and beyond.</p>--}}
+                                {{--<a href="uc-overview.html" class="btn" data-animation="fadeInUp" data-delay="1.2s">Read more</a>--}}
                             </div>
                         </div>
                     </div>
@@ -36,10 +37,10 @@
                     <div class="row justify-content-end">
                         <div class="col-xl-6 col-lg-7">
                             <div class="slider-content">
-                                <h6 data-animation="fadeInUp" data-delay=".3s">CREATE AND <span>game</span></h6>
-                                <h2 data-animation="fadeInUp" data-delay=".6s">online Matches</h2>
-                                <p data-animation="fadeInUp" data-delay=".9s">Largest and most trusted top-up websites for games and online entertainment in Asia and beyond.</p>
-                                <a href="uc-overview.html" class="btn" data-animation="fadeInUp" data-delay="1.2s">Read more</a>
+                                {{--<h6 data-animation="fadeInUp" data-delay=".3s">CREATE AND <span>game</span></h6>--}}
+                                {{--<h2 data-animation="fadeInUp" data-delay=".6s">online Matches</h2>--}}
+                                {{--<p data-animation="fadeInUp" data-delay=".9s">Largest and most trusted top-up websites for games and online entertainment in Asia and beyond.</p>--}}
+                                {{--<a href="uc-overview.html" class="btn" data-animation="fadeInUp" data-delay="1.2s">Read more</a>--}}
                             </div>
                         </div>
                     </div>
