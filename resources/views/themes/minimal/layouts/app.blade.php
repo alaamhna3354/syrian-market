@@ -315,6 +315,11 @@
 <script src="{{asset($themeTrue.'js/pages/jquery.js')}}"></script>
 <script src="{{asset($themeTrue.'js/pages/jquery.appear.js')}}"></script>
 <script src="{{asset($themeTrue.'js/pages/slick.min.js')}}"></script>
+    @if(session()->get('rtl') == 1)
+    <script src="{{asset($themeTrue.'js/pages/slick.min2.js')}}"></script>
+    @else
+    <script src="{{asset($themeTrue.'js/pages/slick.min.js')}}"></script>
+    @endif
 <script src="{{asset($themeTrue.'js/pages/ajax-form.js')}}"></script>
 <script src="{{asset($themeTrue.'js/pages/wow.min.js')}}"></script>
 <script src="{{asset($themeTrue.'js/pages/plugins.js')}}"></script>
