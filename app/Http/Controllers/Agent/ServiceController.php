@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
 use App\Models\AgentCommissionRate;
@@ -35,7 +35,7 @@ class ServiceController extends Controller
                 $commission_rate +=  $commission->commission_rate;
             }
             $total = Fund::where('user_id', $user->id)->where('status', 1)->sum('amount');
-            return view('agent.pages.dashboard',compact('transactions','commission_rate','total'));
+            return view('agent.pages.services.show-service',compact('transactions','commission_rate','total','categories'));
         }elseif ($user->is_agent == 1 && $user->is_approved == 0){
             return view('user.pages.waitForApproved', compact('categories'));
         }else{
@@ -92,7 +92,7 @@ class ServiceController extends Controller
         }
 
 
-        return view('user.pages.services.show-services', compact('services','category'));
+        return view('agent.pages.services.show-services', compact('services','category'));
     }
     public function servicesearch(Request $request)
     {

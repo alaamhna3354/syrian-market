@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         //order search
         Route::get('/services', 'User\ServiceController@index')->name('service.show');
+        Route::get('/products', 'User\ServiceController@show')->name('products');
         Route::get('/service-search', 'User\ServiceController@search')->name('service.search');
         Route::get('/services/{id}', 'User\ServiceController@service')->name('services.show');
         Route::get('/player/{serviceid}/{playerid}', 'User\ServiceController@getPlayerName')->name('service.player');
@@ -103,6 +104,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
     Route::middleware('userCheck')->group(function () {
         Route::get('/users', 'Agent\UserController@index')->name('users');
+        Route::get('/products', 'Agent\ServiceController@show')->name('products');
         Route::get('/users/search', 'Agent\UserController@search')->name('users.search');
         Route::get('/user/create', 'Agent\UserController@create')->name('user.create');
         Route::post('/user/create', 'Agent\UserController@store')->name('user.store');
@@ -110,6 +112,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::post('/user/update/{id}', 'Agent\UserController@userUpdate')->name('user.update');
         Route::get('/user/add-balance', 'Agent\UserController@addBalance')->name('user.add-balance');
         Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
+
+        //order search
+        Route::get('/services', 'Agent\ServiceController@index')->name('service.show');
+        Route::get('/service-search', 'Agent\ServiceController@search')->name('service.search');
+        Route::get('/services/{id}', 'Agent\ServiceController@service')->name('services.show');
 
         Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
 

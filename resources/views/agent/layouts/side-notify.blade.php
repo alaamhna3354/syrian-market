@@ -14,6 +14,11 @@
                 <a class="nav-link {{ Request::routeIs('user.home')  ? 'active' : '' }}"
                    href="{{ route('user.home') }}">@lang('Home') </a>
             </li>
+            <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-home m-2"></i>
+                <a class="nav-link {{ Request::routeIs('agent.products')  ? 'active' : '' }}"
+                   href="{{ route('agent.products') }}">@lang('products') </a>
+            </li>
             <li class="nav-item dropdown {{ (Request::routeIs('agent.users') || Request::routeIs('agent.user.create') || Request::routeIs('agent.users.orders')) ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                    role="button"

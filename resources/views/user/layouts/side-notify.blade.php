@@ -23,6 +23,13 @@
                            href="{{ route('user.home') }}">@lang('Home') </a>
 
                     </li>
+                    @if(Auth::user()->is_agent == 1 && Auth::user()->is_approved == 0)
+                        <li class="nav-item d-flex align-items-center">
+                            <i class="fa fa-home m-2"></i>
+                            <a class="nav-link {{ Request::routeIs('user.products')  ? 'active' : '' }}"
+                               href="{{ route('user.products') }}">@lang('products') </a>
+                        </li>
+                    @endif
 
                     <li class="nav-item d-flex align-items-center">
                     <i class="fa fa-shopping-cart m-2"></i>
