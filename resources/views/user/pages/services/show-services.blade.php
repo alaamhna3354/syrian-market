@@ -147,12 +147,15 @@
                 $('.vald-player-number').addClass('active');
             }
             else{
+                $('#player_name').val('please wait');
+                $(".get-name").addClass('active');
                 $.ajax({
                     url:'/user/player/'+category_id+'/'+player_number,
                     type:"GET",
                     success:function(response){
-                        console.log(response)
+                        console.log(response);
                         $('#player_name').val(response.name);
+                        $(".get-name").removeClass('active');
                     },
                 })
             }

@@ -404,6 +404,8 @@
 
 #navbarSupportedContent{
     display: block;
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 #navbarSupportedContent ul{
     height: 100%;
@@ -677,6 +679,17 @@
 }
 .services form .refresh i:hover{
     transform: rotateZ(360deg);
+}
+@keyframes around {
+    from {transform: rotateZ(0deg);}
+    to { transform: rotateZ(360deg);}
+  }
+.services form .refresh i.active{
+    animation-name: around;
+    animation-duration: 2s; 
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    scale: 1.3;
 }
 .services form .chosen-item{
     background-color: #fd5a18bd;
