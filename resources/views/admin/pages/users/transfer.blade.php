@@ -75,7 +75,7 @@
                                 </h4>
                             </div>
                             <div class="col-sm-6">
-                                <form method="post" action="{{ route('admin.agent.transfer') }}"
+                                <form method="post" action="{{ route('admin.agent.transferEarn') }}"
                                       enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="id" value="{{$userid}}">

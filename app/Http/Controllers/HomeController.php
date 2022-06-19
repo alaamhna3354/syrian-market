@@ -85,22 +85,31 @@ class HomeController extends Controller
         $x = 0 ;
 //        dd($user);
         $coupon = BalanceCoupon::where('code',$request['code'])->first();
-//        dd($coupon);
+
         if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+
             if ($user->balance < 0){
+
                 $debts = Debt::where('user_id',$user->id)->where('is_paid',0)->sum('debt');
                 $allDebts = Debt::where('user_id',$user->id)->where('is_paid',0)->get();
+
                 if ($debts <= $coupon->balance){
                     $balance = $coupon->balance;
+
                     foreach ($allDebts as $debt){
+
                         $debt->is_paid = 1;
                         $user->parent->balance += $debt->debt;
+                        $user->balance += $debt->debt;
+//                        dd($user->balance);
                         $debt->save();
                         $user->parent->save();
                         $balance -= $debt->debt;
+
                     }
 
-                }else{
+                }
+                else{
 
                     $balance = $coupon->balance;
                     foreach ($allDebts as $debt){

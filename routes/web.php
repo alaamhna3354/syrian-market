@@ -233,7 +233,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/user/fundLog/{id}', 'Admin\UsersController@funds')->name('user.fundLog');
 
         Route::get('/agent/transfer/{id}', 'Admin\UsersController@transfer')->name('agent.transfer');
-        Route::post('/agent/transfer', 'Admin\UsersController@transferEarn')->name('agent.transfer');
+        Route::post('/agent/transfereEarn', 'Admin\UsersController@transferEarn')->name('agent.transferEarn');
 
 
         Route::get('/get-user-name', 'Admin\OrderManageController@getUsername')->name('get.user-name');

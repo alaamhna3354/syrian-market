@@ -120,6 +120,7 @@ class UsersController extends Controller
 
     public function transfer($id)
     {
+//        dd($id);
         $user = User::findOrFail($id);
         $userid = $user->id;
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)

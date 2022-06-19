@@ -79,6 +79,21 @@
                                 <span class="btn-label"><i class="fas fa-dollar-sign"></i></span> @lang('Transfer of profit to balance')
                             </a>
 
+{{--                            <a href="{{ route('admin.agent.transfer',$user->id) }}"--}}
+{{--                               class="btn btn-info waves-effect waves-light">--}}
+{{--                                <span class="btn-label"><i class="fas fa-history"></i></span> @lang('Users orders')--}}
+{{--                            </a>--}}
+
+{{--                            <a href="{{ route('admin.agent.transfer',$user->id) }}"--}}
+{{--                               class="btn btn-info waves-effect waves-light">--}}
+{{--                                <span class="btn-label"><i class="fas fa-exchange-alt"></i></span> @lang('Users Transactions')--}}
+{{--                            </a>--}}
+
+{{--                            <a href="{{ route('admin.agent.transfer',$user->id) }}"--}}
+{{--                               class="btn btn-info waves-effect waves-light">--}}
+{{--                                <span class="btn-label"><i class="fas fa-exchange-alt"></i></span> @lang('Users Debt')--}}
+{{--                            </a>--}}
+
 
                         </div>
 
