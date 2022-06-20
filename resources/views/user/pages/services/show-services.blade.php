@@ -87,14 +87,14 @@
                     <input type="text" name="total" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
-                    <div class=" col-12 col-sm-10 mb-2" >
+                    <div class=" col-10  mb-2" >
                         <label for="player_number">@lang('Player number')</label>
                         <input type="number" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
 
                     </div>
-                    <div class="col-2 col-sm-2 d-flex align-items-center refresh mb-2">
+                    <div class="col-2 d-flex align-items-center refresh mb-2">
                         <!-- <i class="fas fa-sync-alt get-name"></i> -->
                         <i class="fas fa-crosshairs get-name "></i>
                     </div>
