@@ -662,13 +662,25 @@
     padding: 20px;
 }
 .services form label{
-    color: #fff;
+    color: #bfbfbf;
+    font-weight: bold;
 }
 .services form input{
+    color: #fff;
     width: 100%;
-    border-radius: 5px;
     border: none;
-    padding:5px 10px ;
+    border-bottom: 1px solid #ffc3cd;
+    background-color: transparent;
+    transition: .3s;
+    margin-bottom: 5px;
+}
+.services form input:focus{
+    margin-top: 5px;
+    border-bottom: 2px solid #fe5917;
+}
+.services form .total:focus{
+    margin-top: 0;
+    border-bottom: 1px solid #ffc3cd;
 }
 .services form .refresh i{
     font-size: 25px;
