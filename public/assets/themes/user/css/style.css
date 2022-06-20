@@ -658,6 +658,7 @@
     border-radius: 5px;
     background-color: #ff5411;
 }
+
 .services form{
     padding: 20px;
 }
@@ -736,6 +737,8 @@
 }
 .services form .add .btn{
     width: 100%;
+    animation: fri 1s ease-out infinite;
+    animation-play-state: running;
 }
 .services form .add .btn::after{
     bottom: 0px;
@@ -744,6 +747,12 @@
 .services form .add .btn.disble{
     cursor: no-drop;
     color: #fff;
+    animation: fri 1s ease-out infinite;
+    animation-play-state: paused;
+}
+@keyframes fri {
+    0%{box-shadow: 0px 2px 10px #ff5411;}
+    100%{box-shadow: 0px 6px 15px #ff5411;}
 }
 #service-table thead{
     color: #fff;
