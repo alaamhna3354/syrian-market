@@ -16,9 +16,10 @@
         @yield('content')
     </div>
 
-    <footer class="footer text-center text-white">
+    <footer class="footer text-center text-white wid-res">
         <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
     </footer>
+
 
 </div>
 
@@ -69,6 +70,7 @@
         $('.fixed-icon').toggleClass('rfixedicon');
         $('.fixedsidebar').toggleClass('rfixed');
         $('.main-page').toggleClass('wid-res');
+        $('.footer').toggleClass('wid-res');
         if (typeof(Storage) !== "undefined") {
             if(localStorage.sidenote == 'true'){
                 localStorage.setItem("sidenote", false);
@@ -144,9 +146,13 @@
                 let channel = pusher.subscribe('user-notification.' + "{{ Auth::id() }}");
                 channel.bind('App\\Events\\UserNotification', function (data) {
                     app.items.unshift(data.message);
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
                 channel.bind('App\\Events\\UpdateUserNotification', function (data) {
                     app.getNotifications();
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    audio.play();
                 });
             }
         }

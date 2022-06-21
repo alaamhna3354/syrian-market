@@ -175,6 +175,36 @@ class UsersController extends Controller
 //        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
     }
 
+    public function userOrders($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_order', compact('user', 'userid'));
+    }
+
+    public function userTransactions($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_transactions', compact('user', 'userid'));
+    }
+
+    public function userDebts($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_debts', compact('user', 'userid'));
+    }
+
     public function activeMultiple(Request $request)
     {
 

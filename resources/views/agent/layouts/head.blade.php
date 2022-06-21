@@ -13,7 +13,6 @@
 
 <link rel="stylesheet" href="{{asset('assets/themes/user/css/color.php')}}?primaryColor={{config('color.primaryColor')}}&subheading={{config('color.subheading')}}&bggrdleft={{config('color.bggrdleft')}}&bggrdright={{config('color.bggrdright')}}&bggrdleft2={{config('color.bggrdleft2')}}&btngrdleft={{config('color.btngrdleft')}}&copyrights={{config('color.copyrights')}}">
 
-<link href="{{asset('assets/admin/css/custom.css')}}" rel="stylesheet">
 @stack('style')
 
 @stack('extra-style')
