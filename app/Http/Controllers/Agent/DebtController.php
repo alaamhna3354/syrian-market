@@ -32,6 +32,12 @@ class DebtController extends Controller
         return view('agent.pages.debt.show', compact('debts'));
     }
 
+    public function myDebt()
+    {
+        $debts = Debt::where('user_id',$this->user->id)->get();
+        return view('agent.pages.debt.show', compact('debts'));
+    }
+
     public function search(Request $request)
     {
 //        $search = $request->all();

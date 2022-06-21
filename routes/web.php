@@ -50,6 +50,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('/use-balance-coupon', 'HomeController@useBalanceCoupon')->name('use-balance-coupon');
         Route::Post('/add-balance-coupon', 'HomeController@addBalanceCoupon')->name('add-balance-coupon');
 
+        Route::get('/user/debts', 'User\HomeController@debts')->name('debts');
+
+
         Route::get('/profile', 'HomeController@profile')->name('profile');
         Route::post('/updateProfile', 'HomeController@updateProfile')->name('updateProfile');
         Route::put('/updateInformation', 'HomeController@updateInformation')->name('updateInformation');
@@ -113,6 +116,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/user/add-balance', 'Agent\UserController@addBalance')->name('user.add-balance');
         Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
 
+        Route::get('/add-debt-payment', 'Agent\UserController@addDebtPayment')->name('add-debt-payment');
+        Route::Post('/pay-a-debt', 'Agent\UserController@payDebt')->name('pay-a-debt');
         //order search
         Route::get('/services', 'Agent\ServiceController@index')->name('service.show');
         Route::get('/service-search', 'Agent\ServiceController@search')->name('service.search');
@@ -145,6 +150,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
 
         Route::resource('debt', 'Agent\DebtController');
         Route::get('/debts', 'Agent\DebtController@search')->name('debt.search');
+        Route::get('/my_debts', 'Agent\DebtController@myDebt')->name('debt.my-debt');
 
 
         Route::get('add-fund', 'Agent\HomeController@addFund')->name('addFund');
@@ -157,6 +163,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('fund-history-search', 'Agent\HomeController@fundHistorySearch')->name('fund-history.search');
         Route::get('/transaction', 'Agent\HomeController@transaction')->name('transaction');
         Route::get('/transaction-search', 'Agent\HomeController@transactionSearch')->name('transaction.search');
+
 
 
     });
@@ -192,6 +199,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/password', 'Admin\DashboardController@password')->name('password');
         Route::put('/password', 'Admin\DashboardController@passwordUpdate')->name('passwordUpdate');
 
+        Route::get('/add-debt-payment/{id}', 'Admin\UsersController@addDebtPayment')->name('add-debt-payment');
+        Route::Post('/pay-a-debt/{id}', 'Admin\UsersController@payDebt')->name('pay-a-debt');
 
         Route::get('payment-methods', 'Admin\PaymentMethodController@index')->name('payment.methods');
         Route::post('payment-methods/deactivate', 'Admin\PaymentMethodController@deactivate')->name('payment.methods.deactivate');

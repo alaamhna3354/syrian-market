@@ -42,6 +42,9 @@
                     <a class="dropdown-item {{menuActive('agent.user.add-balance')}}" href="{{ route('agent.user.add-balance') }}">
                         <i class="fas fa-piggy-bank m-2"></i> @lang('Add Balance To User')
                     </a>
+                    <a class="dropdown-item {{menuActive('agent.add-debt-payment')}}" href="{{ route('agent.add-debt-payment') }}">
+                        <i class="fas fa-piggy-bank m-2"></i> @lang('Add Debt Payment')
+                    </a>
                 </div>
             </li>
             <li class="nav-item d-flex align-items-center">
@@ -52,7 +55,12 @@
             <li class="nav-item d-flex align-items-center">
                 <i class="fa fa-shopping-cart m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.debt.index*')  ? 'active' : '' }}"
-                   href="{{route('agent.debt.index')}}">@lang('Debts')</a>
+                   href="{{route('agent.debt.index')}}">@lang('Users Debts')</a>
+            </li>
+            <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-shopping-cart m-2"></i>
+                <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
+                   href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
             </li>
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-piggy-bank m-2"></i>

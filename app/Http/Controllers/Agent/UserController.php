@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
 use App\Models\BalanceCoupon;
+use App\Models\Debt;
 use App\Models\Fund;
 use App\Models\Language;
 use App\Models\Transaction;
@@ -265,6 +266,7 @@ class UserController extends Controller
         if ($agent->balance > $balance) {
             $agent->balance -= $balance;
             $user->balance += $balance;
+            $user->debt += $balance;
 
             $transactionForAgent = new Transaction();
             $transactionForAgent->user_id = $agent->id;
@@ -297,6 +299,15 @@ class UserController extends Controller
             $fund->transaction = strRandom();
             $fund->try = 0;
             $fund->status = 1;
+
+            $debt = new Debt();
+            $debt->order_id = 0 ;
+            $debt->user_id = $user->id;
+            $debt->agent_id = $agent->id;
+            $debt->debt = $balance;
+            $debt->status = 1 ;
+            $debt->despite = 0;
+            $debt->save();
 
             $basic = (object)config('basic');
             if ($agent->save() && $user->save()) {
@@ -387,6 +398,89 @@ class UserController extends Controller
         } else {
             return back()->with('error', 'You Do Not Have Enough Balance');
         }
+
+
+    }
+
+    public function addDebtPayment()
+    {
+
+        return view('agent.pages.user.add_debt_payment');
+    }
+
+    public function payDebt(Request $request)
+    {
+
+        $req = Purify::clean($request->all());
+        $rules = [
+            'user_id' => 'required',
+            'balance' => 'required|numeric|min:0',
+        ];
+
+        $message = [
+            'user_id.required' => 'User Name is required',
+            'balance.required' => 'Balance is required',
+            'balance.numeric' => 'Balance is Must Be Number',
+        ];
+        $Validator = Validator::make($req, $rules, $message);
+
+        if ($Validator->fails()) {
+            return back()->withErrors($Validator)->withInput();
+        }
+        $user = User::findOrFail($req['user_id']);
+        $agent = $user->parent;
+        $balance = $req['balance'];
+
+
+            $user->debt -= $balance;
+
+
+            $transactionForUser = new Transaction();
+            $transactionForUser->user_id = $user->id;
+            $transactionForUser->trx_type = '+';
+            $transactionForUser->amount = $balance;
+            $transactionForUser->remarks = 'Pay A Debt';
+            $transactionForUser->trx_id = strRandom();
+            $transactionForUser->charge = 0;
+
+
+
+
+            $debt = new Debt();
+            $debt->order_id = 0 ;
+            $debt->user_id = $user->id;
+            $debt->agent_id = $agent->id;
+            $debt->debt = $balance;
+            $debt->status = 1 ;
+            $debt->despite = 1;
+            $debt->save();
+
+            $basic = (object)config('basic');
+            if ( $user->save()) {
+                if ($transactionForUser->save()) {
+                    $msg = [
+                        'transaction' => $transactionForUser->trx_id,
+                        'amount' => $balance,
+                        'currency' => $basic->currency,
+                        'main_balance' => $balance,
+                    ];
+                    $action = [
+//                        "link" => route('admin.user.transaction', $transactionForAgent->id),
+                        "icon" => "fas fa-cart-plus text-white",
+                        "link" => "#"
+                    ];
+                    $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
+                    return back()->with('success', 'Balance Added Successfully.');
+                } else {
+                    return back()->with('error', 'Balance Do Not Added Successfully.');
+                }
+
+            } else {
+                return back()->with('error', 'Balance Do Not Added Successfully.');
+            }
+
+
+
 
 
     }

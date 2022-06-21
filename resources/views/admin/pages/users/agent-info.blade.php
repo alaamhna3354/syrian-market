@@ -94,6 +94,11 @@
                                 <span class="btn-label"><i class="fas fa-exchange-alt"></i></span> @lang('Users Debt')
                             </a>
 
+                            <a href="{{ route('admin.add-debt-payment',$user->id) }}"
+                               class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label"><i class="fas fa-hand-holding-usd"></i></span> @lang('Add Debt Payment')
+                            </a>
+
 
                         </div>
 
@@ -190,6 +195,8 @@
             </div>
         </div>
     </div>
+
+
 
 @endsection
 @push('js')

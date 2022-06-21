@@ -60,6 +60,12 @@
                     </li>
 
                     <li class="nav-item d-flex align-items-center">
+                        <i class="fas fa-piggy-bank m-2"></i>
+                        <a class="nav-link {{ Request::routeIs('user.debts')  ? 'active' : '' }}"
+                           href="{{route('user.debts')}}">@lang('Debts')</a>
+                    </li>
+
+                    <li class="nav-item d-flex align-items-center">
                     <i class="fa fa-shopping-cart m-2"></i>
                         <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
                            href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>

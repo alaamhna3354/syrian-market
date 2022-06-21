@@ -77,29 +77,32 @@
         <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-12 col-sm-6 mb-2">
+                <div class="col-12  mb-2">
                     <label for="">@lang('quantity')</label>
                     <input type="number" name="quantity" class="quantity">
+                    
                 </div>
-                <div class="col-12 col-sm-6 mb-2">
+                <div class="col-12  mb-2">
                     <label for="">@lang('Total')</label>
                     <input type="text" name="total" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
-                    <div class=" col-12 col-sm-5 mb-2" >
+                    <div class=" col-10  mb-2" >
                         <label for="player_number">@lang('Player number')</label>
                         <input type="number" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
 
                     </div>
-                    <div class="col-10 col-sm-5 mb-2">
+                    <div class="col-2 d-flex align-items-center refresh mb-2">
+                        <!-- <i class="fas fa-sync-alt get-name"></i> -->
+                        <i class="fas fa-crosshairs get-name "></i>
+                    </div>
+                    <div class="col-10 col-sm-12 mb-2">
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    <div class="col-2 col-sm-2 d-flex align-items-center refresh mb-2">
-                        <i class="fas fa-sync-alt get-name"></i>
-                    </div>
+                    
 
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
@@ -148,14 +151,14 @@
             }
             else{
                 $('#player_name').val('please wait');
-                $(".get-name").addClass('active');
+                $(".get-name").addClass('fa-spinner active');
                 $.ajax({
                     url:'/user/player/'+category_id+'/'+player_number,
                     type:"GET",
                     success:function(response){
                         console.log(response);
                         $('#player_name').val(response.name);
-                        $(".get-name").removeClass('active');
+                        $(".get-name").removeClass('fa-spinner active');
                     },
                 })
             }

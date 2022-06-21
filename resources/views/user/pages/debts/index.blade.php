@@ -1,4 +1,4 @@
-@extends('agent.layouts.app')
+@extends('user.layouts.app')
 @section('title',__('Debts'))
 @section('content')
 
@@ -77,7 +77,6 @@
                                     <th scope="col">@lang('Debt ID')</th>
                                     <th scope="col" class="order-details-column text-left">@lang('Debt')</th>
                                     <th scope="col">@lang('Order')</th>
-                                    <th scope="col">@lang('User')</th>
                                     <th scope="col">@lang('Debt AT')</th>
                                     <th scope="col">@lang('Status')</th>
                                     <th scope="col">@lang('Is Paid')</th>
@@ -96,17 +95,12 @@
                                                 {{$debt->order->id}}
                                             @else
                                                 @if($debt->despite == 0)
-                                                    @if($debt->is_for_admin == 1)
-                                                        @lang('From Admin')
-                                                    @else
-                                                        @lang('From Agent')
-                                                    @endif
+                                                    @lang('From Agent')
                                                 @else
                                                     @lang('To Agent')
                                                 @endif
                                             @endif
                                         </td>
-                                        <td data-label="@lang('User')">@lang($debt->user->username)</td>
 
                                         <td data-label="@lang('Debt AT')">@lang(dateTime($debt->created_at, 'd/m/Y - h:i A' ))</td>
 

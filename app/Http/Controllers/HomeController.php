@@ -87,54 +87,8 @@ class HomeController extends Controller
         $coupon = BalanceCoupon::where('code',$request['code'])->first();
 
         if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+            $balance = $coupon->balance;
 
-            if ($user->balance < 0){
-
-                $debts = Debt::where('user_id',$user->id)->where('is_paid',0)->sum('debt');
-                $allDebts = Debt::where('user_id',$user->id)->where('is_paid',0)->get();
-
-                if ($debts <= $coupon->balance){
-                    $balance = $coupon->balance;
-
-                    foreach ($allDebts as $debt){
-
-                        $debt->is_paid = 1;
-                        $user->parent->balance += $debt->debt;
-                        $user->balance += $debt->debt;
-//                        dd($user->balance);
-                        $debt->save();
-                        $user->parent->save();
-                        $balance -= $debt->debt;
-
-                    }
-
-                }
-                else{
-
-                    $balance = $coupon->balance;
-                    foreach ($allDebts as $debt){
-
-                        if ($balance > 0 && $balance - $debt->debt >= 0){
-                            $debt->is_paid = 1;
-                            $user->parent->balance += $debt->debt;
-                            $debt->save();
-                            $user->parent->save();
-                            $balance -= $debt->debt;
-                            $x += $debt->debt;
-                        }
-                    }
-
-                    if ($balance > 0){
-                        $minDebt = Debt::where('debt', '<=' ,$balance)->where('is_paid',0)->first();
-                        $minDebt->is_paid = 1;
-                        $user->parent->balance += $minDebt->debt;
-                        $minDebt->save();
-                        $user->parent->save();
-                        $balance -= $minDebt->debt;
-                        $x += $minDebt->debt;
-                    }
-                }
-            }
 
             $user->balance += $balance;
             $user->balance += $x;
@@ -169,10 +123,12 @@ class HomeController extends Controller
 
                     if ($transaction->save() && $fund->save()){
                         return back()->with('success', 'Balance Is Updated Successfully.');
-                    }else{
+                    }
+                    else{
                         return back()->with('error', 'Please Try Again There Are An Error');
                     }
-                }else{
+                }
+                else{
                     return back()->with('error', 'Please Try Again There Are An Error');
                 }
             }else{
