@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Traits\Notify;
+use App\Models\PriceRange;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
@@ -132,6 +133,7 @@ class RegisterController extends Controller
             $approved = 1;
         }
 
+
         return User::create([
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
@@ -144,7 +146,8 @@ class RegisterController extends Controller
             'email_verification' => ($basic->email_verification) ? 0 : 1,
             'sms_verification' => ($basic->sms_verification) ? 0 : 1,
             'is_agent' => $is_agent,
-            'is_approved' => $approved
+            'is_approved' => $approved,
+            'price_range_id' => 1
         ]);
 
 

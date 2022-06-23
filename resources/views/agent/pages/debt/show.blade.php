@@ -5,7 +5,7 @@
 
     <div class="container px-3 user-service-list ">
         <div class="row my-3 justify-content-between">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <ol class="breadcrumb center-items">
                     <li><a href="{{route('user.home')}}">@lang('Home')</a></li>
                     <li class="active">@lang('Debt List')</li>
@@ -59,6 +59,12 @@
                 {{--                        </form>--}}
                 {{--                    </div>--}}
                 {{--                </div>--}}
+            </div>
+            <div class="col-md-6">
+                <ol class="breadcrumb center-items">
+                    <li style="color: #000000">@lang('Total')</li>
+                    <li class="active">{{auth()->user()->debt}} {{config('basic.currency_symbol')}}</li>
+                </ol>
             </div>
         </div>
 

@@ -93,6 +93,24 @@
                 </li>
                 <li class="list-divider"></li>
 
+                {{--Manage Price Range--}}
+                <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Price Range')</span></li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.price_range.create')}}" aria-expanded="false">
+                        <i data-feather="plus-circle" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Add Price Range')</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{route('admin.price_range.index')}}"
+                       aria-expanded="false">
+                        <i data-feather="list" class="feather-icon"></i>
+                        <span class="hide-menu">@lang('Show Price Range')</span>
+                    </a>
+                </li>
+                <li class="list-divider"></li>
+
 
                 {{--Manage Coupon--}}
 {{--                <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Coupon')</span></li>--}}

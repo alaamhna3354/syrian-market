@@ -203,13 +203,28 @@
                                 @endif
                                 <div class="col-sm-6">
                                     <div class="form-group ">
-                                        <label>@lang('Debt Amount')</label>
+                                        <label>@lang('reserve balance')</label>
                                         <input class="form-control" type="text" name="debt_balance" value="{{ $user->debt_balance }}">
                                         @error('debt_balance')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
+                                @if(0 < count($ranges))
+                                    <div class="col-sm-6">
+                                        <div class="form-group ">
+                                            <label>@lang('Price Range')</label>
+
+                                            <select name="price_range_id" class="form-control">
+                                                <option value="" disabled>@lang('Select Price Range')</option>
+                                                @foreach($ranges as $item)
+                                                    <option value="{{$item->id}}" @if($item->id == $user->price_range_id) selected @endif>{{$item->name}}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label>@lang('Address')</label>
@@ -262,27 +277,40 @@
                                                 </label>
                                             </div>
                                         </div>
+{{--                                        <div class="col-sm-3">--}}
+{{--                                            <label>@lang('Special User')</label>--}}
+{{--                                            <div class="custom-switch-btn w-md-80">--}}
+{{--                                                <input type='hidden' value='1' name='is_special'>--}}
+{{--                                                <input type="checkbox" name="is_special"--}}
+{{--                                                       class="custom-switch-checkbox"--}}
+{{--                                                       id="is_special" {{ $user->is_special == 0 ? 'checked' : '' }}>--}}
+{{--                                                <label class="custom-switch-checkbox-label" for="is_special">--}}
+{{--                                                    <span class="custom-switch-checkbox-inner"></span>--}}
+{{--                                                    <span class="custom-switch-checkbox-switch"></span>--}}
+{{--                                                </label>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                         <div class="col-sm-3">
-                                            <label>@lang('Special User')</label>
-                                            <div class="custom-switch-btn w-md-80">
-                                                <input type='hidden' value='1' name='is_special'>
-                                                <input type="checkbox" name="is_special"
-                                                       class="custom-switch-checkbox"
-                                                       id="is_special" {{ $user->is_special == 0 ? 'checked' : '' }}>
-                                                <label class="custom-switch-checkbox-label" for="is_special">
-                                                    <span class="custom-switch-checkbox-inner"></span>
-                                                    <span class="custom-switch-checkbox-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label>@lang('Debt')</label>
+                                            <label>@lang('Allow the use of the reserve balance')</label>
                                             <div class="custom-switch-btn w-md-80">
                                                 <input type='hidden' value='1' name='is_debt'>
                                                 <input type="checkbox" name="is_debt"
                                                        class="custom-switch-checkbox"
                                                        id="is_debt" {{ $user->is_debt == 0 ? 'checked' : '' }}>
                                                 <label class="custom-switch-checkbox-label" for="is_debt">
+                                                    <span class="custom-switch-checkbox-inner"></span>
+                                                    <span class="custom-switch-checkbox-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label>@lang('Price Range Fixing')</label>
+                                            <div class="custom-switch-btn w-md-80">
+                                                <input type='hidden' value='1' name='is_const_price_range'>
+                                                <input type="checkbox" name="is_const_price_range"
+                                                       class="custom-switch-checkbox"
+                                                       id="is_const_price_range" {{ $user->is_const_price_range == 0 ? 'checked' : '' }}>
+                                                <label class="custom-switch-checkbox-label" for="is_const_price_range">
                                                     <span class="custom-switch-checkbox-inner"></span>
                                                     <span class="custom-switch-checkbox-switch"></span>
                                                 </label>

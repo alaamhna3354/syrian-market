@@ -44,7 +44,21 @@
                                     <h5>{{$debt->debt}} @lang(config('basic.currency'))</h5>
                                 </td>
 
-                                <td data-label="@lang('Order')">{{$debt->order->id}} </td>
+                                <td data-label="@lang('Order')">
+                                    @if($debt->order_id != 0)
+                                        {{$debt->order->id}}
+                                    @else
+                                        @if($debt->despite == 0)
+                                            @if($debt->is_for_admin == 1)
+                                                @lang('From Admin')
+                                            @else
+                                                @lang('From Agent')
+                                            @endif
+                                        @else
+                                            @lang('To Agent')
+                                        @endif
+                                    @endif
+                                </td>
                                 <td data-label="@lang('User')">@lang($debt->user->username)</td>
 
                                 <td data-label="@lang('Debt AT')">@lang(dateTime($debt->created_at, 'd/m/Y - h:i A' ))</td>

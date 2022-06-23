@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ApiProvider;
 use App\Models\Category;
+use App\Models\PriceRange;
 use App\Models\Service;
+use App\Models\ServicePriceRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Ixudra\Curl\Facades\Curl;
@@ -67,7 +69,8 @@ class ServiceController extends Controller
     {
         $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
         $apiProviders = ApiProvider::orderBy('id', 'DESC')->where('status', 1)->get();
-        return view('admin.pages.services.add-service', compact('categories', 'apiProviders'));
+        $ranges = PriceRange::all();
+        return view('admin.pages.services.add-service', compact('categories', 'apiProviders','ranges'));
     }
 
     /**
@@ -80,15 +83,23 @@ class ServiceController extends Controller
     {
 //        dd($request);
         $req = Purify::clean($request->all());
+        $ranges = PriceRange::all();
+
+
         $rules = [
             'service_title' => 'required|string|max:150',
             'category_id' => 'required|string',
             'min_amount' => 'required|numeric',
             'max_amount' => 'required|numeric',
             'price' => 'required|numeric',
-            'special_price' => 'required|numeric',
+//            'special_price' => 'required|numeric',
             'agent_commission_rate' => 'required|numeric',
         ];
+        foreach ($ranges as $range){
+            $rules['price_'.$range->id] = 'required|numeric';
+            $rules['agent_commission_'.$range->id] = 'required|numeric';
+        }
+//        dd($rules);
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -101,7 +112,7 @@ class ServiceController extends Controller
         $service->max_amount = $req['max_amount'];
         $service->agent_commission_rate = $req['agent_commission_rate'];
         $service->price = $req['price'];
-        $service->special_price = $req['special_price'];
+//        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
         $service->is_available = $req['is_available'];
         $service->api_provider_id = ($req['api_provider_id'] == 0) ? null : $req['api_provider_id'];
@@ -129,8 +140,21 @@ class ServiceController extends Controller
             $success = "Successfully Updated";
         endif;
 
-        $service->save();
-        return back()->with('success', $success);
+        if ($service->save()){
+            foreach ($ranges as $range){
+                $service_price_range = new ServicePriceRange();
+                $service_price_range->service_id = $service->id;
+                $service_price_range->price_range_id = $range->id;
+                $service_price_range->price = $req['price_'.$range->id];
+                $service_price_range->agent_commission_rate = $req['agent_commission_'.$range->id];
+                $service_price_range->save();
+
+            }
+            return back()->with('success', $success);
+        }else{
+            return back()->with('error', 'Sorry There Are An Error');
+        }
+
     }
 
 
@@ -159,9 +183,11 @@ class ServiceController extends Controller
     public function edit($id)
     {
         $service = Service::find($id);
+//        dd();
         $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
         $apiProviders = ApiProvider::orderBy('id', 'DESC')->where('status', 1)->get();
-        return view('admin.pages.services.edit-service', compact('service', 'categories', 'apiProviders'));
+        $ranges = PriceRange::all();
+        return view('admin.pages.services.edit-service', compact('service','ranges', 'categories', 'apiProviders'));
     }
 
     /**
@@ -173,15 +199,20 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $req = Purify::clean($request->all());
+        $ranges = PriceRange::all();
         $rules = [
             'service_title' => 'required|string|max:150',
             'category_id' => 'required|string',
             'min_amount' => 'required',
             'price' => 'required',
             'max_amount' => 'required',
-            'special_price' => 'required|numeric',
+//            'special_price' => 'required|numeric',
             'agent_commission_rate' => 'required|numeric',
         ];
+        foreach ($ranges as $range){
+            $rules['price_'.$range->id] = 'required|numeric';
+            $rules['agent_commission_'.$range->id] = 'required|numeric';
+        }
         $validator = Validator::make($req, $rules);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
@@ -192,7 +223,7 @@ class ServiceController extends Controller
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
         $service->price = $req['price'];
-        $service->special_price = $req['special_price'];
+//        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
         $service->agent_commission_rate = $req['agent_commission_rate'];
         if (isset($req['country']) && isset($req['product'] ))
@@ -220,9 +251,30 @@ class ServiceController extends Controller
             $success = "Successfully Updated";
         endif;
 
-//        dd($service);
-        $service->save();
-        return back()->with('success', $success);
+        if ($service->save()){
+            foreach ($ranges as $range){
+                if ($service->service_price_ranges()->where('price_range_id',$range->id)->first() != null){
+                    $service_price_range = $service->service_price_ranges()->where('price_range_id',$range->id)->first();
+                    $service_price_range->service_id = $service->id;
+                    $service_price_range->price_range_id = $range->id;
+                    $service_price_range->price = $req['price_'.$range->id];
+                    $service_price_range->agent_commission_rate = $req['agent_commission_'.$range->id];
+                    $service_price_range->save();
+                }else{
+                    $service_price_range = new ServicePriceRange();
+                    $service_price_range->service_id = $service->id;
+                    $service_price_range->price_range_id = $range->id;
+                    $service_price_range->price = $req['price_'.$range->id];
+                    $service_price_range->agent_commission_rate = $req['agent_commission_'.$range->id];
+                    $service_price_range->save();
+                }
+
+
+            }
+            return back()->with('success', $success);
+        }else{
+            return back()->with('error', 'Sorry There Are An Error');
+        }
     }
 
 

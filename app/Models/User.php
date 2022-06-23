@@ -122,6 +122,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserServiceRate::class, 'user_id')->latest();
     }
 
+    public function userPriceRanges()
+    {
+        return $this->hasMany(UserPriceRange::class, 'user_id')->latest();
+    }
+
 
     public function siteNotificational()
     {
@@ -133,6 +138,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(AgentCommissionRate::class,'user_id');
     }
 
+    public function priceRange()
+    {
+        return $this->belongsTo(PriceRange::class, 'price_range_id');
+    }
 
 
 
