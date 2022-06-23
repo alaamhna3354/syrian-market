@@ -17,11 +17,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h4 class="card-title shadow-h text-white mb-3">@lang('Add new')</h4>
-                                <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
+                                <form class="form un-form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data" id="oederform">
                                     @csrf
                                     <div class="form-group">
                                         <label class="shadow-h text-white control-label" for="category_id">@lang('Category')</label>
-                                        <select id="category" class="form-control" name="category">
+                                        <select id="category" class="form-control" name="category" required>
                                             <option value="0" hidden>@lang('Select Category')</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : (isset($selectService) && $selectService->category_id == $category->id ? 'selected ' : '')  }}>@lang($category->category_title)</option>
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="shadow-h text-white control-label " for="service_id">@lang('Service')</label>
-                                        <select id="service" class="form-control" name="service">
+                                        <select id="service" class="form-control" name="service" required>
                                         </select>
                                         @if($errors->has('service'))
                                             <div class="error text-danger">@lang($errors->first('service'))</div>
@@ -44,7 +44,7 @@
                                         <label"form-group drip_feed">
                                                     <label class="shadow-h text-white ">@lang('Link')</label>
                                         <input type="text" name="link" value="{{ old('link') }}"
-                                               placeholder="Player ID" class="form-control">
+                                               placeholder="Player ID" class="form-control" required>
                                         @if($errors->has('link'))
                                             <div class="error text-danger">@lang($errors->first('link'))</div>
                                         @endif
@@ -52,7 +52,7 @@
                                     <div class="form-group ">
                                         <label class="form-group drip_feed">
                                                     <label class="shadow-h text-white ">@lang('Quantity')</label>
-                                        <input type="number" name="quantity" id="quantity" value="{{ old('quantity') ?? 1}}"
+                                        <input type="number" name="quantity" id="quantity" value="{{ old('quantity') ?? 1}}" 
                                                class="form-control">
                                         @if($errors->has('quantity'))
                                             <div class="error text-danger"> @lang($errors->first('quantity')) </div>
@@ -62,7 +62,7 @@
                                     <div class="form-group drip_feed" style="{{ old('runs') || old('interval')  || $errors->has('runs') || $errors->has('interval') ? '' : 'display: none;' }}">
                                         <label>@lang('Drip-feed')</label>
                                         <div class="custom-switch-btn w-md-25">
-                                            <input type="checkbox" name="drip_feed" class="custom-switch-checkbox dripfeed"
+                                            <input type="checkbox" name="drip_feed" class="custom-switch-checkbox dripfeed" 
                                                    id="status" value="0" {!!  old('runs') || old('interval') || $errors->has('runs') || $errors->has('interval') ? '' : 'checked="false"' !!}>
                                             <label class="shadow-h text-white custom-switch-checkbox-label" for="status">
                                                 <span class="custom-switch-checkbox-inner"></span>
@@ -76,7 +76,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group drip_feed">
                                                     <label class="shadow-h text-white ">@lang('Runs')</label>
-                                                    <input type="number" id="runs" name="runs" class="form-control" value="{{ old('runs') }}">
+                                                    <input type="number" id="runs" name="runs" class="form-control" value="{{ old('runs') }}" >
                                                     @if($errors->has('runs'))
                                                         <div class="error text-danger">@lang($errors->first('runs'))</div>
                                                     @endif
@@ -85,7 +85,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group drip_feed">
                                                     <label class="shadow-h text-white ">@lang('Interval (in minutes)')</label>
-                                                    <input type="number" name="interval" class="form-control" value="{{ old('interval') }}">
+                                                    <input type="number" name="interval" class="form-control" value="{{ old('interval') }}" >
                                                     @if($errors->has('interval'))
                                                         <div class="error text-danger">@lang($errors->first('interval'))</div>
                                                     @endif
@@ -96,27 +96,28 @@
                                         <div class="form-group drip_feed">
                                             <label class="shadow-h text-white ">@lang('Total Quantity')</label>
                                             <input type="text" class="form-control total_quantity" name="total_quantity"
-                                                   disabled>
+                                                   disabled >
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group price">
                                                 <label class="shadow-h text-white">@lang('Price')</label>
-                                                <input type="number" id="price" name="price" class="form-control" disabled>
+                                                <input type="number" id="price" name="price" class="form-control" disabled >
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="agree" name="check">
-                                        <label class="shadow-h text-white form-check-label" style="margin-inline-start: 20px;"
+                                        <input style="margin-inline-start: 0px;position: relative;"
+                                        type="checkbox" class="form-check-input agree" id="agree" name="check" required>
+                                        <label class="shadow-h text-white form-check-label" 
                                                for="agree">@lang('Yes, i have confirmed the order!')</label>
                                         @if($errors->has('check'))
                                             <div class="error text-danger">@lang($errors->first('check')) </div>
                                         @endif
                                     </div>
                                     <div class="submit-btn-wrapper mt-md-5 text-center text-md-left">
-                                        <button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3 place_order"><span>@lang('Place Order')</span></button>
+                                        <button disabled type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3 place_order"><span>@lang('Place Order')</span></button>
                                     </div>
                                 </form>
                             </div>
@@ -166,7 +167,23 @@
 @push('js')
     <script>
         "use strict";
+        // fun 1
+        $(".agree").on("click", function() {
+            if(  $('#oederform')[0].checkValidity()){
+                $('.place_order').removeAttr("disabled");
+            }
+            else{
+                $('.place_order').attr("disabled","");
+            }
+        });
+    </script>
+@endpush
+@push('js')
+    <script>
+        "use strict";
         $(document).ready(function () {
+          
+           
             var catId = "{{ old('category', $selectService->category_id ?? '') }}";
             if (catId) {
                 getService(catId);
