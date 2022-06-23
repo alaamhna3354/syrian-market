@@ -404,6 +404,9 @@
     overflow-y: scroll;
     scrollbar-width: none;
 }
+#navbarSupportedContent::-webkit-scrollbar {
+    width: 0;
+}
 #navbarSupportedContent ul{
     /* margin-top: 10px;
     display: grid;
