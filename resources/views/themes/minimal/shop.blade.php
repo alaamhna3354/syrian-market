@@ -4,7 +4,7 @@
 @section('content')
 
     <div class="breadcrumb-content text-center">
-        <h2> <span>@lang('Shop')</span></h2>
+        <h2 style="margin:0"> <span>@lang('Shop')</span></h2>
     </div>
     <!-- shop-area -->
     <section class="shop-area shop-bg pt-120 pb-120" data-background="{{asset($themeTrue.'imgs/shop_bg.jpg')}}">
@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="pagination-wrap mt-30">
-                        <ul>
+                        <ul >
                             <li><a href="#"><i class="fas fa-angle-double-left"></i></a></li>
                             <li class="active"><a href="#">1</a></li>
                             {{--<li><a href="#">2</a></li>--}}
@@ -70,3 +70,24 @@
     </section>
     <!-- shop-area-end -->
 @endsection
+<style>
+.pagination-wrap ul {
+    display:flex;
+    justify-content:center;
+}    
+.page-item.active .page-link {
+    background-color: #ff5917 !important;
+    border-color: #ff5917 !important;
+}
+.pagination-wrap ul li a {
+    background-color: transparent;
+    display:flex !important;
+    justify-content:center !important;
+    align-items: center !important;
+}
+.page-link:hover {
+    background-color: #ff5917 !important;
+    border-color: #ff5917 !important;
+}
+
+</style>
