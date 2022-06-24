@@ -1,8 +1,8 @@
 @if(isset($templates['about-us'][0]) && $aboutUs = $templates['about-us'][0])
 
     <!-- ABOUT-US -->
-    <section id="about-us">
-        <div class="shape-circle wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.35s">
+    <section id="about-us" data-background="{{asset($themeTrue.'imgs/shop_bg.jpg')}}">
+        <!-- <div class="shape-circle wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.35s">
             <div class="circle"></div>
         </div>
         <div class="container">
@@ -34,15 +34,67 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-sm-12 col-12 text-center">
+                   <img class="logo" src="{{ getFile(config('location.logoIcon.path').'logo.png')}}" alt="">
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 gr-inf">
+                    <h2>متجر سيريا ماركيت للبطاقات الرقمية</h2>
+                    <h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i><span>أفضل متجر لشراء البطاقات للألعاب</span></li>
+                            <li><i class="fas fa-check"></i><span>جميع الألعاب والتحديثات</span></li>
+                            <li><i class="fas fa-check"></i><span>قم بشحن جميع ألعابك بطريقة سريعة وسهلة</span></li>
+                            <li><i class="fas fa-check"></i><span>ضمانة وجودة</span></li>
+                        </ul>
+                         
+                        
+                    </h4>
+                </div>
+                </div>
+            </div>
         </div>
     </section>
-    <!-- /ABOUT-US -->
+<style>
+#about-us{
+    text-align: start;
+    color:#fff;
+    min-height:300px;
+    padding: 20px;
+}
+#about-us .logo{
+    max-width: 90%;
+    margin-bottom:50px;
+}
+#about-us ul li{
+    line-height: 2;
+}
+#about-us ul li i{
+    margin-inline-end: 10px;
+    color: #f1632c;
+}
+#about-us .gr-inf{
+    display: grid;
+    place-content: center;
+}
+@media (max-width:568px) {
+#about-us{
+    padding: 20px 10px;
+}
+h2{
+  font-size: 20px;
+}
+h4{
+  font-size: 16px;
+}
+}
+</style>
 
-
-
+<!-- 
     @push('extra-content')
         @if($aboutUs->templateMedia()->youtube_link)
-            <!-- MODAL-VIDEO -->
             <div id="modal-video">
                 <div class="modal-wrapper">
                     <div class="modal-content">
@@ -56,8 +108,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /MODAL-VIDEO -->
         @endif
-    @endpush
+    @endpush -->
 
 @endif
