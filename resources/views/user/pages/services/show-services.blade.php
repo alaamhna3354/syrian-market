@@ -88,10 +88,9 @@
                 @if($category->type == "GAME")
                     <div class=" col-12 col-sm-5 mb-2" >
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="number" name="link" id="player_number" placeholder="" required>
+                        <input type="text" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
-
                     </div>
                     <div class="col-10 col-sm-5 mb-2">
                         <label for="player_name">@lang('Player name')</label>
@@ -152,7 +151,7 @@
                     type:"GET",
                     success:function(response){
                         console.log(response)
-                        $('#player_name').val(response.name);
+                        $('#player_name').val(response.username);
                     },
                 })
             }

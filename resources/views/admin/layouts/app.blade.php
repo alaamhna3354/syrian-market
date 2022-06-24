@@ -135,13 +135,29 @@
                 let channel = pusher.subscribe('admin-notification.' + "{{ Auth::guard('admin')->id() }}");
                 channel.bind('App\\Events\\AdminNotification', function (data) {
                     app.items.unshift(data.message);
-                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-light-button-2580.mp3');
                     audio.play();
+                    if (Platform.OS === 'android') {
+                        Notifications.createChannelAndroidAsync('notification-sound-channel', {
+                            name: 'Notification Sound Channel',
+                            sound: true,
+                            priority: 'max',
+                            vibrate: [0, 250, 250, 250],
+                        });
+                    }
                 });
                 channel.bind('App\\Events\\UpdateAdminNotification', function (data) {
                     app.getNotifications();
-                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-light-button-2580.mp3');
                     audio.play();
+                    if (Platform.OS === 'android') {
+                        Notifications.createChannelAndroidAsync('notification-sound-channel', {
+                            name: 'Notification Sound Channel',
+                            sound: true,
+                            priority: 'max',
+                            vibrate: [0, 250, 250, 250],
+                        });
+                    }
                 });
 
             }
