@@ -117,14 +117,16 @@
                                             alt="SYRIA MARKET"></a></div>
                             <div class="navbar-wrap main-menu d-none d-lg-flex">
                                 <ul class="navigation">
-                                    <li class="active"><a href="{{route('home')}}">@lang('Home')</a></li>
-                                    <li class="dropdown">
+                                    <li class="@if(Request::is('/')) active @endif"
+                                     ><a href="{{route('home')}}">@lang('Home')</a></li>
+                                    <li class="@if(Request::is('shop')) active @endif"  class="dropdown">
                                         <a href="{{route('shop')}}">@lang('Shop')</a>
                                     </li>
-                                    <li class="dropdown">
-                                        <a href="#">@lang('About')</a>
+                                    <li class="@if(Request::is('about')) active @endif" class="dropdown">
+                                        <a href="{{route('about')}}">@lang('About')</a>
                                     </li>
-                                    <li><a href="contact.html">@lang('Contact')</a></li>
+                                    <!-- <li><a href="{{route('contact')}}">@lang('Contact')</a></li> -->
+                                    <li class="@if(Request::is('blog')) active @endif"><a href="{{route('blog')}}">@lang('دليل الموقع')</a></li>
                                 </ul>
                             </div>
                             <div class="header-action d-none d-md-block">
@@ -342,7 +344,5 @@
         Notiflix.Notify.Warning("@lang(session('warning'))");
     </script>
 @endif
-
-
 </body>
 </html>

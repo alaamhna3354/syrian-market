@@ -3,12 +3,13 @@
 
 @section('content')
 
-    @include($theme.'sections.feature')
+{{-- @include($theme.'sections.feature') --}}
+
     @include($theme.'sections.about')
 
-    @include($theme.'sections.counter')
+    {{-- @include($theme.'sections.counter') --}}
 
-    @include($theme.'sections.testimonial')
+    {{-- @include($theme.'sections.testimonial') --}}
 
-    @include($theme.'sections.gateways')
+    {{-- @include($theme.'sections.gateways') --}}
 @endsection

@@ -11,7 +11,21 @@
                 <span class="navbar-toggler-icon"></span>
             </button> -->
             <!-- Notification -->
+            
             <div class="account" style="margin-inline-start: auto;">
+            <div id="coverProgress"></div>
+            <div id="contentProgress" data-progress="70">
+            <div class="mb-2 d-flex progressText">
+                    <h4>@lang('تبقى')</h4>
+                    <h4 id="progressText"></h4>
+                    <h4>@lang('للانتقال للمستوى التالي')</h4>
+                </div>
+                <div id="myProgress">
+                    <div id="myBar"></div>
+                </div>
+                
+            </div>
+            <i class="fas fa-id-card" id="showProgress" style="color: #fe5917;cursor: pointer;margin-inline-end: 5px;"></i>
             <a class="lin" href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>
            
                        
@@ -72,3 +86,38 @@
         </nav>
     </div>
 </div>
+@push('js')
+    <script>
+    $("#showProgress").on("click", function() {
+    $('#contentProgress').addClass('active');
+    $('#coverProgress').show();
+    
+    var i = 0;
+    var progress = $('#contentProgress').attr("data-progress");
+    
+    $("#progressText").html(`${100 - progress}%`);
+    if (i == 0) {
+        i = 1;
+        var elem = document.getElementById("myBar");
+        var width = 1;
+        var id = setInterval(frame, 10);
+        data-progress
+        function frame() {
+        if (width >= progress) {
+            clearInterval(id);
+            i = 0;
+        } else {
+            width++;
+            elem.style.width = width + "%";
+        }
+        }
+    }
+   
+    });
+    $("#coverProgress").on("click", function() {
+    $('#contentProgress').removeClass('active');
+    $('#coverProgress').hide();
+    });
+    
+    </script>
+@endpush
