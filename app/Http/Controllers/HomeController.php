@@ -113,6 +113,19 @@ class HomeController extends Controller
                     $fund->try = 0;
                     $fund->status = 1;
 
+                    $msg = [
+                        'amount' => $fund->amount,
+                        'currency' =>$fund->gateway_currency,
+                        'main_balance' => $user->balance,
+                        'transaction' => $transaction->trx_id
+                    ];
+                    $action = [
+                        "link" => '#',
+                        "icon" => "fa fa-money-bill-alt text-white"
+                    ];
+
+                    $this->userPushNotification($user, 'ADD_BALANCE', $msg, $action);
+                    $this->sendMailSms($user, 'ADD_BALANCE', $msg);
 
                     if ($transaction->save() && $fund->save()){
                         return back()->with('success', 'Balance Is Updated Successfully.');

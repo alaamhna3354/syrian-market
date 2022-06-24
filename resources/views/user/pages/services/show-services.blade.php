@@ -92,7 +92,6 @@
                         <input type="text" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
-
                     </div>
                     <div class="col-2 d-flex align-items-center refresh mb-2">
                         <!-- <i class="fas fa-sync-alt get-name"></i> -->
@@ -157,7 +156,7 @@
                     type:"GET",
                     success:function(response){
                         console.log(response);
-                        $('#player_name').val(response.name);
+                        $('#player_name').val(response.username);
                         $(".get-name").removeClass('fa-spinner active');
                     },
                 })
