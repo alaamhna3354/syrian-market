@@ -156,7 +156,7 @@
                     type:"GET",
                     success:function(response){
                         console.log(response);
-                        $('#player_name').val(response.name);
+                        $('#player_name').val(response.username);
                         $(".get-name").removeClass('fa-spinner active');
                     },
                 })

@@ -126,7 +126,7 @@
                                         <a href="{{route('about')}}">@lang('About')</a>
                                     </li>
                                     <!-- <li><a href="{{route('contact')}}">@lang('Contact')</a></li> -->
-                                    <li class="@if(Request::is('blog')) active @endif"><a href="{{route('blog')}}">@lang('دليل الموقع')</a></li>
+                                    <li class="@if(Request::is('blog')) active @endif"><a href="{{route('blog')}}">@lang('Guide')</a></li>
                                 </ul>
                             </div>
                             <div class="header-action d-none d-md-block">
