@@ -198,14 +198,14 @@
                                         <td data-label="@lang('Note')">
 
                                             @if(optional($order->service)->service_status == 1)
-                                                <button type="button"
+                                                <!-- <button type="button"
                                                         class="btn btn-sm btn-success  orderBtn" data-toggle="modal"
                                                         data-target="#description" id="details"
                                                         data-service_id="{{$order->service_id}}"
                                                         data-servicetitle="{{optional($order->service)->service_title}}"
                                                         data-description="{{optional($order->service)->description}}">
                                                     <i class="fa fa-cart-plus"></i>
-                                                </button>
+                                                </button> -->
                                             @endif
 
                                             @if($order->reason)
