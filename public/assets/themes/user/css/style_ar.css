@@ -414,7 +414,7 @@
 #contentProgress{
     position: absolute;
     width: 400px;
-    height: 300px;
+    height: 280px;
     padding: 20px;
     padding-bottom: 25px;
     z-index: 1000;
@@ -425,18 +425,33 @@
     align-items: center;
     background-color: #24262e;
     border-radius: 5px;
-    /* display: none; */
+    display: none;
 }
+#contentProgress.active{
+    display: grid;
+    align-content: space-between;
+}
+
 @media (max-width:568px) {
     #contentProgress{
     width: 275px;
     }
 }
-#contentProgress.active{
-    /* display: flex;
+#contentProgress .level{
+    position: relative;
+    display: flex;
     justify-content: center;
-    flex-direction: column;
-    align-items: self-start; */
+    align-items: center;
+}
+#contentProgress .level img{
+    width: 100px;
+}
+#contentProgress .level span{
+    font-weight: bold;
+    font-size: 20px;
+    position: absolute;
+    top: 22px;
+    right: 44px;
 }
 #contentProgress .progressText {
     display: flex;
@@ -460,6 +475,21 @@ margin-inline-end: 4px;
   }
   
   #myBar {
+    width: 1%;
+    background-color: #fe5916;
+    height: 10px;
+    border-radius: 5px;
+
+  }
+  #myProgress2 {
+    width: 100%;
+    background-color: #ddd;
+    height: 10px;
+    border-radius: 5px;
+
+  }
+  
+  #myBar2 {
     width: 1%;
     background-color: #fe5916;
     height: 10px;
@@ -514,6 +544,11 @@ margin-inline-end: 4px;
 .page-wrapper {
     background-image: url(../../minimal/imgs/battel.jpg);
     padding-bottom: 50px;
+}
+@media (min-width:568px) {
+    .page-wrapper {
+        background-position: right;
+    }
 }
 .contain-cards-order{
     width: 400px;
@@ -1006,3 +1041,20 @@ margin-inline-end: 4px;
     pointer-events:none;
     opacity:0.5;
 }
+/* Start Agent */
+#Agent ul{
+ color: #fff;
+ list-style: none;
+ padding: 0;
+}
+#Agent input,#Agent textarea{
+    background-color: #0000007a;
+    border-radius: 5px;
+    border-color: #fe5917;
+    color: #fff;
+   }
+#Agent input::placeholder,#Agent textarea::placeholder{
+    color: #fff;
+
+}
+/* End Agent */
