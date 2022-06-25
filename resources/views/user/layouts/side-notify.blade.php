@@ -21,8 +21,15 @@
                     <i class="fa fa-home m-2"></i>
                         <a class="nav-link {{ Request::routeIs('user.home')  ? 'active' : '' }}"
                            href="{{ route('user.home') }}">@lang('Home') </a>
-                         
+
                     </li>
+                    @if(Auth::user()->is_agent == 1 && Auth::user()->is_approved == 0)
+                        <li class="nav-item d-flex align-items-center">
+                            <i class="fa fa-home m-2"></i>
+                            <a class="nav-link {{ Request::routeIs('user.products')  ? 'active' : '' }}"
+                               href="{{ route('user.products') }}">@lang('products') </a>
+                        </li>
+                    @endif
 
                     <li class="nav-item d-flex align-items-center">
                     <i class="fa fa-shopping-cart m-2"></i>
@@ -53,6 +60,12 @@
                     </li>
 
                     <li class="nav-item d-flex align-items-center">
+                        <i class="fas fa-piggy-bank m-2"></i>
+                        <a class="nav-link {{ Request::routeIs('user.debts')  ? 'active' : '' }}"
+                           href="{{route('user.debts')}}">@lang('Debts')</a>
+                    </li>
+
+                    <li class="nav-item d-flex align-items-center">
                     <i class="fa fa-shopping-cart m-2"></i>
                         <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
                            href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
@@ -68,6 +81,12 @@
                     <i class="fas fa-table m-2"></i>
                         <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                            href="{{ route('user.transaction') }}">@lang('Transactions') </a>
+                    </li>
+
+                    <li class="nav-item d-flex align-items-center">
+                        <i class="fas fa-edit m-2"></i>
+                        <a class="nav-link {{ Request::routeIs('registerAsAgent') ? 'active' : '' }}"
+                           href="{{ route('registerAsAgent') }}">@lang('Sign up As Agent') </a>
                     </li>
 
                     {{--<li class="nav-item ">--}}
@@ -89,7 +108,7 @@
                                     </a>
                                     @endforeach
                                 </div>
-                    </li>        
+                    </li>
                     <li class="nav-item dropdown {{ (Request::routeIs('user.profile') || Request::routeIs('user.api.docs') || Request::routeIs('user.ticket*')) ? 'active' : '' }}">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                            role="button"
@@ -131,11 +150,12 @@
                         </div>
                     </li>
                 </ul>
-                   
+
                     </div>
             </div>
     <!-- <div class="fs-wrapper">
         @foreach($notices as $notice)
+
         <div class="content">
             <div class="featureDate">
                 <div class="category categoryNew new">

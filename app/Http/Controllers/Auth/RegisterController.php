@@ -68,6 +68,19 @@ class RegisterController extends Controller
         $templates = Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
         return view(template().'auth.register',compact('country_code','countries','templates'));
     }
+    public function showAgentRegistrationForm()
+    {
+        $info = json_decode(json_encode(getIpInfo()), true);
+
+        $country_code  = null;
+        if(!empty($info['code'])){
+            $country_code = @$info['code'][0];
+        }
+        $countries = config('country');
+        $templateSection = ['register'];
+        $templates = Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
+        return view(template().'auth.registerAsAgent',compact('country_code','countries','templates'));
+    }
 
     public function sponsor($sponsor)
     {
@@ -109,9 +122,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+//        dd($data);
         $basic = (object) config('basic');
-
+        if (isset($data['is_agent']) ){
+            $is_agent = $data['is_agent'];
+            $approved = 0;
+        }else{
+            $is_agent = 0;
+            $approved = 1;
+        }
 
         return User::create([
             'firstname' => $data['firstname'],
@@ -124,6 +143,8 @@ class RegisterController extends Controller
             'api_token' => Str::random(60),
             'email_verification' => ($basic->email_verification) ? 0 : 1,
             'sms_verification' => ($basic->sms_verification) ? 0 : 1,
+            'is_agent' => $is_agent,
+            'is_approved' => $approved
         ]);
 
 
@@ -131,6 +152,7 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+//        dd($request);
 
         $this->validator($request->all())->validate();
 

@@ -201,6 +201,15 @@
                                         </div>
                                     </div>
                                 @endif
+                                <div class="col-sm-6">
+                                    <div class="form-group ">
+                                        <label>@lang('Debt Amount')</label>
+                                        <input class="form-control" type="text" name="debt_balance" value="{{ $user->debt_balance }}">
+                                        @error('debt_balance')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label>@lang('Address')</label>
@@ -261,6 +270,19 @@
                                                        class="custom-switch-checkbox"
                                                        id="is_special" {{ $user->is_special == 0 ? 'checked' : '' }}>
                                                 <label class="custom-switch-checkbox-label" for="is_special">
+                                                    <span class="custom-switch-checkbox-inner"></span>
+                                                    <span class="custom-switch-checkbox-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label>@lang('Debt')</label>
+                                            <div class="custom-switch-btn w-md-80">
+                                                <input type='hidden' value='1' name='is_debt'>
+                                                <input type="checkbox" name="is_debt"
+                                                       class="custom-switch-checkbox"
+                                                       id="is_debt" {{ $user->is_debt == 0 ? 'checked' : '' }}>
+                                                <label class="custom-switch-checkbox-label" for="is_debt">
                                                     <span class="custom-switch-checkbox-inner"></span>
                                                     <span class="custom-switch-checkbox-switch"></span>
                                                 </label>

@@ -15,6 +15,11 @@ class Order extends Model
         return $this->belongsTo(Service::class, 'service_id','id');
     }
 
+    public function agentCommissionRate()
+    {
+        return $this->belongsTo(AgentCommissionRate::class,'order_id','id');
+    }
+
     public function users()
     {
         return $this->belongsTo(User::class,'user_id','id');
@@ -23,6 +28,11 @@ class Order extends Model
     public function transaction()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function debt()
+    {
+        return $this->hasMany(Debt::class,'order_id');
     }
 
     public function category()
