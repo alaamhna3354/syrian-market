@@ -6,6 +6,7 @@ use App\Http\Traits\Notify;
 use App\Http\Traits\Upload;
 use App\Models\BalanceCoupon;
 use App\Models\Category;
+use App\Models\Debt;
 use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Language;
@@ -80,12 +81,18 @@ class HomeController extends Controller
             'code' => 'required'
         ]);
         $user = Auth::user();
+
+        $x = 0 ;
 //        dd($user);
         $coupon = BalanceCoupon::where('code',$request['code'])->first();
-//        dd($coupon);
-        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
 
-            $user->balance += $coupon->balance;
+        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+            $balance = $coupon->balance;
+
+
+            $user->balance += $balance;
+            $user->balance += $x;
+
             if ($user->save()){
                 $coupon->is_sold = 1;
                 $coupon->user_id = $user->id;
@@ -129,10 +136,12 @@ class HomeController extends Controller
 
                     if ($transaction->save() && $fund->save()){
                         return back()->with('success', 'Balance Is Updated Successfully.');
-                    }else{
+                    }
+                    else{
                         return back()->with('error', 'Please Try Again There Are An Error');
                     }
-                }else{
+                }
+                else{
                     return back()->with('error', 'Please Try Again There Are An Error');
                 }
             }else{
