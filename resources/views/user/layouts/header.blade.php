@@ -16,14 +16,27 @@
             <div id="coverProgress"></div>
             <div id="contentProgress" data-progress="70">
             <div class="mb-2 d-flex progressText">
+                <div class="d-flex mb-3">
+                <h2>
+                    <span> @lang('مستوى الشريحة')</span>
+                    (<span class="progressTextcolor">@lang('3')</span>)
+                </h2>
+
+                </div>
+                <div class="d-flex">
                     <h4>@lang('تبقى')</h4>
-                    <h4 id="progressText"></h4>
+                    <h4 id="progressText" class="progressTextcolor"></h4>
                     <h4>@lang('للانتقال للمستوى التالي')</h4>
+                </div>
                 </div>
                 <div id="myProgress">
                     <div id="myBar"></div>
                 </div>
-                
+                <div class="d-flex mt-3">
+                    <h4>@lang(' تبقى')</h4>
+                    <h4 id="progressText" class="progressTextcolor"> 1 </h4>
+                    <h4>@lang('عملبة شراء للحفاظ على مستواك')</h4>
+                </div>
             </div>
             <i class="fas fa-id-card" id="showProgress" style="color: #fe5917;cursor: pointer;margin-inline-end: 5px;"></i>
             <a class="lin" href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>

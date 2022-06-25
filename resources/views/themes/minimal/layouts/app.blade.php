@@ -111,7 +111,7 @@
                 <div class="col-12">
                     <div class="menu-wrap">
                         <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
-                        <nav class="menu-nav show">
+                        <nav class="menu-nav show" style="@if(session()->get('rtl') == 1) justify-content: end; @endif">
                             <div class="logo"><a href="{{route('home')}}"><img
                                             src="{{ getFile(config('location.logoIcon.path').'logo.png')}}"
                                             alt="SYRIA MARKET"></a></div>
