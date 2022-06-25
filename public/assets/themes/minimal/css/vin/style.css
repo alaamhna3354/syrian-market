@@ -3154,6 +3154,7 @@ ul.minicart .cart-price .new {
 .login-signup .form-group input{
     background-color: transparent;
     border: 1px solid #ff5917;
+    color: #fff;
 }
 .login-signup .form-group input:focus{
     box-shadow: 0 0 10px .2rem #ff591770;

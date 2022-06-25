@@ -130,7 +130,7 @@
                                     <div>
                                         <a class="btn-forgetpass"
                                            href="{{ route('login') }}">@lang("Already have account?")</a>
-                                    </div>
+                                    </div>   
                                 </div>
                             </div>
 

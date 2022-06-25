@@ -403,7 +403,7 @@
 }
 /* start progress */
 #coverProgress{
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.79);
     position: fixed;
     width: 100%;
     height: 100%;
@@ -415,31 +415,58 @@
 }
 #contentProgress{
     position: absolute;
-    width: 80%;
-    padding: 10px;
+    width: 400px;
+    height: 280px;
+    padding: 20px;
     padding-bottom: 25px;
     z-index: 1000;
     color: #fff;
-    top: 81px;
-    right: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,40%);
     align-items: center;
     background-color: #24262e;
+    border-radius: 5px;
     display: none;
 }
 #contentProgress.active{
+    display: grid;
+    align-content: space-between;
+}
+
+@media (max-width:568px) {
+    #contentProgress{
+    width: 275px;
+    }
+}
+#contentProgress .level{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#contentProgress .level img{
+    width: 100px;
+}
+#contentProgress .level span{
+    font-weight: bold;
+    font-size: 20px;
+    position: absolute;
+    top: 22px;
+    left: 44px;
+}
+#contentProgress .progressText {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: self-start;
-}
-#contentProgress .progressText{
-    margin: auto;
-}
+    }
 #contentProgress .progressText h4{
 margin-inline-end: 4px;
 }
-#progressText{
+#contentProgress .progressTextcolor{
     color: #fe5916;
+    margin: 0 5px;
 }
 #myProgress {
     width: 100%;
@@ -456,11 +483,27 @@ margin-inline-end: 4px;
     border-radius: 5px;
 
   }
+  #myProgress2 {
+    width: 100%;
+    background-color: #ddd;
+    height: 10px;
+    border-radius: 5px;
+
+  }
+  
+  #myBar2 {
+    width: 1%;
+    background-color: #fe5916;
+    height: 10px;
+    border-radius: 5px;
+
+  }
   /* end progress */
 #navbarSupportedContent{
     display: block;
     overflow-y: scroll;
     scrollbar-width: none;
+    height: 100%;
 }
 #navbarSupportedContent ul{
     height: 100%;
