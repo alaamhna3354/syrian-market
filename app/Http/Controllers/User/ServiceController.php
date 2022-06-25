@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AgentCommissionRate;
 use App\Models\Category;
+use App\Models\Fund;
+use App\Models\Order;
 use App\Models\Service;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +23,44 @@ class ServiceController extends Controller
         }])
             ->where('status', 1)
             ->get();
-        return view('user.pages.services.show-service', compact('categories'));
+        $user = Auth::user();
+        if ($user->is_agent == 1 && $user->is_approved == 1){
+            $transactions = Transaction::where('user_id',$user->id)->get();
+            $commissions = AgentCommissionRate::whereMonth('created_at', date('m'))
+                ->whereYear('created_at', date('Y'))
+                ->get();
+//            dd($commissions);
+            $commission_rate = 0;
+            foreach ($commissions as $commission){
+                $commission_rate +=  $commission->commission_rate;
+            }
+            $total = Fund::where('user_id', $user->id)->where('status', 1)->sum('amount');
+            return view('agent.pages.dashboard',compact('transactions','commission_rate','total'));
+        }elseif ($user->is_agent == 1 && $user->is_approved == 0){
+            return view('user.pages.waitForApproved', compact('categories'));
+        }else{
+            return view('user.pages.services.show-service', compact('categories'));
+        }
+
+    }
+
+    public function show()
+    {
+        $categories = Category::with(['service' => function ($query) {
+            $query->userRate()->where('service_status', 1);
+        }])
+            ->where('status', 1)
+            ->get();
+        $user = Auth::user();
+        if ($user->is_agent == 1 && $user->is_approved == 1){
+
+            return view('agent.pages.services.show-service',compact('categories'));
+        }elseif ($user->is_agent == 1 && $user->is_approved == 0){
+            return view('user.pages.services.show-service', compact('categories'));
+        }else{
+            return view('user.pages.services.show-service', compact('categories'));
+        }
+
     }
 
 

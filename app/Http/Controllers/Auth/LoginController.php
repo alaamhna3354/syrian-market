@@ -80,6 +80,8 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+
+
         $this->validateLogin($request);
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
@@ -88,12 +90,14 @@ class LoginController extends Controller
         }
         if ($this->guard()->validate($this->credentials($request))) {
             if (Auth::attempt([$this->username() => $request->username, 'password' => $request->password,'status'=>1])) {
+
                 return $this->sendLoginResponse($request);
             } else {
                 return back()->with('error', 'You are banned from this application. Please contact with system Administrator.');
             }
         }
         $this->incrementLoginAttempts($request);
+
         return $this->sendFailedLoginResponse($request);
     }
 

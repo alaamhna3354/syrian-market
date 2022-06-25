@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Notify;
+use App\Models\AgentCommissionRate;
 use App\Models\Category;
+use App\Models\Debt;
 use App\Models\Language;
+use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserServiceRate;
 use App\Rules\FileTypeValidate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -23,6 +27,12 @@ class UsersController extends Controller
     {
         $users = User::orderBy('id', 'DESC')->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-user', compact('users'));
+    }
+
+    public function agents()
+    {
+        $users = User::orderBy('id', 'DESC')->where('is_agent',1)->paginate(config('basic.paginate'));
+        return view('admin.pages.users.show-agent', compact('users'));
     }
 
     public function search(Request $request)
@@ -50,6 +60,48 @@ class UsersController extends Controller
         return view('admin.pages.users.show-user', compact('users', 'search'));
     }
 
+    public function agentsSearch(Request $request)
+    {
+        $search = $request->all();
+        $dateSearch = $request->date_time;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $users = User::when(isset($search['username']), function ($query) use ($search) {
+            return $query->where('username', 'LIKE', "%{$search['username']}%");
+        })
+            ->when(isset($search['email']), function ($query) use ($search) {
+                return $query->where('email', 'LIKE', "%{$search['email']}%");
+            })
+            ->when(isset($search['phone']), function ($query) use ($search) {
+                return $query->where('phone', 'LIKE', "%{$search['phone']}%");
+            })
+
+            ->when($date == 1, function ($query) use ($dateSearch) {
+                return $query->whereDate("created_at", $dateSearch);
+            })
+            ->when(isset($search['status']), function ($query) use ($search) {
+                return $query->where('status', $search['status']);
+            })
+            ->when(isset($search['is_approved']), function ($query) use ($search) {
+                return $query->where('is_approved', $search['is_approved']);
+            })
+            ->where('is_agent',1)
+            ->paginate(config('basic.paginate'));
+        return view('admin.pages.users.show-agent', compact('users', 'search'));
+    }
+
+    public function approve(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user['is_approved'] == 0) {
+            $is_approved = 1;
+        } else {
+            $is_approved = 0;
+        }
+        $user->is_approved = $is_approved;
+        $user->save();
+        return back()->with('success', 'Successfully Updated');
+    }
+
     public function transaction($id)
     {
         $user = User::findOrFail($id);
@@ -65,6 +117,93 @@ class UsersController extends Controller
 
         $funds = $user->funds()->paginate(config('basic.paginate'));
         return view('admin.pages.users.fund-log', compact('user', 'userid', 'funds'));
+    }
+
+    public function transfer($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', date('Y'))
+            ->paginate(config('basic.paginate'));
+        $commission_rate = 0;
+        foreach ($commissions as $key=>$commission){
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid){
+                $commission_rate +=  $commission->commission_rate;
+            }else{
+                $commissions->forget($key);
+            }
+        }
+
+        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
+    }
+
+    public function transferEarn(Request $request)
+    {
+        $id = $request->id;
+
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', date('Y'))
+            ->where('is_paid',0)
+            ->paginate(config('basic.paginate'));
+        $commission_rate = 0;
+        if (count($commissions) == 0){
+            return back()->with('error', 'All Earnings of last month was been transfer before');
+        }
+        foreach ($commissions as $key=>$commission){
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid){
+                $commission_rate +=  $commission->commission_rate;
+                $commission->is_paid = 1;
+            }else{
+                $commissions->forget($key);
+            }
+        }
+        $user->balance += $commission_rate;
+        if ($user->save()){
+            foreach ($commissions as $commission){
+                $commission->save();
+            }
+            return back()->with('success', 'Successfully Added Earnings to Agent Balance');
+        }else{
+            return back()->with('error', 'Try Again Later there was an error now');
+        }
+//        dd($commission_rate);
+//        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
+    }
+
+    public function userOrders($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_order', compact('user', 'userid'));
+    }
+
+    public function userTransactions($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_transactions', compact('user', 'userid'));
+    }
+
+    public function userDebts($id)
+    {
+//        dd($id);
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.user_debts', compact('user', 'userid'));
     }
 
     public function activeMultiple(Request $request)
@@ -108,6 +247,30 @@ class UsersController extends Controller
         return view('admin.pages.users.edit-user', compact('user', 'languages'));
     }
 
+    public function info($id)
+    {
+        $user = User::findOrFail($id);
+        $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
+//        dd($user->children);
+        $total = 0 ;
+        foreach ($user->children as $child){
+            $orders = $child->order;
+            foreach ($orders as $order){
+                $total += $order->price;
+            }
+
+
+//            dd($total);
+        }
+        foreach ($user->order as $ord){
+
+            $total += $ord->price;
+//                dd($total);
+        }
+        return view('admin.pages.users.agent-info', compact('user', 'languages','total'));
+
+    }
+
     public function userUpdate(Request $request, $id)
     {
         $userData = Purify::clean($request->except('_token', '_method'));
@@ -119,6 +282,7 @@ class UsersController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'phone' => 'sometimes|required',
             'language_id' => 'required|sometimes',
+            'debt_balance' => 'numeric',
             'image' => ['nullable', 'image', new FileTypeValidate(['jpeg', 'jpg', 'png'])]
         ];
         $message = [
@@ -148,7 +312,9 @@ class UsersController extends Controller
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
+        $user->debt_balance = $userData['debt_balance'];
         $user->status = ($userData['status'] == 'on') ? 0 : 1;
+        $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
         $user->sms_verification = ($userData['sms_verification'] == 'on') ? 0 : 1;
         $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;
@@ -190,6 +356,7 @@ class UsersController extends Controller
 
             if ($userData['add_status'] == "1") {
                 $user->balance += $userData['balance'];
+                $user->debt += $userData['balance'];
                 $user->save();
 
                 $transaction = new Transaction();
@@ -200,6 +367,16 @@ class UsersController extends Controller
                 $transaction->remarks = 'Add Balance';
                 $transaction->trx_id = strRandom();
                 $transaction->save();
+
+                $debt = new Debt();
+                $debt->order_id = 0 ;
+                $debt->user_id = $user->id;
+                $debt->agent_id = 0;
+                $debt->debt = $userData['balance'];
+                $debt->status = 1 ;
+                $debt->despite = 0;
+                $debt->is_for_admin = 1;
+                $debt->save();
 
 
                 $msg = [
@@ -281,6 +458,87 @@ class UsersController extends Controller
         $user->save();
 
         return $user->api_token;
+    }
+
+    public function addDebtPayment($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.pages.users.add_debt_payment',compact('user'));
+    }
+
+    public function payDebt(Request $request,$id)
+    {
+
+        $req = Purify::clean($request->all());
+        $rules = [
+            'amount' => 'required|numeric|min:0',
+        ];
+
+        $message = [
+            'amount.required' => 'Balance is required',
+            'amount.numeric' => 'Balance is Must Be Number',
+        ];
+        $Validator = Validator::make($req, $rules, $message);
+
+        if ($Validator->fails()) {
+            return back()->withErrors($Validator)->withInput();
+        }
+        $user = User::findOrFail($id);
+        $balance = $req['amount'];
+
+//dd($balance);
+        $user->debt -= $balance;
+
+
+        $transactionForUser = new Transaction();
+        $transactionForUser->user_id = $user->id;
+        $transactionForUser->trx_type = '+';
+        $transactionForUser->amount = $balance;
+        $transactionForUser->remarks = 'Pay A Debt';
+        $transactionForUser->trx_id = strRandom();
+        $transactionForUser->charge = 0;
+
+
+
+
+        $debt = new Debt();
+        $debt->order_id = 0 ;
+        $debt->user_id = $user->id;
+        $debt->agent_id = 0;
+        $debt->debt = $balance;
+        $debt->status = 1 ;
+        $debt->is_for_admin = 1;
+        $debt->despite = 1;
+        $debt->save();
+
+        $basic = (object)config('basic');
+        if ( $user->save()) {
+            if ($transactionForUser->save()) {
+                $msg = [
+                    'transaction' => $transactionForUser->trx_id,
+                    'amount' => $balance,
+                    'currency' => $basic->currency,
+                    'main_balance' => $balance,
+                ];
+                $action = [
+//                        "link" => route('admin.user.transaction', $transactionForAgent->id),
+                    "icon" => "fas fa-cart-plus text-white",
+                    "link" => "#"
+                ];
+                $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
+                return back()->with('success', 'Balance Added Successfully.');
+            } else {
+                return back()->with('error', 'Balance Do Not Added Successfully.');
+            }
+
+        } else {
+            return back()->with('error', 'Balance Do Not Added Successfully.');
+        }
+
+
+
+
+
     }
 
 

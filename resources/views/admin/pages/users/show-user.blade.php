@@ -59,7 +59,6 @@
         </div>
     </div>
 
-
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
         <div class="card-body">
 
@@ -153,7 +152,28 @@
     </div>
 
 
-
+    <div class="modal fade" id="statusMoldal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">@lang('Confirm Approve')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post" id="statusForm">
+                    @csrf
+                    <div class="modal-body">
+                        <p>@lang('Are you really want to approve this agent')</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
+                        <button type="submit" class="btn btn-primary"><span> @lang('Approve')</span> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="all_active" role="dialog">
         <div class="modal-dialog">
@@ -224,6 +244,10 @@
                 } else {
                     $('#check-all').prop('checked', false);
                 }
+            });
+            $(document).on('click', '.status-change', function () {
+                let route = $(this).data('route');
+                $('#statusForm').attr('action', route);
             });
 
             //dropdown menu is not working

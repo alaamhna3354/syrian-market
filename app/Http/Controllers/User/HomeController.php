@@ -410,6 +410,12 @@ class HomeController extends Controller
         return view($this->theme . 'user.transaction.index', compact('transactions'));
     }
 
+    public function debts()
+    {
+        $debts = $this->user->debts()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view( 'user.pages.debts.index', compact('debts'));
+    }
+
     public function transactionSearch(Request $request)
     {
         $search = $request->all();

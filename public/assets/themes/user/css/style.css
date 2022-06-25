@@ -118,7 +118,7 @@
 
 .nav-link.clear:hover{
     color: #fe5917;
-} 
+}
 #pushNotificationArea{
     margin: 10px 0 0 0;
 }
@@ -144,7 +144,7 @@
     @media screen and (max-width:568px){
         .headerNav .push-notification .right-dropdown {
             width: 300px !important;
-            }  
+            }
             #pushNotificationArea{
                 margin: 10px 0 0 0;
             }
@@ -152,7 +152,7 @@
                 right: 0 !important;
             }
     }
-  
+
 @media screen and (max-width:568px){
     #boltd{
         padding:10px 0 !important;
@@ -169,12 +169,12 @@
     #pushNotificationArea{
         margin: 10px 0 0;
     }
-   
+
       #navbarDropdown{
         padding: 0;
-        min-width: 25px;    
+        min-width: 25px;
       }
-} 
+}
 @media screen and (max-width:340px){
     .headerNav .account .lin{
         font-size: 14px;
@@ -584,7 +584,7 @@ margin-inline-end: 4px;
 }
 @media (max-width:568px) {
     .contain-cards-order .cards-order .item .price span{
-        font-size: 13px; 
+        font-size: 13px;
     }
     .contain-cards-order .cards-order .item .price span:last-child{
         font-size: 11px;
@@ -624,7 +624,7 @@ margin-inline-end: 4px;
     .contain-cards-order .cards-order .item{
         margin: 0 0 20px 0;
     }
-    
+
     .contain-cards-order .cards-order .item .price{
         font-size: 14px;
     }
@@ -697,7 +697,7 @@ margin-inline-end: 4px;
 }
 .services .item.active .fire{
     display: block !important;
-    
+
 }
 .services .disable{
     opacity: .6;
@@ -786,7 +786,7 @@ margin-inline-end: 4px;
 @media (max-width:568px) {
     .services .vald-player-number{
         position: relative;
-    }   
+    }
 }
 .services .vald-player-number.active{
     display: block;
@@ -842,7 +842,7 @@ margin-inline-end: 4px;
 .lang{
     padding: 0;
     list-style: none;
-    margin: 0;   
+    margin: 0;
 }
 .lang i{
     color: #fff !important;
@@ -852,7 +852,7 @@ margin-inline-end: 4px;
     color: #fe5917 !important;
 }
 .lang a{
-    background-color: transparent !important; 
+    background-color: transparent !important;
     color: #fff;
 }
 .lang a:hover{
@@ -918,4 +918,11 @@ margin-inline-end: 4px;
 }
 .dropdown-item:hover{
     background-color: #fe5917 !important;
+}
+
+.terms li {
+    color: #ffffff;
+}
+.advantages li {
+    color: #ffffff;
 }
