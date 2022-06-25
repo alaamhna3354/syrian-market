@@ -41,7 +41,9 @@
                     <div id="myBar2"></div>
                 </div>
             </div>
-            <i class="fas fa-id-card" id="showProgress" style="color: #fe5917;cursor: pointer;margin-inline-end: 5px;"></i>
+            
+            <img id="showProgress" src="{{asset($themeTrue.'imgs/iconl-level.png')}}" alt="" style="width: 35px;cursor: pointer">
+            <!-- <i class="fas fa-id-card" id="showProgress" style="color: #fe5917;cursor: pointer;margin-inline-end: 5px;"></i> -->
             <a class="lin" href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>
            
                        

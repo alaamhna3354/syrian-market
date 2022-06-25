@@ -58,19 +58,58 @@
                 <hr>
                 <div class="row">
                 <div class="col-lg-12 text-center">
-                <h1>الشرائح</h1>
+                <h1 class="mb-4">الشرائح</h1>
+                <h3>
+                    عزيزي المستخدم إن شريحتك الحالية : <span style="color:#ff5917">3</span>
+                <br> إذا كنت ترغب بترقية حسابك الى شريحة أعلى والحصول على حسومات مميزة ما عليك إلا زيادة مبيعاتك الشهرية
+                </h3>
                 </div>
-                <div class="col-lg-6 col-sm-12 col-12 text-center">
+                <!-- <div class="col-lg-6 col-sm-12 col-12 text-center">
                 <img class="imag" src="{{asset($themeTrue.'imgs/slides1.jpg')}}" alt="">
-                </div>
-                <div class="col-lg-6 col-sm-12 col-12 gr-inf">
-                    <h2>مميزات كونك أحد وكلائنا :</h2>
+                </div> -->
+                <div class="col-sm-12 col-12 gr-inf">
                     <h4>
-                        <ul>
-                            <li><i class="fas fa-check"></i><span>أسعار مخصصة لتجار الجملة</span></li>
-                            <li><i class="fas fa-check"></i><span>وزع أكثر من 1500 بطاقة</span></li>
-                            <li><i class="fas fa-check"></i><span>خدمة عملاء مخصصة</span></li>
-                            <li><i class="fas fa-check"></i><span>تسليم مباشر للطلبات</span></li>
+                        <ul class="sim">
+                            <li>
+                                <img src="{{asset($themeTrue.'imgs/level-1.jpg')}}" alt="">
+                                <span>يتطلب الشراء ب
+                                <span style="color:#ff5917">500$</span> 
+                                    للوصول لهذا المستوى
+                                </span>
+                                <i class="fas fa-check"></i>
+                            </li>
+                            <li>
+                                <img src="{{asset($themeTrue.'imgs/level-2.jpg')}}" alt="">
+                                <span>يتطلب الشراء ب
+                                <span style="color:#ff5917">700$</span> 
+                                    للوصول لهذا المستوى
+                                </span>
+                                <i class="fas fa-check"></i>
+                            </li>
+                            <li>
+                                <img src="{{asset($themeTrue.'imgs/level-3.jpg')}}" alt="">
+                                <span>يتطلب الشراء ب
+                                <span style="color:#ff5917">800$</span> 
+                                    للوصول لهذا المستوى
+                                </span>
+                                <i class="fas fa-check"></i>
+                            </li>
+                            <li>
+                                <img src="{{asset($themeTrue.'imgs/level-4.jpg')}}" alt="">
+                                <span>يتطلب الشراء ب
+                                <span style="color:#ff5917">900$</span> 
+                                    للوصول لهذا المستوى
+                                </span>
+                                <i class="fas fa-check"></i>
+                            </li>
+                            <li>
+                                <img src="{{asset($themeTrue.'imgs/level-5.jpg')}}" alt="">
+                                <span>يتطلب الشراء ب
+                                <span style="color:#ff5917">1000$</span> 
+                                    للوصول لهذا المستوى
+                                </span>
+                                <i class="fas fa-check"></i>
+                            </li>
                         </ul>
                          
                         
@@ -103,10 +142,19 @@
 #blog ul li{
     line-height: 2;
 }
+#blog ul li img{
+    width:100px;
+}
 #blog ul li i{
     margin-inline-end: 10px;
     color: #f1632c;
 }
+#blog .sim li i{
+    margin-inline-start: 10px;
+    margin-inline-end: 0;
+    color: #f1632c;
+}
+
 #blog .gr-inf{
     display: grid;
     place-content: center;
@@ -118,11 +166,26 @@
 h2{
   font-size: 20px;
 }
+h3{
+  font-size: 18px;
+}
 h4{
   font-size: 16px;
 }
-}@media (max-width:568px) {
-
+#blog .sim li{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+    border: 1px solid #ff682d;
+    padding: 5px;
+}
+#blog ul li img{
+    width:80px;
+}
+#blog .sim li i{
+    display: none;
+}
 }
 </style>
     <!-- /BLOG -->
