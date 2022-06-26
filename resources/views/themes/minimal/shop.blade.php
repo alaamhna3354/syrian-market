@@ -4,7 +4,7 @@
 @section('content')
 
     <div class="breadcrumb-content text-center">
-        <h2 style="margin:0"> <span>@lang('Shop')</span></h2>
+        <h2 style="margin:0;padding: 10px;"> <span>@lang('Shop')</span></h2>
     </div>
     <!-- shop-area -->
     <section class="shop-area shop-bg pt-120 pb-120" data-background="{{asset($themeTrue.'imgs/shop_bg.jpg')}}">

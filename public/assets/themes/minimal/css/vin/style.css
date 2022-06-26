@@ -1952,6 +1952,7 @@ ul.minicart .cart-price .new {
     font-family: 'Oxanium', cursive;
     font-weight: 800;
     margin-bottom: 0;
+    text-align: start;
 }
 .shop-top-meta .custom-select {
     display: block;
@@ -1985,6 +1986,8 @@ ul.minicart .cart-price .new {
     box-shadow: 0px 3px 6px 0px rgba(34, 12, 3, 0.24);
     border-radius: 4px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 .shop-item-bottom {
     display: flex;
@@ -3154,6 +3157,7 @@ ul.minicart .cart-price .new {
 .login-signup .form-group input{
     background-color: transparent;
     border: 1px solid #ff5917;
+    color: #fff;
 }
 .login-signup .form-group input:focus{
     box-shadow: 0 0 10px .2rem #ff591770;

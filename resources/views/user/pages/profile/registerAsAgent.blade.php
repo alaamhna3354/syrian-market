@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <div class="container-fluid">
+    <div class="container" id="Agent">
         <ol class="breadcrumb center-items">
             <li><a href="{{route('user.home')}}">@lang('Home')</a></li>
             <li class="active">@lang('Sign up As Agent')</li>

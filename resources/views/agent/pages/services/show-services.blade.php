@@ -1,4 +1,4 @@
-@extends('agent.layouts.app')
+@extends('user.layouts.app')
 @section('title')
     @lang('Service')
 @endsection
@@ -31,7 +31,7 @@
     {{--</div>--}}
 
     <div class="contain-cards-order services">
-        <h3 class="text-white">@lang('Add Order') <a href="{{ route('agent.service.show') }}"><i
+        <h3 class="text-white">@lang('Add Order') <a href="{{ route('user.service.show') }}"><i
                     class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text" class="myInput">
@@ -50,8 +50,8 @@
                       <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
                       <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
-
-
+                    
+                   
                     <div class="fire">
                         <img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">
                     </div>
@@ -77,29 +77,31 @@
         <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="col-12 col-sm-6 mb-2">
+                <div class="col-12  mb-2">
                     <label for="">@lang('quantity')</label>
                     <input type="number" name="quantity" class="quantity">
+                    
                 </div>
-                <div class="col-12 col-sm-6 mb-2">
+                <div class="col-12  mb-2">
                     <label for="">@lang('Total')</label>
                     <input type="text" name="total" class="total" readonly>
                 </div>
                 @if($category->type == "GAME")
-                    <div class=" col-12 col-sm-5 mb-2" >
+                    <div class=" col-10  mb-2" >
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="number" name="link" id="player_number" placeholder="" required>
+                        <input type="text" name="link" id="player_number" placeholder="" required>
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
-
                     </div>
-                    <div class="col-10 col-sm-5 mb-2">
+                    <div class="col-2 d-flex align-items-center refresh mb-2">
+                        <!-- <i class="fas fa-sync-alt get-name"></i> -->
+                        <i class="fas fa-crosshairs get-name "></i>
+                    </div>
+                    <div class="col-10 col-sm-12 mb-2">
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    <div class="col-2 col-sm-2 d-flex align-items-center refresh mb-2">
-                        <i class="fas fa-sync-alt get-name"></i>
-                    </div>
+                    
 
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
@@ -147,12 +149,15 @@
                 $('.vald-player-number').addClass('active');
             }
             else{
+                $('#player_name').val('please wait');
+                $(".get-name").addClass('fa-spinner active');
                 $.ajax({
                     url:'/user/player/'+category_id+'/'+player_number,
                     type:"GET",
                     success:function(response){
-                        console.log(response)
-                        $('#player_name').val(response.name);
+                        console.log(response);
+                        $('#player_name').val(response.username);
+                        $(".get-name").removeClass('fa-spinner active');
                     },
                 })
             }
