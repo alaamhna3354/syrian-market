@@ -35,18 +35,36 @@
         </div> -->
         <div class="container">
         <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h1>أنضم إلينا</h1>
+                <div class="col-lg-12 text-center d-flex justify-content-center">
+                    <h1 class="tit">الوكلاء</h1>
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 text-center">
+                <img class="imag" style="width: 225px;"
+                src="{{asset($themeTrue.'imgs/unnamed.png')}}" alt="">
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 mb-4 gr-int">
+                    <h2>شروط الانتساب كوكيل لسيريا ماركت :</h2>
+                    <h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i><span>ان تتجاوز مشترياتك 5000$ شهريا</span></li>
+                            <li><i class="fas fa-check"></i><span>الدفع نقدا</span></li>
+                            <li><i class="fas fa-check"></i><span> دعوة 10 من اصدقائك وفتح حساباتهم بمدة أقل من 15 يوم</span></li>
+                            <li><i class="fas fa-check"></i><span>يجب ان يحوي رصيدك على الاقل على 500 $</span></li>
+                        </ul>
+                         
+                        
+                    </h4>
                 </div>
                 <div class="col-lg-6 col-sm-12 col-12 text-center">
                 <img class="imag" src="{{asset($themeTrue.'imgs/agents.png')}}" alt="">
                 </div>
-                <div class="col-lg-6 col-sm-12 col-12 gr-inf">
+                <div class="col-lg-6 col-sm-12 col-12 gr-int">
                     <h2>مميزات كونك أحد وكلائنا :</h2>
                     <h4>
                         <ul>
                             <li><i class="fas fa-check"></i><span>أسعار مخصصة لتجار الجملة</span></li>
                             <li><i class="fas fa-check"></i><span>وزع أكثر من 1500 بطاقة</span></li>
+                            <li><i class="fas fa-check"></i><span>الربح من خلال مشتريات اصدقائك</span></li>
                             <li><i class="fas fa-check"></i><span>خدمة عملاء مخصصة</span></li>
                             <li><i class="fas fa-check"></i><span>تسليم مباشر للطلبات</span></li>
                         </ul>
@@ -54,13 +72,16 @@
                         
                     </h4>
                 </div>
+              
                 </div>
                 <hr>
                 <div class="row">
+                <div class="col-lg-12 text-center d-flex justify-content-center">
+                <h1 class="mb-4 tit">الشرائح</h1>
+                </div>
                 <div class="col-lg-12 text-center">
-                <h1 class="mb-4">الشرائح</h1>
                 <h3>
-                    عزيزي المستخدم إن شريحتك الحالية : <span style="color:#ff5917">3</span>
+                    عزيزي المستخدم
                 <br> إذا كنت ترغب بترقية حسابك الى شريحة أعلى والحصول على حسومات مميزة ما عليك إلا زيادة مبيعاتك الشهرية
                 </h3>
                 </div>
@@ -127,6 +148,11 @@
 }
 #blog h1{
     font-weight: bold;
+    padding: 5px 20px;
+    border-bottom: 2px solid #ff5917;
+}
+#blog hr{
+    border: 1px solid #ff5917;
 }
 #blog{
     text-align: start;
@@ -138,6 +164,10 @@
     max-width: 100%;
     margin-bottom:25px;
     border-radius: 29px;
+}
+#blog .gr-inf{
+    display:grid;
+    place-content:center;
 }
 #blog ul li{
     line-height: 2;
@@ -156,14 +186,13 @@
     margin-inline-end: 0;
     color: #f1632c;
 }
-
-#blog .gr-inf{
-    display: grid;
-    place-content: center;
-}
 @media (max-width:568px) {
 #blog{
     padding: 20px 10px;
+}
+#blog .gr-int{
+    display:grid;
+    place-content:center;
 }
 h2{
   font-size: 20px;

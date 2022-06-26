@@ -145,9 +145,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
+                @if(session()->get('rtl') == 1)
+                    <div class="side-title mb-45 ">
+                        <h3 style="text-align: start;padding-right: 30px;">
+                        <i class="fas fa-play"></i>@lang('POPULAR GAME') <span>@lang('TOP UP')</span></h3>
+                        <style>
+                            .side-title h3::before {
+                            right: 0;
+                            }
+                            .side-title h3 i {
+                            right: 10px;
+                            }
+                        </style>
+                    </div>
+                @else
                     <div class="side-title mb-45">
                         <h3><i class="fas fa-play"></i>@lang('POPULAR GAME') <span>@lang('TOP UP')</span></h3>
                     </div>
+                @endif
+                    
                 </div>
             </div>
             <div class="row justify-content-center">

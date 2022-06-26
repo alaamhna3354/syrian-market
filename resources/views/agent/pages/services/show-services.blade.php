@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+@extends('agent.layouts.app')
 @section('title')
     @lang('Service')
 @endsection
