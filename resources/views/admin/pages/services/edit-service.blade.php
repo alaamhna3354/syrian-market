@@ -65,14 +65,14 @@
                                 <div class="error text-danger">@lang($errors->first('price')) </div>
                             @endif
                         </div>
-                        <div class="form-group">
-                            <label>@lang('Special Price')</label>
-                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"
-                                   value="{{old('special_price',$service->special_price)}}">
-                            @if($errors->has('special_price'))
-                                <div class="error text-danger">@lang($errors->first('special_price')) </div>
-                            @endif
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>@lang('Special Price')</label>--}}
+{{--                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"--}}
+{{--                                   value="{{old('special_price',$service->special_price)}}">--}}
+{{--                            @if($errors->has('special_price'))--}}
+{{--                                <div class="error text-danger">@lang($errors->first('special_price')) </div>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
@@ -155,6 +155,30 @@
                                 <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
                             @endif
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        @foreach($ranges as $range)
+                            <div class="form-group">
+                                <label>@lang('Price') {{$range->name}}  </label>
+                                <input type="text" class="form-control square" name="price_{{$range->id}}" placeholder="0.00"
+                                       value="{{old('price_'.$range->id,$service->service_price_ranges()->where('price_range_id',$range->id)->first() != null  ? $service->service_price_ranges()->where('price_range_id',$range->id)->first()->price : '0')}}">
+                                @if($errors->has('price_'.$range->id))
+                                    <div class="error text-danger">@lang($errors->first('price_'.$range->id)) </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="col-md-6">
+                        @foreach($ranges as $range)
+                            <div class="form-group">
+                                <label>@lang('Agent Commission Rate') {{$range->name}}  </label>
+                                <input type="text" class="form-control square" name="agent_commission_{{$range->id}}" placeholder="0.00"
+                                       value="{{old('agent_commission_'.$range->id,$service->service_price_ranges()->where('price_range_id',$range->id)->first() != null  ? $service->service_price_ranges()->where('price_range_id',$range->id)->first()->agent_commission_rate : '0')}}">
+                                @if($errors->has('agent_commission_'.$range->id))
+                                    <div class="error text-danger">@lang($errors->first('agent_commission_'.$range->id)) </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="divider"></div>

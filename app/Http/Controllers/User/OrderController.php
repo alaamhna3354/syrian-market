@@ -11,9 +11,11 @@ use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Debt;
 use App\Models\Order;
+use App\Models\PriceRange;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\UserPriceRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -124,6 +126,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+
         $req = Purify::clean($request->all());
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
@@ -143,8 +146,12 @@ class OrderController extends Controller
 
         $user = Auth::user();
         if ($user != null) {
-            if ($user->is_special == 1 && $service->special_price != null) {
-                $service->price = $service->special_price;
+            if (!($service->price != null && $service->price !=0)){
+                $user_range = $user->priceRange;
+                $range = $service->service_price_ranges()->where('price_range_id',$user_range->id)->first();
+                $service->price = $range->price;
+                $service->agent_commission_rate = $range->agent_commission_rate;
+
             }
         }
 
@@ -159,11 +166,12 @@ class OrderController extends Controller
 
 
             $price = round(($quantity * $userRate), 2);
+//            dd($price);
             $user = Auth::user();
             if ($user->balance < $price) {
-                if ($user->is_debt != 1 || $user->balance + $user->debt_balance < $price) {
+
                     return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
-                }
+
 
             }
 
@@ -202,32 +210,67 @@ class OrderController extends Controller
 
             $order->save();
 
-
-            if ($user->balance < $price) {
-                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1 && $user->is_debt == 1 && $user->balance + $user->debt_balance >= $price) {
-                    if ($user->balance >= 0) {
-                        $agentDiscount = $price - $user->balance;
-                    } else {
-                        $agentDiscount = $price;
-                    }
-                    $debt = new Debt();
-                    $debt->debt = $agentDiscount;
-                    $debt->order_id = $order->id;
-                    $debt->user_id = $user->id;
-                    $debt->agent_id = $user->parent->id;
-                    $debt->save();
-                    $user->balance -= $price;
-                    $user->parent->balance -= $agentDiscount;
-                    $user->save();
-                    $user->parent->save();
-                } else {
-                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+////////////////////////            change Price Range     /////////////////////////////
+            if ($user->is_const_price_range == 0){
+                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+                if ($lastUserPriceRange != null){
+                    $lastUserPriceRange->total += $price;
+                    $lastUserPriceRange->save();
+                }else{
+                    $total = $price;
+                    $userPriceRange = new UserPriceRange();
+                    $userPriceRange->user_id = $user->id;
+                    $userPriceRange->price_range_id = $user->price_range_id;
+                    $userPriceRange->price_range_type =  '+';
+                    $userPriceRange->total =  $total;
+                    $userPriceRange->save();
                 }
-
-            } else {
-                $user->balance -= $price;
-                $user->save();
+                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+                $current_user_price_range = $user->priceRange;
+                $nextPriceRange = PriceRange::find($current_user_price_range->id+1);
+                if ($nextPriceRange != null){
+                    if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount){
+                        $userPriceRange = new UserPriceRange();
+                        $userPriceRange->user_id = $user->id;
+                        $userPriceRange->price_range_id = $user->price_range_id;
+                        $userPriceRange->price_range_type =  '+';
+                        $userPriceRange->total =  0;
+                        $userPriceRange->save();
+                        $user->price_range_id = $nextPriceRange->id;
+                        $user->save();
+                    }
+                }
             }
+
+////////////////////////            End change Price Range     /////////////////////////////
+
+
+//            if ($user->balance < $price) {
+//                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1 && $user->is_debt == 1 && $user->balance + $user->debt_balance >= $price) {
+//                    if ($user->balance >= 0) {
+//                        $agentDiscount = $price - $user->balance;
+//                    } else {
+//                        $agentDiscount = $price;
+//                    }
+//                    $debt = new Debt();
+//                    $debt->debt = $agentDiscount;
+//                    $debt->order_id = $order->id;
+//                    $debt->user_id = $user->id;
+//                    $debt->agent_id = $user->parent->id;
+//                    $debt->save();
+//                    $user->balance -= $price;
+//                    $user->parent->balance -= $agentDiscount;
+//                    $user->save();
+//                    $user->parent->save();
+//                } else {
+//                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+//                }
+//
+//            } else {
+//
+//            }
+            $user->balance -= $price;
+                $user->save();
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
             $transaction->trx_type = '-';

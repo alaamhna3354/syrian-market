@@ -20,6 +20,12 @@ class Service extends Model
     {
         return $this->hasMany(ServiceCode::class, 'service_id', 'id');
     }
+
+
+    public function service_price_ranges()
+    {
+        return $this->hasMany(ServicePriceRange::class, 'service_id');
+    }
     public function provider()
     {
         return $this->belongsTo(ApiProvider::class, 'api_provider_id', 'id');
