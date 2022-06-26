@@ -141,6 +141,8 @@
 }
 #blog ul li{
     line-height: 2;
+    display: flex;
+    align-items: center;
 }
 #blog ul li img{
     width:100px;
