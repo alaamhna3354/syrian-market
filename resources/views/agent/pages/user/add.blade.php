@@ -18,40 +18,59 @@
     .form-group label{
         color: #ffffff;
     }
+    /* ******* new ******* */
+    .add-user .image-input {
+    background:  #00000070 !important;
+    }
+    .add-user .image-input #image-label {
+    background-color: #00000070!important;
+    border: 2px dashed #fe5917!important;
+    }
+    .add-user .form-group label {
+    color: #fff;
+    font-weight: bold;
+    }
+    .add-user input{
+        outline:none;
+    }
+    .add-user .form-control:focus {
+  color: #fff!important;
+  border: 1px solid #fe5917!important;
+  outline: none!important;
+  background-color: transparent!important;
+}
+    .add-user input,.add-user select,.add-user textarea{
+        background-color: #00000070;
+        border: 1px solid #fe5917;
+        border-radius: 5px;
+        color: #fff;
+    }
+    .add-user .nav-tabs {
+    border-bottom: 1px solid #fe5917;
+    padding: 0;
+    margin-bottom: 20px;
+    }
+    .add-user .nav-item .nav-link{
+        background-color: transparent !important;
+        border: 2px solid #fe5917 !important;
+        color:#fff !important;
+        font-weight: bold !important;
+    }
+    button:disabled,
+    button[disabled]{
+        cursor: no-drop;
+}
 </style>
 @section('content')
 
 
-    <div class="container">
+    <div class="container add-user"">
         <ol class="breadcrumb center-items">
             <li><a href="{{route('user.home')}}">@lang('Home')</a></li>
             <li class="active">@lang('Add User')</li>
         </ol>
-        <form method="post" action="{{ route('agent.user.store') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('agent.user.store') }}" enctype="multipart/form-data" id="addUserform">
             <div class="row my-3">
-                <div class="col-sm-4">
-                    <div class="card card-primary">
-                        <div class="card-body">
-
-                            <div class="form-group">
-                                @csrf
-                                <div class="image-input ">
-                                    <label for="image-upload" id="image-label"><i class="fas fa-upload"></i></label>
-                                    <input type="file" name="image" placeholder="Choose image" id="image">
-                                    <img id="image_preview_container" class="preview-image"
-                                         src="{{getFile(config('location.user.path'))}}"
-                                         alt="preview image">
-                                </div>
-                                @error('image')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
                 <div class="col-sm-8">
                     <div class="card card-primary">
                         <div class="card-body">
@@ -188,8 +207,8 @@
                                                         <label>@lang('Dept')</label>
                                                         <div class="custom-switch-btn w-md-80">
                                                             <input type='hidden' value='1' name='dept'>
-                                                            <input type="checkbox" name="dept" class="custom-switch-checkbox"
-                                                                   id="dept" checked>
+                                                            <input type="checkbox" name="dept" class="agree custom-switch-checkbox"
+                                                                   id="dept"  required>
                                                             <label class="custom-switch-checkbox-label" for="dept" style="border: 2px solid #fe5917;">
                                                                 <span class="custom-switch-checkbox-inner"></span>
                                                                 <span class="custom-switch-checkbox-switch"></span>
@@ -225,8 +244,8 @@
                                     </div>
 
                                     <div class="submit-btn-wrapper text-center text-md-left">
-                                        <button type="submit"
-                                                class="btn waves-effect waves-light btn-primary btn-block btn-rounded">
+                                        <button type="submit" disabled
+                                                class="place_ btn waves-effect waves-light btn-primary btn-block btn-rounded">
                                             <span>@lang('Add User')</span></button>
                                     </div>
 
@@ -238,6 +257,28 @@
                     </div>
 
                 </div>
+                <div class="col-sm-4">
+                    <div class="card card-primary">
+                        <div class="card-body">
+
+                            <div class="form-group">
+                                @csrf
+                                <div class="image-input ">
+                                    <label for="image-upload" id="image-label"><i class="fas fa-upload"></i></label>
+                                    <input type="file" name="image" placeholder="Choose image" id="image">
+                                    <img id="image_preview_container" class="preview-image"
+                                         src="{{getFile(config('location.user.path'))}}"
+                                         alt="preview image">
+                                </div>
+                                @error('image')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </form>
@@ -247,6 +288,21 @@
 @push('js')
     <script>
         "use strict";
+        // fun 1
+        
+    </script>
+@endpush
+@push('js')
+    <script>
+        "use strict";
+        $(".agree").on("click", function() {
+            if(  $('#addUserform')[0].checkValidity()){
+                $('.place_').removeAttr("disabled");
+            }
+            else{
+                $('.place_').attr("disabled","");
+            }
+        });
         $(document).on('click', '#image-label', function () {
             $('#image').trigger('click');
         });
