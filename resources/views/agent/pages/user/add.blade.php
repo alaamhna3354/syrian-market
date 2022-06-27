@@ -40,10 +40,14 @@
   background-color: transparent!important;
 }
     .add-user input,.add-user select,.add-user textarea{
-        background-color: #00000070;
+        background-color: #00000070 ;
         border: 1px solid #fe5917;
         border-radius: 5px;
         color: #fff;
+    }
+    .add-user select option {
+        color: #000;
+
     }
     .add-user .nav-tabs {
     border-bottom: 1px solid #fe5917;
@@ -112,7 +116,7 @@
                                             <div class="form-group ">
                                                 <label>@lang('Username')</label>
                                                 <input class="form-control" type="text" name="username"
-                                                       value="{{old('username') }}">
+                                                       value="{{old('username') }}" style="background-color: #00000070;">
                                                 @if($errors->has('username'))
                                                     <div
                                                         class="error text-danger">@lang($errors->first('username')) </div>

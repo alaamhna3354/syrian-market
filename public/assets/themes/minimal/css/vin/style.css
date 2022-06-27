@@ -1269,7 +1269,8 @@ ul.minicart .cart-price .new {
 }
 .popular-game-thumb img {
 	border-radius: 4px 20px 4px 20px;
-	max-width: 100%;
+	/* max-width: 100%; */
+	width: 100%;
 }
 .popular-game-item {
 	position: relative;
