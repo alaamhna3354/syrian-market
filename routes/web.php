@@ -477,6 +477,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('coupon/edit/{id}', 'CouponController@update')->name('coupon.update');
         Route::delete('coupon/delete/{id}', 'CouponController@delete')->name('coupon.delete');
 
+        Route::resource('price_range', 'Admin\PriceRangeController');
+        Route::post('/price_range/update/{id}','Admin\PriceRangeController@update')->name('price_range.update');
     });
 
 });

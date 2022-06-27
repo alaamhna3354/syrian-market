@@ -56,14 +56,14 @@
                                 <div class="error text-danger">@lang($errors->first('price')) </div>
                             @endif
                         </div>
-                        <div class="form-group">
-                            <label>@lang('Special Price')</label>
-                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"
-                                   value="{{ old('special_price') }}">
-                            @if($errors->has('special_price'))
-                                <div class="error text-danger">@lang($errors->first('special_price')) </div>
-                            @endif
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>@lang('Special Price')</label>--}}
+{{--                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"--}}
+{{--                                   value="{{ old('special_price') }}">--}}
+{{--                            @if($errors->has('special_price'))--}}
+{{--                                <div class="error text-danger">@lang($errors->first('special_price')) </div>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
 
                     </div>
                     <div class="col-md-6">
@@ -73,6 +73,14 @@
                                    value="{{ old('max_amount',500) }}">
                             @if($errors->has('max_amount'))
                                 <div class="error text-danger">@lang($errors->first('max_amount')) </div>
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            <label>@lang('Agent Commission Rate')</label>
+                            <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"
+                                   value="{{ old('agent_commission_rate') }}">
+                            @if($errors->has('agent_commission_rate'))
+                                <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
                             @endif
                         </div>
                         <div class="row">
@@ -138,14 +146,30 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        @foreach($ranges as $range)
                         <div class="form-group">
-                            <label>@lang('Agent Commission Rate')</label>
-                            <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"
-                                   value="{{ old('agent_commission_rate') }}">
-                            @if($errors->has('agent_commission_rate'))
-                                <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
+                            <label>@lang('Price') {{$range->name}}  </label>
+                            <input type="text" class="form-control square" name="price_{{$range->id}}" placeholder="0.00"
+                                   value="{{ old('price_'.$range->id) }}">
+                            @if($errors->has('price_'.$range->id))
+                                <div class="error text-danger">@lang($errors->first('price_'.$range->id)) </div>
                             @endif
                         </div>
+                        @endforeach
+                    </div>
+                    <div class="col-md-6">
+                        @foreach($ranges as $range)
+                            <div class="form-group">
+                                <label>@lang('Agent Commission Rate') {{$range->name}}  </label>
+                                <input type="text" class="form-control square" name="agent_commission_{{$range->id}}" placeholder="0.00"
+                                       value="{{ old('agent_commission_'.$range->id) }}">
+                                @if($errors->has('agent_commission_'.$range->id))
+                                    <div class="error text-danger">@lang($errors->first('agent_commission_'.$range->id)) </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 {{--<div class="divider"></div>--}}

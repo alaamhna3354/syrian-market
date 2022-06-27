@@ -76,19 +76,28 @@ class ServiceController extends Controller
     }
     public function service($id)
     {
-
+//dd($id);
         $category=Category::find($id);
         $services=Service::where('category_id', $id)->where('service_status',1)->get();
         $user = Auth::user();
         if ($user != null){
-            if ($user->is_special == 1){
-                foreach ($services as $service){
-                    if ($service->special_price != null){
-                        $service->price = $service->special_price;
-                    }
+            foreach ($services as $service){
+                if (!($service->price != null && $service->price !=0)){
+                    $user_range = $user->priceRange;
+                    $range = $service->service_price_ranges()->where('price_range_id',$user_range->id)->first();
+                    $service->price = $range->price;
+                    $service->agent_commission_rate = $range->agent_commission_rate;
 
                 }
             }
+//            if ($user->is_special == 1){
+//                foreach ($services as $service){
+//                    if ($service->special_price != null){
+//                        $service->price = $service->special_price;
+//                    }
+//
+//                }
+//            }
         }
 
 

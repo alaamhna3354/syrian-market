@@ -9,9 +9,11 @@ use App\Models\Category;
 use App\Models\Debt;
 use App\Models\Language;
 use App\Models\Order;
+use App\Models\PriceRange;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\UserPriceRange;
 use App\Models\UserServiceRate;
 use App\Rules\FileTypeValidate;
 use Carbon\Carbon;
@@ -58,6 +60,29 @@ class UsersController extends Controller
             })
             ->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-user', compact('users', 'search'));
+    }
+
+    public function changePriceRange(){
+        $users = User::where('is_const_price_range',0)->get();
+        foreach ($users as $user){
+            $lastUserPriceRangeChange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+            if ($lastUserPriceRangeChange != null){
+                $total = $lastUserPriceRangeChange->total;
+                $orders = Order::whereDate('created_at','<=',$lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
+                $limitDays = $user->priceRange->limit_days;
+                $now = Carbon::now();
+
+
+            }else{
+                $userPriceRange = new UserPriceRange();
+                $userPriceRange->user_id = $user->id;
+                $userPriceRange->price_range_id = $user->price_range_id;
+                $userPriceRange->price_range_type =  '+';
+                $userPriceRange->total =  0;
+                $userPriceRange->save();
+            }
+        }
+
     }
 
     public function agentsSearch(Request $request)
@@ -244,7 +269,8 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
-        return view('admin.pages.users.edit-user', compact('user', 'languages'));
+        $ranges = PriceRange::all();
+        return view('admin.pages.users.edit-user', compact('user', 'languages','ranges'));
     }
 
     public function info($id)
@@ -282,6 +308,7 @@ class UsersController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'phone' => 'sometimes|required',
             'language_id' => 'required|sometimes',
+            'price_range_id' => 'required|sometimes',
             'debt_balance' => 'numeric',
             'image' => ['nullable', 'image', new FileTypeValidate(['jpeg', 'jpg', 'png'])]
         ];
@@ -306,6 +333,8 @@ class UsersController extends Controller
         }
 
 
+
+
         $user->firstname = $userData['firstname'];
         $user->lastname = $userData['lastname'];
         $user->username = $userData['username'];
@@ -317,10 +346,30 @@ class UsersController extends Controller
         $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
         $user->sms_verification = ($userData['sms_verification'] == 'on') ? 0 : 1;
-        $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;
-
+//        $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;
+        $user->is_const_price_range = ($userData['is_const_price_range'] == 'on') ? 0 : 1;
         if (isset($userData['language_id'])) {
             $user->language_id = @$userData['language_id'];
+        }
+        if (isset($userData['price_range_id'])) {
+            if ($user->price_range_id != $userData['price_range_id']){
+                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->where('price_range_type','-')->orderBy('id','desc')->first();
+
+                if ($lastUserPriceRange != null){
+//                    dd(Order::where('user_id',$user->id)->whereDate('created_at','>=', $lastUserPriceRange->created_at->format('Y-m-d'))->get());
+                    $total = Order::where('user_id',$user->id)->whereDate('created_at','>=', $lastUserPriceRange->created_at->format('Y-m-d'))->sum('price');
+//                    dd($total);
+                }else{
+                    $total = 0;
+                }
+                $userPriceRange = new UserPriceRange();
+                $userPriceRange->user_id = $user->id;
+                $userPriceRange->price_range_id = $user->price_range_id;
+                $userPriceRange->price_range_type = $user->price_range_id > $userData['price_range_id'] ? '-' : '+';
+                $userPriceRange->total = $user->price_range_id < $userData['price_range_id'] ? 0 : $total;
+                $userPriceRange->save();
+            }
+            $user->price_range_id = @$userData['price_range_id'];
         }
         $user->save();
 
