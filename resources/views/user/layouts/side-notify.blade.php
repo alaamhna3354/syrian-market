@@ -137,6 +137,11 @@
                     <a class="dropdown-item {{menuActive('user.ticket.list')}}" href="{{ route('user.ticket.list') }}">
                         <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Show Ticket')
                     </a>
+                    @if(auth()->user()->is_debt == 1)
+                    <a class="dropdown-item {{menuActive('user.use_spare_balance')}}" href="{{ route('user.use_spare_balance') }}">
+                        <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Use Spare Balance')
+                    </a>
+                    @endif
 
 
                     <div class="dropdown-divider"></div>
