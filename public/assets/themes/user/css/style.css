@@ -436,9 +436,14 @@
 
 @media (max-width:568px) {
     #contentProgress{
-    width: 275px;
-    }
+        width: 290px;
+        padding: 10px;
+        }
+        #contentProgress h4{
+            font-size: 14px;
+            }
 }
+
 #contentProgress .level{
     position: relative;
     display: flex;
