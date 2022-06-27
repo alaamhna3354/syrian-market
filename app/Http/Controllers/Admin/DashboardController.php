@@ -212,4 +212,14 @@ class DashboardController extends Controller
         ]);
         return back()->with('success', 'Password has been Changed');
     }
+
+    public function migrate(){
+        try {
+            \Artisan::call("migrate");
+            return \Artisan::call("migrate");
+        }catch (\Exception $ex){
+            return $ex->getMessage();
+        }
+
+    }
 }

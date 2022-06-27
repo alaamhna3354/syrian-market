@@ -19,7 +19,7 @@
                             <li class="active">@lang('Terms of affiliation as an agent for Syria Market')</li>
                         </ol>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="background: #00000077;">
                        <ul class="terms">
                            <li><h4 class="">@lang('Your purchases exceed $5000 per month')</h4></li>
                            <li><h4>@lang('pay cash')</h4></li>
@@ -35,7 +35,7 @@
                             <li class="active">@lang('Advantages of Being a Syria Market Agent')</li>
                         </ol>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="background: #00000077;">
                         <ul class="advantages">
                             <li><h4 class="">@lang('discounted prices')</h4></li>
                             <li><h4>@lang('Invite your friends to join us')</h4></li>
