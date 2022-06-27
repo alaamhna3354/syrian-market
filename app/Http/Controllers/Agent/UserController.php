@@ -142,6 +142,7 @@ class UserController extends Controller
         $user->is_approved = 0;
 //        dd($agent->id);
         $user->user_id = $agent->id;
+        $user->price_range_id = 1;
 //        if ($request->hasFile('image')) {
 //            try {
 //                $user->image = $this->uploadImage($request['image'], config('location.user.path'));
