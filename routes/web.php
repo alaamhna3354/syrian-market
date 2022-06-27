@@ -187,7 +187,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('/dashboard', 'Admin\DashboardController@dashboard')->name('dashboard');
-
+        Route::get('/changePriceRange','Admin\UsersController@changePriceRange')->name('changePriceRange');
+        Route::get('migrate', 'Admin\DashboardController@migrate')->name('migrate');
         Route::get('push-notification-show', 'SiteNotificationController@showByAdmin')->name('push.notification.show');
         Route::get('push.notification.readAll', 'SiteNotificationController@readAllByAdmin')->name('push.notification.readAll');
         Route::get('push-notification-readAt/{id}', 'SiteNotificationController@readAt')->name('push.notification.readAt');

@@ -18,20 +18,46 @@
                 <div class="d-flex mb-3">
                 <div class="level">
                     <img src="{{asset($themeTrue.'imgs/level.jpg')}}" alt="">
-                    <span >@lang('3')</span>
+                    <span >{{auth()->user()->price_range_id}}</span>
                     <h2>@lang('المستوى')</h2>
                 </div>
 
                 </div>
                 </div>
+                <?php
+                $nextLevel = \App\Models\PriceRange::where('id',auth()->user()->price_range_id+1)->first();
+                ?>
+                @if($nextLevel != null)
                 <div class="d-flex">
                     <h4>@lang('عليك الشراء ب')</h4>
-                    <h4 id="progressText" class="progressTextcolor">30$</h4>
+                    <h4 id="progressText" class="progressTextcolor">
+                        $<?php
+                        $x = \App\Models\PriceRange::where('id',auth()->user()->price_range_id+1)->first();
+                        $y = auth()->user()->userPriceRanges;
+                        if ($x != null){
+                            if (count($y) > 0){
+                                echo $x->min_total_amount - $y[0]->total;
+                            }else{
+                                echo $x->min_total_amount;
+                            }
+                        }else{
+                            echo "0";
+                        }
+
+
+                        ?>
+
+                    </h4>
                     <h4>@lang('للانتقال للمستوى التالي')</h4>
                 </div>
                 <div id="myProgress" data-progress="70">
                     <div id="myBar"></div>
                 </div>
+                @else
+                    <div class="d-flex">
+                        <h4>@lang('لقد وصلت الى المستوى الاعلى')</h4>
+                    </div>
+                @endif
                 <div class="d-flex mt-3">
                     <h4>@lang(' عليك الشراء ب')</h4>
                     <h4 id="progressText" class="progressTextcolor"> 10$ </h4>
@@ -41,11 +67,12 @@
                     <div id="myBar2"></div>
                 </div>
             </div>
-            <img id="showProgress" src="{{asset($themeTrue.'imgs/iconl-level.png')}}" alt="" style="width: 35px;cursor: pointer">
+            <img id="showProgress" src="{{asset($themeTrue.'imgs/level.jpg')}}" alt="" style="width: 50px;cursor: pointer">
+                <span id="showProgressSpan" style="cursor: pointer;margin-left: 20px;margin-right:{{auth()->user()->price_range_id == 1 ? "-28px" : "-30px"}} ;margin-top: 5px;color: #ffffff;">{{auth()->user()->price_range_id}}</span>
             <!-- <i class="fas fa-id-card" id="showProgress" style="color: #fe5917;cursor: pointer;margin-inline-end: 5px;"></i> -->
             <a class="lin" href="">{{config('basic.currency_symbol')}}</sup>{{getAmount(auth()->user()->balance)}}</a>
-           
-                       
+
+
             <div class="push-notification dropdown " id="pushNotificationArea">
 
 <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
@@ -61,7 +88,7 @@
         <li>
             <div class="scrollable message-center notifications position-relative">
 
-               
+
                 <a v-for="(item, index) in items"
                    @click.prevent="readAt(item.id, item.description.link)"
                    href="javascript:void(0)"
@@ -108,7 +135,7 @@
     $("#showProgress").on("click", function() {
     $('#contentProgress').addClass('active');
     $('#coverProgress').show();
-    
+
     var i = 0;
     var x = 0;
     var progress = $('#myProgress').attr("data-progress");
@@ -144,13 +171,55 @@
             elem2.style.width = width2 + "%";
         }
         }
-        
+
     }
+    });
+    $("#showProgressSpan").on("click", function() {
+        $('#contentProgress').addClass('active');
+        $('#coverProgress').show();
+
+        var i = 0;
+        var x = 0;
+        var progress = $('#myProgress').attr("data-progress");
+        var progress2 = $('#myProgress2').attr("data-progress");
+        // myProgress 1
+        if (i == 0) {
+            i = 1;
+            var elem = document.getElementById("myBar");
+            var width = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= progress) {
+                    clearInterval(id);
+                    i = 0;
+                } else {
+                    width++;
+                    elem.style.width = width + "%";
+                }
+            }
+        }
+        // myProgress 2
+        if (x == 0) {
+            x = 1;
+            var elem2 = document.getElementById("myBar2");
+            var width2 = 1;
+            var id2 = setInterval(frame2, 10);
+            function frame2() {
+                if (width2 >= progress2) {
+                    clearInterval(id2);
+                    x = 0;
+                } else {
+                    width2++;
+                    elem2.style.width = width2 + "%";
+                }
+            }
+
+        }
     });
     $("#coverProgress").on("click", function() {
     $('#contentProgress').removeClass('active');
     $('#coverProgress').hide();
     });
-    
+
     </script>
 @endpush

@@ -10,6 +10,7 @@ use App\Models\ContentDetails;
 use App\Models\Gateway;
 use App\Models\Language;
 use App\Models\Order;
+use App\Models\PriceRange;
 use App\Models\Service;
 use App\Models\Subscriber;
 use App\Models\Template;
@@ -66,6 +67,7 @@ class FrontendController extends Controller
                     $q->select(['content_id', 'description']);
                 }])
             ->get()->groupBy('content.name');
+        $data['levels'] = PriceRange::all();
 
         return view($this->theme . 'blog', $data);
     }

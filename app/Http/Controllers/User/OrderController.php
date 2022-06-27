@@ -238,6 +238,18 @@ class OrderController extends Controller
                         $userPriceRange->save();
                         $user->price_range_id = $nextPriceRange->id;
                         $user->save();
+                        $msg = [
+                            'username' => $user->username,
+                            'level' => $nextPriceRange->name,
+                            'status' => "promoted"
+                        ];
+                        $action = [
+                            "link" => route('admin.user-edit', $user->id),
+                            "icon" => "fas fa-plus text-white"
+                        ];
+                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                        $this->userPushNotification($user,'CHANGE_LEVEL', $msg, $action);
+
                     }
                 }
             }

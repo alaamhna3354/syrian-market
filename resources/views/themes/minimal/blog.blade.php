@@ -51,8 +51,8 @@
                             <li><i class="fas fa-check"></i><span> دعوة 10 من اصدقائك وفتح حساباتهم بمدة أقل من 15 يوم</span></li>
                             <li><i class="fas fa-check"></i><span>يجب ان يحوي رصيدك على الاقل على 500 $</span></li>
                         </ul>
-                         
-                        
+
+
                     </h4>
                 </div>
                 <div class="col-lg-6 col-sm-12 col-12 text-center">
@@ -68,11 +68,11 @@
                             <li><i class="fas fa-check"></i><span>خدمة عملاء مخصصة</span></li>
                             <li><i class="fas fa-check"></i><span>تسليم مباشر للطلبات</span></li>
                         </ul>
-                         
-                        
+
+
                     </h4>
                 </div>
-              
+
                 </div>
                 <hr>
                 <div class="row">
@@ -91,57 +91,28 @@
                 <div class="col-sm-12 col-12 gr-inf">
                     <h4>
                         <ul class="sim">
+                            @foreach($levels as $key => $level)
                             <li>
-                                <img src="{{asset($themeTrue.'imgs/level-1.jpg')}}" alt="">
+                                <img src="{{asset($themeTrue.'imgs/level-'.($key+1 > 5 ? 6 : $key+1).'.jpg')}}" alt="">
                                 <span>يتطلب الشراء ب
-                                <span style="color:#ff5917">500$</span> 
+                                <span style="color:#ff5917">{{$level->min_total_amount}}$</span>
                                     للوصول لهذا المستوى
                                 </span>
                                 <i class="fas fa-check"></i>
                             </li>
-                            <li>
-                                <img src="{{asset($themeTrue.'imgs/level-2.jpg')}}" alt="">
-                                <span>يتطلب الشراء ب
-                                <span style="color:#ff5917">700$</span> 
-                                    للوصول لهذا المستوى
-                                </span>
-                                <i class="fas fa-check"></i>
-                            </li>
-                            <li>
-                                <img src="{{asset($themeTrue.'imgs/level-3.jpg')}}" alt="">
-                                <span>يتطلب الشراء ب
-                                <span style="color:#ff5917">800$</span> 
-                                    للوصول لهذا المستوى
-                                </span>
-                                <i class="fas fa-check"></i>
-                            </li>
-                            <li>
-                                <img src="{{asset($themeTrue.'imgs/level-4.jpg')}}" alt="">
-                                <span>يتطلب الشراء ب
-                                <span style="color:#ff5917">900$</span> 
-                                    للوصول لهذا المستوى
-                                </span>
-                                <i class="fas fa-check"></i>
-                            </li>
-                            <li>
-                                <img src="{{asset($themeTrue.'imgs/level-5.jpg')}}" alt="">
-                                <span>يتطلب الشراء ب
-                                <span style="color:#ff5917">1000$</span> 
-                                    للوصول لهذا المستوى
-                                </span>
-                                <i class="fas fa-check"></i>
-                            </li>
+                            @endforeach
+
                         </ul>
-                         
-                        
+
+
                     </h4>
                 </div>
                 </div>
-            
+
         </div>
     </section>
 <style>
-    
+
 #blog{
     text-align: start;
     padding: 20px;
