@@ -857,6 +857,11 @@ margin-inline-end: 4px;
     0%{box-shadow: 0px 2px 10px #ff5411;}
     100%{box-shadow: 0px 6px 15px #ff5411;}
 }
+.services .agree{
+    width: 15px;
+    margin-inline-end: 10px;
+    accent-color: #fe5917;
+}
 #service-table thead{
     color: #fff;
     background-color: #c1c7d0;

@@ -101,7 +101,10 @@
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    
+                    <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
+                    <input type="checkbox" name="agree" class="agree" id="agree">
+                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
+                    </div>
 
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
@@ -178,7 +181,7 @@
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
-        // fun 4
+       
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
                 event.preventDefault();
@@ -191,11 +194,13 @@
                 $('.quantity').val('0');
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
+                $('.agree').removeAttr("checked");
             }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#btn-add').removeClass('disble');
                 $('#btn-add').removeAttr("disabled");
+                $('.agree').attr("checked","");
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
@@ -218,6 +223,17 @@
                 });
             }
             event.preventDefault();
+        });
+         // fun 4
+         $('.agree').on('click', function (event) {
+            if (!$('.agree').is(':checked')) {
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }
+            else{
+                $('#btn-add').removeClass('disble');
+                $('#btn-add').removeAttr("disabled");
+            }
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
