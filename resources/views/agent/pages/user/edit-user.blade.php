@@ -175,9 +175,9 @@
                                                     <div class="col-sm-6">
                                                         <label>@lang('Dept')</label>
                                                         <div class="custom-switch-btn w-md-80">
-                                                            <input type='hidden' value='1' name='dept'>
+                                                            <input type='hidden' value='0' name='dept'>
                                                             <input type="checkbox" name="dept" class="custom-switch-checkbox"
-                                                                   id="dept" checked>
+                                                                   id="dept" {{$user->is_debt == 1 ? "checked" : ""}}>
                                                             <label class="custom-switch-checkbox-label" for="dept" style="border: 2px solid #fe5917;">
                                                                 <span class="custom-switch-checkbox-inner"></span>
                                                                 <span class="custom-switch-checkbox-switch"></span>
@@ -189,7 +189,7 @@
                                                             <label>@lang('Debt amount')</label>
                                                             <input id="dept_amount" type="text"
                                                                    name="dept_amount"
-                                                                   class="form-control">
+                                                                   class="form-control" value="{{old('dept_amount')?: $user->debt_balance }}">
                                                             @if($errors->has('dept_amount'))
                                                                 <div
                                                                     class="error text-danger">@lang($errors->first('dept_amount')) </div>

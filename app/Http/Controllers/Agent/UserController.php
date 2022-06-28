@@ -118,6 +118,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $agent = $this->user;
         $req = Purify::clean($request->all());
         $basic = (object)config('basic');
@@ -140,9 +141,15 @@ class UserController extends Controller
         $user->sms_verification = ($basic->sms_verification) ? 0 : 1;
         $user->is_agent = 0;
         $user->is_approved = 0;
+        $user->debt_balance = $req['dept_amount'];
 //        dd($agent->id);
         $user->user_id = $agent->id;
         $user->price_range_id = 1;
+        if ($req['dept'] == "on") {
+            $user->is_debt = 1;
+        } else {
+            $user->is_debt = 0;
+        }
 //        if ($request->hasFile('image')) {
 //            try {
 //                $user->image = $this->uploadImage($request['image'], config('location.user.path'));
@@ -217,8 +224,8 @@ class UserController extends Controller
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
-        if ($userData['dept'] == 1) {
-            $user->is_debt = $userData['dept'];
+        if ($userData['dept'] == "on") {
+            $user->is_debt = 1;
         } else {
             $user->is_debt = 0;
         }
