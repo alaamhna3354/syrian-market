@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         Route::get('/dashboard', 'User\ServiceController@index')->name('home');
 //        Route::get('/dashboard', 'HomeController@index')->name('home');
+        Route::get('use_spare_balance', 'HomeController@use_spare_balance')->name('use_spare_balance');
         Route::get('add-fund', 'HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');
@@ -115,7 +116,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::post('/user/update/{id}', 'Agent\UserController@userUpdate')->name('user.update');
         Route::get('/user/add-balance', 'Agent\UserController@addBalance')->name('user.add-balance');
         Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
-
+        Route::get('use_spare_balance', 'Agent\HomeController@use_spare_balance')->name('use_spare_balance');
         Route::get('/add-debt-payment', 'Agent\UserController@addDebtPayment')->name('add-debt-payment');
         Route::Post('/pay-a-debt', 'Agent\UserController@payDebt')->name('pay-a-debt');
         //order search

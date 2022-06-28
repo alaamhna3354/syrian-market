@@ -127,7 +127,11 @@
                         <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Show Ticket')
                     </a>
 
-
+                    @if(auth()->user()->is_debt == 1)
+                        <a class="dropdown-item {{menuActive('agent.use_spare_balance')}}" href="{{ route('agent.use_spare_balance') }}">
+                            <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Use Spare Balance')
+                        </a>
+                    @endif
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
