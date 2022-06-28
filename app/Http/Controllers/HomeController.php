@@ -82,21 +82,21 @@ class HomeController extends Controller
         ]);
         $user = Auth::user();
 
-        $x = 0 ;
+        $x = 0;
 //        dd($user);
-        $coupon = BalanceCoupon::where('code',$request['code'])->first();
+        $coupon = BalanceCoupon::where('code', $request['code'])->first();
 
-        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0) {
             $balance = $coupon->balance;
 
 
             $user->balance += $balance;
             $user->balance += $x;
 
-            if ($user->save()){
+            if ($user->save()) {
                 $coupon->is_sold = 1;
                 $coupon->user_id = $user->id;
-                if ($coupon->save()){
+                if ($coupon->save()) {
                     $transaction = new Transaction();
                     $transaction->user_id = $user->id;
                     $transaction->trx_type = '+';
@@ -122,7 +122,7 @@ class HomeController extends Controller
 
                     $msg = [
                         'amount' => $fund->amount,
-                        'currency' =>$fund->gateway_currency,
+                        'currency' => $fund->gateway_currency,
                         'main_balance' => $user->balance,
                         'transaction' => $transaction->trx_id
                     ];
@@ -134,20 +134,18 @@ class HomeController extends Controller
                     $this->userPushNotification($user, 'ADD_BALANCE', $msg, $action);
                     $this->sendMailSms($user, 'ADD_BALANCE', $msg);
 
-                    if ($transaction->save() && $fund->save()){
+                    if ($transaction->save() && $fund->save()) {
                         return back()->with('success', 'Balance Is Updated Successfully.');
-                    }
-                    else{
+                    } else {
                         return back()->with('error', 'Please Try Again There Are An Error');
                     }
-                }
-                else{
+                } else {
                     return back()->with('error', 'Please Try Again There Are An Error');
                 }
-            }else{
+            } else {
                 return back()->with('error', 'Please Try Again There Are An Error');
             }
-        }else{
+        } else {
             return back()->with('error', 'Coupon Is Not Found.');
         }
     }
@@ -198,7 +196,6 @@ class HomeController extends Controller
             ->when(isset($search['status']), function ($query) use ($search) {
                 return $query->where('status', $search['status']);
             })
-
             ->with('gateway')
             ->paginate(config('basic.paginate'));
         $funds->appends($search);
@@ -217,54 +214,83 @@ class HomeController extends Controller
     public function use_spare_balance()
     {
         $user = Auth::user();
-        if ($user->user_id != null && $user->user_id != 0){
-            if ($user->is_debt == 1){
-                if ($user->debt_balance > 0){
-                    $user->balance += $user->debt_balance ;
-                    $user->is_debt = 0;
-                    $user->save();
+//        if ($user->debt == 0) {
+            if ($user->user_id != null && $user->user_id != 0) {
+                if ($user->is_debt == 1) {
+                    if ($user->debt_balance > 0) {
+                        $user->balance += $user->debt_balance;
+                        $user->is_debt = 0;
+                        $user->debt += $user->debt_balance;
+                        $user->save();
+                        if ($user->parent != null) {
+                            $user->parent->balance -= $user->debt_balance;
+                            $user->parent->save();
+                        }
 
-                    $transactionForUser = new Transaction();
-                    $transactionForUser->user_id = $user->id;
-                    $transactionForUser->trx_type = '+';
-                    $transactionForUser->amount = $user->debt_balance;
-                    $transactionForUser->remarks = 'Charge Balance From reserve balance';
-                    $transactionForUser->trx_id = strRandom();
-                    $transactionForUser->charge = 0;
 
-                    $fund = new Fund();
-                    $fund->user_id = $user->id;
-                    $fund->gateway_id = null;
-                    $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
-                    $fund->amount = $user->debt_balance;
-                    $fund->charge = 0;
-                    $fund->rate = 0;
-                    $fund->final_amount = $user->debt_balance;
-                    $fund->btc_amount = 0;
-                    $fund->btc_wallet = "";
-                    $fund->transaction = strRandom();
-                    $fund->try = 0;
-                    $fund->status = 1;
+                        $transactionForUser = new Transaction();
+                        $transactionForUser->user_id = $user->id;
+                        $transactionForUser->trx_type = '+';
+                        $transactionForUser->amount = $user->debt_balance;
+                        $transactionForUser->remarks = 'Charge Balance From reserve balance';
+                        $transactionForUser->trx_id = strRandom();
+                        $transactionForUser->charge = 0;
 
-                    $debt = new Debt();
-                    $debt->order_id = 0 ;
-                    $debt->user_id = $user->id;
-                    $debt->agent_id = $user->user_id;
-                    $debt->debt = $user->debt_balance;
-                    $debt->status = 1 ;
-                    $debt->despite = 0;
-                    $debt->save();
-                    $transactionForUser->save();
-                    $fund->save();
-                }else{
-                    return back()->with('error', 'sorry You do not have a reserve balance');
+                        $fund = new Fund();
+                        $fund->user_id = $user->id;
+                        $fund->gateway_id = null;
+                        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+                        $fund->amount = $user->debt_balance;
+                        $fund->charge = 0;
+                        $fund->rate = 0;
+                        $fund->final_amount = $user->debt_balance;
+                        $fund->btc_amount = 0;
+                        $fund->btc_wallet = "";
+                        $fund->transaction = strRandom();
+                        $fund->try = 0;
+                        $fund->status = 1;
+
+                        $debt = new Debt();
+                        $debt->order_id = 0;
+                        $debt->user_id = $user->id;
+                        $debt->agent_id = $user->user_id;
+                        $debt->debt = $user->debt_balance;
+                        $debt->status = 1;
+                        $debt->despite = 0;
+                        $debt->save();
+                        $transactionForUser->save();
+                        $fund->save();
+
+                        $msg = [
+                            'amount' => $user->debt_balance,
+                            'currency' => $fund->gateway_currency,
+                            'main_balance' => $user->balance,
+                            'username' => $user->username
+                        ];
+                        $action = [
+                            "link" => '#',
+                            "icon" => "fa fa-money-bill-alt text-white"
+                        ];
+                        if ($user->parent != null) {
+                            $this->userPushNotification($user->parent, 'USE_SPARE_BALANCE', $msg, $action);
+                        } else {
+                            $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
+                        }
+
+
+                    } else {
+                        return back()->with('error', 'sorry You do not have a reserve balance');
+                    }
+
+                } else {
+                    return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
                 }
-
-            }else{
-                return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
+            } else {
+                return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance.');
             }
-        }
-
+//        } else {
+//            return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, You have debts ');
+//        }
         return back()->with('success', 'Balance Is Updated Successfully.');
     }
 
@@ -293,8 +319,8 @@ class HomeController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $languages =  Language::where('is_active',1)->orderBy('short_name')->get();
-        return view('user.pages.profile.myprofile', compact('user','languages'));
+        $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
+        return view('user.pages.profile.myprofile', compact('user', 'languages'));
     }
 
 
@@ -359,7 +385,7 @@ class HomeController extends Controller
         $user->username = $req['username'];
         $user->address = $req['address'];
 
-        if(isset($req['language_id'])){
+        if (isset($req['language_id'])) {
             $user->language_id = $req['language_id'];
         }
         $user->save();

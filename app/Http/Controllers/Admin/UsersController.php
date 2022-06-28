@@ -408,9 +408,14 @@ class UsersController extends Controller
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
-        $user->debt_balance = $userData['debt_balance'];
+        if ($request['debt_balance'] != null){
+            $user->debt_balance = $userData['debt_balance'];
+        }
+
         $user->status = ($userData['status'] == 'on') ? 0 : 1;
-        $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
+        if ($request['is_debt'] != null){
+            $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
+        }
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
         $user->sms_verification = ($userData['sms_verification'] == 'on') ? 0 : 1;
 //        $user->is_special = ($userData['is_special'] == 'on') ? 0 : 1;

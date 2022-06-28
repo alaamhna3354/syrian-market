@@ -201,6 +201,7 @@
                                         </div>
                                     </div>
                                 @endif
+                                @if($user->is_agent == 1)
                                 <div class="col-sm-6">
                                     <div class="form-group ">
                                         <label>@lang('reserve balance')</label>
@@ -210,6 +211,7 @@
                                         @enderror
                                     </div>
                                 </div>
+                                @endif
                                 @if(0 < count($ranges))
                                     <div class="col-sm-6">
                                         <div class="form-group ">
@@ -290,6 +292,7 @@
 {{--                                                </label>--}}
 {{--                                            </div>--}}
 {{--                                        </div>--}}
+                                        @if($user->is_agent == 1)
                                         <div class="col-sm-3">
                                             <label>@lang('Allow the use of the reserve balance')</label>
                                             <div class="custom-switch-btn w-md-80">
@@ -303,6 +306,7 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        @endif
                                         <div class="col-sm-3">
                                             <label>@lang('Price Range Fixing')</label>
                                             <div class="custom-switch-btn w-md-80">

@@ -68,11 +68,12 @@ class HomeController extends Controller
     public function use_spare_balance()
     {
         $user = Auth::user();
-
-            if ($user->is_debt == 1){
-                if ($user->debt_balance > 0){
-                    $user->balance += $user->debt_balance ;
+//        if ($user->debt == 0) {
+            if ($user->is_debt == 1) {
+                if ($user->debt_balance > 0) {
+                    $user->balance += $user->debt_balance;
                     $user->is_debt = 0;
+                    $user->debt += $user->debt_balance;
                     $user->save();
 
                     $transactionForUser = new Transaction();
@@ -98,23 +99,38 @@ class HomeController extends Controller
                     $fund->status = 1;
 
                     $debt = new Debt();
-                    $debt->order_id = 0 ;
+                    $debt->order_id = 0;
                     $debt->user_id = $user->id;
                     $debt->agent_id = 0;
                     $debt->debt = $user->debt_balance;
-                    $debt->status = 1 ;
+                    $debt->status = 1;
                     $debt->despite = 0;
                     $debt->is_for_admin = 1;
                     $debt->save();
                     $transactionForUser->save();
                     $fund->save();
-                }else{
+
+                    $msg = [
+                        'amount' => $user->debt_balance,
+                        'currency' => $fund->gateway_currency,
+                        'main_balance' => $user->balance,
+                        'username' => $user->username
+                    ];
+                    $action = [
+                        "link" => '#',
+                        "icon" => "fa fa-money-bill-alt text-white"
+                    ];
+                    $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
+                } else {
                     return back()->with('error', 'sorry You do not have a reserve balance');
                 }
 
-            }else{
+            } else {
                 return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
             }
+//        } else {
+//            return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, You have debts ');
+//        }
 
 
         return back()->with('success', 'Balance Is Updated Successfully.');
@@ -141,21 +157,21 @@ class HomeController extends Controller
         ]);
         $user = Auth::user();
 
-        $x = 0 ;
+        $x = 0;
 //        dd($user);
-        $coupon = BalanceCoupon::where('code',$request['code'])->first();
+        $coupon = BalanceCoupon::where('code', $request['code'])->first();
 
-        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0){
+        if ($coupon != null && $coupon->is_sold != 1 && $coupon->status != 0) {
             $balance = $coupon->balance;
 
 
             $user->balance += $balance;
             $user->balance += $x;
 
-            if ($user->save()){
+            if ($user->save()) {
                 $coupon->is_sold = 1;
                 $coupon->user_id = $user->id;
-                if ($coupon->save()){
+                if ($coupon->save()) {
                     $transaction = new Transaction();
                     $transaction->user_id = $user->id;
                     $transaction->trx_type = '+';
@@ -180,20 +196,18 @@ class HomeController extends Controller
                     $fund->status = 1;
 
 
-                    if ($transaction->save() && $fund->save()){
+                    if ($transaction->save() && $fund->save()) {
                         return back()->with('success', 'Balance Is Updated Successfully.');
-                    }
-                    else{
+                    } else {
                         return back()->with('error', 'Please Try Again There Are An Error');
                     }
-                }
-                else{
+                } else {
                     return back()->with('error', 'Please Try Again There Are An Error');
                 }
-            }else{
+            } else {
                 return back()->with('error', 'Please Try Again There Are An Error');
             }
-        }else{
+        } else {
             return back()->with('error', 'Coupon Is Not Found.');
         }
     }
@@ -244,7 +258,6 @@ class HomeController extends Controller
             ->when(isset($search['status']), function ($query) use ($search) {
                 return $query->where('status', $search['status']);
             })
-
             ->with('gateway')
             ->paginate(config('basic.paginate'));
         $funds->appends($search);
@@ -285,8 +298,8 @@ class HomeController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $languages =  Language::where('is_active',1)->orderBy('short_name')->get();
-        return view('agent.pages.profile.myprofile', compact('user','languages'));
+        $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
+        return view('agent.pages.profile.myprofile', compact('user', 'languages'));
     }
 
 
@@ -355,7 +368,7 @@ class HomeController extends Controller
         $user->username = $req['username'];
         $user->address = $req['address'];
 
-        if(isset($req['language_id'])){
+        if (isset($req['language_id'])) {
             $user->language_id = $req['language_id'];
         }
         $user->save();
@@ -395,11 +408,11 @@ class HomeController extends Controller
     public function showAgentRegistrationForm()
     {
         $user = Auth::user();
-        $languages =  Language::where('is_active',1)->orderBy('short_name')->get();
-        return view('user.pages.profile.registerAsAgent', compact('user','languages'));
+        $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
+        return view('user.pages.profile.registerAsAgent', compact('user', 'languages'));
     }
 
-    public function registerAsAgent(Request $request,User $user)
+    public function registerAsAgent(Request $request, User $user)
     {
 //        dd($request);
 
@@ -419,10 +432,10 @@ class HomeController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-        if ($user->balance >= 500){
-            $user->is_agent = 1 ;
+        if ($user->balance >= 500) {
+            $user->is_agent = 1;
             $user->is_approved = 0;
-            if($user->save()){
+            if ($user->save()) {
                 $agent = new Agent();
                 $agent->fullname = $req['fullname'];
                 $agent->whatsapp = $req['whatsapp'];
@@ -435,7 +448,7 @@ class HomeController extends Controller
                 $agent->note = $req['note'];
                 $agent->status = 1;
                 $agent->user_id = $user->id;
-                if($agent->save()){
+                if ($agent->save()) {
                     $msg = [
                         'username' => $user->username,
                     ];
@@ -445,14 +458,14 @@ class HomeController extends Controller
                     ];
 
                     $this->adminPushNotification('AGENT_REQUEST', $msg, $action);
-                }else{
-                    return back()->with('error', 'Please Try Again Later' )->withInput();
+                } else {
+                    return back()->with('error', 'Please Try Again Later')->withInput();
                 }
-            }else{
-                return back()->with('error', 'Please Try Again Later' )->withInput();
+            } else {
+                return back()->with('error', 'Please Try Again Later')->withInput();
             }
-        }else{
-            return back()->with('error', 'Your balance must be at least 500$' )->withInput();
+        } else {
+            return back()->with('error', 'Your balance must be at least 500$')->withInput();
         }
 
         return back()->with('success', 'The Admin will see your request soon');
