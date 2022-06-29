@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <div class="container px-3 user-service-list ">
+    <div class="container px-3 user-service-list order-list">
         <div class="row my-3 justify-content-between">
             <div class="col-md-12">
                 <ol class="breadcrumb center-items">
@@ -63,7 +63,8 @@
 
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <button type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
+                                        <button style="padding: 12px 15px;margin: 0;"
+                                        type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
                                                 class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>
@@ -196,6 +197,7 @@
 
                                         </td>
                                         <td data-label="@lang('Note')">
+
 
                                         @if(optional($order->service)->service_status == 1)
                                             <!-- <button type="button"

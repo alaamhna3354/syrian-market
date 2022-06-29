@@ -3,7 +3,7 @@
     @lang('Fund History')
 @endsection
 @section('content')
-     <div class="container px-3 user-service-list">
+     <div class="container px-3 user-service-list order-list">
 
 
 
@@ -50,7 +50,8 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <button type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
+                                        <button style="padding:12px 30px;margin:0"
+                                        type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
                                                 class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>

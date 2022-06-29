@@ -32,7 +32,7 @@
             @endif
 
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+            <i class="fas fa-list-alt m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
                    href="{{route('user.order.index')}}">@lang('Orders')</a>
             </li>

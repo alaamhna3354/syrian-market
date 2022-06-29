@@ -3,7 +3,7 @@
     @lang('Transaction')
 @endsection
 @section('content')
-     <div class="container px-3 user-service-list">
+     <div class="container px-3 user-service-list order-list">
 
          <div class="row justify-content-between ">
              <div class="col-md-12">
@@ -42,7 +42,8 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <button type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i class="fas fa-search"></i> @lang('Search')</button>
+                                        <button style="padding: 12px 15px;margin: 0;"
+                                        type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>
                             </div>

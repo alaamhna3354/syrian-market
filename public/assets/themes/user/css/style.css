@@ -566,10 +566,14 @@ margin-inline-end: 4px;
     flex: 1;
     margin-inline-end: 10px;
     border-radius: 5px;
-    border: none;
+    background-color: transparent;
+    border: 1px solid #fe5917;
+    color: #fff;
     padding: 0 10px;
 }
-
+.contain-cards-order .search input::placeholder{
+    color: #fff !important;
+}
 .contain-cards-order .search .btn{
     padding: 10px 20px;
 }
@@ -857,6 +861,11 @@ margin-inline-end: 4px;
     0%{box-shadow: 0px 2px 10px #ff5411;}
     100%{box-shadow: 0px 6px 15px #ff5411;}
 }
+.services .agree{
+    width: 15px;
+    margin-inline-end: 10px;
+    accent-color: #fe5917;
+}
 #service-table thead{
     color: #fff;
     background-color: #c1c7d0;
@@ -972,4 +981,61 @@ margin-inline-end: 4px;
 }
 .advantages li {
     color: #ffffff;
+}
+/* Start Agent */
+#Agent ul{
+    color: #fff;
+    list-style: none;
+    padding: 0;
+   }
+   #Agent input,#Agent textarea{
+       background-color: #0000007a;
+       border-radius: 5px;
+       border-color: #fe5917;
+       color: #fff;
+      }
+   #Agent input::placeholder,#Agent textarea::placeholder{
+       color: #fff;
+   
+   }
+   /* End Agent */
+   .order-list input{
+       background-color: #0000005c;
+       border-color:  #fe5917 ;
+       color: #fff !important;
+       border-radius: 5px;
+   }
+   .order-list input::placeholder{
+       color: #fff !important;
+   }
+   .form-control:focus {
+       color: #fff;
+       background-color: #0000005c;
+       border-color: #fe5917;
+       outline: 0;
+       box-shadow: transparent;
+     }
+   .order-list select{
+       background-color: #0000005c;
+       border-color:  #fe5917 ;
+       color:  #fff ;
+       border-radius: 5px;
+   }
+   .order-list select:focus {
+       background-color: #0000005c;
+       border-color:  #fe5917 ;
+       color:  #fff ;
+   }
+   @media (max-width:568px) {
+    .nav-pills{
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+    } 
+    .nav-pills li{
+       width: 33%;
+       font-size: 14px;
+       text-align: center;
+       font-weight: bold;
+    } 
 }
