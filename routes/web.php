@@ -125,6 +125,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/services/{id}', 'Agent\ServiceController@service')->name('services.show');
 
         Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
+        Route::get('/users/orderSearch', 'Agent\UserController@usersOrderSearch')->name('users.OrderSearch');
 
         Route::get('/profile', 'Agent\HomeController@profile')->name('profile');
         Route::post('/updateProfile', 'Agent\HomeController@updateProfile')->name('updateProfile');
@@ -144,6 +145,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/orders', 'Agent\OrderController@search')->name('order.search');
         Route::post('/order/status', 'Agent\OrderController@statusChange')->name('order.status.change');
         Route::get('/orders/{status}', 'Agent\OrderController@statusSearch')->name('order.status.search');
+        Route::get('/userOrders/{status}', 'Agent\UserController@statusSearch')->name('userOrders.status.search');
         Route::get('/mass/orders', 'Agent\OrderController@massOrder')->name('order.mass');
         Route::post('/mass/orders', 'Agent\OrderController@masOrderStore')->name('order.mass.store');
         Route::get('/get-service', 'ServiceController@getservice')->name('get.service');
@@ -248,6 +250,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/agent/userOrders/{id}', 'Admin\UsersController@userOrders')->name('agent.userOrders');
         Route::get('/agent/userTransactions/{id}', 'Admin\UsersController@userTransactions')->name('agent.userTransactions');
         Route::get('/agent/userDebts/{id}', 'Admin\UsersController@userDebts')->name('agent.userDebts');
+        Route::get('/agent/debts/{id}', 'Admin\UsersController@debts')->name('agent.debts');
 
 
 

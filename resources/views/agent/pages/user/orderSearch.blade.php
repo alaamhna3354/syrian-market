@@ -80,7 +80,6 @@
 
                 <div class="card">
                     <div class="card-body pb-4">
-
                         <div class="row justify-content-between align-items-start">
                             <div class="col-sm-12">
                                 <div class="my-4">
@@ -135,7 +134,8 @@
                             </div>
                         </div>
 
-                        @foreach(auth()->user()->children as $user)
+
+                        @foreach(auth()->user()->children as $key=>$user)
                             <ol class="breadcrumb center-items">
                                 <li class="active">@lang($user->username)</li>
                             </ol>
@@ -156,7 +156,7 @@
                                     </thead>
                                     <tbody>
 
-                                    @foreach($user->order()->latest()->paginate(10) as $key => $order)
+                                    @foreach($orders[$key] as $key => $order)
                                         <tr>
                                             <td data-label="@lang('Order ID')"> {{$order->id}} </td>
                                             <td  data-label="@lang('Order Details')" class="un-td">

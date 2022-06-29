@@ -309,6 +309,15 @@ class UsersController extends Controller
         return view('admin.pages.agent.user_debts', compact('user', 'userid'));
     }
 
+    public function debts($id)
+    {
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.debts', compact('user', 'userid'));
+    }
+
     public function activeMultiple(Request $request)
     {
 

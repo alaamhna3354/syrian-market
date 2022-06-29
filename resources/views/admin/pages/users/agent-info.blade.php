@@ -99,6 +99,11 @@
                                 <span class="btn-label"><i class="fas fa-hand-holding-usd"></i></span> @lang('Add Debt Payment')
                             </a>
 
+                            <a href="{{ route('admin.agent.debts',$user->id) }}"
+                               class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label"><i class="fas fa-clipboard-list"></i></span> @lang('Debt with admin')
+                            </a>
+
 
                         </div>
 

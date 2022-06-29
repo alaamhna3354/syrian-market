@@ -8,6 +8,7 @@ use App\Models\BalanceCoupon;
 use App\Models\Debt;
 use App\Models\Fund;
 use App\Models\Language;
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\FileTypeValidate;
@@ -503,6 +504,55 @@ class UserController extends Controller
 
     public function usersOrder(){
         return view('agent.pages.user.orders');
+    }
+
+    public function usersOrderSearch(Request $request)
+    {
+        $search = @$request->order_id;
+//        dd($search);
+        $status = @$request->status;
+        $dateSearch = @$request->date_order;
+        $agent = Auth::user();
+        $children = $agent->children;
+//        dd($children);
+        foreach ($children as $key=>$child){
+            $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+            $orders[$key] = Order::where('user_id', $child->id)
+                ->when($search, function ($query) use ($search) {
+                    return $query->where('id', 'LIKE', "%{$search}%")
+                        ->orWhereHas('service', function ($q) use ($search) {
+                            return $q->where('service_title', 'LIKE', "%{$search}%");
+                        });
+                })
+                ->when($status != -1, function ($query) use ($status) {
+                    return $query->where('status', 'LIKE', "%{$status}%");
+                })
+                ->when($date == 1, function ($query) use ($dateSearch) {
+                    return $query->whereDate("created_at", $dateSearch);
+                })
+                ->with('service', 'service.category', 'users')
+                ->latest()
+                ->paginate(config('basic.paginate'));
+        }
+//        dd($orders);
+
+        return view('agent.pages.user.orderSearch', compact('orders'));
+    }
+
+    public function statusSearch(Request $request, $name = 'awaiting')
+    {
+        $status = @$name;
+        $agent = Auth::user();
+        $children = $agent->children;
+        foreach ($children as $key=>$child) {
+            $orders[$key] = Order::with('service', 'users')
+                ->where(['user_id' => $child->id])
+                ->when($status != -1, function ($query) use ($status) {
+                    return $query->where('status', $status);
+                })
+                ->paginate(config('basic.paginate'));
+        }
+        return view('agent.pages.user.orderSearch', compact('orders'));
     }
 
 }
