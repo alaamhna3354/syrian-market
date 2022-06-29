@@ -15,7 +15,12 @@
                    href="{{ route('user.home') }}">@lang('Home') </a>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-home m-2"></i>
+                <i class="fab fa-jedi-order m-2"></i>
+                <style>
+                    .fa-jedi-order::before {
+                    content: "\f50e";
+                    }
+                </style>
                 <a class="nav-link {{ Request::routeIs('agent.products')  ? 'active' : '' }}"
                    href="{{ route('agent.products') }}">@lang('products') </a>
             </li>
@@ -48,17 +53,17 @@
                 </div>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+                <i class="fas fa-list-alt m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.order.index*')  ? 'active' : '' }}"
                    href="{{route('agent.order.index')}}">@lang('Orders')</a>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+                <i class="far fa-address-book m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.debt.index*')  ? 'active' : '' }}"
                    href="{{route('agent.debt.index')}}">@lang('Users Debts')</a>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+            <i class="fas fa-clipboard-list m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
                    href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
             </li>

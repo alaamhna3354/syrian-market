@@ -85,10 +85,10 @@
                 <br> إذا كنت ترغب بترقية حسابك الى شريحة أعلى والحصول على حسومات مميزة ما عليك إلا زيادة مبيعاتك الشهرية
                 </h3>
                 </div>
-                <!-- <div class="col-lg-6 col-sm-12 col-12 text-center">
+                <div class="col-lg-6 col-sm-12 col-12 text-center mt-4">
                 <img class="imag" src="{{asset($themeTrue.'imgs/slides1.jpg')}}" alt="">
-                </div> -->
-                <div class="col-sm-12 col-12 gr-inf">
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 mt-4">
                     <h4>
                         <ul class="sim">
                             @foreach($levels as $key => $level)
@@ -151,6 +151,9 @@
 #blog ul li i{
     margin-inline-end: 10px;
     color: #f1632c;
+}
+#blog .sim li{
+    justify-content: space-around;
 }
 #blog .sim li i{
     margin-inline-start: 10px;

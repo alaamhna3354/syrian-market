@@ -7,7 +7,7 @@
     <div class="contain-cards-order">
         <h3 class="text-white">@lang('Add Order')</h3>
         <div class="search">
-            <input type="text" id="myInput">
+            <input type="text" id="myInput" placeholder="@lang('Type Here')">
             <button class="btn">@lang('Search')</button>
         </div>
         <div class="cards-order" >
