@@ -215,14 +215,35 @@ class UsersController extends Controller
 //        dd($id);
         $user = User::findOrFail($id);
         $userid = $user->id;
+        $children = $user->children;
+        $users_ids = [];
+        if (count($children) > 0){
+            foreach ($children as $key=>$child){
+                $users_ids[$key] = $child->id;
+            }
+        }
+
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->paginate(config('basic.paginate'));
+
         $commissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->paginate(config('basic.paginate'));
+
+        $totalCommissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('created_at', date('Y'))->where('is_paid', 0)
+            ->wherein('user_id', $users_ids)
+            ->paginate(config('basic.paginate'));
+        $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', date('Y'))->where('is_paid', 0)
+            ->wherein('user_id', $users_ids)
+            ->paginate(config('basic.paginate'));
+//        dd($totalCommissionsThisMonth);
         $commission_rate = 0;
         $this_month_commission_rate = 0;
+        $totalCommission_rate = 0;
+        $totalThis_month_commission_rate = 0;
         foreach ($commissions as $key => $commission) {
             $agent = $commission->user;
             if ($agent->parent->id == $userid) {
@@ -239,8 +260,25 @@ class UsersController extends Controller
                 $commissionsThisMonth->forget($key1);
             }
         }
+        foreach ($totalCommissions as $key => $commission) {
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid) {
+                $totalCommission_rate += $commission->commission_rate;
+            } else {
+                $totalCommissions->forget($key);
+            }
+        }
+        foreach ($totalCommissionsThisMonth as $key1 => $commissionThisMonth) {
+            $agent = $commissionThisMonth->user;
+            if ($agent->parent->id == $userid) {
+                $totalThis_month_commission_rate += $commissionThisMonth->commission_rate;
+            } else {
+                $totalCommissionsThisMonth->forget($key1);
+            }
+        }
 
-        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissionsThisMonth', 'commissions', 'commission_rate', 'this_month_commission_rate'));
+
+        return view('admin.pages.users.transfer', compact('totalCommission_rate','totalThis_month_commission_rate','user', 'userid', 'commissionsThisMonth', 'commissions', 'commission_rate', 'this_month_commission_rate'));
     }
 
     public function transferEarn(Request $request)
@@ -259,7 +297,7 @@ class UsersController extends Controller
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
-            ->where('user_id','in', $users_ids)
+            ->wherein('user_id', $users_ids)
             ->paginate(config('basic.paginate'));
         $commission_rate = 0;
         if (count($commissions) == 0) {
@@ -303,8 +341,8 @@ class UsersController extends Controller
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
-            ->where('user_id','in', $users_ids)
-            ->paginate(config('basic.paginate'));
+            ->wherein('user_id', $users_ids)
+            ->get();
         $commission_rate = 0;
         if (count($commissions) == 0) {
             return back()->with('error', 'All Earnings of last month was been transfer before');

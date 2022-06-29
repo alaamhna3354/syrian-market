@@ -41,7 +41,8 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Region')
                                 <span>{{ $user->agent->region }}</span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Profits')
-                                <span>{{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                <span>{{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span>
+                            </li>
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Status')
                                 <span
@@ -61,8 +62,6 @@
                 </div>
 
 
-
-
             </div>
 
             <div class="col-sm-8">
@@ -72,6 +71,8 @@
                             <div class="col-sm-6">
                                 <h4 class="card-title">@lang('Last month earnings') :
                                     <span> {{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                    <br>
+                                    ({{$totalCommission_rate == 0 ? "تم تحويل الارباح" : $totalCommission_rate}})
                                 </h4>
                             </div>
                             <div class="col-sm-6">
@@ -96,7 +97,11 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <h4 class="card-title">@lang('This month earnings') :
+
                                     <span> {{ getAmount($this_month_commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                    <br>
+                                    ({{$totalThis_month_commission_rate == 0 ? "تم تحويل الارباح" : "المتبقي :".config('basic.currency')." ".$totalThis_month_commission_rate}}
+                                    )
                                 </h4>
                             </div>
                             <div class="col-sm-6">
@@ -127,7 +132,8 @@
                                 <thead class="thead-primary">
                                 <tr>
                                     <th scope="col" class="text-center">
-                                        <input type="checkbox" class="form-check-input check-all tic-check" name="check-all"
+                                        <input type="checkbox" class="form-check-input check-all tic-check"
+                                               name="check-all"
                                                id="check-all">
                                         <label for="check-all"></label>
                                     </th>
@@ -144,7 +150,8 @@
                                     <tr>
                                         <td class="text-center">
                                             <input type="checkbox" id="chk-{{ $commission->id }}"
-                                                   class="form-check-input row-tic tic-check" name="check" value="{{$commission->id}}"
+                                                   class="form-check-input row-tic tic-check" name="check"
+                                                   value="{{$commission->id}}"
                                                    data-id="{{ $commission->id }}">
                                             <label for="chk-{{ $commission->id }}"></label>
                                         </td>
@@ -181,7 +188,8 @@
                                 <thead class="thead-primary">
                                 <tr>
                                     <th scope="col" class="text-center">
-                                        <input type="checkbox" class="form-check-input check-all tic-check" name="check-all"
+                                        <input type="checkbox" class="form-check-input check-all tic-check"
+                                               name="check-all"
                                                id="check-all">
                                         <label for="check-all"></label>
                                     </th>
@@ -198,7 +206,8 @@
                                     <tr>
                                         <td class="text-center">
                                             <input type="checkbox" id="chk-{{ $commission->id }}"
-                                                   class="form-check-input row-tic tic-check" name="check" value="{{$commission->id}}"
+                                                   class="form-check-input row-tic tic-check" name="check"
+                                                   value="{{$commission->id}}"
                                                    data-id="{{ $commission->id }}">
                                             <label for="chk-{{ $commission->id }}"></label>
                                         </td>
@@ -300,7 +309,7 @@
         });
 
 
-        $('.copyBoard').on('click',function () {
+        $('.copyBoard').on('click', function () {
             var copyText = document.getElementById("referralURL");
             copyText.select();
             copyText.setSelectionRange(0, 99999);
