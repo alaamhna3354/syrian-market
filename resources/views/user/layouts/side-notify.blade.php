@@ -25,7 +25,7 @@
             </li>
             @if(Auth::user()->is_agent == 1 && Auth::user()->is_approved == 0)
                 <li class="nav-item d-flex align-items-center">
-                    <i class="fa fa-home m-2"></i>
+                    <i class="fab fa-product-hunt m-2"></i>
                     <a class="nav-link {{ Request::routeIs('user.products')  ? 'active' : '' }}"
                        href="{{ route('user.products') }}">@lang('products') </a>
                 </li>
@@ -60,13 +60,13 @@
             </li>
             @if(Auth::user()->parent != null)
                 <li class="nav-item d-flex align-items-center">
-                    <i class="fas fa-piggy-bank m-2"></i>
+                    <i class="fas fa-indent m-2"></i>
                     <a class="nav-link {{ Request::routeIs('user.debts')  ? 'active' : '' }}"
                        href="{{route('user.debts')}}">@lang('Debts')</a>
                 </li>
             @endif
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+                <i class="fas fa-hand-holding-usd m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
                    href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
             </li>

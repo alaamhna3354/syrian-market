@@ -25,6 +25,7 @@ use Stevebauman\Purify\Facades\Purify;
 class UsersController extends Controller
 {
     use Notify;
+
     public function index()
     {
         $users = User::orderBy('id', 'DESC')->paginate(config('basic.paginate'));
@@ -33,7 +34,7 @@ class UsersController extends Controller
 
     public function agents()
     {
-        $users = User::orderBy('id', 'DESC')->where('is_agent',1)->paginate(config('basic.paginate'));
+        $users = User::orderBy('id', 'DESC')->where('is_agent', 1)->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-agent', compact('users'));
     }
 
@@ -51,7 +52,6 @@ class UsersController extends Controller
             ->when(isset($search['phone']), function ($query) use ($search) {
                 return $query->where('phone', 'LIKE', "%{$search['phone']}%");
             })
-
             ->when($date == 1, function ($query) use ($dateSearch) {
                 return $query->whereDate("created_at", $dateSearch);
             })
@@ -62,71 +62,72 @@ class UsersController extends Controller
         return view('admin.pages.users.show-user', compact('users', 'search'));
     }
 
-    public function changePriceRange(){
-        $users = User::where('is_const_price_range',0)->get();
+    public function changePriceRange()
+    {
+        $users = User::where('is_const_price_range', 0)->get();
 //        foreach ($users as $user){
         $user = User::findOrFail(22);
 
-            $lastUserPriceRangeChange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+        $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 //        dd($lastUserPriceRangeChange);
-            if ($lastUserPriceRangeChange != null){
-                $total = $lastUserPriceRangeChange->total;
-                $orders = Order::whereDate('created_at','<=',$lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
-                $limitDays = $user->priceRange->limit_days;
-                $now = Carbon::now();
-                $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
-                if ($dateDiff == $limitDays){
-                    if ($total < $user->priceRange->min_total_amount){
-                        $user->price_range_id = $user->price_range_id - 1 ;
-                        if ($user->save()){
-                            $nextPriceRange = $user->priceRange;
-                            $msg = [
-                                'username' => $user->username,
-                                'level' => $nextPriceRange->name,
-                                'status' => "demotion"
-                            ];
-                            $action = [
-                                "link" => route('admin.user-edit', $user->id),
-                                "icon" => "fas fa-plus text-white"
-                            ];
-                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                            $this->userPushNotification($user,'CHANGE_LEVEL', $msg, $action);
-                        }
-                    }
-                }elseif ($dateDiff > $limitDays){
-                    $days = $dateDiff % $limitDays ;
-                    $dateOfOrders = Carbon::now()->subDays($days);
-                    $ordersTotal = Order::where('user_id',$user->id)->whereDate('created_at','>=',$dateOfOrders)->sum('price');
-                    if ($ordersTotal < $user->priceRange->min_total_amount){
-                        $user->price_range_id = $user->price_range_id - 1 ;
-                        if ($user->save()){
-                            $nextPriceRange = $user->priceRange;
-                            $msg = [
-                                'username' => $user->username,
-                                'level' => $nextPriceRange->name,
-                                'status' => "demotion"
-                            ];
-                            $action = [
-                                "link" => route('admin.user-edit', $user->id),
-                                "icon" => "fas fa-plus text-white"
-                            ];
-                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                            $this->userPushNotification($user,'CHANGE_LEVEL', $msg, $action);
-                        }
+        if ($lastUserPriceRangeChange != null) {
+            $total = $lastUserPriceRangeChange->total;
+            $orders = Order::whereDate('created_at', '<=', $lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
+            $limitDays = $user->priceRange->limit_days;
+            $now = Carbon::now();
+            $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
+            if ($dateDiff == $limitDays) {
+                if ($total < $user->priceRange->min_total_amount) {
+                    $user->price_range_id = $user->price_range_id - 1;
+                    if ($user->save()) {
+                        $nextPriceRange = $user->priceRange;
+                        $msg = [
+                            'username' => $user->username,
+                            'level' => $nextPriceRange->name,
+                            'status' => "demotion"
+                        ];
+                        $action = [
+                            "link" => route('admin.user-edit', $user->id),
+                            "icon" => "fas fa-plus text-white"
+                        ];
+                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
                     }
                 }
-
-                dd($total);
-
-
-            }else{
-                $userPriceRange = new UserPriceRange();
-                $userPriceRange->user_id = $user->id;
-                $userPriceRange->price_range_id = $user->price_range_id;
-                $userPriceRange->price_range_type =  '+';
-                $userPriceRange->total =  0;
-                $userPriceRange->save();
+            } elseif ($dateDiff > $limitDays) {
+                $days = $dateDiff % $limitDays;
+                $dateOfOrders = Carbon::now()->subDays($days);
+                $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
+                if ($ordersTotal < $user->priceRange->min_total_amount) {
+                    $user->price_range_id = $user->price_range_id - 1;
+                    if ($user->save()) {
+                        $nextPriceRange = $user->priceRange;
+                        $msg = [
+                            'username' => $user->username,
+                            'level' => $nextPriceRange->name,
+                            'status' => "demotion"
+                        ];
+                        $action = [
+                            "link" => route('admin.user-edit', $user->id),
+                            "icon" => "fas fa-plus text-white"
+                        ];
+                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                    }
+                }
             }
+
+            dd($total);
+
+
+        } else {
+            $userPriceRange = new UserPriceRange();
+            $userPriceRange->user_id = $user->id;
+            $userPriceRange->price_range_id = $user->price_range_id;
+            $userPriceRange->price_range_type = '+';
+            $userPriceRange->total = 0;
+            $userPriceRange->save();
+        }
 //        }
 
     }
@@ -145,7 +146,6 @@ class UsersController extends Controller
             ->when(isset($search['phone']), function ($query) use ($search) {
                 return $query->where('phone', 'LIKE', "%{$search['phone']}%");
             })
-
             ->when($date == 1, function ($query) use ($dateSearch) {
                 return $query->whereDate("created_at", $dateSearch);
             })
@@ -155,7 +155,7 @@ class UsersController extends Controller
             ->when(isset($search['is_approved']), function ($query) use ($search) {
                 return $query->where('is_approved', $search['is_approved']);
             })
-            ->where('is_agent',1)
+            ->where('is_agent', 1)
             ->paginate(config('basic.paginate'));
         return view('admin.pages.users.show-agent', compact('users', 'search'));
     }
@@ -187,8 +187,7 @@ class UsersController extends Controller
         $user->is_approved = $is_approved;
         $user->save();
 
-            $this->userPushNotification($user, 'APPROVE_AGENT', $msg, $action);
-
+        $this->userPushNotification($user, 'APPROVE_AGENT', $msg, $action);
 
 
         return back()->with('success', 'Successfully Updated');
@@ -219,17 +218,29 @@ class UsersController extends Controller
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->paginate(config('basic.paginate'));
+        $commissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', date('Y'))
+            ->paginate(config('basic.paginate'));
         $commission_rate = 0;
-        foreach ($commissions as $key=>$commission){
+        $this_month_commission_rate = 0;
+        foreach ($commissions as $key => $commission) {
             $agent = $commission->user;
-            if ($agent->parent->id == $userid){
-                $commission_rate +=  $commission->commission_rate;
-            }else{
+            if ($agent->parent->id == $userid) {
+                $commission_rate += $commission->commission_rate;
+            } else {
                 $commissions->forget($key);
             }
         }
+        foreach ($commissionsThisMonth as $key1 => $commissionThisMonth) {
+            $agent = $commissionThisMonth->user;
+            if ($agent->parent->id == $userid) {
+                $this_month_commission_rate += $commissionThisMonth->commission_rate;
+            } else {
+                $commissionsThisMonth->forget($key1);
+            }
+        }
 
-        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
+        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissionsThisMonth', 'commissions', 'commission_rate', 'this_month_commission_rate'));
     }
 
     public function transferEarn(Request $request)
@@ -240,28 +251,28 @@ class UsersController extends Controller
         $userid = $user->id;
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
-            ->where('is_paid',0)
+            ->where('is_paid', 0)
             ->paginate(config('basic.paginate'));
         $commission_rate = 0;
-        if (count($commissions) == 0){
+        if (count($commissions) == 0) {
             return back()->with('error', 'All Earnings of last month was been transfer before');
         }
-        foreach ($commissions as $key=>$commission){
+        foreach ($commissions as $key => $commission) {
             $agent = $commission->user;
-            if ($agent->parent->id == $userid){
-                $commission_rate +=  $commission->commission_rate;
+            if ($agent->parent->id == $userid) {
+                $commission_rate += $commission->commission_rate;
                 $commission->is_paid = 1;
-            }else{
+            } else {
                 $commissions->forget($key);
             }
         }
         $user->balance += $commission_rate;
-        if ($user->save()){
-            foreach ($commissions as $commission){
+        if ($user->save()) {
+            foreach ($commissions as $commission) {
                 $commission->save();
             }
             return back()->with('success', 'Successfully Added Earnings to Agent Balance');
-        }else{
+        } else {
             return back()->with('error', 'Try Again Later there was an error now');
         }
 //        dd($commission_rate);
@@ -296,6 +307,15 @@ class UsersController extends Controller
 
 
         return view('admin.pages.agent.user_debts', compact('user', 'userid'));
+    }
+
+    public function debts($id)
+    {
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+
+
+        return view('admin.pages.agent.debts', compact('user', 'userid'));
     }
 
     public function activeMultiple(Request $request)
@@ -337,7 +357,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
         $ranges = PriceRange::all();
-        return view('admin.pages.users.edit-user', compact('user', 'languages','ranges'));
+        return view('admin.pages.users.edit-user', compact('user', 'languages', 'ranges'));
     }
 
     public function info($id)
@@ -345,22 +365,22 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
 //        dd($user->children);
-        $total = 0 ;
-        foreach ($user->children as $child){
+        $total = 0;
+        foreach ($user->children as $child) {
             $orders = $child->order;
-            foreach ($orders as $order){
+            foreach ($orders as $order) {
                 $total += $order->price;
             }
 
 
 //            dd($total);
         }
-        foreach ($user->order as $ord){
+        foreach ($user->order as $ord) {
 
             $total += $ord->price;
 //                dd($total);
         }
-        return view('admin.pages.users.agent-info', compact('user', 'languages','total'));
+        return view('admin.pages.users.agent-info', compact('user', 'languages', 'total'));
 
     }
 
@@ -400,20 +420,18 @@ class UsersController extends Controller
         }
 
 
-
-
         $user->firstname = $userData['firstname'];
         $user->lastname = $userData['lastname'];
         $user->username = $userData['username'];
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
-        if ($request['debt_balance'] != null){
+        if ($request['debt_balance'] != null) {
             $user->debt_balance = $userData['debt_balance'];
         }
 
         $user->status = ($userData['status'] == 'on') ? 0 : 1;
-        if ($request['is_debt'] != null){
+        if ($request['is_debt'] != null) {
             $user->is_debt = ($userData['is_debt'] == 'on') ? 0 : 1;
         }
         $user->email_verification = ($userData['email_verification'] == 'on') ? 0 : 1;
@@ -424,14 +442,14 @@ class UsersController extends Controller
             $user->language_id = @$userData['language_id'];
         }
         if (isset($userData['price_range_id'])) {
-            if ($user->price_range_id != $userData['price_range_id']){
-                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->where('price_range_type','-')->orderBy('id','desc')->first();
+            if ($user->price_range_id != $userData['price_range_id']) {
+                $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->where('price_range_type', '-')->orderBy('id', 'desc')->first();
 
-                if ($lastUserPriceRange != null){
+                if ($lastUserPriceRange != null) {
 //                    dd(Order::where('user_id',$user->id)->whereDate('created_at','>=', $lastUserPriceRange->created_at->format('Y-m-d'))->get());
-                    $total = Order::where('user_id',$user->id)->whereDate('created_at','>=', $lastUserPriceRange->created_at->format('Y-m-d'))->sum('price');
+                    $total = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $lastUserPriceRange->created_at->format('Y-m-d'))->sum('price');
 //                    dd($total);
-                }else{
+                } else {
                     $total = 0;
                 }
                 $userPriceRange = new UserPriceRange();
@@ -490,11 +508,11 @@ class UsersController extends Controller
                 $transaction->save();
 
                 $debt = new Debt();
-                $debt->order_id = 0 ;
+                $debt->order_id = 0;
                 $debt->user_id = $user->id;
                 $debt->agent_id = 0;
                 $debt->debt = $userData['balance'];
-                $debt->status = 1 ;
+                $debt->status = 1;
                 $debt->despite = 0;
                 $debt->is_for_admin = 1;
                 $debt->save();
@@ -584,10 +602,10 @@ class UsersController extends Controller
     public function addDebtPayment($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.pages.users.add_debt_payment',compact('user'));
+        return view('admin.pages.users.add_debt_payment', compact('user'));
     }
 
-    public function payDebt(Request $request,$id)
+    public function payDebt(Request $request, $id)
     {
 
         $req = Purify::clean($request->all());
@@ -608,56 +626,57 @@ class UsersController extends Controller
         $balance = $req['amount'];
 
 //dd($balance);
-        $user->debt -= $balance;
+        if ($balance <= $user->debt) {
+            $user->debt -= $balance;
 
 
-        $transactionForUser = new Transaction();
-        $transactionForUser->user_id = $user->id;
-        $transactionForUser->trx_type = '+';
-        $transactionForUser->amount = $balance;
-        $transactionForUser->remarks = 'Pay A Debt';
-        $transactionForUser->trx_id = strRandom();
-        $transactionForUser->charge = 0;
+            $transactionForUser = new Transaction();
+            $transactionForUser->user_id = $user->id;
+            $transactionForUser->trx_type = '+';
+            $transactionForUser->amount = $balance;
+            $transactionForUser->remarks = 'Pay A Debt';
+            $transactionForUser->trx_id = strRandom();
+            $transactionForUser->charge = 0;
 
 
+            $debt = new Debt();
+            $debt->order_id = 0;
+            $debt->user_id = $user->id;
+            $debt->agent_id = 0;
+            $debt->debt = $balance;
+            $debt->status = 1;
+            $debt->is_for_admin = 1;
+            $debt->despite = 1;
+            $debt->save();
 
-
-        $debt = new Debt();
-        $debt->order_id = 0 ;
-        $debt->user_id = $user->id;
-        $debt->agent_id = 0;
-        $debt->debt = $balance;
-        $debt->status = 1 ;
-        $debt->is_for_admin = 1;
-        $debt->despite = 1;
-        $debt->save();
-
-        $basic = (object)config('basic');
-        if ( $user->save()) {
-            if ($transactionForUser->save()) {
-                $msg = [
-                    'transaction' => $transactionForUser->trx_id,
-                    'amount' => $balance,
-                    'currency' => $basic->currency,
-                    'main_balance' => $balance,
-                ];
-                $action = [
+            $basic = (object)config('basic');
+            if ($user->save()) {
+                if ($transactionForUser->save()) {
+                    $msg = [
+                        'transaction' => $transactionForUser->trx_id,
+                        'amount' => $balance,
+                        'currency' => $basic->currency,
+                        'main_balance' => $balance,
+                    ];
+                    $action = [
 //                        "link" => route('admin.user.transaction', $transactionForAgent->id),
-                    "icon" => "fas fa-cart-plus text-white",
-                    "link" => "#"
-                ];
-                $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
-                return back()->with('success', 'Balance Added Successfully.');
+                        "icon" => "fas fa-cart-plus text-white",
+                        "link" => "#"
+                    ];
+                    $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
+                    return back()->with('success', 'Balance Added Successfully.');
+                } else {
+                    return back()->with('error', 'Balance Do Not Added Successfully.');
+                }
+
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
             }
-
         } else {
-            return back()->with('error', 'Balance Do Not Added Successfully.');
+
+            return back()->with('error', 'The debt payment must not be greater than the debt.');
+
         }
-
-
-
 
 
     }
@@ -682,7 +701,7 @@ class UsersController extends Controller
         }
         $user = User::findOrFail($id);
 
-        $state=$this->mail($user, null, [], $req['subject'], $req['message']);
+        $state = $this->mail($user, null, [], $req['subject'], $req['message']);
         return back()->with('success', 'Mail Send Successfully');
     }
 

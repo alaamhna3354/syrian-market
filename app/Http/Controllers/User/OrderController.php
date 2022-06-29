@@ -340,35 +340,54 @@ class OrderController extends Controller
                     $serviceCode->is_used = 1;
                     $serviceCode->user_id = $user->id;
                     $serviceCode->save();
-                    return back()->with('success', trans('Your order has been submitted'));
+                    if ($user->is_agent == 1 && $user->is_approved == 1){
+                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
+                    }
+                    else{
+                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted')) ;
+                    }
+
+//                    return back()->with('success', trans('Your order has been submitted'));
                 } else {
                     return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
             } elseif ($service->category->type == '5SIM') {
 
-                $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
-                    'order_id' => $order->id,
-                    'order_at' => $order->created_at,
-                    'service' => optional($order->service)->service_title,
-                    'status' => $order->status,
-                    'currency' => $basic->currency,
-                    'your-code' => $order->code,
-
-                ]);
-                return back()->with('success', trans('Your order has been submitted'));
+//                $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
+//                    'order_id' => $order->id,
+//                    'order_at' => $order->created_at,
+//                    'service' => optional($order->service)->service_title,
+//                    'status' => $order->status,
+//                    'currency' => $basic->currency,
+//                    'your-code' => $order->code,
+//
+//                ]);
+                if ($user->is_agent == 1 && $user->is_approved == 1){
+                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
+                }
+                else{
+                    return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
+                }
+//                return back()->with('success', trans('Your order has been submitted'));
 
             } else {
-                $this->sendMailSms($user, 'ORDER_CONFIRM', [
-                    'order_id' => $order->id,
-                    'order_at' => $order->created_at,
-                    'service' => optional($order->service)->service_title,
-                    'status' => $order->status,
-                    'paid_amount' => $price,
-                    'remaining_balance' => $user->balance,
-                    'currency' => $basic->currency,
-                    'transaction' => $transaction->trx_id,
-                ]);
-                return back()->with('success', trans('Your order has been submitted'));
+//                $this->sendMailSms($user, 'ORDER_CONFIRM', [
+//                    'order_id' => $order->id,
+//                    'order_at' => $order->created_at,
+//                    'service' => optional($order->service)->service_title,
+//                    'status' => $order->status,
+//                    'paid_amount' => $price,
+//                    'remaining_balance' => $user->balance,
+//                    'currency' => $basic->currency,
+//                    'transaction' => $transaction->trx_id,
+//                ]);
+                if ($user->is_agent == 1 && $user->is_approved == 1){
+                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
+                }
+                else{
+                    return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
+                }
+//                return back()->with('success', trans('Your order has been submitted'));
             }
 
         } else {
