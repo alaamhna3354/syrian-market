@@ -143,10 +143,10 @@
                                     <th scope="col">@lang('Order ID')</th>
                                     <th scope="col" class="order-details-column text-left">@lang('Order Details')</th>
                                     <th scope="col">@lang('Price')</th>
-                                    <th scope="col">@lang('Start Counter')</th>
-                                    <th scope="col">@lang('Remains')</th>
                                     <th scope="col">@lang('Order AT')</th>
                                     <th scope="col">@lang('Codes')</th>
+                                    <th scope="col">@lang('Verify')</th>
+                                    <th scope="col">@lang('Remains')</th>
                                     <th scope="col">@lang('Status')</th>
                                     <th scope="col" >@lang('Note')</th>
                                 </tr>
@@ -155,20 +155,26 @@
                                 @foreach($orders as $key => $order)
                                     <tr>
                                         <td data-label="@lang('Order ID')"> {{$order->id}} </td>
-                                        <td data-label="@lang('Order Details')" >
+                                        <td  data-label="@lang('Order Details')" class="un-td">
                                             <h5>@lang(optional($order->service)->service_title)</h5>
-                                        <span> @lang('Link') : @lang($order->link) </span>
-                                        <br>
-                                        <span>@lang('Quantity') : @lang($order->quantity)</span>
+                                            <span> @lang('Link') : @lang($order->link) </span>
+                                            <br>
+                                            <span>@lang('Quantity') : @lang($order->quantity)</span>
                                         </td>
 
                                         <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
-                                        <td data-label="@lang('Start Counter')">@lang($order->start_counter?? 'N/A')</td>
-                                        <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
-
                                         <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
-                                        <td data-label="@lang('Codes')">@lang($order->codes)</td>
-
+                                        <td data-label="@lang('Codes')">@lang($order->code)</td>
+                                        <td data-label="@lang('Verify')" id="verfiy">
+                                            <span id="{{$order->id}}">
+                                            @if($order->verify )
+                                                    {{ $order->verify }}
+                                                @elseif($order->category->type=='5SIM')
+                                                    <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
+                                                @endif
+                                            </span >
+                                        </td>
+                                        <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
                                         <td data-label="@lang('Status')">
                                             @if($order->status=='Awaiting') <span
                                                 class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
@@ -191,15 +197,15 @@
                                         </td>
                                         <td data-label="@lang('Note')">
 
-                                            @if(optional($order->service)->service_status == 1)
-                                                <button type="button"
+                                        @if(optional($order->service)->service_status == 1)
+                                            <!-- <button type="button"
                                                         class="btn btn-sm btn-success  orderBtn" data-toggle="modal"
                                                         data-target="#description" id="details"
                                                         data-service_id="{{$order->service_id}}"
                                                         data-servicetitle="{{optional($order->service)->service_title}}"
                                                         data-description="{{optional($order->service)->description}}">
                                                     <i class="fa fa-cart-plus"></i>
-                                                </button>
+                                                </button> -->
                                             @endif
 
                                             @if($order->reason)
@@ -294,5 +300,27 @@
             $('#title').text(title);
             $('#servicedescription').text(description);
         });
+    </script>
+    <script>
+        function checksms($id) {
+            var url = "{{ route('user.checksms', ':id') }}";
+            url = url.replace(':id', $id);
+            {{--document.location.href=url;--}}
+            $.ajax({
+                type: 'GET',
+                url:  url,
+                // url : url.replace(':id', $id),
+                // data: "id=" + $id , //laravel checks for the CSRF token in post requests
+
+                success: function (data) {
+                    if(data!='0')
+                    {
+                        $('#'+$id).text(data)
+                    }
+                    else {alert('تأكد من طلب الرمز ثم اعد المحاولة')}
+                }
+            });
+
+        }
     </script>
 @endpush

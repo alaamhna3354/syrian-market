@@ -439,6 +439,7 @@ class UserController extends Controller
         $agent = $user->parent;
         $balance = $req['balance'];
 
+        if ($balance <= $user->debt){
 
             $user->debt -= $balance;
 
@@ -486,6 +487,13 @@ class UserController extends Controller
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
             }
+        }else{
+
+                return back()->with('error', 'The debt payment must not be greater than the debt.');
+
+        }
+
+
 
 
 

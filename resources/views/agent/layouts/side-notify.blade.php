@@ -15,7 +15,7 @@
                    href="{{ route('user.home') }}">@lang('Home') </a>
             </li>
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-home m-2"></i>
+                <i class="fab fa-product-hunt m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.products')  ? 'active' : '' }}"
                    href="{{ route('agent.products') }}">@lang('products') </a>
             </li>
@@ -40,10 +40,13 @@
                         <i class="fa fa-shopping-cart m-2"></i> @lang('Users Orders')
                     </a>
                     <a class="dropdown-item {{menuActive('agent.user.add-balance')}}" href="{{ route('agent.user.add-balance') }}">
-                        <i class="fas fa-piggy-bank m-2"></i> @lang('Add Balance To User')
+                        <i class="fas fa-hand-holding-usd m-2"></i> @lang('Add Balance To User')
                     </a>
                     <a class="dropdown-item {{menuActive('agent.add-debt-payment')}}" href="{{ route('agent.add-debt-payment') }}">
                         <i class="fas fa-piggy-bank m-2"></i> @lang('Add Debt Payment')
+                    </a>
+                    <a class="dropdown-item {{menuActive('agent.debt.index*')}}" href="{{ route('agent.debt.index') }}">
+                        <i class="fa fa-indent m-2"></i> @lang('Users Debts')
                     </a>
                 </div>
             </li>
@@ -52,13 +55,9 @@
                 <a class="nav-link {{ Request::routeIs('agent.order.index*')  ? 'active' : '' }}"
                    href="{{route('agent.order.index')}}">@lang('Orders')</a>
             </li>
+
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
-                <a class="nav-link {{ Request::routeIs('agent.debt.index*')  ? 'active' : '' }}"
-                   href="{{route('agent.debt.index')}}">@lang('Users Debts')</a>
-            </li>
-            <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+                <i class="fa fa-indent m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
                    href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
             </li>
@@ -69,7 +68,7 @@
             </li>
 
             <li class="nav-item d-flex align-items-center">
-                <i class="fa fa-shopping-cart m-2"></i>
+                <i class="fas fa-hand-holding-usd m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
                    href="{{ route('agent.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>
             </li>
