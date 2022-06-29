@@ -249,9 +249,17 @@ class UsersController extends Controller
 
         $user = User::findOrFail($id);
         $userid = $user->id;
+        $children = $user->children;
+        $users_ids = [];
+        if (count($children) > 0){
+            foreach ($children as $key=>$child){
+                $users_ids[$key] = $child->id;
+            }
+        }
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
+            ->where('user_id','in', $users_ids)
             ->paginate(config('basic.paginate'));
         $commission_rate = 0;
         if (count($commissions) == 0) {
@@ -283,10 +291,19 @@ class UsersController extends Controller
         $id = $request->id;
 
         $user = User::findOrFail($id);
+        $children = $user->children;
+        $users_ids = [];
+        if (count($children) > 0){
+            foreach ($children as $key=>$child){
+                $users_ids[$key] = $child->id;
+            }
+        }
+
         $userid = $user->id;
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
+            ->where('user_id','in', $users_ids)
             ->paginate(config('basic.paginate'));
         $commission_rate = 0;
         if (count($commissions) == 0) {
