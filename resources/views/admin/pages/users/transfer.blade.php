@@ -99,6 +99,18 @@
                                     <span> {{ getAmount($this_month_commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
                                 </h4>
                             </div>
+                            <div class="col-sm-6">
+                                <form method="post" action="{{ route('admin.agent.transferThisMonthEarn') }}"
+                                      enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{$userid}}">
+                                    <div class="submit-btn-wrapper mt-md-3  text-center text-md-left">
+                                        <button type="submit"
+                                                class=" btn waves-effect waves-light btn-rounded btn-primary btn-block">
+                                            <span>@lang('Transfer of earnings to balance')</span></button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
 

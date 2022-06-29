@@ -278,6 +278,41 @@ class UsersController extends Controller
 //        dd($commission_rate);
 //        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
     }
+    public function transferThisMonthEarn(Request $request)
+    {
+        $id = $request->id;
+
+        $user = User::findOrFail($id);
+        $userid = $user->id;
+        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', date('Y'))
+            ->where('is_paid', 0)
+            ->paginate(config('basic.paginate'));
+        $commission_rate = 0;
+        if (count($commissions) == 0) {
+            return back()->with('error', 'All Earnings of last month was been transfer before');
+        }
+        foreach ($commissions as $key => $commission) {
+            $agent = $commission->user;
+            if ($agent->parent->id == $userid) {
+                $commission_rate += $commission->commission_rate;
+                $commission->is_paid = 1;
+            } else {
+                $commissions->forget($key);
+            }
+        }
+        $user->balance += $commission_rate;
+        if ($user->save()) {
+            foreach ($commissions as $commission) {
+                $commission->save();
+            }
+            return back()->with('success', 'Successfully Added Earnings to Agent Balance');
+        } else {
+            return back()->with('error', 'Try Again Later there was an error now');
+        }
+//        dd($commission_rate);
+//        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
+    }
 
     public function userOrders($id)
     {
