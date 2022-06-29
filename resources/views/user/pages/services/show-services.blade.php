@@ -101,11 +101,6 @@
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
-                    <input type="checkbox" name="agree" class="agree" id="agree">
-                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
-                    </div>
-
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
@@ -115,6 +110,10 @@
                 @else
                     <input type="hidden" name="link" value="">
                 @endif
+                <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
+                    <input type="checkbox" name="agree" class="agree" id="agree">
+                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
+                    </div>
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
                         <span>
