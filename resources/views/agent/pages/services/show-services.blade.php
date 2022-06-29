@@ -192,15 +192,9 @@
                 $('#cards-services .item').removeClass('un-active');
                 $(".total").val('0');
                 $('.quantity').val('0');
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
-                $('.agree').removeAttr("checked");
             }
             else{
                 $('#cards-services .item').removeClass('active');
-                $('#btn-add').removeClass('disble');
-                $('#btn-add').removeAttr("disabled");
-                $('.agree').attr("checked","");
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
