@@ -1,15 +1,13 @@
 @extends('admin.layouts.app')
 @section('title')
-    @lang('Users Debts')
+    @lang('Debt with admin')
 @endsection
 @section('content')
 {{--    @include('admin.pages.order.partials.search-bar')--}}
 
-    @foreach($user->children as $user)
+
         <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
-            <div class="card-header">
-                <h2>{{$user->username}}</h2>
-            </div>
+
             <div class="card-body">
 
                 <div class="table-responsive">
@@ -79,7 +77,7 @@
                 </div>
             </div>
         </div>
-    @endforeach
+
 
 
 

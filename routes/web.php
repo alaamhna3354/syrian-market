@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         Route::get('/dashboard', 'User\ServiceController@index')->name('home');
 //        Route::get('/dashboard', 'HomeController@index')->name('home');
+        Route::get('use_spare_balance', 'HomeController@use_spare_balance')->name('use_spare_balance');
         Route::get('add-fund', 'HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');
@@ -115,7 +116,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::post('/user/update/{id}', 'Agent\UserController@userUpdate')->name('user.update');
         Route::get('/user/add-balance', 'Agent\UserController@addBalance')->name('user.add-balance');
         Route::post('/user/add-balance', 'Agent\UserController@addBalanceToUser')->name('user.add-balance-to-user');
-
+        Route::get('use_spare_balance', 'Agent\HomeController@use_spare_balance')->name('use_spare_balance');
         Route::get('/add-debt-payment', 'Agent\UserController@addDebtPayment')->name('add-debt-payment');
         Route::Post('/pay-a-debt', 'Agent\UserController@payDebt')->name('pay-a-debt');
         //order search
@@ -124,6 +125,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/services/{id}', 'Agent\ServiceController@service')->name('services.show');
 
         Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
+        Route::get('/users/orderSearch', 'Agent\UserController@usersOrderSearch')->name('users.OrderSearch');
 
         Route::get('/profile', 'Agent\HomeController@profile')->name('profile');
         Route::post('/updateProfile', 'Agent\HomeController@updateProfile')->name('updateProfile');
@@ -143,6 +145,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/orders', 'Agent\OrderController@search')->name('order.search');
         Route::post('/order/status', 'Agent\OrderController@statusChange')->name('order.status.change');
         Route::get('/orders/{status}', 'Agent\OrderController@statusSearch')->name('order.status.search');
+        Route::get('/userOrders/{status}', 'Agent\UserController@statusSearch')->name('userOrders.status.search');
         Route::get('/mass/orders', 'Agent\OrderController@massOrder')->name('order.mass');
         Route::post('/mass/orders', 'Agent\OrderController@masOrderStore')->name('order.mass.store');
         Route::get('/get-service', 'ServiceController@getservice')->name('get.service');
@@ -187,7 +190,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('/dashboard', 'Admin\DashboardController@dashboard')->name('dashboard');
-
+        Route::get('/changePriceRange','Admin\UsersController@changePriceRange')->name('changePriceRange');
+        Route::get('migrate', 'Admin\DashboardController@migrate')->name('migrate');
         Route::get('push-notification-show', 'SiteNotificationController@showByAdmin')->name('push.notification.show');
         Route::get('push.notification.readAll', 'SiteNotificationController@readAllByAdmin')->name('push.notification.readAll');
         Route::get('push-notification-readAt/{id}', 'SiteNotificationController@readAt')->name('push.notification.readAt');
@@ -243,9 +247,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         Route::get('/agent/transfer/{id}', 'Admin\UsersController@transfer')->name('agent.transfer');
         Route::post('/agent/transfereEarn', 'Admin\UsersController@transferEarn')->name('agent.transferEarn');
+        Route::post('/agent/transferThisMonthEarn', 'Admin\UsersController@transferThisMonthEarn')->name('agent.transferThisMonthEarn');
         Route::get('/agent/userOrders/{id}', 'Admin\UsersController@userOrders')->name('agent.userOrders');
         Route::get('/agent/userTransactions/{id}', 'Admin\UsersController@userTransactions')->name('agent.userTransactions');
         Route::get('/agent/userDebts/{id}', 'Admin\UsersController@userDebts')->name('agent.userDebts');
+        Route::get('/agent/debts/{id}', 'Admin\UsersController@debts')->name('agent.debts');
 
 
 

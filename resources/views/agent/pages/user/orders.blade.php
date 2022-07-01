@@ -13,7 +13,7 @@
 
                 <div class="card my-3">
                     <div class="card-body">
-                        <form action="{{ route('user.order.search') }}" method="get">
+                        <form action="{{ route('agent.users.OrderSearch') }}" method="get">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -89,45 +89,45 @@
                                     @endphp
                                     <ul class="nav nav-pills">
                                         <li class="nav-item">
-                                            <a class="nav-link @if(Request::routeIs('user.order.index') || Request::routeIs('user.order.search') ) active @endif"
-                                               href="{{ route('user.order.index') }}">@lang('All Orders')</a>
+                                            <a class="nav-link @if(Request::routeIs('agent.users.orders') || Request::routeIs('agent.order.search') ) active @endif"
+                                               href="{{ route('agent.users.orders') }}">@lang('All Orders')</a>
                                         </li>
                                         <li class="nav-item ">
                                             <a class="nav-link  {{( $lastSegment == 'awaiting') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['awaiting']) }}">@lang('Awaiting')</a>
+                                               href="{{ route('agent.userOrders.status.search',['awaiting']) }}">@lang('Awaiting')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'pending') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['pending']) }}">@lang('Pending')</a>
+                                               href="{{ route('agent.userOrders.status.search',['pending']) }}">@lang('Pending')</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'processing') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['processing']) }}">@lang('Processing')</a>
+                                               href="{{ route('agent.userOrders.status.search',['processing']) }}">@lang('Processing')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'progress') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['progress']) }}">@lang('In progress')</a>
+                                               href="{{ route('agent.userOrders.status.search',['progress']) }}">@lang('In progress')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link  {{( $lastSegment == 'completed') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['completed']) }}">@lang('Completed')</a>
+                                               href="{{ route('agent.userOrders.status.search',['completed']) }}">@lang('Completed')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'partial') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['partial']) }}">@lang('Partial')</a>
+                                               href="{{ route('agent.userOrders.status.search',['partial']) }}">@lang('Partial')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'canceled') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['canceled']) }}">@lang('Canceled')</a>
+                                               href="{{ route('agent.userOrders.status.search',['canceled']) }}">@lang('Canceled')</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'refunded') ? 'active' : '' }}"
-                                               href="{{ route('user.order.status.search',['refunded']) }}">@lang('Refunded')</a>
+                                               href="{{ route('agent.userOrders.status.search',['refunded']) }}">@lang('Refunded')</a>
                                         </li>
 
                                     </ul>
@@ -144,15 +144,14 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">@lang('Order ID')</th>
-                                        <th scope="col"
-                                            class="order-details-column text-left">@lang('Order Details')</th>
+                                        <th scope="col" class="order-details-column text-left">@lang('Order Details')</th>
                                         <th scope="col">@lang('Price')</th>
-                                        <th scope="col">@lang('Start Counter')</th>
-                                        <th scope="col">@lang('Remains')</th>
                                         <th scope="col">@lang('Order AT')</th>
                                         <th scope="col">@lang('Codes')</th>
+                                        <th scope="col">@lang('Verify')</th>
+                                        <th scope="col">@lang('Remains')</th>
                                         <th scope="col">@lang('Status')</th>
-                                        <th scope="col">@lang('Note')</th>
+                                        <th scope="col" >@lang('Note')</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -160,7 +159,7 @@
                                     @foreach($user->order()->latest()->paginate(10) as $key => $order)
                                         <tr>
                                             <td data-label="@lang('Order ID')"> {{$order->id}} </td>
-                                            <td data-label="@lang('Order Details')">
+                                            <td  data-label="@lang('Order Details')" class="un-td">
                                                 <h5>@lang(optional($order->service)->service_title)</h5>
                                                 <span> @lang('Link') : @lang($order->link) </span>
                                                 <br>
@@ -168,12 +167,18 @@
                                             </td>
 
                                             <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
-                                            <td data-label="@lang('Start Counter')">@lang($order->start_counter?? 'N/A')</td>
-                                            <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
-
                                             <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
-                                            <td data-label="@lang('Codes')">@lang($order->codes)</td>
-
+                                            <td data-label="@lang('Codes')">@lang($order->code)</td>
+                                            <td data-label="@lang('Verify')" id="verfiy">
+                                            <span id="{{$order->id}}">
+                                            @if($order->verify )
+                                                    {{ $order->verify }}
+                                                @elseif($order->category->type=='5SIM')
+                                                    <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
+                                                @endif
+                                            </span >
+                                            </td>
+                                            <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
                                             <td data-label="@lang('Status')">
                                                 @if($order->status=='Awaiting') <span
                                                     class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
@@ -197,8 +202,24 @@
                                             <td data-label="@lang('Note')">
 
 
+                                            @if(optional($order->service)->service_status == 1)
+                                                <!-- <button type="button"
+                                                        class="btn btn-sm btn-success  orderBtn" data-toggle="modal"
+                                                        data-target="#description" id="details"
+                                                        data-service_id="{{$order->service_id}}"
+                                                        data-servicetitle="{{optional($order->service)->service_title}}"
+                                                        data-description="{{optional($order->service)->description}}">
+                                                    <i class="fa fa-cart-plus"></i>
+                                                </button> -->
+                                                @endif
 
-
+                                                @if($order->reason)
+                                                    <button type="button"
+                                                            data-reason="{{$order->reason}}"
+                                                            class="btn btn-sm btn-info  infoBtn" data-toggle="modal"
+                                                            data-target="#infoModal"><i class="fa fa-info"></i>
+                                                    </button>
+                                                @endif
 
                                             </td>
                                         </tr>

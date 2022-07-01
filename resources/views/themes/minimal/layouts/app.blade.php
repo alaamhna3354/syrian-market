@@ -66,10 +66,10 @@
                 <div class="col-sm-6">
                     <div class="header-top-social">
                         <ul>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-vimeo-v"></i></a></li>
-                            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-vimeo-v"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-youtube"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li class="header-search"><a href="#" data-toggle="modal"
+                                    <li class="header-search"><a style="display: grid;place-content: center;" href="#" data-toggle="modal"
                                                                  data-target="#search-modal"><i
                                                     class="fas fa-search"></i></a></li>
                                 </ul>

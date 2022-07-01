@@ -8,6 +8,7 @@ use App\Models\BalanceCoupon;
 use App\Models\Debt;
 use App\Models\Fund;
 use App\Models\Language;
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Rules\FileTypeValidate;
@@ -118,6 +119,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $agent = $this->user;
         $req = Purify::clean($request->all());
         $basic = (object)config('basic');
@@ -140,8 +142,15 @@ class UserController extends Controller
         $user->sms_verification = ($basic->sms_verification) ? 0 : 1;
         $user->is_agent = 0;
         $user->is_approved = 0;
+        $user->debt_balance = $req['dept_amount'];
 //        dd($agent->id);
         $user->user_id = $agent->id;
+        $user->price_range_id = 1;
+        if ($req['dept'] == "on") {
+            $user->is_debt = 1;
+        } else {
+            $user->is_debt = 0;
+        }
 //        if ($request->hasFile('image')) {
 //            try {
 //                $user->image = $this->uploadImage($request['image'], config('location.user.path'));
@@ -216,8 +225,8 @@ class UserController extends Controller
         $user->email = $userData['email'];
         $user->phone = $userData['phone'];
         $user->address = $userData['address'];
-        if ($userData['dept'] == 1) {
-            $user->is_debt = $userData['dept'];
+        if ($userData['dept'] == "on") {
+            $user->is_debt = 1;
         } else {
             $user->is_debt = 0;
         }
@@ -431,6 +440,7 @@ class UserController extends Controller
         $agent = $user->parent;
         $balance = $req['balance'];
 
+        if ($balance <= $user->debt){
 
             $user->debt -= $balance;
 
@@ -478,6 +488,13 @@ class UserController extends Controller
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
             }
+        }else{
+
+                return back()->with('error', 'The debt payment must not be greater than the debt.');
+
+        }
+
+
 
 
 
@@ -487,6 +504,55 @@ class UserController extends Controller
 
     public function usersOrder(){
         return view('agent.pages.user.orders');
+    }
+
+    public function usersOrderSearch(Request $request)
+    {
+        $search = @$request->order_id;
+//        dd($search);
+        $status = @$request->status;
+        $dateSearch = @$request->date_order;
+        $agent = Auth::user();
+        $children = $agent->children;
+//        dd($children);
+        foreach ($children as $key=>$child){
+            $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+            $orders[$key] = Order::where('user_id', $child->id)
+                ->when($search, function ($query) use ($search) {
+                    return $query->where('id', 'LIKE', "%{$search}%")
+                        ->orWhereHas('service', function ($q) use ($search) {
+                            return $q->where('service_title', 'LIKE', "%{$search}%");
+                        });
+                })
+                ->when($status != -1, function ($query) use ($status) {
+                    return $query->where('status', 'LIKE', "%{$status}%");
+                })
+                ->when($date == 1, function ($query) use ($dateSearch) {
+                    return $query->whereDate("created_at", $dateSearch);
+                })
+                ->with('service', 'service.category', 'users')
+                ->latest()
+                ->paginate(config('basic.paginate'));
+        }
+//        dd($orders);
+
+        return view('agent.pages.user.orderSearch', compact('orders'));
+    }
+
+    public function statusSearch(Request $request, $name = 'awaiting')
+    {
+        $status = @$name;
+        $agent = Auth::user();
+        $children = $agent->children;
+        foreach ($children as $key=>$child) {
+            $orders[$key] = Order::with('service', 'users')
+                ->where(['user_id' => $child->id])
+                ->when($status != -1, function ($query) use ($status) {
+                    return $query->where('status', $status);
+                })
+                ->paginate(config('basic.paginate'));
+        }
+        return view('agent.pages.user.orderSearch', compact('orders'));
     }
 
 }

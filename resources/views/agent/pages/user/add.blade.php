@@ -210,9 +210,9 @@
                                                     <div class="col-sm-6">
                                                         <label>@lang('Dept')</label>
                                                         <div class="custom-switch-btn w-md-80">
-                                                            <input type='hidden' value='1' name='dept'>
+                                                            <input type='hidden' value='0' name='dept'>
                                                             <input type="checkbox" name="dept" class="agree custom-switch-checkbox"
-                                                                   id="dept"  required>
+                                                                   id="dept"  >
                                                             <label class="custom-switch-checkbox-label" for="dept" style="border: 2px solid #fe5917;">
                                                                 <span class="custom-switch-checkbox-inner"></span>
                                                                 <span class="custom-switch-checkbox-switch"></span>
@@ -248,7 +248,7 @@
                                     </div>
 
                                     <div class="submit-btn-wrapper text-center text-md-left">
-                                        <button type="submit" disabled
+                                        <button type="submit"
                                                 class="place_ btn waves-effect waves-light btn-primary btn-block btn-rounded">
                                             <span>@lang('Add User')</span></button>
                                     </div>
@@ -293,7 +293,7 @@
     <script>
         "use strict";
         // fun 1
-        
+
     </script>
 @endpush
 @push('js')

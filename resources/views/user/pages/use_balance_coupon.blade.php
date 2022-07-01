@@ -9,7 +9,7 @@
             <li class="active">@lang('New Order')</li>
         </ol>
 
-        <div class="row my-3">
+        <div class="row my-3 order-list">
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <div class="card card-order">

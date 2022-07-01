@@ -41,7 +41,8 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Region')
                                 <span>{{ $user->agent->region }}</span></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Profits')
-                                <span>{{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                <span>{{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span>
+                            </li>
 
                             <li class="list-group-item d-flex justify-content-between align-items-center">@lang('Status')
                                 <span
@@ -61,8 +62,6 @@
                 </div>
 
 
-
-
             </div>
 
             <div class="col-sm-8">
@@ -72,6 +71,8 @@
                             <div class="col-sm-6">
                                 <h4 class="card-title">@lang('Last month earnings') :
                                     <span> {{ getAmount($commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                    <br>
+                                    ({{$totalCommission_rate == 0 ? "تم تحويل الارباح" : $totalCommission_rate}})
                                 </h4>
                             </div>
                             <div class="col-sm-6">
@@ -91,15 +92,48 @@
 
                     </div>
                 </div>
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4 class="card-title">@lang('This month earnings') :
+
+                                    <span> {{ getAmount($this_month_commission_rate , config('basic.fraction_number')) }} @lang(config('basic.currency'))</span></li>
+                                    <br>
+                                    ({{$totalThis_month_commission_rate == 0 ? "تم تحويل الارباح" : "المتبقي :".config('basic.currency')." ".$totalThis_month_commission_rate}}
+                                    )
+                                </h4>
+                            </div>
+                            <div class="col-sm-6">
+                                <form method="post" action="{{ route('admin.agent.transferThisMonthEarn') }}"
+                                      enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{$userid}}">
+                                    <div class="submit-btn-wrapper mt-md-3  text-center text-md-left">
+                                        <button type="submit"
+                                                class=" btn waves-effect waves-light btn-rounded btn-primary btn-block">
+                                            <span>@lang('Transfer of earnings to balance')</span></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
 
                 <div class="card card-primary">
+                    <div class="card-header">
+                        @lang('Last month earnings')
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="categories-show-table table table-hover table-striped table-bordered">
                                 <thead class="thead-primary">
                                 <tr>
                                     <th scope="col" class="text-center">
-                                        <input type="checkbox" class="form-check-input check-all tic-check" name="check-all"
+                                        <input type="checkbox" class="form-check-input check-all tic-check"
+                                               name="check-all"
                                                id="check-all">
                                         <label for="check-all"></label>
                                     </th>
@@ -116,7 +150,64 @@
                                     <tr>
                                         <td class="text-center">
                                             <input type="checkbox" id="chk-{{ $commission->id }}"
-                                                   class="form-check-input row-tic tic-check" name="check" value="{{$commission->id}}"
+                                                   class="form-check-input row-tic tic-check" name="check"
+                                                   value="{{$commission->id}}"
+                                                   data-id="{{ $commission->id }}">
+                                            <label for="chk-{{ $commission->id }}"></label>
+                                        </td>
+                                        <td data-label="@lang('No.')">{{loopIndex($commissions) + $loop->index	 }}</td>
+                                        <td data-label="@lang('User')">@lang($commission->user->username)</td>
+                                        <td data-label="@lang('Order')">@lang($commission->order_id)</td>
+                                        <td data-label="@lang('Commission Rate')">{{getAmount($commission->commission_rate, config('basic.fraction_number'))}} {{trans(config('basic.currency'))}}</td>
+                                        <td data-label="@lang('Date')">@lang(dateTime($commission->created_at, 'd/m/Y - h:i A' ))</td>
+                                        <td data-label="@lang('Is Paid')">
+                                <span
+                                    class="badge badge-pill {{ $commission->is_paid == 0 ? 'badge-danger' : 'badge-success' }}">{{ $commission->is_paid == 0 ? 'Not Paid' : 'Paid' }}</span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-center text-danger" colspan="9">@lang('No User Data')</td>
+                                    </tr>
+                                @endforelse
+                                </tbody>
+                            </table>
+                            {{$commissions->appends(@$_GET)->links()}}
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-primary">
+                    <div class="card-header">
+                        @lang('This month earnings')
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="categories-show-table table table-hover table-striped table-bordered">
+                                <thead class="thead-primary">
+                                <tr>
+                                    <th scope="col" class="text-center">
+                                        <input type="checkbox" class="form-check-input check-all tic-check"
+                                               name="check-all"
+                                               id="check-all">
+                                        <label for="check-all"></label>
+                                    </th>
+                                    <th scope="col">@lang('No.')</th>
+                                    <th scope="col">@lang('User')</th>
+                                    <th scope="col">@lang('Order')</th>
+                                    <th scope="col">@lang('Commission Rate')</th>
+                                    <th scope="col">@lang('Date')</th>
+                                    <th scope="col">@lang('Is Paid')</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @forelse($commissionsThisMonth as $commission)
+                                    <tr>
+                                        <td class="text-center">
+                                            <input type="checkbox" id="chk-{{ $commission->id }}"
+                                                   class="form-check-input row-tic tic-check" name="check"
+                                                   value="{{$commission->id}}"
                                                    data-id="{{ $commission->id }}">
                                             <label for="chk-{{ $commission->id }}"></label>
                                         </td>
@@ -218,7 +309,7 @@
         });
 
 
-        $('.copyBoard').on('click',function () {
+        $('.copyBoard').on('click', function () {
             var copyText = document.getElementById("referralURL");
             copyText.select();
             copyText.setSelectionRange(0, 99999);

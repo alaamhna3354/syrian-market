@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <div class="container px-3 user-service-list order-list">
+    <div class="container px-3 user-service-list ">
         <div class="row my-3 justify-content-between">
             <div class="col-md-12">
                 <ol class="breadcrumb center-items">
@@ -12,8 +12,8 @@
                 </ol>
 
                 <div class="card my-3">
-                    <div class="card-body" >
-                        <form action="{{ route('agent.order.search') }}" method="get">
+                    <div class="card-body">
+                        <form action="{{ route('agent.users.OrderSearch') }}" method="get">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -63,8 +63,7 @@
 
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <button style="padding: 12px 15px;margin: 0;"
-                                        type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
+                                        <button type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
                                                 class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>
@@ -81,7 +80,6 @@
 
                 <div class="card">
                     <div class="card-body pb-4">
-
                         <div class="row justify-content-between align-items-start">
                             <div class="col-sm-12">
                                 <div class="my-4">
@@ -90,45 +88,45 @@
                                     @endphp
                                     <ul class="nav nav-pills">
                                         <li class="nav-item">
-                                            <a class="nav-link @if(Request::routeIs('agent.order.index') || Request::routeIs('agent.order.search') ) active @endif"
-                                               href="{{ route('agent.order.index') }}">@lang('All Orders')</a>
+                                            <a class="nav-link @if(Request::routeIs('agent.users.orders') || Request::routeIs('agent.order.search') ) active @endif"
+                                               href="{{ route('agent.users.orders') }}">@lang('All Orders')</a>
                                         </li>
                                         <li class="nav-item ">
                                             <a class="nav-link  {{( $lastSegment == 'awaiting') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['awaiting']) }}">@lang('Awaiting')</a>
+                                               href="{{ route('agent.userOrders.status.search',['awaiting']) }}">@lang('Awaiting')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'pending') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['pending']) }}">@lang('Pending')</a>
+                                               href="{{ route('agent.userOrders.status.search',['pending']) }}">@lang('Pending')</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'processing') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['processing']) }}">@lang('Processing')</a>
+                                               href="{{ route('agent.userOrders.status.search',['processing']) }}">@lang('Processing')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'progress') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['progress']) }}">@lang('In progress')</a>
+                                               href="{{ route('agent.userOrders.status.search',['progress']) }}">@lang('In progress')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link  {{( $lastSegment == 'completed') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['completed']) }}">@lang('Completed')</a>
+                                               href="{{ route('agent.userOrders.status.search',['completed']) }}">@lang('Completed')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'partial') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['partial']) }}">@lang('Partial')</a>
+                                               href="{{ route('agent.userOrders.status.search',['partial']) }}">@lang('Partial')</a>
                                         </li>
 
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'canceled') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['canceled']) }}">@lang('Canceled')</a>
+                                               href="{{ route('agent.userOrders.status.search',['canceled']) }}">@lang('Canceled')</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'refunded') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['refunded']) }}">@lang('Refunded')</a>
+                                               href="{{ route('agent.userOrders.status.search',['refunded']) }}">@lang('Refunded')</a>
                                         </li>
 
                                     </ul>
@@ -137,36 +135,41 @@
                         </div>
 
 
-                        <div class="table-responsive ">
-                            <table class="categories-show-table table table-striped text-center ">
-                                <thead>
-                                <tr>
-                                    <th scope="col">@lang('Order ID')</th>
-                                    <th scope="col" class="order-details-column text-left">@lang('Order Details')</th>
-                                    <th scope="col">@lang('Price')</th>
-                                    <th scope="col">@lang('Order AT')</th>
-                                    <th scope="col">@lang('Codes')</th>
-                                    <th scope="col">@lang('Verify')</th>
-                                    <th scope="col">@lang('Remains')</th>
-                                    <th scope="col">@lang('Status')</th>
-                                    <th scope="col" >@lang('Note')</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($orders as $key => $order)
+                        @foreach(auth()->user()->children as $key=>$user)
+                            <ol class="breadcrumb center-items">
+                                <li class="active">@lang($user->username)</li>
+                            </ol>
+                            <div class="table-responsive ">
+                                <table class="categories-show-table table table-striped text-center ">
+                                    <thead>
                                     <tr>
-                                        <td data-label="@lang('Order ID')"> {{$order->id}} </td>
-                                        <td  data-label="@lang('Order Details')" class="un-td">
-                                            <h5>@lang(optional($order->service)->service_title)</h5>
-                                            <span> @lang('Link') : @lang($order->link) </span>
-                                            <br>
-                                            <span>@lang('Quantity') : @lang($order->quantity)</span>
-                                        </td>
+                                        <th scope="col">@lang('Order ID')</th>
+                                        <th scope="col" class="order-details-column text-left">@lang('Order Details')</th>
+                                        <th scope="col">@lang('Price')</th>
+                                        <th scope="col">@lang('Order AT')</th>
+                                        <th scope="col">@lang('Codes')</th>
+                                        <th scope="col">@lang('Verify')</th>
+                                        <th scope="col">@lang('Remains')</th>
+                                        <th scope="col">@lang('Status')</th>
+                                        <th scope="col" >@lang('Note')</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
-                                        <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
-                                        <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
-                                        <td data-label="@lang('Codes')">@lang($order->code)</td>
-                                        <td data-label="@lang('Verify')" id="verfiy">
+                                    @foreach($orders[$key] as $key => $order)
+                                        <tr>
+                                            <td data-label="@lang('Order ID')"> {{$order->id}} </td>
+                                            <td  data-label="@lang('Order Details')" class="un-td">
+                                                <h5>@lang(optional($order->service)->service_title)</h5>
+                                                <span> @lang('Link') : @lang($order->link) </span>
+                                                <br>
+                                                <span>@lang('Quantity') : @lang($order->quantity)</span>
+                                            </td>
+
+                                            <td data-label="@lang('Price')">@lang($order->price) @lang(config('basic.currency'))</td>
+                                            <td data-label="@lang('Order AT')">@lang(dateTime($order->created_at, 'd/m/Y - h:i A' ))</td>
+                                            <td data-label="@lang('Codes')">@lang($order->code)</td>
+                                            <td data-label="@lang('Verify')" id="verfiy">
                                             <span id="{{$order->id}}">
                                             @if($order->verify )
                                                     {{ $order->verify }}
@@ -174,33 +177,33 @@
                                                     <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
                                                 @endif
                                             </span >
-                                        </td>
-                                        <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
-                                        <td data-label="@lang('Status')">
-                                            @if($order->status=='Awaiting') <span
-                                                class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
-                                            @elseif($order->status == 'pending') <span
-                                                class="badge badge-pill badge-info">{{trans('Pending')}}</span>
-                                            @elseif($order->status == 'processing') <span
-                                                class="badge badge-pill badge-info">{{trans('Processing')}}</span>
-                                            @elseif($order->status == 'progress') <span
-                                                class="badge badge-pill badge-warning">{{trans('In progress')}}</span>
-                                            @elseif($order->status == 'completed') <span
-                                                class="badge badge-pill badge-success">{{trans('Completed')}}</span>
-                                            @elseif($order->status == 'partial') <span
-                                                class="badge badge-pill badge-warning">{{trans('Partial')}}</span>
-                                            @elseif($order->status == 'canceled') <span
-                                                class="badge badge-pill badge-danger">{{trans('Canceled')}}</span>
-                                            @elseif($order->status == 'refunded') <span
-                                                class="badge badge-pill badge-danger">{{trans('Refunded')}}</span>
-                                            @endif
+                                            </td>
+                                            <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
+                                            <td data-label="@lang('Status')">
+                                                @if($order->status=='Awaiting') <span
+                                                    class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
+                                                @elseif($order->status == 'pending') <span
+                                                    class="badge badge-pill badge-info">{{trans('Pending')}}</span>
+                                                @elseif($order->status == 'processing') <span
+                                                    class="badge badge-pill badge-info">{{trans('Processing')}}</span>
+                                                @elseif($order->status == 'progress') <span
+                                                    class="badge badge-pill badge-warning">{{trans('In progress')}}</span>
+                                                @elseif($order->status == 'completed') <span
+                                                    class="badge badge-pill badge-success">{{trans('Completed')}}</span>
+                                                @elseif($order->status == 'partial') <span
+                                                    class="badge badge-pill badge-warning">{{trans('Partial')}}</span>
+                                                @elseif($order->status == 'canceled') <span
+                                                    class="badge badge-pill badge-danger">{{trans('Canceled')}}</span>
+                                                @elseif($order->status == 'refunded') <span
+                                                    class="badge badge-pill badge-danger">{{trans('Refunded')}}</span>
+                                                @endif
 
-                                        </td>
-                                        <td data-label="@lang('Note')">
+                                            </td>
+                                            <td data-label="@lang('Note')">
 
 
-                                        @if(optional($order->service)->service_status == 1)
-                                            <!-- <button type="button"
+                                            @if(optional($order->service)->service_status == 1)
+                                                <!-- <button type="button"
                                                         class="btn btn-sm btn-success  orderBtn" data-toggle="modal"
                                                         data-target="#description" id="details"
                                                         data-service_id="{{$order->service_id}}"
@@ -208,24 +211,25 @@
                                                         data-description="{{optional($order->service)->description}}">
                                                     <i class="fa fa-cart-plus"></i>
                                                 </button> -->
-                                            @endif
+                                                @endif
 
-                                            @if($order->reason)
-                                                <button type="button"
-                                                        data-reason="{{$order->reason}}"
-                                                        class="btn btn-sm btn-info  infoBtn" data-toggle="modal"
-                                                        data-target="#infoModal"><i class="fa fa-info"></i>
-                                                </button>
-                                            @endif
+                                                @if($order->reason)
+                                                    <button type="button"
+                                                            data-reason="{{$order->reason}}"
+                                                            class="btn btn-sm btn-info  infoBtn" data-toggle="modal"
+                                                            data-target="#infoModal"><i class="fa fa-info"></i>
+                                                    </button>
+                                                @endif
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- {{ $orders->appends($_GET)->links() }} -->
-
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="clearfix"></div>
+{{--                         {{ $user->order()->latest()->paginate(10)->appends($_GET)->links() }}--}}
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -286,7 +290,7 @@
         $(document).on('click', '.infoBtn', function () {
             var modal = $('#infoModal');
             var id = $(this).data('service_id');
-            var orderRoute = "{{route('agent.order.create')}}" + '?serviceId=' + id;
+            var orderRoute = "{{route('user.order.create')}}" + '?serviceId=' + id;
             $('.order-now').attr('href', orderRoute);
             modal.find('.info-reason').html($(this).data('reason'));
         });
@@ -295,34 +299,12 @@
             var title = $(this).data('servicetitle');
             var id = $(this).data('service_id');
 
-            var orderRoute = "{{route('agent.order.create')}}" + '?serviceId=' + id;
+            var orderRoute = "{{route('user.order.create')}}" + '?serviceId=' + id;
             $('.order-now').attr('href', orderRoute);
 
             var description = $(this).data('description');
             $('#title').text(title);
             $('#servicedescription').text(description);
         });
-    </script>
-    <script>
-        function checksms($id) {
-            var url = "{{ route('user.checksms', ':id') }}";
-            url = url.replace(':id', $id);
-            {{--document.location.href=url;--}}
-            $.ajax({
-                type: 'GET',
-                url:  url,
-                // url : url.replace(':id', $id),
-                // data: "id=" + $id , //laravel checks for the CSRF token in post requests
-
-                success: function (data) {
-                    if(data!='0')
-                    {
-                        $('#'+$id).text(data)
-                    }
-                    else {alert('تأكد من طلب الرمز ثم اعد المحاولة')}
-                }
-            });
-
-        }
     </script>
 @endpush

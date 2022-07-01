@@ -17,10 +17,10 @@
                 <div class="col-sm-6">
                     <div class="header-top-social">
                         <ul>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-vimeo-v"></i></a></li>
-                            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-twitter"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-vimeo-v"></i></a></li>
+                            <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-youtube"></i></a></li>
                         </ul>
                     </div>
                 </div>

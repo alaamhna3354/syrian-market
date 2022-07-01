@@ -101,8 +101,6 @@
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
-                    
-
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
@@ -112,6 +110,10 @@
                 @else
                     <input type="hidden" name="link" value="">
                 @endif
+                <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
+                    <input type="checkbox" name="agree" class="agree" id="agree">
+                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
+                    </div>
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
                         <span>
@@ -139,7 +141,7 @@
     </div>
 @endsection
 @push('js')
-    <script>
+<script>
         "use strict";
         // fun 1
         $(".get-name").on("click", function() {
@@ -178,7 +180,7 @@
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
-        // fun 4
+       
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
                 event.preventDefault();
@@ -189,13 +191,9 @@
                 $('#cards-services .item').removeClass('un-active');
                 $(".total").val('0');
                 $('.quantity').val('0');
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
             }
             else{
                 $('#cards-services .item').removeClass('active');
-                $('#btn-add').removeClass('disble');
-                $('#btn-add').removeAttr("disabled");
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
@@ -218,6 +216,17 @@
                 });
             }
             event.preventDefault();
+        });
+         // fun 4
+         $('.agree').on('click', function (event) {
+            if (!$('.agree').is(':checked')) {
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }
+            else{
+                $('#btn-add').removeClass('disble');
+                $('#btn-add').removeAttr("disabled");
+            }
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
