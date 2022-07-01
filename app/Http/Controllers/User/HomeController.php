@@ -12,12 +12,14 @@ use App\Models\Coupon;
 use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Language;
+use App\Models\PriceRange;
 use App\Models\SendingPurpose;
 use App\Models\SendMoney;
 use App\Models\SourceFund;
 use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -674,6 +676,70 @@ class HomeController extends Controller
         } else {
             return back()->with('error', 'Wrong Verification Code.');
         }
+    }
+
+    public function getLevelData(){
+        $x = PriceRange::where('id',Auth::user()->price_range_id+1)->first();
+        $thisLevel = PriceRange::where('id',Auth::user()->price_range_id)->first();
+        $y = Auth::user()->userPriceRanges;
+        $basic = (object)config('basic');
+        $finish = 0 ;
+//        dd($y[0]);
+        if ($x != null){
+            if (count($y) > 0){
+                $move_to_next =  $x->min_total_amount - $y[0]->total;
+                $move_to_next_progress =100 - $move_to_next * 100 /$x->min_total_amount;
+                $date_of_downgrade_level = $y[0]->created_at;
+                $now = Carbon::now();
+                $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
+                $downgrade_level_day = $dateDiffDay->m * 30*24 + $dateDiffDay->d *24 + $dateDiffDay->h;
+//                dd($downgrade_level_day);
+                if ($y[0]->total >= $thisLevel->min_total_amount){
+                    $downgrade_level = 0 ;
+                    $downgrade_level_progress = 100;
+
+                }else{
+                    $downgrade_level = $thisLevel->min_total_amount - $y[0]->total;
+                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount ;
+                }
+            }else{
+                $move_to_next = $x->min_total_amount;
+                $move_to_next_progress = 100;
+                $downgrade_level = $thisLevel->min_total_amount;
+                $downgrade_level_progress = 100;
+                $downgrade_level_day = $thisLevel->limit_days * 24 ;
+            }
+        }else{
+            $finish = 1 ;
+            $move_to_next_progress = 100;
+            if (count($y) > 0){
+                $date_of_downgrade_level = $y[0]->created_at;
+                $now = Carbon::now();
+                $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
+                $downgrade_level_day = $dateDiffDay->m * 30*24 + $dateDiffDay->d *24 + $dateDiffDay->h;
+//                dd($downgrade_level_day);
+                if ($y[0]->total >= $thisLevel->min_total_amount){
+                    $downgrade_level = 0 ;
+                    $downgrade_level_progress = 100;
+
+                }else{
+                    $downgrade_level = $thisLevel->min_total_amount - $y[0]->total;
+                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount ;
+                }
+            }else{
+                $downgrade_level = $thisLevel->min_total_amount;
+                $downgrade_level_progress = 100;
+                $downgrade_level_day = $thisLevel->limit_days * 24 ;
+            }
+        }
+        return response([
+           'move_to_next' => $move_to_next.$basic->currency_symbol,
+            'move_to_next_progress' => $move_to_next_progress,
+            'downgrade_level' => $downgrade_level.$basic->currency_symbol,
+            'downgrade_level_day' => $downgrade_level_day,
+            'downgrade_level_progress' => $downgrade_level_progress,
+            'finish' => $finish
+        ]);
     }
 
 
