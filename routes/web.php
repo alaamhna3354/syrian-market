@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::Post('/add-balance-coupon', 'HomeController@addBalanceCoupon')->name('add-balance-coupon');
 
         Route::get('/user/debts', 'User\HomeController@debts')->name('debts');
+        Route::get('/getLevelData', 'User\HomeController@getLevelData')->name('getLevelData');
 
 
         Route::get('/profile', 'HomeController@profile')->name('profile');
