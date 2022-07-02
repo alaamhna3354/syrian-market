@@ -3136,7 +3136,7 @@ ul.minicart .cart-price .new {
     padding: 50px  0 ;
     position: relative;
     /* background: linear-gradient(to bottom, #7b7b7b, #000); */
-    background-image: url(../../imgs/Gaming2.jpg);
+    background-image: url(../../imgs/Gaming1.jpg);
     min-height: 500px;
     position: absolute;
     top: 0;
@@ -3144,6 +3144,15 @@ ul.minicart .cart-price .new {
     height: 100%;
     z-index: 1000;
 }
+.login-signup .form-content{
+font-size: 20px;
+}
+.login-signup label{
+    font-size: 18px;
+    }
+.login-signup input::placeholder{
+    font-size: 18px;
+    }
 .login-signup-ar{
     background-position-x: right;
 }
@@ -3177,7 +3186,7 @@ ul.minicart .cart-price .new {
 }
 .login-signup .custom-control-label::before{
     background-color: transparent;
-    border: 1px solid #ff5917;
+    border: 2px solid #ff5917;
     color: #fff;
 }
 .login-signup .custom-control-input:checked ~ .custom-control-label::before{
