@@ -160,7 +160,8 @@
                 channel.bind('App\\Events\\UpdateUserNotification', function (data) {
                     app.getNotifications();
                     const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
-                    audio.play();
+                    audio.play();\
+                    
                     if (Platform.OS === 'android') {
                         Notifications.createChannelAndroidAsync('notification-sound-channel', {
                             name: 'Notification Sound Channel',

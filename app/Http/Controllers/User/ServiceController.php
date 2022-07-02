@@ -9,6 +9,7 @@ use App\Models\Fund;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -25,17 +26,37 @@ class ServiceController extends Controller
             ->get();
         $user = Auth::user();
         if ($user->is_agent == 1 && $user->is_approved == 1){
-            $transactions = Transaction::where('user_id',$user->id)->get();
+            $transactions = Transaction::where('user_id',$user->id)->orderBy('id','desc')->get();
             $commissions = AgentCommissionRate::whereMonth('created_at', date('m'))
                 ->whereYear('created_at', date('Y'))
                 ->get();
+            $children = $user->children;
+            $users_ids = [];
+            if (count($children) > 0){
+                foreach ($children as $key=>$child){
+                    $users_ids[$key] = $child->id;
+                }
+            }
+            $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', date('Y'))
+                ->wherein('user_id', $users_ids)
+                ->paginate(config('basic.paginate'));
+            $totalThis_month_commission_rate = 0;
+            foreach ($totalCommissionsThisMonth as $key1 => $commissionThisMonth) {
+                $agent = $commissionThisMonth->user;
+                if ($agent->parent->id == $user->id) {
+                    $totalThis_month_commission_rate += $commissionThisMonth->commission_rate;
+                } else {
+                    $totalCommissionsThisMonth->forget($key1);
+                }
+            }
 //            dd($commissions);
             $commission_rate = 0;
             foreach ($commissions as $commission){
                 $commission_rate +=  $commission->commission_rate;
             }
             $total = Fund::where('user_id', $user->id)->where('status', 1)->sum('amount');
-            return view('agent.pages.dashboard',compact('transactions','commission_rate','total'));
+            return view('agent.pages.dashboard',compact('totalThis_month_commission_rate','transactions','commission_rate','total'));
         }elseif ($user->is_agent == 1 && $user->is_approved == 0){
             return view('user.pages.waitForApproved', compact('categories'));
         }else{

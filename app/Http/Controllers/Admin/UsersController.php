@@ -163,6 +163,7 @@ class UsersController extends Controller
     public function approve(Request $request, $id)
     {
         $user = User::find($id);
+        $agent = null ;
         if ($user['is_approved'] == 0) {
             $is_approved = 1;
             $msg = [
@@ -174,6 +175,7 @@ class UsersController extends Controller
             ];
         } else {
             $is_approved = 0;
+            $agent = $user->agent();
             $msg = [
                 'status' => "Refused",
             ];
@@ -185,7 +187,12 @@ class UsersController extends Controller
 
         }
         $user->is_approved = $is_approved;
+        $user->is_agent = $is_approved;
+
         $user->save();
+        if ($agent != null){
+            $agent->delete();
+        }
 
         $this->userPushNotification($user, 'APPROVE_AGENT', $msg, $action);
 

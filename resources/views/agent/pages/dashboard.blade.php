@@ -190,7 +190,7 @@
                             <div>
                                 <div class="d-inline-flex align-items-center">
                                     <h2 class="text-white shadow-h  mb-1 font-weight-medium">
-                                        <sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{$commission_rate}}
+                                        <sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{$totalThis_month_commission_rate}}
                                     </h2>
                                 </div>
                                 <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Your Earnings This Month')</h6>

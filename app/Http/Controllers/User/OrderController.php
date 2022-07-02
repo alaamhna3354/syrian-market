@@ -213,6 +213,7 @@ class OrderController extends Controller
 ////////////////////////            change Price Range     /////////////////////////////
             if ($user->is_const_price_range == 0){
                 $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+//                dd($lastUserPriceRange);
                 if ($lastUserPriceRange != null){
                     $lastUserPriceRange->total += $price;
                     $lastUserPriceRange->save();

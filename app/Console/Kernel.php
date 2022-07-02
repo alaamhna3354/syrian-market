@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\BlockIoIPN;
 use App\Console\Commands\Cron;
+use App\Console\Commands\DowngradeUsersLevel;
 use App\Models\Gateway;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         BlockIoIPN::class,
+        DowngradeUsersLevel::class
     ];
 
     /**
@@ -33,6 +35,7 @@ class Kernel extends ConsoleKernel
         if ($blockIoGateway == 1) {
             $schedule->command('blockIo:ipn')->everyThirtyMinutes();
         }
+        $schedule->command('downgrade:users_level')->dailyAt('00:00');
     }
 
     /**

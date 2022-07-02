@@ -38,12 +38,15 @@
 
 
 
-                    <div class="d-flex mt-3">
+                    <div class="d-flex mt-3" id="notStartLevel">
                         <h4>@lang(' عليك الشراء ب')</h4>
                         <h4 id="progressText2" class="progressTextcolor"></h4>
                         <h4>@lang('للحفاظ على مستواك خلال ')</h4>
                         <h4 id="progressText3" class="progressTextcolor"></h4>
-                        <h4>@lang('ساعة')</h4>
+                        <h4>@lang('يوم')</h4>
+                    </div>
+                    <div class="" id="startLevels" style="display: none!important;">
+                        <h4>@lang('انت في المستوى الاول')</h4>
                     </div>
                     <div id="myProgress2" data-progress="90">
                         <div id="myBar2"></div>
@@ -175,6 +178,15 @@
                         $('#finishLevels').attr("style","display : none")
                         $('#unfinishlevel').attr("style","visibility : visible")
                     }
+                    if (data['is_first_level'] == 1){
+                        $('#startLevels').attr("style","display : block")
+                        $('#notStartLevel').attr("style","visibility : hidden");
+
+                    }else {
+
+                        $('#startLevels').attr("style","display : none")
+                        $('#notStartLevel').attr("style","visibility : visible")
+                    }
 
                 },
                 error: function (xhr, b, c) {
@@ -232,6 +244,25 @@
                             }
                         }
 
+                    }
+
+                    if (data['finish'] == 1){
+                        $('#finishLevels').attr("style","display : block")
+                        $('#unfinishlevel').attr("style","visibility : hidden");
+
+                    }else {
+
+                        $('#finishLevels').attr("style","display : none")
+                        $('#unfinishlevel').attr("style","visibility : visible")
+                    }
+                    if (data['is_first_level'] == 1){
+                        $('#startLevels').attr("style","display : block")
+                        $('#notStartLevel').attr("style","visibility : hidden");
+
+                    }else {
+
+                        $('#startLevels').attr("style","display : none")
+                        $('#notStartLevel').attr("style","visibility : visible")
                     }
 
                 },
