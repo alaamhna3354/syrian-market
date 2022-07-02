@@ -75,6 +75,10 @@ class HomeController extends Controller
                     $user->is_debt = 0;
                     $user->debt += $user->debt_balance;
                     $user->save();
+                    if ($user->parent != null) {
+                        $user->parent->balance -= $user->debt_balance;
+                        $user->parent->save();
+                    }
 
                     $transactionForUser = new Transaction();
                     $transactionForUser->user_id = $user->id;
@@ -101,11 +105,17 @@ class HomeController extends Controller
                     $debt = new Debt();
                     $debt->order_id = 0;
                     $debt->user_id = $user->id;
-                    $debt->agent_id = 0;
+
                     $debt->debt = $user->debt_balance;
                     $debt->status = 1;
                     $debt->despite = 0;
-                    $debt->is_for_admin = 1;
+                    if ($user->parent != null) {
+                        $debt->is_for_admin = 0;
+                        $debt->agent_id = $user->user_id;
+                    }else{
+                        $debt->is_for_admin = 1;
+                        $debt->agent_id = 0;
+                    }
                     $debt->save();
                     $transactionForUser->save();
                     $fund->save();

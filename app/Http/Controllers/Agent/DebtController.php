@@ -28,13 +28,13 @@ class DebtController extends Controller
      */
     public function index()
     {
-        $debts = Debt::where('agent_id',$this->user->id)->get();
+        $debts = Debt::where('agent_id',$this->user->id)->orderBy('id','desc')->get();
         return view('agent.pages.debt.show', compact('debts'));
     }
 
     public function myDebt()
     {
-        $debts = Debt::where('user_id',$this->user->id)->get();
+        $debts = Debt::where('user_id',$this->user->id)->orderBy('id','desc')->get();
         return view('agent.pages.debt.show', compact('debts'));
     }
 

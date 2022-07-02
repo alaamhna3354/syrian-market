@@ -684,15 +684,28 @@ class HomeController extends Controller
         $y = Auth::user()->userPriceRanges;
         $basic = (object)config('basic');
         $finish = 0 ;
+        $is_first_level = 0;
+        if ($thisLevel->id == 1){
+            $is_first_level = 1;
+        }
 //        dd($y[0]);
         if ($x != null){
             if (count($y) > 0){
+
                 $move_to_next =  $x->min_total_amount - $y[0]->total;
                 $move_to_next_progress =100 - $move_to_next * 100 /$x->min_total_amount;
                 $date_of_downgrade_level = $y[0]->created_at;
                 $now = Carbon::now();
                 $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
-                $downgrade_level_day = $dateDiffDay->m * 30*24 + $dateDiffDay->d *24 + $dateDiffDay->h;
+
+
+                if ($dateDiffDay->d == 0){
+                    $downgrade_level_day =   $thisLevel->limit_days  ;
+                }else{
+                    $downgrade_level_day = $thisLevel->limit_days - ($dateDiffDay->m * 30 + $dateDiffDay->d) ;
+//                    dd($downgrade_level_day);
+                }
+
 //                dd($downgrade_level_day);
                 if ($y[0]->total >= $thisLevel->min_total_amount){
                     $downgrade_level = 0 ;
@@ -707,7 +720,7 @@ class HomeController extends Controller
                 $move_to_next_progress = 100;
                 $downgrade_level = $thisLevel->min_total_amount;
                 $downgrade_level_progress = 100;
-                $downgrade_level_day = $thisLevel->limit_days * 24 ;
+                $downgrade_level_day = $thisLevel->limit_days  ;
             }
         }else{
             $finish = 1 ;
@@ -716,7 +729,12 @@ class HomeController extends Controller
                 $date_of_downgrade_level = $y[0]->created_at;
                 $now = Carbon::now();
                 $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
-                $downgrade_level_day = $dateDiffDay->m * 30*24 + $dateDiffDay->d *24 + $dateDiffDay->h;
+                if ($dateDiffDay->d == 0){
+                    $downgrade_level_day =   $thisLevel->limit_days  ;
+                }else{
+                    $downgrade_level_day = $thisLevel->limit_days - ($dateDiffDay->m * 30 + $dateDiffDay->d) ;
+//                    dd($downgrade_level_day);
+                }
 //                dd($downgrade_level_day);
                 if ($y[0]->total >= $thisLevel->min_total_amount){
                     $downgrade_level = 0 ;
@@ -729,7 +747,7 @@ class HomeController extends Controller
             }else{
                 $downgrade_level = $thisLevel->min_total_amount;
                 $downgrade_level_progress = 100;
-                $downgrade_level_day = $thisLevel->limit_days * 24 ;
+                $downgrade_level_day = $thisLevel->limit_days  ;
             }
         }
         return response([
@@ -738,7 +756,8 @@ class HomeController extends Controller
             'downgrade_level' => $downgrade_level.$basic->currency_symbol,
             'downgrade_level_day' => $downgrade_level_day,
             'downgrade_level_progress' => $downgrade_level_progress,
-            'finish' => $finish
+            'finish' => $finish,
+            'is_first_level' => $is_first_level
         ]);
     }
 
