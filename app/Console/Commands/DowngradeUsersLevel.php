@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Admin\UsersController;
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 
 class DowngradeUsersLevel extends Command
 {
@@ -38,6 +40,10 @@ class DowngradeUsersLevel extends Command
      */
     public function handle()
     {
+//        $user = User::findOrFail(15);
+//        $user->balance = 10;
+//        $user->save();
+
         $userController=New UsersController();
         $userController->changePriceRange();
         return 'Task Successfully Finshed';

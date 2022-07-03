@@ -64,72 +64,92 @@ class UsersController extends Controller
 
     public function changePriceRange()
     {
-        $users = User::where('is_const_price_range', 0)->get();
-//        foreach ($users as $user){
-        $user = User::findOrFail(22);
+        $users = User::where('is_const_price_range', 0)->where('price_range_id','>',1)->get();
+        foreach ($users as $user) {
+//            if ($user->id == 15){
+            $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 
-        $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
-//        dd($lastUserPriceRangeChange);
-        if ($lastUserPriceRangeChange != null) {
-            $total = $lastUserPriceRangeChange->total;
-            $orders = Order::whereDate('created_at', '<=', $lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
-            $limitDays = $user->priceRange->limit_days;
-            $now = Carbon::now();
-            $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
-            if ($dateDiff == $limitDays) {
-                if ($total < $user->priceRange->min_total_amount) {
-                    $user->price_range_id = $user->price_range_id - 1;
-                    if ($user->save()) {
-                        $nextPriceRange = $user->priceRange;
-                        $msg = [
-                            'username' => $user->username,
-                            'level' => $nextPriceRange->name,
-                            'status' => "demotion"
-                        ];
-                        $action = [
-                            "link" => route('admin.user-edit', $user->id),
-                            "icon" => "fas fa-plus text-white"
-                        ];
-                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+            if ($lastUserPriceRangeChange != null) {
+                $total = $lastUserPriceRangeChange->total;
+
+                $orders = Order::whereDate('created_at', '<=', $lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
+
+                $limitDays = $user->priceRange->limit_days;
+
+                $now = Carbon::now();
+                $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
+
+                if ($dateDiff == $limitDays) {
+                    if ($total < $user->priceRange->min_total_amount) {
+                        $user->price_range_id = $user->price_range_id - 1;
+                        if ($user->save()) {
+                            $userPriceRange = new UserPriceRange();
+                            $userPriceRange->user_id = $user->id;
+                            $userPriceRange->price_range_id = $user->price_range_id;
+                            $userPriceRange->price_range_type = '-';
+                            $userPriceRange->total = 0;
+                            $userPriceRange->save();
+                            $nextPriceRange = $user->priceRange;
+                            $msg = [
+                                'username' => $user->username,
+                                'level' => $nextPriceRange->name,
+                                'status' => "demotion"
+                            ];
+                            $action = [
+                                "link" => route('admin.user-edit', $user->id),
+                                "icon" => "fas fa-plus text-white"
+                            ];
+                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                            $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                        }
+                    }
+                } elseif ($dateDiff > $limitDays) {
+
+                    $days = $dateDiff % $limitDays;
+
+                    $dateOfOrders = Carbon::now()->subDays($days);
+
+                    $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
+
+                    if ($ordersTotal < $user->priceRange->min_total_amount) {
+
+                        $user->price_range_id = $user->price_range_id - 1;
+                        if ($user->save()) {
+
+                            $userPriceRange = new UserPriceRange();
+                            $userPriceRange->user_id = $user->id;
+                            $userPriceRange->price_range_id = $user->price_range_id;
+                            $userPriceRange->price_range_type = '-';
+                            $userPriceRange->total = 0;
+                            $userPriceRange->save();
+                            $nextPriceRange = PriceRange::findOrFail($user->price_range_id);
+                            $msg = [
+                                'username' => $user->username,
+                                'level' => $nextPriceRange->name,
+                                'status' => "demotion"
+                            ];
+                            $action = [
+                                "link" => route('admin.user-edit', $user->id),
+                                "icon" => "fas fa-plus text-white"
+                            ];
+                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                            $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                        }
                     }
                 }
-            } elseif ($dateDiff > $limitDays) {
-                $days = $dateDiff % $limitDays;
-                $dateOfOrders = Carbon::now()->subDays($days);
-                $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
-                if ($ordersTotal < $user->priceRange->min_total_amount) {
-                    $user->price_range_id = $user->price_range_id - 1;
-                    if ($user->save()) {
-                        $nextPriceRange = $user->priceRange;
-                        $msg = [
-                            'username' => $user->username,
-                            'level' => $nextPriceRange->name,
-                            'status' => "demotion"
-                        ];
-                        $action = [
-                            "link" => route('admin.user-edit', $user->id),
-                            "icon" => "fas fa-plus text-white"
-                        ];
-                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
-                    }
-                }
+
+
+            } else {
+
+                $userPriceRange = new UserPriceRange();
+                $userPriceRange->user_id = $user->id;
+                $userPriceRange->price_range_id = $user->price_range_id;
+                $userPriceRange->price_range_type = '+';
+                $userPriceRange->total = 0;
+                $userPriceRange->save();
             }
-
-            dd($total);
-
-
-        } else {
-            $userPriceRange = new UserPriceRange();
-            $userPriceRange->user_id = $user->id;
-            $userPriceRange->price_range_id = $user->price_range_id;
-            $userPriceRange->price_range_type = '+';
-            $userPriceRange->total = 0;
-            $userPriceRange->save();
         }
 //        }
-
     }
 
     public function agentsSearch(Request $request)
