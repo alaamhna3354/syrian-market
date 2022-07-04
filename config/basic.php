@@ -24,4 +24,5 @@
   ),
   'push_notification' => 1,
   'exchange_rate' => '10',
+  'min_balance' => '1000.00',
 );

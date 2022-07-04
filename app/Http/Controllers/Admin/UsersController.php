@@ -77,10 +77,11 @@ class UsersController extends Controller
                 $limitDays = $user->priceRange->limit_days;
 
                 $now = Carbon::now();
-                $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
-
+                $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
+                $dateDiffHour = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->h;
+                $dateDiff = ($dateDiffDay * 24) + $dateDiffHour;
                 if ($dateDiff == $limitDays) {
-                    if ($total < $user->priceRange->min_total_amount) {
+                    if ($total < $user->priceRange->min_total_amount_to_stay) {
                         $user->price_range_id = $user->price_range_id - 1;
                         if ($user->save()) {
                             $userPriceRange = new UserPriceRange();
@@ -105,13 +106,13 @@ class UsersController extends Controller
                     }
                 } elseif ($dateDiff > $limitDays) {
 
-                    $days = $dateDiff % $limitDays;
+                    $hours = $dateDiff % $limitDays;
 
-                    $dateOfOrders = Carbon::now()->subDays($days);
+                    $dateOfOrders = Carbon::now()->subHours($hours);
 
                     $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
 
-                    if ($ordersTotal < $user->priceRange->min_total_amount) {
+                    if ($ordersTotal < $user->priceRange->min_total_amount_to_stay) {
 
                         $user->price_range_id = $user->price_range_id - 1;
                         if ($user->save()) {
@@ -747,13 +748,13 @@ class UsersController extends Controller
             $user->debt -= $balance;
 
 
-            $transactionForUser = new Transaction();
-            $transactionForUser->user_id = $user->id;
-            $transactionForUser->trx_type = '+';
-            $transactionForUser->amount = $balance;
-            $transactionForUser->remarks = 'Pay A Debt';
-            $transactionForUser->trx_id = strRandom();
-            $transactionForUser->charge = 0;
+//            $transactionForUser = new Transaction();
+//            $transactionForUser->user_id = $user->id;
+//            $transactionForUser->trx_type = '+';
+//            $transactionForUser->amount = $balance;
+//            $transactionForUser->remarks = 'Pay A Debt';
+//            $transactionForUser->trx_id = strRandom();
+//            $transactionForUser->charge = 0;
 
 
             $debt = new Debt();
@@ -768,9 +769,9 @@ class UsersController extends Controller
 
             $basic = (object)config('basic');
             if ($user->save()) {
-                if ($transactionForUser->save()) {
+//                if ($transactionForUser->save()) {
                     $msg = [
-                        'transaction' => $transactionForUser->trx_id,
+                        'transaction' => $debt->id,
                         'amount' => $balance,
                         'currency' => $basic->currency,
                         'main_balance' => $balance,
@@ -782,9 +783,9 @@ class UsersController extends Controller
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
                     return back()->with('success', 'Balance Added Successfully.');
-                } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
-                }
+//                } else {
+//                    return back()->with('error', 'Balance Do Not Added Successfully.');
+//                }
 
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');

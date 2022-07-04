@@ -13,9 +13,9 @@ class UpdateCategoryAddSlugColumn extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('slug',15)->nullable();
-        });
+//        Schema::table('categories', function (Blueprint $table) {
+//            $table->string('slug',15)->nullable();
+//        });
     }
 
     /**
