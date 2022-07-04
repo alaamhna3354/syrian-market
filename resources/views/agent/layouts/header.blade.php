@@ -43,7 +43,7 @@
                     <h4 id="progressText2" class="progressTextcolor"></h4>
                     <h4>@lang('للحفاظ على مستواك خلال ')</h4>
                     <h4 id="progressText3" class="progressTextcolor"></h4>
-                    <h4>@lang('يوم')</h4>
+                    <h4>@lang('ساعة')</h4>
                 </div>
                 <div class="" id="startLevels" style="display: none!important;">
                     <h4>@lang('انت في المستوى الاول')</h4>

@@ -42,6 +42,15 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group ">
+                            <label>@lang('Min Total Amount To Stay In Level')</label>
+                            <input type="text" name="min_total_amount_to_stay" value="{{old('min_total_amount_to_stay')}}"
+                                   class="form-control form-control-sm">
+                            <div class="invalid-feedback">@lang('Please fill in the Min Total Amount')</div>
+                            @error('min_total_amount_to_stay')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                     </div>
                     <div class="col-sm-6 col-md-12">

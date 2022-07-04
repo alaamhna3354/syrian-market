@@ -348,7 +348,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 
         Route::any('/basic-controls', 'ControlController@index')->name('basic-controls');
+        Route::get('/basicControls', 'ControlController@basicControls')->name('basicControls');
         Route::post('/basic-controls', 'ControlController@updateConfigure')->name('basic-controls.update');
+        Route::post('/basicControls', 'ControlController@updateBasicControls')->name('updateBasicControls');
         Route::post('/exchange_rate', 'ControlController@setExchangerate')->name('basic-controls.exchange_rate');
         Route::get('/color-settings', 'ControlController@colorSettings')->name('color-settings');
         Route::post('/color-settings', 'ControlController@colorSettingsUpdate')->name('color-settings.update');

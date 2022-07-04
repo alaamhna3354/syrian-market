@@ -26,6 +26,14 @@ class ControlController extends Controller
         return view('admin.pages.basic-controls', compact('control'));
     }
 
+    public function basicControls()
+    {
+        $timeZone = timezone_identifiers_list();
+        $control =   Configure::firstOrNew();
+        $control->time_zone_all = $timeZone;
+        return view('admin.pages.basicControls', compact('control'));
+    }
+
     public function updateConfigure(Request $request)
     {
         $configure = Configure::firstOrNew();
@@ -36,7 +44,8 @@ class ControlController extends Controller
             'currency' => 'required',
             'currency_symbol' => 'required',
             'fraction_number' => 'required|integer',
-            'paginate' => 'required|integer'
+            'paginate' => 'required|integer',
+            'min_balance' => 'required|numeric'
         ]);
 
 
@@ -50,6 +59,46 @@ class ControlController extends Controller
         config(['basic.email_notification' => (int)$reqData['email_notification']]);
         config(['basic.sms_verification' => (int)$reqData['sms_verification']]);
         config(['basic.email_verification' => (int)$reqData['email_verification']]);
+        config(['basic.min_balance' => $reqData['min_balance']]);
+
+        $fp = fopen(base_path() . '/config/basic.php', 'w');
+        fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
+        fclose($fp);
+
+
+        $configure->fill($reqData)->save();
+
+        session()->flash('success', ' Updated Successfully');
+
+        Artisan::call('optimize:clear');
+        Artisan::call('view:clear');
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+
+        return back();
+    }
+    public function updateBasicControls(Request $request)
+    {
+        $configure = Configure::firstOrNew();
+        $reqData = Purify::clean($request->except('_token', '_method'));
+        $request->validate([
+            'site_title' => 'required',
+            'time_zone' => 'required',
+            'currency' => 'required',
+            'currency_symbol' => 'required',
+            'fraction_number' => 'required|integer',
+            'paginate' => 'required|integer',
+            'min_balance' => 'required|numeric'
+        ]);
+
+
+        config(['basic.site_title' => $reqData['site_title']]);
+        config(['basic.time_zone' => trim($reqData['time_zone'])]);
+        config(['basic.currency' => $reqData['currency']]);
+        config(['basic.currency_symbol' => $reqData['currency_symbol']]);
+        config(['basic.fraction_number' => (int)$reqData['fraction_number']]);
+        config(['basic.paginate' => (int)$reqData['paginate']]);
+        config(['basic.min_balance' => $reqData['min_balance']]);
 
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');

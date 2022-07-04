@@ -6,7 +6,7 @@
 
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
         <div class="card-body">
-            <form method="post" action="" novalidate="novalidate"
+            <form method="post" action="{{route('admin.updateBasicControls')}}" novalidate="novalidate"
                   class="needs-validation base-form">
                 @csrf
                 <div class="row">
@@ -88,64 +88,6 @@
                         @error('min_balance')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
-                    </div>
-
-
-
-                    <div class="form-group col-sm-3 ">
-                        <label class="font-weight-bold">@lang('SMS Notification')</label>
-                        <div class="custom-switch-btn">
-                            <input type='hidden' value='1' name='sms_notification'>
-                            <input type="checkbox" name="sms_notification" class="custom-switch-checkbox"
-                                   id="sms_notification"
-                                   value="0" <?php if ($control->sms_notification == 0):echo 'checked'; endif ?> >
-                            <label class="custom-switch-checkbox-label" for="sms_notification">
-                                <span class="custom-switch-checkbox-inner"></span>
-                                <span class="custom-switch-checkbox-switch"></span>
-                            </label>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group col-lg-3 col-md-6">
-                        <label class="d-block">@lang('Email Notification')</label>
-
-                        <div class="custom-switch-btn">
-                            <input type='hidden' value='1' name='email_notification'>
-                            <input type="checkbox" name="email_notification" class="custom-switch-checkbox"
-                                   id="email_notification"
-                                   value="0" <?php if ($control->email_notification == 0):echo 'checked'; endif ?> >
-                            <label class="custom-switch-checkbox-label" for="email_notification">
-                                <span class="custom-switch-checkbox-inner"></span>
-                                <span class="custom-switch-checkbox-switch"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-3 col-md-6">
-                        <label class="d-block">@lang('SMS Verification')</label>
-                        <div class="custom-switch-btn">
-                            <input type='hidden' value='1' name='sms_verification'>
-                            <input type="checkbox" name="sms_verification" class="custom-switch-checkbox"
-                                   id="sms_verification"
-                                   value="0" <?php if ($control->sms_verification == 0):echo 'checked'; endif ?> >
-                            <label class="custom-switch-checkbox-label" for="sms_verification">
-                                <span class="custom-switch-checkbox-inner"></span>
-                                <span class="custom-switch-checkbox-switch"></span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-3 col-md-6">
-                        <label class="d-block">@lang('Email Verification')</label>
-                        <div class="custom-switch-btn">
-                            <input type='hidden' value='1' name='email_verification'>
-                            <input type="checkbox" name="email_verification" class="custom-switch-checkbox"
-                                   id="email_verification"
-                                   value="0" <?php if ($control->email_verification == 0):echo 'checked'; endif ?> >
-                            <label class="custom-switch-checkbox-label" for="email_verification">
-                                <span class="custom-switch-checkbox-inner"></span>
-                                <span class="custom-switch-checkbox-switch"></span>
-                            </label>
-                        </div>
                     </div>
 
 

@@ -13,9 +13,9 @@ class UpdatetDebtTableAddDespiteColumn extends Migration
      */
     public function up()
     {
-        Schema::table('debts', function (Blueprint $table) {
-            $table->boolean('despite')->default(0);
-        });
+//        Schema::table('debts', function (Blueprint $table) {
+//            $table->boolean('despite')->default(0);
+//        });
     }
 
     /**
@@ -25,8 +25,8 @@ class UpdatetDebtTableAddDespiteColumn extends Migration
      */
     public function down()
     {
-        Schema::table('debts', function (Blueprint $table) {
-            $table->dropColumn('is_paid');
-        });
+//        Schema::table('debts', function (Blueprint $table) {
+//            $table->dropColumn('is_paid');
+//        });
     }
 }
