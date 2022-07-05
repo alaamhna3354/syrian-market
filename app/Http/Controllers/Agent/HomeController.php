@@ -193,7 +193,7 @@ class HomeController extends Controller
 
                     $fund = new Fund();
                     $fund->user_id = $user->id;
-                    $fund->gateway_id = null;
+                    $fund->gateway_id = 0;
                     $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
                     $fund->amount = $coupon->balance;
                     $fund->charge = 0;
@@ -439,10 +439,10 @@ class HomeController extends Controller
             'expected_purchasing_power' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-        if ($user->balance >= 500) {
+//        if ($validator->fails()) {
+//            return back()->withErrors($validator)->withInput();
+//        }
+        if ($user->balance >= config('basic.min_balance')) {
             $user->is_agent = 1;
             $user->is_approved = 0;
             if ($user->save()) {
@@ -475,7 +475,7 @@ class HomeController extends Controller
                 return back()->with('error', 'Please Try Again Later')->withInput();
             }
         } else {
-            return back()->with('error', 'Your balance must be at least 500$')->withInput();
+            return back()->with('error', 'Your balance must be at least'.config('basic.min_balance').'$')->withInput();
         }
 
         return back()->with('success', 'The Admin will see your request soon');

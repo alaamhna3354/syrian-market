@@ -445,13 +445,13 @@ class UserController extends Controller
             $user->debt -= $balance;
 
 
-            $transactionForUser = new Transaction();
-            $transactionForUser->user_id = $user->id;
-            $transactionForUser->trx_type = '+';
-            $transactionForUser->amount = $balance;
-            $transactionForUser->remarks = 'Pay A Debt';
-            $transactionForUser->trx_id = strRandom();
-            $transactionForUser->charge = 0;
+//            $transactionForUser = new Transaction();
+//            $transactionForUser->user_id = $user->id;
+//            $transactionForUser->trx_type = '-';
+//            $transactionForUser->amount = $balance;
+//            $transactionForUser->remarks = 'Pay A Debt';
+//            $transactionForUser->trx_id = strRandom();
+//            $transactionForUser->charge = 0;
 
 
 
@@ -467,9 +467,9 @@ class UserController extends Controller
 
             $basic = (object)config('basic');
             if ( $user->save()) {
-                if ($transactionForUser->save()) {
+//                if ($transactionForUser->save()) {
                     $msg = [
-                        'transaction' => $transactionForUser->trx_id,
+                        'transaction' => $debt->id,
                         'amount' => $balance,
                         'currency' => $basic->currency,
                         'main_balance' => $balance,
@@ -481,9 +481,9 @@ class UserController extends Controller
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
                     return back()->with('success', 'Balance Added Successfully.');
-                } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
-                }
+//                } else {
+//                    return back()->with('error', 'Balance Do Not Added Successfully.');
+//                }
 
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');

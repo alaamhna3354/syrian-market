@@ -697,28 +697,28 @@ class HomeController extends Controller
                 $date_of_downgrade_level = $y[0]->created_at;
                 $now = Carbon::now();
                 $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
+//                dd($dateDiffDay);
 
-
-                if ($dateDiffDay->d == 0){
+                if ($dateDiffDay->d == 0 && $dateDiffDay->h == 0){
                     $downgrade_level_day =   $thisLevel->limit_days  ;
                 }else{
-                    $downgrade_level_day = $thisLevel->limit_days - ($dateDiffDay->m * 30 + $dateDiffDay->d) ;
+                    $downgrade_level_day = $thisLevel->limit_days - (($dateDiffDay->m * 30 * 24) + ($dateDiffDay->d * 24) + $dateDiffDay->h) ;
 //                    dd($downgrade_level_day);
                 }
 
 //                dd($downgrade_level_day);
-                if ($y[0]->total >= $thisLevel->min_total_amount){
+                if ($y[0]->total >= $thisLevel->min_total_amount_to_stay){
                     $downgrade_level = 0 ;
                     $downgrade_level_progress = 100;
 
                 }else{
-                    $downgrade_level = $thisLevel->min_total_amount - $y[0]->total;
-                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount ;
+                    $downgrade_level = $thisLevel->min_total_amount_to_stay - $y[0]->total;
+                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount_to_stay ;
                 }
             }else{
                 $move_to_next = $x->min_total_amount;
-                $move_to_next_progress = 100;
-                $downgrade_level = $thisLevel->min_total_amount;
+                $move_to_next_progress = 0;
+                $downgrade_level = $thisLevel->min_total_amount_to_stay;
                 $downgrade_level_progress = 100;
                 $downgrade_level_day = $thisLevel->limit_days  ;
             }
@@ -729,27 +729,28 @@ class HomeController extends Controller
                 $date_of_downgrade_level = $y[0]->created_at;
                 $now = Carbon::now();
                 $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($date_of_downgrade_level)));
-                if ($dateDiffDay->d == 0){
+                if ($dateDiffDay->d == 0 && $dateDiffDay->h == 0){
                     $downgrade_level_day =   $thisLevel->limit_days  ;
                 }else{
-                    $downgrade_level_day = $thisLevel->limit_days - ($dateDiffDay->m * 30 + $dateDiffDay->d) ;
+                    $downgrade_level_day = $thisLevel->limit_days - (($dateDiffDay->m * 30 *24) + ($dateDiffDay->d *24) + $dateDiffDay->h) ;
 //                    dd($downgrade_level_day);
                 }
 //                dd($downgrade_level_day);
-                if ($y[0]->total >= $thisLevel->min_total_amount){
+                if ($y[0]->total >= $thisLevel->min_total_amount_to_stay){
                     $downgrade_level = 0 ;
                     $downgrade_level_progress = 100;
 
                 }else{
-                    $downgrade_level = $thisLevel->min_total_amount - $y[0]->total;
-                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount ;
+                    $downgrade_level = $thisLevel->min_total_amount_to_stay - $y[0]->total;
+                    $downgrade_level_progress = 100 - $downgrade_level * 100 / $thisLevel->min_total_amount_to_stay ;
                 }
             }else{
-                $downgrade_level = $thisLevel->min_total_amount;
+                $downgrade_level = $thisLevel->min_total_amount_to_stay;
                 $downgrade_level_progress = 100;
                 $downgrade_level_day = $thisLevel->limit_days  ;
             }
         }
+//        dd($now->subHours(100));
         return response([
            'move_to_next' => $move_to_next.$basic->currency_symbol,
             'move_to_next_progress' => $move_to_next_progress,

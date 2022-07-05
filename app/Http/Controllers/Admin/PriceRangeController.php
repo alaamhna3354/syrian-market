@@ -47,6 +47,7 @@ class PriceRangeController extends Controller
             'name' => 'required|string|max:20',
             'name' => Rule::unique('price_ranges'),
             'min_total_amount' => 'required|numeric',
+            'min_total_amount_to_stay' => 'required|numeric',
             'limit_days' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
@@ -55,6 +56,7 @@ class PriceRangeController extends Controller
         }
         $range->name = $req['name'];
         $range->min_total_amount = $req['min_total_amount'];
+        $range->min_total_amount_to_stay = $req['min_total_amount_to_stay'];
         $range->limit_days = $req['limit_days'];
         if ($range->save()){
             return back()->with('success', 'Successfully Updated');
@@ -101,6 +103,7 @@ class PriceRangeController extends Controller
             'name' => 'required|string|max:20',
             'name' => Rule::unique('price_ranges')->ignore($id),
             'min_total_amount' => 'required|numeric',
+            'min_total_amount_to_stay' => 'required|numeric',
             'limit_days' => 'required|numeric',
         ];
         $validator = Validator::make($req, $rules);
@@ -109,6 +112,7 @@ class PriceRangeController extends Controller
         }
         $range->name = $req['name'];
         $range->min_total_amount = $req['min_total_amount'];
+        $range->min_total_amount_to_stay = $req['min_total_amount_to_stay'];
         $range->limit_days = $req['limit_days'];
         if ($range->save()){
             return back()->with('success', 'Successfully Updated');

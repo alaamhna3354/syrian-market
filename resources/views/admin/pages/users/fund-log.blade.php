@@ -106,6 +106,9 @@
                 {{ $funds->appends($_GET)->links() }}
             </div>
         </div>
+        <div class="card-footer">
+            <h2>@lang('Total') : {{$funds->sum('amount')}}</h2>
+        </div>
     </div>
 
 @endsection

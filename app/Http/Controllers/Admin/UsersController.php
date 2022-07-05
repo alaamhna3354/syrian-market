@@ -7,6 +7,7 @@ use App\Http\Traits\Notify;
 use App\Models\AgentCommissionRate;
 use App\Models\Category;
 use App\Models\Debt;
+use App\Models\Fund;
 use App\Models\Language;
 use App\Models\Order;
 use App\Models\PriceRange;
@@ -64,72 +65,93 @@ class UsersController extends Controller
 
     public function changePriceRange()
     {
-        $users = User::where('is_const_price_range', 0)->get();
-//        foreach ($users as $user){
-        $user = User::findOrFail(22);
+        $users = User::where('is_const_price_range', 0)->where('price_range_id','>',1)->get();
+        foreach ($users as $user) {
+//            if ($user->id == 15){
+            $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 
-        $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
-//        dd($lastUserPriceRangeChange);
-        if ($lastUserPriceRangeChange != null) {
-            $total = $lastUserPriceRangeChange->total;
-            $orders = Order::whereDate('created_at', '<=', $lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
-            $limitDays = $user->priceRange->limit_days;
-            $now = Carbon::now();
-            $dateDiff = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
-            if ($dateDiff == $limitDays) {
-                if ($total < $user->priceRange->min_total_amount) {
-                    $user->price_range_id = $user->price_range_id - 1;
-                    if ($user->save()) {
-                        $nextPriceRange = $user->priceRange;
-                        $msg = [
-                            'username' => $user->username,
-                            'level' => $nextPriceRange->name,
-                            'status' => "demotion"
-                        ];
-                        $action = [
-                            "link" => route('admin.user-edit', $user->id),
-                            "icon" => "fas fa-plus text-white"
-                        ];
-                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+            if ($lastUserPriceRangeChange != null) {
+                $total = $lastUserPriceRangeChange->total;
+
+                $orders = Order::whereDate('created_at', '<=', $lastUserPriceRangeChange->created_at->format('Y-m-d'))->get();
+
+                $limitDays = $user->priceRange->limit_days;
+
+                $now = Carbon::now();
+                $dateDiffDay = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->d;
+                $dateDiffHour = $now->diff(date("m/d/Y H:i", strtotime($lastUserPriceRangeChange->created_at)))->h;
+                $dateDiff = ($dateDiffDay * 24) + $dateDiffHour;
+                if ($dateDiff == $limitDays) {
+                    if ($total < $user->priceRange->min_total_amount_to_stay) {
+                        $user->price_range_id = $user->price_range_id - 1;
+                        if ($user->save()) {
+                            $userPriceRange = new UserPriceRange();
+                            $userPriceRange->user_id = $user->id;
+                            $userPriceRange->price_range_id = $user->price_range_id;
+                            $userPriceRange->price_range_type = '-';
+                            $userPriceRange->total = 0;
+                            $userPriceRange->save();
+                            $nextPriceRange = $user->priceRange;
+                            $msg = [
+                                'username' => $user->username,
+                                'level' => $nextPriceRange->name,
+                                'status' => "demotion"
+                            ];
+                            $action = [
+                                "link" => route('admin.user-edit', $user->id),
+                                "icon" => "fas fa-plus text-white"
+                            ];
+                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                            $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                        }
+                    }
+                } elseif ($dateDiff > $limitDays) {
+
+                    $hours = $dateDiff % $limitDays;
+
+                    $dateOfOrders = Carbon::now()->subHours($hours);
+
+                    $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
+
+                    if ($ordersTotal < $user->priceRange->min_total_amount_to_stay) {
+
+                        $user->price_range_id = $user->price_range_id - 1;
+                        if ($user->save()) {
+
+                            $userPriceRange = new UserPriceRange();
+                            $userPriceRange->user_id = $user->id;
+                            $userPriceRange->price_range_id = $user->price_range_id;
+                            $userPriceRange->price_range_type = '-';
+                            $userPriceRange->total = 0;
+                            $userPriceRange->save();
+                            $nextPriceRange = PriceRange::findOrFail($user->price_range_id);
+                            $msg = [
+                                'username' => $user->username,
+                                'level' => $nextPriceRange->name,
+                                'status' => "demotion"
+                            ];
+                            $action = [
+                                "link" => route('admin.user-edit', $user->id),
+                                "icon" => "fas fa-plus text-white"
+                            ];
+                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                            $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                        }
                     }
                 }
-            } elseif ($dateDiff > $limitDays) {
-                $days = $dateDiff % $limitDays;
-                $dateOfOrders = Carbon::now()->subDays($days);
-                $ordersTotal = Order::where('user_id', $user->id)->whereDate('created_at', '>=', $dateOfOrders)->sum('price');
-                if ($ordersTotal < $user->priceRange->min_total_amount) {
-                    $user->price_range_id = $user->price_range_id - 1;
-                    if ($user->save()) {
-                        $nextPriceRange = $user->priceRange;
-                        $msg = [
-                            'username' => $user->username,
-                            'level' => $nextPriceRange->name,
-                            'status' => "demotion"
-                        ];
-                        $action = [
-                            "link" => route('admin.user-edit', $user->id),
-                            "icon" => "fas fa-plus text-white"
-                        ];
-                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
-                    }
-                }
+
+
+            } else {
+
+                $userPriceRange = new UserPriceRange();
+                $userPriceRange->user_id = $user->id;
+                $userPriceRange->price_range_id = $user->price_range_id;
+                $userPriceRange->price_range_type = '+';
+                $userPriceRange->total = 0;
+                $userPriceRange->save();
             }
-
-            dd($total);
-
-
-        } else {
-            $userPriceRange = new UserPriceRange();
-            $userPriceRange->user_id = $user->id;
-            $userPriceRange->price_range_id = $user->price_range_id;
-            $userPriceRange->price_range_type = '+';
-            $userPriceRange->total = 0;
-            $userPriceRange->save();
         }
 //        }
-
     }
 
     public function agentsSearch(Request $request)
@@ -166,6 +188,7 @@ class UsersController extends Controller
         $agent = null ;
         if ($user['is_approved'] == 0) {
             $is_approved = 1;
+//            $user->user_id = 0;
             $msg = [
                 'status' => "Accepted",
             ];
@@ -320,7 +343,32 @@ class UsersController extends Controller
             }
         }
         $user->balance += $commission_rate;
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->trx_type = '+';
+        $transaction->amount = $commission_rate;
+        $transaction->remarks = 'ارباح مشتريات مستخدميه';
+        $transaction->trx_id = strRandom();
+        $transaction->charge = 0;
+
+
+        $fund = new Fund();
+        $fund->user_id = $user->id;
+        $fund->gateway_id = 0;
+        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+        $fund->amount = $commission_rate;
+        $fund->charge = 0;
+        $fund->rate = 0;
+        $fund->final_amount = $commission_rate;
+        $fund->btc_amount = 0;
+        $fund->btc_wallet = "";
+        $fund->transaction = strRandom();
+        $fund->try = 0;
+        $fund->status = 1;
+
         if ($user->save()) {
+            $fund->save();
+            $transaction->save();
             foreach ($commissions as $commission) {
                 $commission->save();
             }
@@ -364,7 +412,32 @@ class UsersController extends Controller
             }
         }
         $user->balance += $commission_rate;
+
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->trx_type = '+';
+        $transaction->amount = $commission_rate;
+        $transaction->remarks = 'ارباح مشتريات مستخدميه';
+        $transaction->trx_id = strRandom();
+        $transaction->charge = 0;
+
+
+        $fund = new Fund();
+        $fund->user_id = $user->id;
+        $fund->gateway_id = 0;
+        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+        $fund->amount = $commission_rate;
+        $fund->charge = 0;
+        $fund->rate = 0;
+        $fund->final_amount = $commission_rate;
+        $fund->btc_amount = 0;
+        $fund->btc_wallet = "";
+        $fund->transaction = strRandom();
+        $fund->try = 0;
+        $fund->status = 1;
         if ($user->save()) {
+            $fund->save();
+            $transaction->save();
             foreach ($commissions as $commission) {
                 $commission->save();
             }
@@ -454,7 +527,8 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
         $ranges = PriceRange::all();
-        return view('admin.pages.users.edit-user', compact('user', 'languages', 'ranges'));
+        $agents = User::where('is_agent',1)->where('is_approved',1)->get();
+        return view('admin.pages.users.edit-user', compact('user','agents', 'languages', 'ranges'));
     }
 
     public function info($id)
@@ -537,6 +611,9 @@ class UsersController extends Controller
         $user->is_const_price_range = ($userData['is_const_price_range'] == 'on') ? 0 : 1;
         if (isset($userData['language_id'])) {
             $user->language_id = @$userData['language_id'];
+        }
+        if (isset($userData['agent_id'])) {
+            $user->user_id = @$userData['agent_id'];
         }
         if (isset($userData['price_range_id'])) {
             if ($user->price_range_id != $userData['price_range_id']) {
@@ -727,13 +804,13 @@ class UsersController extends Controller
             $user->debt -= $balance;
 
 
-            $transactionForUser = new Transaction();
-            $transactionForUser->user_id = $user->id;
-            $transactionForUser->trx_type = '+';
-            $transactionForUser->amount = $balance;
-            $transactionForUser->remarks = 'Pay A Debt';
-            $transactionForUser->trx_id = strRandom();
-            $transactionForUser->charge = 0;
+//            $transactionForUser = new Transaction();
+//            $transactionForUser->user_id = $user->id;
+//            $transactionForUser->trx_type = '-';
+//            $transactionForUser->amount = $balance;
+//            $transactionForUser->remarks = 'Pay A Debt';
+//            $transactionForUser->trx_id = strRandom();
+//            $transactionForUser->charge = 0;
 
 
             $debt = new Debt();
@@ -748,9 +825,9 @@ class UsersController extends Controller
 
             $basic = (object)config('basic');
             if ($user->save()) {
-                if ($transactionForUser->save()) {
+//                if ($transactionForUser->save()) {
                     $msg = [
-                        'transaction' => $transactionForUser->trx_id,
+                        'transaction' => $debt->id,
                         'amount' => $balance,
                         'currency' => $basic->currency,
                         'main_balance' => $balance,
@@ -762,9 +839,9 @@ class UsersController extends Controller
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
                     return back()->with('success', 'Balance Added Successfully.');
-                } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
-                }
+//                } else {
+//                    return back()->with('error', 'Balance Do Not Added Successfully.');
+//                }
 
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
@@ -952,5 +1029,40 @@ class UsersController extends Controller
         return response()->json([
             'success' => 'Delete Successfully'
         ], 200);
+    }
+
+    public function user_fundLog($id)
+    {
+        $user = User::findOrFail($id);
+//        $userid = $user->id;
+//
+//        $funds = $user->funds()->paginate(config('basic.paginate'));
+        return view('admin.pages.agent.user-fund-log', compact('user'));
+    }
+
+    public function user_fundLogSearch(Request $request,$id)
+    {
+        $search = $request->all();
+        $user = User::findOrFail($id);
+        $dateSearch = $request->datetrx;
+        $ids = [];
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $user1 = User::with('transaction')->orderBy('id', 'asc')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['user_name']}%");
+            })
+            ->get();
+        foreach ($user1 as $id){
+            array_push($ids,$id->id);
+        }
+        foreach ($user->children as $key=>$userSearch){
+            if (!in_array($userSearch->id,$ids)){
+                $user->children->forget($key);
+            }
+        }
+//        dd($user);
+
+        return view('admin.pages.agent.user-fund-log', compact('user'));
     }
 }
