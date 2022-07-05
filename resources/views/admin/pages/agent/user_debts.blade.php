@@ -26,8 +26,7 @@
                             <th scope="col">@lang('Order')</th>
                             <th scope="col">@lang('User')</th>
                             <th scope="col">@lang('Debt AT')</th>
-                            <th scope="col">@lang('Status')</th>
-                            <th scope="col">@lang('Is Paid')</th>
+                            <th scope="col">@lang('Details')</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,13 +62,9 @@
 
                                 <td data-label="@lang('Debt AT')">@lang(dateTime($debt->created_at, 'd/m/Y - h:i A' ))</td>
 
-                                <td data-label="@lang('Status')">
+                                <td data-label="@lang('Details')">
                                 <span
-                                    class="badge badge-pill {{ $debt->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->status == 0 ? 'Inactive' : 'Active' }}</span>
-                                </td>
-                                <td data-label="@lang('Is Paid')">
-                                <span
-                                    class="badge badge-pill {{ $debt->despite == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->despite == 0 ? 'Not Paid' : 'Paid' }}</span>
+                                    class="badge badge-pill {{ $debt->despite == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->despite == 0 ? 'دين' : 'دفعة دين' }}</span>
                                 </td>
                             </tr>
                         @endforeach
@@ -77,6 +72,9 @@
                     </table>
 {{--                    {{ $orders->appends($_GET)->links() }}--}}
                 </div>
+            </div>
+            <div class="card-footer">
+                <h2>@lang('Total') : {{$user->debts()->where('despite' , 0)->sum('debt') - $user->debts()->where('despite' , 1)->sum('debt')}}</h2>
             </div>
         </div>
     @endforeach

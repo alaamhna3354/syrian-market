@@ -73,7 +73,14 @@
                             <td data-label="@lang('Username')"><a
                                     href="{{route('admin.user-edit', $fund->user_id)}}" target="_blank">{{ optional($fund->user)->username }}</a>
                             </td>
-                            <td data-label="@lang('Method')">{{ optional($fund->gateway)->name }}</td>
+                            @if($fund->gateway_id == null)
+                                <td data-label="@lang('Method')">@lang('يدوي')</td>
+
+                            @else
+                                <td data-label="@lang('Method')">@lang(optional($fund->gateway)->name)</td>
+                            @endif
+{{--                            <td data-label="@lang('Method')">--}}
+{{--                                {{ optional($fund->gateway)->name }}</td>--}}
                             <td data-label="@lang('Amount')"
                                 class="font-weight-bold">{{ getAmount($fund->amount ) }} {{ $basic->currency }}</td>
                             <td data-label="@lang('Charge')"

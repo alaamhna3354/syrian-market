@@ -284,6 +284,14 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{ route('admin.user-inventory') }}"
+                       aria-expanded="false">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span class="hide-menu">@lang('Inventory')</span>
+                    </a>
+                </li>
+
 
                 <li class="nav-small-cap"><span class="hide-menu">@lang('Support Tickets')</span></li>
 

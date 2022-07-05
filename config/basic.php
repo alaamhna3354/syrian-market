@@ -1,6 +1,6 @@
 <?php return array (
   'site_title' => 'Syria Market',
-  'time_zone' => 'UTC',
+  'time_zone' => 'Asia/Damascus',
   'currency' => 'USD',
   'currency_symbol' => '$',
   'theme' => 'minimal',
@@ -24,5 +24,5 @@
   ),
   'push_notification' => 1,
   'exchange_rate' => '10',
-  'min_balance' => '1000.00',
+  'min_balance' => '100',
 );
