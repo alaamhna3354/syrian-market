@@ -63,7 +63,11 @@
             <div class="col-md-6">
                 <ol class="breadcrumb center-items">
                     <li style="color: #000000">@lang('Total')</li>
+                    @if(isset($total))
+                        <li class="active">{{$total}} {{config('basic.currency_symbol')}}</li>
+                    @else
                     <li class="active">{{auth()->user()->debt}} {{config('basic.currency_symbol')}}</li>
+                    @endif
                 </ol>
             </div>
         </div>
