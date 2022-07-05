@@ -29,7 +29,16 @@ class DebtController extends Controller
     public function index()
     {
         $debts = Debt::where('agent_id',$this->user->id)->orderBy('id','desc')->get();
-        return view('agent.pages.debt.show', compact('debts'));
+        $total = 0;
+        foreach ($debts as $debt){
+            if ($debt->despite == 0){
+                $total += $debt->debt;
+            }else{
+                $total -= $debt->debt;
+            }
+        }
+//        dd($debts);
+        return view('agent.pages.debt.show', compact('debts','total'));
     }
 
     public function myDebt()
