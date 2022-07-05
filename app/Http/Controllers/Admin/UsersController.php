@@ -7,6 +7,7 @@ use App\Http\Traits\Notify;
 use App\Models\AgentCommissionRate;
 use App\Models\Category;
 use App\Models\Debt;
+use App\Models\Fund;
 use App\Models\Language;
 use App\Models\Order;
 use App\Models\PriceRange;
@@ -187,6 +188,7 @@ class UsersController extends Controller
         $agent = null ;
         if ($user['is_approved'] == 0) {
             $is_approved = 1;
+            $user->user_id = 0;
             $msg = [
                 'status' => "Accepted",
             ];
@@ -341,7 +343,32 @@ class UsersController extends Controller
             }
         }
         $user->balance += $commission_rate;
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->trx_type = '+';
+        $transaction->amount = $commission_rate;
+        $transaction->remarks = 'ارباح مشتريات مستخدميه';
+        $transaction->trx_id = strRandom();
+        $transaction->charge = 0;
+
+
+        $fund = new Fund();
+        $fund->user_id = $user->id;
+        $fund->gateway_id = 0;
+        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+        $fund->amount = $commission_rate;
+        $fund->charge = 0;
+        $fund->rate = 0;
+        $fund->final_amount = $commission_rate;
+        $fund->btc_amount = 0;
+        $fund->btc_wallet = "";
+        $fund->transaction = strRandom();
+        $fund->try = 0;
+        $fund->status = 1;
+
         if ($user->save()) {
+            $fund->save();
+            $transaction->save();
             foreach ($commissions as $commission) {
                 $commission->save();
             }
@@ -385,7 +412,32 @@ class UsersController extends Controller
             }
         }
         $user->balance += $commission_rate;
+
+        $transaction = new Transaction();
+        $transaction->user_id = $user->id;
+        $transaction->trx_type = '+';
+        $transaction->amount = $commission_rate;
+        $transaction->remarks = 'ارباح مشتريات مستخدميه';
+        $transaction->trx_id = strRandom();
+        $transaction->charge = 0;
+
+
+        $fund = new Fund();
+        $fund->user_id = $user->id;
+        $fund->gateway_id = 0;
+        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+        $fund->amount = $commission_rate;
+        $fund->charge = 0;
+        $fund->rate = 0;
+        $fund->final_amount = $commission_rate;
+        $fund->btc_amount = 0;
+        $fund->btc_wallet = "";
+        $fund->transaction = strRandom();
+        $fund->try = 0;
+        $fund->status = 1;
         if ($user->save()) {
+            $fund->save();
+            $transaction->save();
             foreach ($commissions as $commission) {
                 $commission->save();
             }
@@ -752,13 +804,13 @@ class UsersController extends Controller
             $user->debt -= $balance;
 
 
-            $transactionForUser = new Transaction();
-            $transactionForUser->user_id = $user->id;
-            $transactionForUser->trx_type = '-';
-            $transactionForUser->amount = $balance;
-            $transactionForUser->remarks = 'Pay A Debt';
-            $transactionForUser->trx_id = strRandom();
-            $transactionForUser->charge = 0;
+//            $transactionForUser = new Transaction();
+//            $transactionForUser->user_id = $user->id;
+//            $transactionForUser->trx_type = '-';
+//            $transactionForUser->amount = $balance;
+//            $transactionForUser->remarks = 'Pay A Debt';
+//            $transactionForUser->trx_id = strRandom();
+//            $transactionForUser->charge = 0;
 
 
             $debt = new Debt();
@@ -773,7 +825,7 @@ class UsersController extends Controller
 
             $basic = (object)config('basic');
             if ($user->save()) {
-                if ($transactionForUser->save()) {
+//                if ($transactionForUser->save()) {
                     $msg = [
                         'transaction' => $debt->id,
                         'amount' => $balance,
@@ -787,9 +839,9 @@ class UsersController extends Controller
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
                     return back()->with('success', 'Balance Added Successfully.');
-                } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
-                }
+//                } else {
+//                    return back()->with('error', 'Balance Do Not Added Successfully.');
+//                }
 
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
@@ -977,5 +1029,40 @@ class UsersController extends Controller
         return response()->json([
             'success' => 'Delete Successfully'
         ], 200);
+    }
+
+    public function user_fundLog($id)
+    {
+        $user = User::findOrFail($id);
+//        $userid = $user->id;
+//
+//        $funds = $user->funds()->paginate(config('basic.paginate'));
+        return view('admin.pages.agent.user-fund-log', compact('user'));
+    }
+
+    public function user_fundLogSearch(Request $request,$id)
+    {
+        $search = $request->all();
+        $user = User::findOrFail($id);
+        $dateSearch = $request->datetrx;
+        $ids = [];
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $user1 = User::with('transaction')->orderBy('id', 'asc')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['user_name']}%");
+            })
+            ->get();
+        foreach ($user1 as $id){
+            array_push($ids,$id->id);
+        }
+        foreach ($user->children as $key=>$userSearch){
+            if (!in_array($userSearch->id,$ids)){
+                $user->children->forget($key);
+            }
+        }
+//        dd($user);
+
+        return view('admin.pages.agent.user-fund-log', compact('user'));
     }
 }

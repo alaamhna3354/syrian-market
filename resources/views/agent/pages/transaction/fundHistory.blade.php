@@ -83,7 +83,12 @@
                                     <tr>
 
                                         <td data-label="#@lang('Transaction ID')">{{$data->transaction}}</td>
+                                        @if($data->gateway_id == null)
+                                            <td data-label="@lang('Gateway')">@lang('يدوي')</td>
+
+                                        @else
                                         <td data-label="@lang('Gateway')">@lang(optional($data->gateway)->name)</td>
+                                        @endif
                                         <td data-label="@lang('Amount')">
                                             <strong>{{getAmount($data->amount)}} @lang($basic->currency)</strong>
                                         </td>

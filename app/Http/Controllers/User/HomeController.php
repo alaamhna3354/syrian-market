@@ -717,7 +717,7 @@ class HomeController extends Controller
                 }
             }else{
                 $move_to_next = $x->min_total_amount;
-                $move_to_next_progress = 100;
+                $move_to_next_progress = 0;
                 $downgrade_level = $thisLevel->min_total_amount_to_stay;
                 $downgrade_level_progress = 100;
                 $downgrade_level_day = $thisLevel->limit_days  ;

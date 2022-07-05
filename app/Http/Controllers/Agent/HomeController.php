@@ -193,7 +193,7 @@ class HomeController extends Controller
 
                     $fund = new Fund();
                     $fund->user_id = $user->id;
-                    $fund->gateway_id = null;
+                    $fund->gateway_id = 0;
                     $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
                     $fund->amount = $coupon->balance;
                     $fund->charge = 0;
