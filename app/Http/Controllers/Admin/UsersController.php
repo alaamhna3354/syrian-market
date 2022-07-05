@@ -475,7 +475,8 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $languages = Language::where('is_active', 1)->orderBy('short_name')->get();
         $ranges = PriceRange::all();
-        return view('admin.pages.users.edit-user', compact('user', 'languages', 'ranges'));
+        $agents = User::where('is_agent',1)->where('is_approved',1)->get();
+        return view('admin.pages.users.edit-user', compact('user','agents', 'languages', 'ranges'));
     }
 
     public function info($id)
@@ -558,6 +559,9 @@ class UsersController extends Controller
         $user->is_const_price_range = ($userData['is_const_price_range'] == 'on') ? 0 : 1;
         if (isset($userData['language_id'])) {
             $user->language_id = @$userData['language_id'];
+        }
+        if (isset($userData['agent_id'])) {
+            $user->user_id = @$userData['agent_id'];
         }
         if (isset($userData['price_range_id'])) {
             if ($user->price_range_id != $userData['price_range_id']) {
@@ -748,13 +752,13 @@ class UsersController extends Controller
             $user->debt -= $balance;
 
 
-//            $transactionForUser = new Transaction();
-//            $transactionForUser->user_id = $user->id;
-//            $transactionForUser->trx_type = '+';
-//            $transactionForUser->amount = $balance;
-//            $transactionForUser->remarks = 'Pay A Debt';
-//            $transactionForUser->trx_id = strRandom();
-//            $transactionForUser->charge = 0;
+            $transactionForUser = new Transaction();
+            $transactionForUser->user_id = $user->id;
+            $transactionForUser->trx_type = '-';
+            $transactionForUser->amount = $balance;
+            $transactionForUser->remarks = 'Pay A Debt';
+            $transactionForUser->trx_id = strRandom();
+            $transactionForUser->charge = 0;
 
 
             $debt = new Debt();
@@ -769,7 +773,7 @@ class UsersController extends Controller
 
             $basic = (object)config('basic');
             if ($user->save()) {
-//                if ($transactionForUser->save()) {
+                if ($transactionForUser->save()) {
                     $msg = [
                         'transaction' => $debt->id,
                         'amount' => $balance,
@@ -783,9 +787,9 @@ class UsersController extends Controller
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
                     return back()->with('success', 'Balance Added Successfully.');
-//                } else {
-//                    return back()->with('error', 'Balance Do Not Added Successfully.');
-//                }
+                } else {
+                    return back()->with('error', 'Balance Do Not Added Successfully.');
+                }
 
             } else {
                 return back()->with('error', 'Balance Do Not Added Successfully.');
