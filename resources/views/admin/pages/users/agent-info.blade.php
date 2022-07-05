@@ -68,6 +68,11 @@
                                 <span class="btn-label"><i class="fas fa-money-bill-alt"></i></span> @lang('Fund Log')
                             </a>
 
+                            <a href="{{ route('admin.user.user_fundLog',$user->id) }}"
+                               class="btn btn-info waves-effect waves-light">
+                                <span class="btn-label"><i class="fas fa-money-bill-alt"></i></span> @lang('Users Fund Log')
+                            </a>
+
 
                             <a href="{{ route('admin.send-email',$user->id) }}"
                                class="btn btn-info waves-effect waves-light">

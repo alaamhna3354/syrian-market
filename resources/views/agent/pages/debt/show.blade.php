@@ -63,7 +63,11 @@
             <div class="col-md-6">
                 <ol class="breadcrumb center-items">
                     <li style="color: #000000">@lang('Total')</li>
+                    @if(isset($total))
+                        <li class="active">{{$total}} {{config('basic.currency_symbol')}}</li>
+                    @else
                     <li class="active">{{auth()->user()->debt}} {{config('basic.currency_symbol')}}</li>
+                    @endif
                 </ol>
             </div>
         </div>
@@ -85,8 +89,7 @@
                                     <th scope="col">@lang('Order')</th>
                                     <th scope="col">@lang('User')</th>
                                     <th scope="col">@lang('Debt AT')</th>
-                                    <th scope="col">@lang('Status')</th>
-                                    <th scope="col">@lang('Is Paid')</th>
+                                    <th scope="col">@lang('Details')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -116,13 +119,9 @@
 
                                         <td data-label="@lang('Debt AT')">@lang(dateTime($debt->created_at, 'd/m/Y - h:i A' ))</td>
 
-                                        <td data-label="@lang('Status')">
+                                        <td data-label="@lang('Details')">
                                 <span
-                                    class="badge badge-pill {{ $debt->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->status == 0 ? 'Inactive' : 'Active' }}</span>
-                                        </td>
-                                        <td data-label="@lang('Is Paid')">
-                                <span
-                                    class="badge badge-pill {{ $debt->despite == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->despite == 0 ? 'Not Paid' : 'Paid' }}</span>
+                                    class="badge badge-pill {{ $debt->despite == 0 ? 'badge-danger' : 'badge-success' }}">{{ $debt->despite == 0 ? 'دين' : 'دفعة دين' }}</span>
                                         </td>
                                     </tr>
                                 @endforeach

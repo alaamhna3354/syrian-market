@@ -87,5 +87,8 @@
             </table>
             {{ $transaction->links() }}
         </div>
+        <div class="card-footer">
+            <h2>@lang('Total') : {{$transaction->where('trx_type' , '+')->sum('amount') - $transaction->where('trx_type' , '-')->sum('amount')}}</h2>
+        </div>
     </div>
 @endsection

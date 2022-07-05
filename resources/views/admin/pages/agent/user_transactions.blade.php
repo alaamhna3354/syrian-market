@@ -93,7 +93,8 @@
             </table>
 {{--            {{ $user->transaction()->limit(25)->get()->links() }}--}}
         </div>
-        <div class="table-responsive">
+        <div class="card-footer">
+            <h2>@lang('Total') : {{$user->transaction()->where('trx_type' , '+')->sum('amount') - $user->transaction()->where('trx_type' , '-')->sum('amount')}}</h2>
         </div>
     </div>
     @endforeach

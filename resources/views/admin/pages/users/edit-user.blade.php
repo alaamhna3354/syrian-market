@@ -227,6 +227,21 @@
                                         </div>
                                     </div>
                                 @endif
+                                @if(0 < count($agents))
+                                    <div class="col-sm-6">
+                                        <div class="form-group ">
+                                            <label>@lang('Agent')</label>
+
+                                            <select name="agent_id" class="form-control">
+                                                <option value="0" >@lang('Select Agent')</option>
+                                                @foreach($agents as $agent)
+                                                    <option value="{{$agent->id}}" @if($agent->id == $user->user_id) selected @endif>{{$agent->username}}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="col-sm-12">
                                     <div class="form-group ">
                                         <label>@lang('Address')</label>

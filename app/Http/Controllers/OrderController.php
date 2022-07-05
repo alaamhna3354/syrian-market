@@ -176,6 +176,7 @@ class OrderController extends Controller
 
     public function statusChange(Request $request)
     {
+
         $req = $request->all();
         $order = Order::find($request->id);
         if($req['statusChange']=='refunded') {
@@ -262,5 +263,30 @@ class OrderController extends Controller
         $transaction =  $transaction->appends($search);
 
         return view('admin.pages.transaction.index', compact('transaction'));
+    }
+
+    public function inventory()
+    {
+        $users = User::with('transaction')->orderBy('id', 'asc')->get();
+        $user = User::findOrFail(2);
+//        dd($user->transactions());
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view('admin.pages.inventory.index', compact('transaction','users'));
+    }
+    public function inventorySearch(Request $request)
+    {
+        $search = $request->all();
+
+        $dateSearch = $request->datetrx;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $users = User::with('transaction')->orderBy('id', 'asc')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['user_name']}%");
+            })
+            ->get();
+        $transaction =  $transaction->appends($search);
+
+        return view('admin.pages.inventory.index', compact('transaction','users'));
     }
 }

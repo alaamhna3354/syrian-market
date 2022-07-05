@@ -245,6 +245,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         Route::get('/user/transaction/{id}', 'Admin\UsersController@transaction')->name('user.transaction');
         Route::get('/user/fundLog/{id}', 'Admin\UsersController@funds')->name('user.fundLog');
+        Route::get('/user/user_fundLog/{id}', 'Admin\UsersController@user_fundLog')->name('user.user_fundLog');
+        Route::get('/user_fundLog-search/{id}', 'Admin\UsersController@user_fundLogSearch')->name('user_fundLog.search');
+//        Route::get('user_fundLog/search', 'Admin\PaymentLogController@user_fundLog')->name('user_fundLog.search');
 
         Route::get('/agent/transfer/{id}', 'Admin\UsersController@transfer')->name('agent.transfer');
         Route::post('/agent/transfereEarn', 'Admin\UsersController@transferEarn')->name('agent.transferEarn');
@@ -348,7 +351,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 
         Route::any('/basic-controls', 'ControlController@index')->name('basic-controls');
+        Route::get('/basicControls', 'ControlController@basicControls')->name('basicControls');
         Route::post('/basic-controls', 'ControlController@updateConfigure')->name('basic-controls.update');
+        Route::post('/basicControls', 'ControlController@updateBasicControls')->name('updateBasicControls');
         Route::post('/exchange_rate', 'ControlController@setExchangerate')->name('basic-controls.exchange_rate');
         Route::get('/color-settings', 'ControlController@colorSettings')->name('color-settings');
         Route::post('/color-settings', 'ControlController@colorSettingsUpdate')->name('color-settings.update');
@@ -395,7 +400,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/order/refunded', 'OrderController@refunded')->name('refunded');
         // transaction
         Route::get('/transaction', 'OrderController@transaction')->name('user-transaction');
+        Route::get('/inventory', 'OrderController@inventory')->name('user-inventory');
         Route::get('/transaction-search', 'OrderController@transactionSearch')->name('transaction.search');
+        Route::get('/inventory-search', 'OrderController@inventorySearch')->name('inventory.search');
         // jquery autocomplete search
         Route::get('/get-trx-id-search', 'OrderController@gettrxidsearch')->name('get.trx-id-search');
         Route::get('/get-trx-user-search', 'OrderController@getTrxUserSearch')->name('get.trx-user-search');

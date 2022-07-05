@@ -41,9 +41,10 @@
                     <div class="d-flex mt-3" id="notStartLevel">
                         <h4>@lang(' عليك الشراء ب')</h4>
                         <h4 id="progressText2" class="progressTextcolor"></h4>
-                        <h4>@lang('للحفاظ على مستواك خلال ')</h4>
+                        <h4 id="throw">@lang('للحفاظ على مستواك خلال ')</h4>
+                        <h4 id="until"  style="display: none!important;">@lang('للحفاظ على مستواك حتى نهاية اليوم ')</h4>
                         <h4 id="progressText3" class="progressTextcolor"></h4>
-                        <h4>@lang('يوم')</h4>
+                        <h4 id="hour">@lang('ساعة')</h4>
                     </div>
                     <div class="" id="startLevels" style="display: none!important;">
                         <h4>@lang('انت في المستوى الاول')</h4>
@@ -187,6 +188,18 @@
                         $('#startLevels').attr("style","display : none")
                         $('#notStartLevel').attr("style","visibility : visible")
                     }
+                    if (data['downgrade_level_day'] <= 0){
+                        $('#throw').attr("style","display : none")
+                        $('#until').attr("style","display : block");
+                        $('#progressText3').attr("style","display : none")
+                        $('#hour').attr("style","display : none")
+                    }else {
+
+                        $('#throw').attr("style","display : block")
+                        $('#until').attr("style","display : none");
+                        $('#progressText3').attr("style","display : block")
+                        $('#hour').attr("style","display : block")
+                    }
 
                 },
                 error: function (xhr, b, c) {
@@ -263,6 +276,18 @@
 
                         $('#startLevels').attr("style","display : none")
                         $('#notStartLevel').attr("style","visibility : visible")
+                    }
+                    if (data['downgrade_level_day'] <= 0){
+                        $('#throw').attr("style","display : none")
+                        $('#until').attr("style","display : block");
+                        $('#progressText3').attr("style","display : none")
+                        $('#hour').attr("style","display : none")
+                    }else {
+
+                        $('#throw').attr("style","display : block")
+                        $('#until').attr("style","display : none");
+                        $('#progressText3').attr("style","display : block")
+                        $('#hour').attr("style","display : block")
                     }
 
                 },

@@ -205,6 +205,9 @@
                 </table>
             </div>
         </div>
+        <div class="card-footer">
+            <h2>@lang('Total') : {{$user->order->sum('price')}}</h2>
+        </div>
     </div>
 
 

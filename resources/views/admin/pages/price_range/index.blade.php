@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('title')
-    @lang('Coupon Show')
+    @lang('Price Range Show')
 @endsection
 
 @section('content')
@@ -21,6 +21,7 @@
                         </th>
                         <th scope="col">@lang('Name')</th>
                         <th scope="col">@lang('Min Total Amount')</th>
+                        <th scope="col">@lang('Min Total Amount To Stay In Level')</th>
                         <th scope="col">@lang('Limit Days')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
@@ -47,9 +48,16 @@
                                 --
                                 @endif
                             </td>
+                            <td data-label="@lang('Min Total Amount To Stay In Level')">
+                                @if($range->min_total_amount_to_stay != 0)
+                                    @lang($range->min_total_amount_to_stay)
+                                @else
+                                    --
+                                @endif
+                            </td>
                             <td data-label="@lang('Limit Days')">
                                 @if($range->limit_days != 0)
-                                    @lang($range->limit_days) @lang('days')
+                                    @lang($range->limit_days) @lang('Hours')
                                 @else
                                     --
                                 @endif

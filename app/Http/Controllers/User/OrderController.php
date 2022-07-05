@@ -296,7 +296,7 @@ class OrderController extends Controller
             if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                 $commision = new AgentCommissionRate();
                 $rate = $service->agent_commission_rate;
-                $commision->user_id = $user->id;
+                $commision->user_id = $user->parent->id;
                 $commision->order_id = $order->id;
                 $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
                 $commision->save();
