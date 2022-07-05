@@ -188,7 +188,7 @@ class UsersController extends Controller
         $agent = null ;
         if ($user['is_approved'] == 0) {
             $is_approved = 1;
-            $user->user_id = 0;
+//            $user->user_id = 0;
             $msg = [
                 'status' => "Accepted",
             ];
