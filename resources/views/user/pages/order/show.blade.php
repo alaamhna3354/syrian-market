@@ -51,6 +51,8 @@
                                                     @if(@request()->status == 'canceled') selected @endif>@lang('Cancelled')</option>
                                             <option value="refunded"
                                                     @if(@request()->status == 'refunded') selected @endif>@lang('Refunded')</option>
+                                            <option value="code-waiting"
+                                                    @if(@request()->status == 'code-waiting') selected @endif>@lang('Waiting for Code')</option>
                                         </select>
                                     </div>
                                 </div>
@@ -130,7 +132,10 @@
                                             <a class="nav-link {{( $lastSegment == 'refunded') ? 'active' : '' }}"
                                                href="{{ route('user.order.status.search',['refunded']) }}">@lang('Refunded')</a>
                                         </li>
-
+                                        <li class="nav-item">
+                                            <a class="nav-link {{( $lastSegment == 'code-waiting') ? 'active' : '' }}"
+                                               href="{{ route('agent.order.status.search',['code-waiting']) }}">@lang('Wating For Code')</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -193,6 +198,8 @@
                                                 class="badge badge-pill badge-danger">{{trans('Canceled')}}</span>
                                             @elseif($order->status == 'refunded') <span
                                                 class="badge badge-pill badge-danger">{{trans('Refunded')}}</span>
+                                            @elseif($order->status == 'code-waiting') <span
+                                                    class="badge badge-pill badge-danger">{{trans('Waiting For Code')}}</span>
                                             @endif
 
                                         </td>
