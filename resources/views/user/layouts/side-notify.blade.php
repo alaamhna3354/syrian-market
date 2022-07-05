@@ -82,12 +82,13 @@
                 <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                    href="{{ route('user.transaction') }}">@lang('Transactions') </a>
             </li>
-
+            @if(auth()->user()->user_id == 0 || auth()->user()->user_id == null)
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-edit m-2"></i>
                 <a class="nav-link {{ Request::routeIs('registerAsAgent') ? 'active' : '' }}"
                    href="{{ route('registerAsAgent') }}">@lang('Sign up As Agent') </a>
             </li>
+            @endif
 
             {{--<li class="nav-item ">--}}
             {{--<a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"--}}
