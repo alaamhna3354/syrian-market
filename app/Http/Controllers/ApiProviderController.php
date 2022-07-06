@@ -383,7 +383,7 @@ class ApiProviderController extends Controller
         $headers[] = 'Accept: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
-//        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if (curl_errno($ch)) {
             echo 'Error:' . curl_error($ch);
         }
@@ -392,8 +392,9 @@ class ApiProviderController extends Controller
         if (isset($result['sms'][0])) {
             $code = $result['sms'][0]['code'];
             if (isset($code)) {
-                return   $this->finishOrder($id, $orderID);
+                   $this->finishOrder($id, $orderID);
             }
+            return $code;
         }
         else return '0';
     }

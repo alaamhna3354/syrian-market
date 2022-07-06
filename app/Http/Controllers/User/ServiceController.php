@@ -29,26 +29,27 @@ class ServiceController extends Controller
             $transactions = Transaction::where('user_id',$user->id)->orderBy('id','desc')->get();
             $commissions = AgentCommissionRate::whereMonth('created_at', date('m'))
                 ->whereYear('created_at', date('Y'))
+                ->where('user_id', $user->id)
                 ->get();
-            $children = $user->children;
-            $users_ids = [];
-            if (count($children) > 0){
-                foreach ($children as $key=>$child){
-                    $users_ids[$key] = $child->id;
-                }
-            }
+//            $children = $user->children;
+//            $users_ids = [];
+//            if (count($children) > 0){
+//                foreach ($children as $key=>$child){
+//                    $users_ids[$key] = $child->id;
+//                }
+//            }
             $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', date('Y'))
-                ->wherein('user_id', $users_ids)
+                ->where('user_id', $user->id)
                 ->paginate(config('basic.paginate'));
             $totalThis_month_commission_rate = 0;
             foreach ($totalCommissionsThisMonth as $key1 => $commissionThisMonth) {
-                $agent = $commissionThisMonth->user;
-                if ($agent->parent->id == $user->id) {
+//                $agent = $commissionThisMonth->user;
+//                if ($agent->parent->id == $user->id) {
                     $totalThis_month_commission_rate += $commissionThisMonth->commission_rate;
-                } else {
-                    $totalCommissionsThisMonth->forget($key1);
-                }
+//                } else {
+//                    $totalCommissionsThisMonth->forget($key1);
+//                }
             }
 //            dd($commissions);
             $commission_rate = 0;

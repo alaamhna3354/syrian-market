@@ -66,7 +66,7 @@ class CategoryController extends Controller
             try {
                 $cat->image = $this->uploadImage($request['image'], config('location.category.path'), config('location.category.size'));
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
 
@@ -86,7 +86,7 @@ class CategoryController extends Controller
 
 
         $cat->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 
@@ -136,7 +136,7 @@ class CategoryController extends Controller
                 $old = $cat->image;
                 $cat->image = $this->uploadImage($request->image, config('location.category.path'), config('location.category.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
 
@@ -154,7 +154,7 @@ class CategoryController extends Controller
         }
         $cat->type = $catData['type'];
         $cat->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 
@@ -178,7 +178,7 @@ class CategoryController extends Controller
             $re->status = 0;
             $re->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 
@@ -192,7 +192,7 @@ class CategoryController extends Controller
         }
         $cat->status = $status;
         $cat->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 
@@ -222,7 +222,7 @@ class CategoryController extends Controller
                     'status' => 1,
                 ]);
             }
-            session()->flash('success', 'User Active Updated Successfully!!');
+            session()->flash('success',trans('User Active Updated Successfully!!') );
             return response()->json(['success' => 1]);
         }
 
@@ -242,7 +242,7 @@ class CategoryController extends Controller
                     'status' => 0,
                 ]);
             }
-            session()->flash('success', 'User Active Updated Successfully!!');
+            session()->flash('success', trans('User Active Updated Successfully!!') );
             return response()->json(['success' => 1]);
         }
     }

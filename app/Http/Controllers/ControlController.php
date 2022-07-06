@@ -68,7 +68,7 @@ class ControlController extends Controller
 
         $configure->fill($reqData)->save();
 
-        session()->flash('success', ' Updated Successfully');
+        session()->flash('success',trans('Updated Successfully') );
 
         Artisan::call('optimize:clear');
         Artisan::call('view:clear');
@@ -107,7 +107,7 @@ class ControlController extends Controller
 
         $configure->fill($reqData)->save();
 
-        session()->flash('success', ' Updated Successfully');
+        session()->flash('success',trans('Updated Successfully'));
 
         Artisan::call('optimize:clear');
         Artisan::call('view:clear');
@@ -165,7 +165,7 @@ class ControlController extends Controller
 
         $configure->fill($reqData)->save();
 
-        session()->flash('success', ' Updated Successfully');
+        session()->flash('success', trans('Updated Successfully'));
 
         Artisan::call('optimize:clear');
         Artisan::call('view:clear');
@@ -204,7 +204,7 @@ class ControlController extends Controller
                 $old = 'logo.png';
                 $this->uploadImage($request->image, config('location.logo.path'), null, $old, null, $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Logo could not be uploaded.');
+                return back()->with('error',trans('Logo could not be uploaded.') );
             }
         }
         if ($request->hasFile('footer_image')) {
@@ -212,7 +212,7 @@ class ControlController extends Controller
                 $old = 'footer-logo.png';
                 $this->uploadImage($request->footer_image, config('location.logo.path'), null, $old, null, $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Footer logo could not be uploaded.');
+                return back()->with('error', trans('Footer logo could not be uploaded.'));
             }
         }
 
@@ -221,10 +221,10 @@ class ControlController extends Controller
                 $old = 'favicon.png';
                 $this->uploadImage($request->favicon, config('location.logo.path'), null, $old, null, $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'favicon could not be uploaded.');
+                return back()->with('error', trans('favicon could not be uploaded.'));
             }
         }
-        return back()->with('success', 'Logo has been updated.');
+        return back()->with('success', trans('Logo has been updated.'));
     }
 
 
@@ -240,10 +240,10 @@ class ControlController extends Controller
                 $old = 'banner.jpg';
                 $this->uploadImage($request->banner, config('location.logo.path'), null, $old, null, $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Banner could not be uploaded.');
+                return back()->with('error',trans('Banner could not be uploaded.') );
             }
         }
-        return back()->with('success', 'Banner has been updated.');
+        return back()->with('success', trans('Banner has been updated.'));
     }
 
 
@@ -271,7 +271,7 @@ class ControlController extends Controller
                 $meta_image = $this->uploadImage($request->meta_image, config('location.logo.path'), null, $old, null, $old);
                 config(['seo.meta_image' => $meta_image]);
             } catch (\Exception $exp) {
-                return back()->with('error', 'favicon could not be uploaded.');
+                return back()->with('error', trans('favicon could not be uploaded.'));
             }
         }
 
@@ -280,7 +280,7 @@ class ControlController extends Controller
         fclose($fp);
 
         Artisan::call('optimize:clear');
-        return back()->with('success', 'Favicon has been updated.');
+        return back()->with('success', trans('Favicon has been updated.'));
 
     }
     public function setExchangerate(Request $request)
@@ -297,6 +297,6 @@ class ControlController extends Controller
         fclose($fp);
         $configure->exchange_rate=$reqData['rate'];
         $configure->save();
-        return back()->with('success', 'Exchange Rate has been updated.');
+        return back()->with('success',trans('Exchange Rate has been updated.') );
     }
 }

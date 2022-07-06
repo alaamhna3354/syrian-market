@@ -204,7 +204,7 @@ class OrderController extends Controller
                 else {
                     $order->code = $codes['phone'];
                     $order->order_id_api = $codes['id'];
-                    $order->status = 5;
+                    $order->status = 'code-waiting';
                 }
             }
 
@@ -595,5 +595,4 @@ class OrderController extends Controller
 //        return back()->withNotify($notify);
 
     }
-
 }

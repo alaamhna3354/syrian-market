@@ -17,7 +17,7 @@ class Order extends Model
 
     public function agentCommissionRate()
     {
-        return $this->belongsTo(AgentCommissionRate::class,'order_id','id');
+        return $this->hasOne(AgentCommissionRate::class,'order_id');
     }
 
     public function users()
