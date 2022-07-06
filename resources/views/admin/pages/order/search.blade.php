@@ -70,6 +70,8 @@
                                     class="badge badge-pill badge-danger">{{'Canceled'}}</span>
                             @elseif($order->status == 'refunded') <span
                                     class="badge badge-pill badge-danger">{{'Refunded'}}</span>
+                            @elseif($order->status == 'code-waiting') <span
+                                    class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
                             @endif
                         </td>
 
