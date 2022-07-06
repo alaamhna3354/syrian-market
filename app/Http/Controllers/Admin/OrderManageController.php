@@ -92,7 +92,7 @@ class OrderManageController extends Controller
 
                 return $logs;
             }
-            session()->flash('success', 'Order has been updated');
+            session()->flash('success', trans('Order has been updated'));
             return response()->json(['success' => 1]);
         }
     }
@@ -100,7 +100,7 @@ class OrderManageController extends Controller
     public function awaitingMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -110,7 +110,7 @@ class OrderManageController extends Controller
                     'status' => 'awaiting',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -118,7 +118,7 @@ class OrderManageController extends Controller
     public function pendingMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -128,7 +128,7 @@ class OrderManageController extends Controller
                     'status' => 'pending',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -136,7 +136,7 @@ class OrderManageController extends Controller
     public function processingMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -146,7 +146,7 @@ class OrderManageController extends Controller
                     'status' => 'processing',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -154,7 +154,7 @@ class OrderManageController extends Controller
     public function inProgressMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -164,7 +164,7 @@ class OrderManageController extends Controller
                     'status' => 'progress',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -172,7 +172,7 @@ class OrderManageController extends Controller
     public function completedMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -182,7 +182,7 @@ class OrderManageController extends Controller
                     'status' => 'completed',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -190,7 +190,7 @@ class OrderManageController extends Controller
     public function partialMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -200,7 +200,7 @@ class OrderManageController extends Controller
                     'status' => 'partial',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -208,7 +208,7 @@ class OrderManageController extends Controller
     public function cancelledMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -218,7 +218,7 @@ class OrderManageController extends Controller
                     'status' => 'canceled',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }
@@ -226,7 +226,7 @@ class OrderManageController extends Controller
     public function refundedMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -236,7 +236,7 @@ class OrderManageController extends Controller
                     'status' => 'refunded',
                 ]);
             }
-            session()->flash('success', 'Updated Successfully!!');
+            session()->flash('success', trans('Updated Successfully!!'));
             return response()->json(['success' => 1]);
         }
     }

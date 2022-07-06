@@ -62,7 +62,7 @@ class NotifyController extends Controller
 
         Artisan::call('config:clear');
         Artisan::call('cache:clear');
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully.'));
 
     }
 
@@ -120,7 +120,7 @@ class NotifyController extends Controller
         $template->body = $templateData['body'];
         $template->save();
 
-        return back()->with('success', 'Update Successfully');
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
 

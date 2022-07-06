@@ -74,7 +74,7 @@ class LanguageController extends Controller
         $path = resource_path('lang/') . $json_file;
         File::put($path, $data);
 
-        return redirect()->route('admin.language.index')->with('success', 'Language Successfully Saved');
+        return redirect()->route('admin.language.index')->with('success', trans('Language Successfully Saved'));
     }
 
     public function edit(language $language)
@@ -113,7 +113,7 @@ class LanguageController extends Controller
         $json_file = strtolower($language->short_name) . '.json';
         $path = resource_path('lang/') . $json_file;
         File::put($path, $data);
-        return redirect(route('admin.language.index'))->with('success', 'Language Successfully Saved');
+        return redirect(route('admin.language.index'))->with('success', trans('Language Successfully Saved'));
     }
 
     public function delete(language $language)
@@ -130,7 +130,7 @@ class LanguageController extends Controller
         $language->delete();
 
 
-        return back()->with('success', 'Language Has been Deleted');
+        return back()->with('success', trans('Language Has been Deleted'));
     }
 
 
@@ -144,7 +144,7 @@ class LanguageController extends Controller
         $list_lang = Language::all();
 
         if (empty($json)) {
-            return back()->with('error', 'File Not Found.');
+            return back()->with('error', trans('File Not Found.'));
         }
         $json = json_decode($json);
 
@@ -157,10 +157,10 @@ class LanguageController extends Controller
         $lang = Language::findOrFail($id);
         $content = json_encode($request->keys);
         if ($content === 'null') {
-            return back()->with('error', 'At Least One Field Should Be Fill-up');
+            return back()->with('error', trans('At Least One Field Should Be Fill-up'));
         }
         file_put_contents(resource_path('lang/') . $lang->short_name . '.json', $content);
-        return back()->with('success', 'Update Successfully');
+        return back()->with('success', trans('Update Successfully'));
     }
 
     public function importJson(Request $request)
@@ -204,7 +204,7 @@ class LanguageController extends Controller
             file_put_contents(resource_path('lang/') . $lang->short_name . '.json', json_encode($result));
 
 
-            return back()->with('success',"`".trim($requestkey)."` has been added");
+            return back()->with('success',"`".trim($requestkey).trans("` has been added"));
         }
 
     }
@@ -227,7 +227,7 @@ class LanguageController extends Controller
         $jsonArray = json_decode($data, true);
         unset($jsonArray[$requestkey]);
         file_put_contents(resource_path('lang/'). $lang->short_name . '.json', json_encode($jsonArray));
-        return back()->with('success', "`".trim($request->key)."` has been removed");
+        return back()->with('success', "`".trim($request->key).trans("` has been removed"));
     }
     public function updateKey(Request $request, $id)
     {
@@ -248,6 +248,6 @@ class LanguageController extends Controller
         $jsonArray[$reqquestkey] = $requestValue;
         file_put_contents(resource_path('lang/'). $lang->short_name . '.json', json_encode($jsonArray));
 
-        return back()->with('success', "Update successfully");
+        return back()->with('success', trans("Update Successfully"));
     }
 }

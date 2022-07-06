@@ -38,7 +38,7 @@ class PaymentMethodController extends Controller
         }
         $data->save();
 
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully!!'));
     }
 
     public function edit($id)
@@ -80,7 +80,7 @@ class PaymentMethodController extends Controller
                 $old = $getGateway->image ?: null;
                 $image = $this->uploadImage($request->image, config('location.gateway.path'), config('location.gateway.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error',trans('Image could not be uploaded.') );
             }
         }
 
@@ -100,9 +100,9 @@ class PaymentMethodController extends Controller
             ]);
 
             if (!$res) {
-                throw new \Exception('Unexpected error! Please try again.');
+                throw new \Exception(trans('Unexpected error! Please try again.'));
             }
-            return back()->with('success', 'Gateway data has been updated.');
+            return back()->with('success', trans('Gateway data has been updated.'));
 
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());

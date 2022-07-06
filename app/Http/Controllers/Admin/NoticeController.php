@@ -41,7 +41,7 @@ class NoticeController extends Controller
         $notice->details = $purifyData['details'];
         $notice->save();
 
-        return back()->with('success', 'Notice has been saved');
+        return back()->with('success', trans('Notice has been saved'));
     }
     public function edit($id)
     {
@@ -71,7 +71,7 @@ class NoticeController extends Controller
         $notice->details = $purifyData['details'];
         $notice->update();
 
-        return back()->with('success', 'Notice has been updated');
+        return back()->with('success', trans('Notice has been updated'));
 
     }
 
@@ -79,6 +79,6 @@ class NoticeController extends Controller
     {
         $notice = Notice::findOrFail($id);
         $notice->delete();
-        return back()->with('success', 'Notice has been deleted');
+        return back()->with('success', trans('Notice has been deleted'));
     }
 }
