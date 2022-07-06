@@ -105,6 +105,7 @@
                                     @elseif($order->status == 'partial') {{'Partial'}}
                                     @elseif($order->status == 'canceled') {{'Canceled'}}
                                     @elseif($order->status == 'refunded') {{'Refunded'}}
+                                    @elseif($order->status == 'code-waiting') {{'Waiting for Code'}}
                                     @endif
                                 </option>
                                 <option value="awaiting">@lang('Awaiting')</option>

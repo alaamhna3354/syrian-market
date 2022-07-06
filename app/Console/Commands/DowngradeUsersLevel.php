@@ -46,6 +46,6 @@ class DowngradeUsersLevel extends Command
 
         $userController=New UsersController();
         $userController->changePriceRange();
-        return 'Task Successfully Finshed';
+        return 'Task Successfully Finished';
     }
 }

@@ -299,19 +299,19 @@ class FrontendController extends Controller
 
             $service = $order->service;
 
-            if (isset($service->api_provider_id)) {
-                $apiproviderdata = $service->provider;
-                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'status','order'=>$order->api_order_id])->post();
-
-                $apidata = json_decode($apiservicedata);
-                if (isset($apidata->order)) {
-                    $order->status_description = "order: {$apidata->order}";
-                    $order->api_order_id = $apidata->order;
-                } else {
-                    $order->status_description = "error: {$apidata->error}";
-                }
-                $order->save();
-            }
+//            if (isset($service->api_provider_id)) {
+//                $apiproviderdata = $service->provider;
+//                $apiservicedata = Curl::to($apiproviderdata['url'])->withData(['key' => $apiproviderdata['api_key'], 'action' => 'status','order'=>$order->api_order_id])->post();
+//
+//                $apidata = json_decode($apiservicedata);
+//                if (isset($apidata->order)) {
+//                    $order->status_description = "order: {$apidata->order}";
+//                    $order->api_order_id = $apidata->order;
+//                } else {
+//                    $order->status_description = "error: {$apidata->error}";
+//                }
+//                $order->save();
+//            }
         });
 
     }
