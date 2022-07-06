@@ -3228,3 +3228,51 @@ font-size: 20px;
         width: 75px;
     }
 }
+.top-social{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.top-social .download{
+    position: relative;
+}
+.top-social .download{
+    position: relative;
+}
+.top-social .download span{
+    position: absolute;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.671);
+    padding: 10px;
+    border-radius: 10px;
+    top: -60px;
+    width: 150px;
+    left: 0;
+    opacity: 0;
+    transition: .5s;
+    text-align: center;
+}
+.top-social .download i{
+ color: #ff5917;
+ cursor: pointer;
+ font-size: 30px;
+ transition: .3s;
+ animation: transBtn 5s linear infinite;
+}
+.top-social .download:hover span{
+    opacity: 1;
+   }
+.top-social .download:hover i{
+    scale: 1.2;
+   }
+   @keyframes transBtn {
+    0% {
+       transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+     }
+    100% {
+        transform: translateY(0);
+    }
+}

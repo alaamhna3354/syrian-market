@@ -4,17 +4,17 @@
     <div class="copyright-wrap">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6">
+                <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="copyright-text">
                         <p>Copyright © 2022 <a href="#">Syria Market</a> All Rights Reserved.</p>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 d-none d-md-block">
+                <div class="col-lg-4 col-md-6 d-none d-md-block">
                     <div class="payment-method-img text-right">
                         <img src="{{asset($themeTrue.'imgs/card_img.png')}}" alt="img">
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-lg-4 col-sm-6 col-md-6 top-social">
                     <div class="header-top-social">
                         <ul>
                             <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-twitter"></i></a></li>
@@ -22,6 +22,10 @@
                             <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-vimeo-v"></i></a></li>
                             <li><a style="display: grid;place-content: center;" href="#"><i class="fab fa-youtube"></i></a></li>
                         </ul>
+                    </div>
+                    <div class="download">
+                   <a href=""> <i class="fas fa-download"></i></a>
+                   <span>@lang('Download App')</span>
                     </div>
                 </div>
             </div>
@@ -158,4 +162,12 @@
         {{--</div>--}}
     {{--</div>--}}
 </footer>
+@push('js')
+    <script>
+    
+
+    </script>
+   
+@endpush
+
 <!-- /FOOTER -->
