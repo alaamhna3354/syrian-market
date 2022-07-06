@@ -134,7 +134,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link {{( $lastSegment == 'code-waiting') ? 'active' : '' }}"
-                                               href="{{ route('agent.order.status.search',['code-waiting']) }}">@lang('Wating For Code')</a>
+                                               href="{{ route('agent.order.status.search',['code-waiting']) }}">@lang('Waiting For Code')</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -152,7 +152,7 @@
                                     <th scope="col">@lang('Order AT')</th>
                                     <th scope="col">@lang('Codes')</th>
                                     <th scope="col">@lang('Verify')</th>
-                                    <th scope="col">@lang('Remains')</th>
+                                    {{--<th scope="col">@lang('Remains')</th>--}}
                                     <th scope="col">@lang('Status')</th>
                                     <th scope="col" >@lang('Note')</th>
                                 </tr>
@@ -180,7 +180,7 @@
                                                 @endif
                                             </span >
                                         </td>
-                                        <td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>
+                                        {{--<td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>--}}
                                         <td data-label="@lang('Status')">
                                             @if($order->status=='Awaiting') <span
                                                 class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
