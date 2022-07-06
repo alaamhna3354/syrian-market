@@ -80,6 +80,6 @@ class TemplateController extends Controller
             $templateMedia->save();
         }
 
-        return back()->with('success', 'Template Successfully Saved');
+        return back()->with('success', trans('Template Successfully Saved'));
     }
 }

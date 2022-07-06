@@ -36,7 +36,7 @@ class LoginController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }else{
             return redirect()->route('admin.login')
-                ->with('error','Email-Address And Password Are Wrong.');
+                ->with('error',trans('Email-Address And Password Are Wrong.'));
         }
 
 
@@ -51,7 +51,7 @@ class LoginController extends Controller
             if (Auth::guard('admin')->attempt([$this->username() => $request->username, 'password' => $request->password])) {
                 return $this->sendLoginResponse($request);
             } else {
-                return redirect()->route('admin.login')->with('error', 'Email-Address And Password Are Wrong.');
+                return redirect()->route('admin.login')->with('error', trans('Email-Address And Password Are Wrong.'));
             }
         }
         $this->incrementLoginAttempts($request);

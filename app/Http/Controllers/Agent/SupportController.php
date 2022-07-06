@@ -102,11 +102,11 @@ class SupportController extends Controller
                                 return $fail("Images MAX  2MB ALLOW!");
                             }
                             if (!in_array($ext, $allowedExtensions)) {
-                                return $fail("Only png, jpg, jpeg, pdf images are allowed");
+                                return $fail(trans("Only png, jpg, jpeg, pdf images are allowed"));
                             }
                         }
                         if (count($images) > 5) {
-                            return $fail("Maximum 5 images can be uploaded");
+                            return $fail(trans("Maximum 5 images can be uploaded"));
                         }
                     },
                 ],
@@ -128,7 +128,7 @@ class SupportController extends Controller
                     try {
                         $this->saveAttachment($message, $image, $path);
                     } catch (\Exception $exp) {
-                        return back()->with('error', 'Could not upload your ' . $image)->withInput();
+                        return back()->with('error', trans('Could not upload your ') . $image)->withInput();
                     }
                 }
             }
@@ -148,13 +148,13 @@ class SupportController extends Controller
 
 
 
-            return back()->with('success', 'Ticket has been replied');
+            return back()->with('success', trans('Ticket has been replied'));
         } elseif ($request->replayTicket == 2) {
             $ticket->status = 3;
             $ticket->last_reply = Carbon::now();
             $ticket->save();
 
-            return back()->with('success', 'Ticket has been closed');
+            return back()->with('success', trans('Ticket has been closed'));
         }
         return back();
     }
@@ -199,11 +199,11 @@ class SupportController extends Controller
                             return $fail("Images MAX  2MB ALLOW!");
                         }
                         if (!in_array($ext, $allowedExtension)) {
-                            return $fail("Only png, jpg, jpeg, pdf images are allowed");
+                            return $fail(trans("Only png, jpg, jpeg, pdf images are allowed"));
                         }
                     }
                     if (count($images) > 5) {
-                        return $fail("Maximum 5 images can be uploaded");
+                        return $fail(trans("Maximum 5 images can be uploaded"));
                     }
                 },
             ],

@@ -316,7 +316,7 @@ class OrderController extends Controller
 
 
         } else {
-            return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
+            return back()->with('error',trans("Order quantity should be minimum") . $service->min_amount.trans('and maximum').  $service->max_amount)->withInput();
         }
     }
 

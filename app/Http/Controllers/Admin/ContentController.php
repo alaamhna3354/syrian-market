@@ -190,13 +190,13 @@ class ContentController extends Controller
             $contentMedia->save();
         }
 
-        return back()->with('success', 'Content Details Successfully Saved');
+        return back()->with('success', trans("Content Details Successfully Saved."));
     }
 
     public function contentDelete($id)
     {
         $content = Content::findOrFail($id);
         $content->delete();
-        return back()->with('success', 'Content has been deleted');
+        return back()->with('success', trans('Content has been deleted'));
     }
 }

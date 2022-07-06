@@ -175,7 +175,7 @@ class DashboardController extends Controller
                 $old = $user->image ?: null;
                 $user->image = $this->uploadImage($request->image, config('location.admin.path'), config('location.admin.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
         $user->name = $request->name;
@@ -184,7 +184,7 @@ class DashboardController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->save();
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
 
@@ -205,12 +205,12 @@ class DashboardController extends Controller
         $request = (object)$req;
         $user = $this->user;
         if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('error', "Password didn't match");
+            return back()->with('error', trans("Password didn't match"));
         }
         $user->update([
             'password' => bcrypt($request->password)
         ]);
-        return back()->with('success', 'Password has been Changed');
+        return back()->with('success', trans('Password has been Changed'));
     }
 
     public function migrate(){
