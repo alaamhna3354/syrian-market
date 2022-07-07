@@ -217,71 +217,74 @@ class HomeController extends Controller
 //        if ($user->debt == 0) {
             if ($user->user_id != null && $user->user_id != 0) {
                 if ($user->is_debt == 1) {
-                    if ($user->debt_balance > 0) {
-                        $user->balance += $user->debt_balance;
-                        $user->is_debt = 0;
-                        $user->debt += $user->debt_balance;
-                        $user->save();
-                        if ($user->parent != null) {
-                            $user->parent->balance -= $user->debt_balance;
-                            $user->parent->save();
-                        }
+                    if($user->parent->balance>=$user->debt_balance) {
+                        if ($user->debt_balance > 0) {
+                            $user->balance += $user->debt_balance;
+                            $user->is_debt = 0;
+                            $user->debt += $user->debt_balance;
+                            $user->save();
+                            if ($user->parent != null) {
+                                $user->parent->balance -= $user->debt_balance;
+                                $user->parent->save();
+                            }
 
 
-                        $transactionForUser = new Transaction();
-                        $transactionForUser->user_id = $user->id;
-                        $transactionForUser->trx_type = '+';
-                        $transactionForUser->amount = $user->debt_balance;
-                        $transactionForUser->remarks = 'Charge Balance From reserve balance';
-                        $transactionForUser->trx_id = strRandom();
-                        $transactionForUser->charge = 0;
+                            $transactionForUser = new Transaction();
+                            $transactionForUser->user_id = $user->id;
+                            $transactionForUser->trx_type = '+';
+                            $transactionForUser->amount = $user->debt_balance;
+                            $transactionForUser->remarks = 'Charge Balance From reserve balance';
+                            $transactionForUser->trx_id = strRandom();
+                            $transactionForUser->charge = 0;
 
-                        $fund = new Fund();
-                        $fund->user_id = $user->id;
-                        $fund->gateway_id = null;
-                        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
-                        $fund->amount = $user->debt_balance;
-                        $fund->charge = 0;
-                        $fund->rate = 0;
-                        $fund->final_amount = $user->debt_balance;
-                        $fund->btc_amount = 0;
-                        $fund->btc_wallet = "";
-                        $fund->transaction = strRandom();
-                        $fund->try = 0;
-                        $fund->status = 1;
+                            $fund = new Fund();
+                            $fund->user_id = $user->id;
+                            $fund->gateway_id = null;
+                            $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+                            $fund->amount = $user->debt_balance;
+                            $fund->charge = 0;
+                            $fund->rate = 0;
+                            $fund->final_amount = $user->debt_balance;
+                            $fund->btc_amount = 0;
+                            $fund->btc_wallet = "";
+                            $fund->transaction = strRandom();
+                            $fund->try = 0;
+                            $fund->status = 1;
 
-                        $debt = new Debt();
-                        $debt->order_id = 0;
-                        $debt->user_id = $user->id;
-                        $debt->agent_id = $user->user_id;
-                        $debt->debt = $user->debt_balance;
-                        $debt->status = 1;
-                        $debt->despite = 0;
-                        $debt->save();
-                        $transactionForUser->save();
-                        $fund->save();
+                            $debt = new Debt();
+                            $debt->order_id = 0;
+                            $debt->user_id = $user->id;
+                            $debt->agent_id = $user->user_id;
+                            $debt->debt = $user->debt_balance;
+                            $debt->status = 1;
+                            $debt->despite = 0;
+                            $debt->save();
+                            $transactionForUser->save();
+                            $fund->save();
 
-                        $msg = [
-                            'amount' => $user->debt_balance,
-                            'currency' => $fund->gateway_currency,
-                            'main_balance' => $user->balance,
-                            'username' => $user->username
-                        ];
-                        $action = [
-                            "link" => '#',
-                            "icon" => "fa fa-money-bill-alt text-white"
-                        ];
-                        if ($user->parent != null) {
-                            $this->userPushNotification($user->parent, 'USE_SPARE_BALANCE', $msg, $action);
+                            $msg = [
+                                'amount' => $user->debt_balance,
+                                'currency' => $fund->gateway_currency,
+                                'main_balance' => $user->balance,
+                                'username' => $user->username
+                            ];
+                            $action = [
+                                "link" => '#',
+                                "icon" => "fa fa-money-bill-alt text-white"
+                            ];
+                            if ($user->parent != null) {
+                                $this->userPushNotification($user->parent, 'USE_SPARE_BALANCE', $msg, $action);
+                            } else {
+                                $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
+                            }
+
+
                         } else {
-                            $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
+                            return back()->with('error', 'sorry You do not have a reserve balance');
                         }
-
-
-                    } else {
-                        return back()->with('error', 'sorry You do not have a reserve balance');
                     }
-
+                    else
+                        return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
                 } else {
                     return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
                 }
