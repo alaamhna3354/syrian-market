@@ -443,37 +443,44 @@ class HomeController extends Controller
 //            return back()->withErrors($validator)->withInput();
 //        }
         if ($user->balance >= config('basic.min_balance')) {
-            $user->is_agent = 1;
-            $user->is_approved = 0;
-            if ($user->save()) {
-                $agent = new Agent();
-                $agent->fullname = $req['fullname'];
-                $agent->whatsapp = $req['whatsapp'];
-                $agent->email = $req['email'];
-                $agent->company_name = $req['company_name'];
-                $agent->company_address = $req['company_address'];
-                $agent->country = $req['country'];
-                $agent->region = $req['region'];
-                $agent->expected_purchasing_power = $req['expected_purchasing_power'];
-                $agent->note = $req['note'];
-                $agent->status = 1;
-                $agent->user_id = $user->id;
-                if ($agent->save()) {
-                    $msg = [
-                        'username' => $user->username,
-                    ];
-                    $action = [
-                        "link" => route('admin.user-edit', $user->id),
-                        "icon" => "fas fa-user text-white"
-                    ];
+            if ($user->debt == 0){
+                $user->is_agent = 1;
+                $user->is_approved = 0;
+                if ($user->save()) {
+                    $agent = new Agent();
+                    $agent->fullname = $req['fullname'];
+                    $agent->whatsapp = $req['whatsapp'];
+                    $agent->email = $req['email'];
+                    $agent->company_name = $req['company_name'];
+                    $agent->company_address = $req['company_address'];
+                    $agent->country = $req['country'];
+                    $agent->region = $req['region'];
+                    $agent->expected_purchasing_power = $req['expected_purchasing_power'];
+                    $agent->note = $req['note'];
+                    $agent->status = 1;
+                    $agent->user_id = $user->id;
+                    if ($agent->save()) {
+                        $msg = [
+                            'username' => $user->username,
+                        ];
+                        $action = [
+                            "link" => route('admin.user-edit', $user->id),
+                            "icon" => "fas fa-user text-white"
+                        ];
 
-                    $this->adminPushNotification('AGENT_REQUEST', $msg, $action);
+                        $this->adminPushNotification('AGENT_REQUEST', $msg, $action);
+                    } else {
+                        return back()->with('error', trans('Please Try Again Later'))->withInput();
+                    }
                 } else {
                     return back()->with('error', trans('Please Try Again Later'))->withInput();
                 }
-            } else {
-                return back()->with('error', trans('Please Try Again Later'))->withInput();
             }
+            else{
+                return back()->with('error', trans('You must pay off all your debts first'))->withInput();
+            }
+
+
         } else {
             return back()->with('error', trans('Your balance must be at least') .config('basic.min_balance').'$')->withInput();
         }

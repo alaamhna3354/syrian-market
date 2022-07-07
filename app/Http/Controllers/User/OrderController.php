@@ -146,9 +146,9 @@ class OrderController extends Controller
 
         $user = Auth::user();
         if ($user != null) {
-            if (!($service->price != null && $service->price !=0)){
+            if (!($service->price != null && $service->price != 0)) {
                 $user_range = $user->priceRange;
-                $range = $service->service_price_ranges()->where('price_range_id',$user_range->id)->first();
+                $range = $service->service_price_ranges()->where('price_range_id', $user_range->id)->first();
                 $service->price = $range->price;
                 $service->agent_commission_rate = $range->agent_commission_rate;
 
@@ -169,8 +169,8 @@ class OrderController extends Controller
 
             $user = Auth::user();
             if ($user->balance < $price) {
-            dd($user->balance);
-                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                dd($user->balance);
+                return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
 
 
             }
@@ -211,34 +211,40 @@ class OrderController extends Controller
             $order->save();
 
 ////////////////////////            change Price Range     /////////////////////////////
-            if ($user->is_const_price_range == 0){
-                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+            if ($user->is_const_price_range == 0) {
+                $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 //                dd($lastUserPriceRange);
-                if ($lastUserPriceRange != null){
+                if ($lastUserPriceRange != null) {
                     $lastUserPriceRange->total += $price;
                     $lastUserPriceRange->save();
-                }else{
+                } else {
                     $total = $price;
                     $userPriceRange = new UserPriceRange();
                     $userPriceRange->user_id = $user->id;
                     $userPriceRange->price_range_id = $user->price_range_id;
-                    $userPriceRange->price_range_type =  '+';
-                    $userPriceRange->total =  $total;
+                    $userPriceRange->price_range_type = '+';
+                    $userPriceRange->total = $total;
                     $userPriceRange->save();
                 }
-                $lastUserPriceRange = UserPriceRange::where('user_id',$user->id)->orderBy('id','desc')->first();
+                $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
                 $current_user_price_range = $user->priceRange;
-                $nextPriceRange = PriceRange::find($current_user_price_range->id+1);
-                if ($nextPriceRange != null){
-                    if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount){
+                $nextPriceRange = PriceRange::find($current_user_price_range->id + 1);
+                if ($nextPriceRange != null) {
+                    if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount) {
                         $userPriceRange = new UserPriceRange();
                         $userPriceRange->user_id = $user->id;
                         $userPriceRange->price_range_id = $user->price_range_id;
-                        $userPriceRange->price_range_type =  '+';
-                        $userPriceRange->total =  0;
+                        $userPriceRange->price_range_type = '+';
+                        $userPriceRange->total = 0;
                         $userPriceRange->save();
                         $user->price_range_id = $nextPriceRange->id;
                         $user->save();
+
+                        $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                            'thisLevel' => $nextPriceRange->name,
+                            'lastLevel' => $current_user_price_range->name,
+
+                        ]);
                         $msg = [
                             'username' => $user->username,
                             'level' => $nextPriceRange->name,
@@ -249,7 +255,8 @@ class OrderController extends Controller
                             "icon" => "fas fa-plus text-white"
                         ];
                         $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user,'CHANGE_LEVEL', $msg, $action);
+                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+
 
                     }
                 }
@@ -283,7 +290,7 @@ class OrderController extends Controller
 //
 //            }
             $user->balance -= $price;
-                $user->save();
+            $user->save();
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
             $transaction->trx_type = '-';
@@ -341,11 +348,10 @@ class OrderController extends Controller
                     $serviceCode->is_used = 1;
                     $serviceCode->user_id = $user->id;
                     $serviceCode->save();
-                    if ($user->is_agent == 1 && $user->is_approved == 1){
-                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
-                    }
-                    else{
-                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted')) ;
+                    if ($user->is_agent == 1 && $user->is_approved == 1) {
+                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                    } else {
+                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                     }
 
 //                    return back()->with('success', trans('Your order has been submitted'));
@@ -363,10 +369,9 @@ class OrderController extends Controller
 //                    'your-code' => $order->code,
 //
 //                ]);
-                if ($user->is_agent == 1 && $user->is_approved == 1){
-                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
-                }
-                else{
+                if ($user->is_agent == 1 && $user->is_approved == 1) {
+                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                } else {
                     return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
 //                return back()->with('success', trans('Your order has been submitted'));
@@ -382,10 +387,9 @@ class OrderController extends Controller
 //                    'currency' => $basic->currency,
 //                    'transaction' => $transaction->trx_id,
 //                ]);
-                if ($user->is_agent == 1 && $user->is_approved == 1){
-                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted')) ;
-                }
-                else{
+                if ($user->is_agent == 1 && $user->is_approved == 1) {
+                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                } else {
                     return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
 //                return back()->with('success', trans('Your order has been submitted'));

@@ -231,7 +231,8 @@
                                     <div class="col-sm-6">
                                         <div class="form-group ">
                                             <label>@lang('Agent')</label>
-
+                                            <span
+                                                class="badge badge-{{($user->debt <= 0) ? 'success' :'danger'}} success badge-pill">{{($user->debt <= 0) ? trans('There is no debt') : trans('There is a debt between this user and the agent')}}</span>
                                             <select name="agent_id" class="form-control">
                                                 <option value="0" >@lang('Select Agent')</option>
                                                 @foreach($agents as $agent)
