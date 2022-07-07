@@ -67,6 +67,7 @@ class UsersController extends Controller
     {
         $users = User::where('is_const_price_range', 0)->where('price_range_id','>',1)->get();
         foreach ($users as $user) {
+            $current_user_price_range = $user->priceRange;
 //            if ($user->id == 15){
             $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 
@@ -92,6 +93,13 @@ class UsersController extends Controller
                             $userPriceRange->total = 0;
                             $userPriceRange->save();
                             $nextPriceRange = $user->priceRange;
+
+
+                            $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                                'thisLevel' => $nextPriceRange->name,
+                                'lastLevel' => $current_user_price_range->name,
+
+                            ]);
                             $msg = [
                                 'username' => $user->username,
                                 'level' => $nextPriceRange->name,
@@ -125,6 +133,11 @@ class UsersController extends Controller
                             $userPriceRange->total = 0;
                             $userPriceRange->save();
                             $nextPriceRange = PriceRange::findOrFail($user->price_range_id);
+                            $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                                'thisLevel' => $nextPriceRange->name,
+                                'lastLevel' => $current_user_price_range->name,
+
+                            ]);
                             $msg = [
                                 'username' => $user->username,
                                 'level' => $nextPriceRange->name,
