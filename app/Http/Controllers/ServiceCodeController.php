@@ -125,6 +125,7 @@ class ServiceCodeController extends Controller
     public function storeMulti(Request $request)
     {
 
+
         $req = Purify::clean($request->all());
         $rules = [
             'code' => 'required',
@@ -134,8 +135,8 @@ class ServiceCodeController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-        $codes = explode("\r\n", $req['code']);
-
+        $codes = explode("\n", $req['code']);
+//        dd($req['code']);
         foreach ($codes as $code) {
 
             $service_code = new ServiceCode();
