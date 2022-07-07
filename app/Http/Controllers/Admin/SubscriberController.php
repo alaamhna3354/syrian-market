@@ -31,7 +31,7 @@ class SubscriberController extends Controller
         $subscriber = Subscriber::findOrFail($request->subscriber);
         $subscriber->delete();
 
-        return back()->with('success', 'Subscriber has been removed');
+        return back()->with('success', trans('Subscriber has been removed'));
     }
 
 
@@ -59,7 +59,7 @@ class SubscriberController extends Controller
         $email_body = json_decode($basic->email_description);
 
 
-        if (!Subscriber::first()) return back()->withInput()->with('error','No subscribers to send email.');
+        if (!Subscriber::first()) return back()->withInput()->with('error',trans('No subscribers to send email.'));
 
         $subscribers = Subscriber::all();
         foreach ($subscribers as $subscriber) {
@@ -68,6 +68,6 @@ class SubscriberController extends Controller
             $message = str_replace("[[message]]", $requestMessage, $message);
             Mail::to($subscriber->email)->send(new SendMail($email_from, $subject, $message));
         }
-        return back()->with('success', 'Email has been sent to subscribers.');
+        return back()->with('success', trans('Email has been sent to subscribers.'));
     }
 }

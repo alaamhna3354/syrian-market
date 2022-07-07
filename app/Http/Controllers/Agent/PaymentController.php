@@ -60,10 +60,10 @@ class PaymentController extends Controller
         $track = session()->get('track');
         $order = Fund::where('transaction', $track)->orderBy('id', 'DESC')->with(['gateway','user'])->first();
         if (is_null($order)) {
-            return redirect()->route('user.addFund')->with('error', 'Invalid Fund Request');
+            return redirect()->route('user.addFund')->with('error', trans('Invalid Fund Request'));
         }
         if ($order->status != 0) {
-            return redirect()->route('user.addFund')->with('error', 'Invalid Fund Request');
+            return redirect()->route('user.addFund')->with('error', trans('Invalid Fund Request'));
         }
         $method = $order->gateway->code;
         try {
@@ -91,10 +91,10 @@ class PaymentController extends Controller
 
         try {
             $gateway = Gateway::where('code', $code)->first();
-            if (!$gateway) throw new \Exception('Invalid Payment Gateway.');
+            if (!$gateway) throw new \Exception(trans('Invalid Payment Gateway.'));
             if (isset($trx)) {
                 $order = Fund::where('transaction', $trx)->orderBy('id','desc')->first();
-                if (!$order) throw new \Exception( 'Invalid Payment Request.');
+                if (!$order) throw new \Exception( trans('Invalid Payment Request.'));
             }
             $getwayObj = 'App\\Services\\Gateway\\' . $code . '\\Payment';
             $data = $getwayObj::ipn($request, $gateway, $order, $trx, $type);

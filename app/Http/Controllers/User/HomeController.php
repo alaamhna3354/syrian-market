@@ -90,12 +90,12 @@ class HomeController extends Controller
                 return back()->withInput();
             }
             if (!$receiveCountry->facilities) {
-                session()->flash('error', 'Receiver Country Service Not Available');
+                session()->flash('error',trans('Receiver Country Service Not Available') );
                 return back()->withInput();
             }
             $receiveCountryFacilities = collect($receiveCountry->facilities)->where('id', $request->country_service)->first();
             if (!$receiveCountryFacilities) {
-                session()->flash('error', 'Receiver Country Service Not Available');
+                session()->flash('error', trans('Receiver Country Service Not Available'));
                 return back()->withInput();
             }
 
@@ -108,7 +108,7 @@ class HomeController extends Controller
             ])->first();
 
             if (!$provider) {
-                session()->flash('error', 'Provider must be required');
+                session()->flash('error', trans('Provider must be required'));
                 return back()->withInput();
             }
         }
@@ -167,7 +167,7 @@ class HomeController extends Controller
             abort(401);
         }
         if ($sendMoney->status != '0') {
-            session()->flash('error', 'You are not eligible to change request.');
+            session()->flash('error',  trans('You are not eligible to change request.'));
             return redirect()->route('user.transfer-log');
         }
 
@@ -187,7 +187,7 @@ class HomeController extends Controller
         }
 
         if ($sendMoney->status != '0') {
-            session()->flash('error', 'You are not eligible to change request.');
+            session()->flash('error', trans('You are not eligible to change request.'));
             return redirect()->route('user.transfer-log');
         }
 
@@ -251,7 +251,7 @@ class HomeController extends Controller
                                         'type' => $inVal->type,
                                     ];
                                 } catch (\Exception $exp) {
-                                    session()->flash('error', 'Could not upload your ' . $inKey);
+                                    session()->flash('error',trans('Could not upload your ' ) . $inKey);
                                     return back()->withInput();
                                 }
                             }
@@ -379,7 +379,7 @@ class HomeController extends Controller
             $pdf = PDF::loadView($this->theme .'layouts.invoice', $data);
             return $pdf->stream('invoice.pdf');
         }else if ($sendMoney->status == '0') {
-            session()->flash('error', 'You are not eligible to action this request.');
+            session()->flash('error',trans('You are not eligible to action this request.' ) );
             return redirect()->route('user.transfer-log');
         }
         abort(404);
@@ -477,17 +477,17 @@ class HomeController extends Controller
         }
          $sendMoney = SendMoney::latest()->where(['invoice' => $invoice, 'status' => 2])->with(['sendCurrency:id,name,rate'])->first();
         if (!$sendMoney) {
-            return redirect()->route('user.transfer-log')->with('error', 'Invalid Payment Request');
+            return redirect()->route('user.transfer-log')->with('error',trans('Invalid Payment Request' ) );
         }
 
         if ($sendMoney->payment_status == 1) {
-            return redirect()->route('user.transfer-log')->with('success', 'Payment has been completed');
+            return redirect()->route('user.transfer-log')->with('success',trans('Payment has been completed' ) );
         }
         if ($sendMoney->payment_status == 3) {
-            return redirect()->route('user.transfer-log')->with('error', 'Payment has been rejected');
+            return redirect()->route('user.transfer-log')->with('error', trans('Payment has been rejected'));
         }
         if ($sendMoney->payment_status == 3) {
-            return redirect()->route('user.transfer-log')->with('warning', 'Wait for payment approval by admin');
+            return redirect()->route('user.transfer-log')->with('warning', trans('Wait for payment approval by admin'));
         }
 
 
@@ -517,10 +517,10 @@ class HomeController extends Controller
                 function ($fail) use ($image, $allowedExtensions) {
                     $ext = strtolower($image->extension());
                     if (!in_array($ext, $allowedExtensions)) {
-                        return $fail("Only png, jpg, jpeg images are allowed");
+                        return $fail(trans("Only png, jpg, jpeg images are allowed"));
                     } else {
                         if (($image->getSize() / 1000000) > 2) {
-                            return $fail("Images MAX  2MB ALLOW!");
+                            return $fail(trans("Images MAX  2MB ALLOW!"));
                         }
                     }
 
@@ -533,11 +533,11 @@ class HomeController extends Controller
             try {
                 $user->image = $this->uploadImage($image, $path);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Could not upload your ' . $image)->withInput();
+                return back()->with('error',trans('Could not upload your ')  . $image)->withInput();
             }
         }
         $user->save();
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully.') );
     }
 
     public function updateInformation(Request $request)
@@ -572,7 +572,7 @@ class HomeController extends Controller
         $user->username = $req['username'];
         $user->address = $req['address'];
         $user->save();
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success',trans('Updated Successfully.') );
     }
 
     public function updatePassword(Request $request)
@@ -593,9 +593,9 @@ class HomeController extends Controller
             if (Hash::check($request->current_password, $user->password)) {
                 $user->password = bcrypt($request->password);
                 $user->save();
-                return back()->with('success', 'Password Changes successfully.');
+                return back()->with('success', trans('Password Changes successfully.'));
             } else {
-                throw new \Exception('Current password did not match');
+                throw new \Exception(trans('Current password did not match'));
             }
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -640,9 +640,9 @@ class HomeController extends Controller
                 'browser' => $browser->browserName() . ', ' . $browser->platformName(),
                 'time' => date('d M, Y h:i:s A'),
             ]);
-            return back()->with('success', 'Two Factor has been enabled.');
+            return back()->with('success', trans('Two Factor has been enabled.'));
         } else {
-            return back()->with('error', 'Wrong Verification Code.');
+            return back()->with('error',trans('Wrong Verification Code.') );
         }
 
     }
@@ -672,9 +672,9 @@ class HomeController extends Controller
                 'time' => date('d M, Y h:i:s A'),
             ]);
 
-            return back()->with('success', 'Two Factor has been disabled.');
+            return back()->with('success',trans('Two Factor has been disabled.') );
         } else {
-            return back()->with('error', 'Wrong Verification Code.');
+            return back()->with('error',trans( 'Wrong Verification Code.'));
         }
     }
 

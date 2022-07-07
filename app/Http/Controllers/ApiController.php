@@ -34,7 +34,7 @@ class ApiController extends Controller
         }
         $actionList = ['balance', 'services', 'add', 'status', 'orders'];
         if (!in_array($req['action'], $actionList)) {
-            return response()->json(['errors' => ['action' => "Invalid request action"]], 422);
+            return response()->json(['errors' => ['action' => trans( "Invalid request action")]], 422);
         }
 
         $user = User::where('api_token', $req['key'])->first(['id', 'api_token', 'status', 'balance']);
@@ -42,7 +42,7 @@ class ApiController extends Controller
             return response()->json(['errors' => ['key' => "Invalid Key"]], 422);
         }
         if ($user->status == 0) {
-            return response()->json(['errors' => ['message' => "This credential is no longer"]], 422);
+            return response()->json(['errors' => ['message' => trans( "This credential is no longer")]], 422);
         }
 
 
@@ -79,7 +79,7 @@ class ApiController extends Controller
             }
             $service = Service::where('id', $req['service'])->where('service_status', 1)->first();
             if (!$service) {
-                return response()->json(['errors' => ['message' => "Invalid Service"]], 422);
+                return response()->json(['errors' => ['message' => trans( "Invalid Service")]], 422);
             }
             $quantity = $req['quantity'];
             if ($service->drip_feed == 1) {
@@ -95,7 +95,7 @@ class ApiController extends Controller
                 $price = round(($quantity * $service->price) / 1000, 2);
 
                 if ($user->balance < $price) {
-                    return response()->json(['errors' => ['message' => "Insufficient balance."]], 422);
+                    return response()->json(['errors' => ['message' => trans( "Insufficient balance.")]], 422);
                 }
 
                 $order = new Order();
@@ -152,7 +152,7 @@ class ApiController extends Controller
                 return response()->json($result, 200);
 
             } else {
-                return response()->json(['errors' => ['message' => "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}"]], 422);
+                return response()->json(['errors' => ['message' => trans( "Order quantity should be minimum"). $service->min_amount.trans('and maximum').  $service->max_amount]], 422);
             }
 
         } elseif (strtolower($req['action']) == 'status') {
@@ -166,7 +166,7 @@ class ApiController extends Controller
 
             $order = Order::where('id', $req['order'])->where('user_id', $user->id)->first();
             if (!$order) {
-                return response()->json(['errors' => ['message' => "Invalid Order"]], 422);
+                return response()->json(['errors' => ['message' => trans("Invalid Order")]], 422);
             }
 
 

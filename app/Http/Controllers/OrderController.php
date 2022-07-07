@@ -138,6 +138,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order, $id)
     {
+//        dd($request);
         $req = Purify::clean($request->all());
         $order = Order::with('users')->find($id);
         $order->start_counter = $req['start_counter'] == '' ? null : $req['start_counter'];
@@ -145,6 +146,46 @@ class OrderController extends Controller
         $order->link = $req['link'];
         $order->remains = $req['remains'] == '' ? null : $req['remains'];
         if ($request->status) {
+//            $order->status = $req['status'];
+            if($req['status']=='refunded') {
+                if ($order->status != 'refunded') {
+                    $user = $order->users;
+                    $user->balance += $order->price;
+                    $transaction1 = new Transaction();
+                    $transaction1->user_id = $user->id;
+                    $transaction1->trx_type = '+';
+                    $transaction1->amount = $order->price;
+                    $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
+                    $transaction1->trx_id = strRandom();
+                    $transaction1->charge = 0;
+
+                    if ($order->agentCommissionRate != null){
+                        $agentCommissionRate = $order->agentCommissionRate;
+                        if ($agentCommissionRate->is_paid == 1){
+                            $agent = $user->parent;
+                            $agent->balance -= $agentCommissionRate->commission_rate;
+                            if ($agent->save()){
+                                $transaction = new Transaction();
+                                $transaction->user_id = $agent->id;
+                                $transaction->trx_type = '-';
+                                $transaction->amount = $agentCommissionRate->commission_rate;
+                                $transaction->remarks = 'استرجاع الارباح من الوكيل بعد تحويل حالة الطلب الى مسترجع';
+                                $transaction->trx_id = strRandom();
+                                $transaction->charge = 0;
+                                $transaction->save();
+                            }
+
+                        }
+
+//                    dd($agentCommissionRate);
+                        $agentCommissionRate->delete();
+                    }
+                    if ($user->save()){
+                        $transaction1->save();
+                    }
+
+                }
+            }
             $order->status = $req['status'];
         }
         $order->reason = $req['reason'];
@@ -183,7 +224,39 @@ class OrderController extends Controller
             if ($order->status != 'refunded') {
                 $user = $order->users;
                 $user->balance += $order->price;
-                $user->save();
+                $transaction1 = new Transaction();
+                $transaction1->user_id = $user->id;
+                $transaction1->trx_type = '+';
+                $transaction1->amount = $order->price;
+                $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
+                $transaction1->trx_id = strRandom();
+                $transaction1->charge = 0;
+
+                if ($order->agentCommissionRate != null){
+                    $agentCommissionRate = $order->agentCommissionRate;
+                    if ($agentCommissionRate->is_paid == 1){
+                        $agent = $user->parent;
+                        $agent->balance -= $agentCommissionRate->commission_rate;
+                        if ($agent->save()){
+                            $transaction = new Transaction();
+                            $transaction->user_id = $agent->id;
+                            $transaction->trx_type = '-';
+                            $transaction->amount = $agentCommissionRate->commission_rate;
+                            $transaction->remarks = 'استرجاع الارباح من الوكيل بعد تحويل حالة الطلب الى مسترجع';
+                            $transaction->trx_id = strRandom();
+                            $transaction->charge = 0;
+                            $transaction->save();
+                        }
+
+                    }
+
+//                    dd($agentCommissionRate);
+                    $agentCommissionRate->delete();
+                }
+                if ($user->save()){
+                    $transaction1->save();
+                }
+
             }
         }
         $order->status = $req['statusChange'];

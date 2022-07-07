@@ -67,6 +67,7 @@ class UsersController extends Controller
     {
         $users = User::where('is_const_price_range', 0)->where('price_range_id','>',1)->get();
         foreach ($users as $user) {
+            $current_user_price_range = $user->priceRange;
 //            if ($user->id == 15){
             $lastUserPriceRangeChange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 
@@ -92,6 +93,13 @@ class UsersController extends Controller
                             $userPriceRange->total = 0;
                             $userPriceRange->save();
                             $nextPriceRange = $user->priceRange;
+
+
+                            $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                                'thisLevel' => $nextPriceRange->name,
+                                'lastLevel' => $current_user_price_range->name,
+
+                            ]);
                             $msg = [
                                 'username' => $user->username,
                                 'level' => $nextPriceRange->name,
@@ -125,6 +133,11 @@ class UsersController extends Controller
                             $userPriceRange->total = 0;
                             $userPriceRange->save();
                             $nextPriceRange = PriceRange::findOrFail($user->price_range_id);
+                            $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                                'thisLevel' => $nextPriceRange->name,
+                                'lastLevel' => $current_user_price_range->name,
+
+                            ]);
                             $msg = [
                                 'username' => $user->username,
                                 'level' => $nextPriceRange->name,
@@ -220,7 +233,7 @@ class UsersController extends Controller
         $this->userPushNotification($user, 'APPROVE_AGENT', $msg, $action);
 
 
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     public function transaction($id)
@@ -334,7 +347,7 @@ class UsersController extends Controller
             ->paginate(config('basic.paginate'));
         $commission_rate = 0;
         if (count($commissions) == 0) {
-            return back()->with('error', 'All Earnings of last month was been transfer before');
+            return back()->with('error', trans('All Earnings of last month was been transfer before'));
         }
         foreach ($commissions as $key => $commission) {
 //            $agent = $commission->user;
@@ -375,9 +388,9 @@ class UsersController extends Controller
             foreach ($commissions as $commission) {
                 $commission->save();
             }
-            return back()->with('success', 'Successfully Added Earnings to Agent Balance');
+            return back()->with('success', trans('Successfully Added Earnings to Agent Balance'));
         } else {
-            return back()->with('error', 'Try Again Later there was an error now');
+            return back()->with('error', trans('Try Again Later there was an error now') );
         }
 //        dd($commission_rate);
 //        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
@@ -403,7 +416,7 @@ class UsersController extends Controller
             ->get();
         $commission_rate = 0;
         if (count($commissions) == 0) {
-            return back()->with('error', 'All Earnings of last month was been transfer before');
+            return back()->with('error', trans('All Earnings of this month was been transfer before'));
         }
         foreach ($commissions as $key => $commission) {
 //            $agent = $commission->user;
@@ -444,9 +457,9 @@ class UsersController extends Controller
             foreach ($commissions as $commission) {
                 $commission->save();
             }
-            return back()->with('success', 'Successfully Added Earnings to Agent Balance');
+            return back()->with('success',trans('Successfully Added Earnings to Agent Balance') );
         } else {
-            return back()->with('error', 'Try Again Later there was an error now');
+            return back()->with('error',trans('Try Again Later there was an error now') );
         }
 //        dd($commission_rate);
 //        return view('admin.pages.users.transfer', compact('user', 'userid', 'commissions','commission_rate'));
@@ -495,13 +508,13 @@ class UsersController extends Controller
     {
 
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User.');
+            session()->flash('error', trans('You did not select User.'));
             return response()->json(['error' => 1]);
         } else {
             User::whereIn('id', $request->strIds)->update([
                 'status' => 1,
             ]);
-            session()->flash('success', 'User Status Has Been Active');
+            session()->flash('success', trans('User Status Has Been Active'));
             return response()->json(['success' => 1]);
         }
     }
@@ -511,14 +524,14 @@ class UsersController extends Controller
     {
 
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User.');
+            session()->flash('error', trans('You do not select User.'));
             return response()->json(['error' => 1]);
         } else {
             User::whereIn('id', $request->strIds)->update([
                 'status' => 0,
             ]);
 
-            session()->flash('success', 'User Status Has Been Deactive');
+            session()->flash('success',  trans('User Status Has Been Deactive'));
             return response()->json(['success' => 1]);
 
         }
@@ -589,7 +602,7 @@ class UsersController extends Controller
                 $old = $user->image ?: null;
                 $user->image = $this->uploadImage($request->image, config('location.user.path'), config('location.user.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
 
@@ -640,7 +653,7 @@ class UsersController extends Controller
         }
         $user->save();
 
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
     public function passwordUpdate(Request $request, $id)
@@ -656,7 +669,7 @@ class UsersController extends Controller
         $this->sendMailSms($user, 'PASSWORD_CHANGED', [
             'password' => $request->password
         ]);
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success',trans('Updated Successfully.') );
     }
 
 
@@ -664,7 +677,7 @@ class UsersController extends Controller
     {
         $userData = Purify::clean($request->all());
         if ($userData['balance'] == null) {
-            return back()->with('error', 'Balance Value Empty!');
+            return back()->with('error',trans('Balance Value Empty!') );
         } else {
             $control = (object)config('basic');
             $user = User::findOrFail($id);
@@ -716,12 +729,12 @@ class UsersController extends Controller
                     'transaction' => $transaction->trx_id
                 ]);
 
-                return back()->with('success', 'Balance Add Successfully.');
+                return back()->with('success', trans('Balance Add Successfully.'));
 
             } else {
 
                 if ($userData['balance'] > $user->balance) {
-                    return back()->with('error', 'Insufficient Balance to deducted.');
+                    return back()->with('error', trans('Insufficient Balance to deducted.'));
                 }
                 $user->balance -= $userData['balance'];
                 $user->save();
@@ -759,7 +772,7 @@ class UsersController extends Controller
                 ]);
 
 
-                return back()->with('success', 'Balance deducted Successfully.');
+                return back()->with('success', trans('Balance deducted Successfully.'));
             }
         }
 
@@ -841,17 +854,17 @@ class UsersController extends Controller
                         "link" => "#"
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
-                    return back()->with('success', 'Balance Added Successfully.');
+                    return back()->with('success',trans( 'Balance Added Successfully.'));
 //                } else {
 //                    return back()->with('error', 'Balance Do Not Added Successfully.');
 //                }
 
             } else {
-                return back()->with('error', 'Balance Do Not Added Successfully.');
+                return back()->with('error', trans( 'Balance Do Not Added Successfully.'));
             }
         } else {
 
-            return back()->with('error', 'The debt payment must not be greater than the debt.');
+            return back()->with('error', trans( 'The debt payment must not be greater than the debt.'));
 
         }
 
@@ -879,7 +892,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
 
         $state = $this->mail($user, null, [], $req['subject'], $req['message']);
-        return back()->with('success', 'Mail Send Successfully');
+        return back()->with('success',  trans( 'Mail Send Successfully'));
     }
 
 
@@ -905,7 +918,7 @@ class UsersController extends Controller
         foreach ($allUsers as $user) {
             $this->mail($user, null, [], $req['subject'], $req['message']);
         }
-        return back()->with('success', 'Mail Send Successfully');
+        return back()->with('success', trans( 'Mail Send Successfully'));
     }
 
 
@@ -995,7 +1008,7 @@ class UsersController extends Controller
         });
 
         return response()->json([
-            'success' => 'Added Successfully',
+            'success' => trans( 'Added Successfully'),
             'userServices' => $result
         ], 200);
 
@@ -1030,7 +1043,7 @@ class UsersController extends Controller
         $data->delete();
 
         return response()->json([
-            'success' => 'Delete Successfully'
+            'success' => trans( 'Delete Successfully')
         ], 200);
     }
 

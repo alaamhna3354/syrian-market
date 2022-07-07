@@ -158,7 +158,7 @@
                                                 <label>@lang('Phone')</label>
                                                 <input type="text" name="phone" class="form-control pl-3"
                                                        value="{{old('phone')}}"
-                                                       placeholder="User Phone Number">
+                                                       placeholder=@lang("User Phone Number")>
                                                 @if($errors->has('phone'))
                                                     <div class="error text-danger">@lang($errors->first('phone')) </div>
                                                 @endif

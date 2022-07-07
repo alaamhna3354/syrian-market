@@ -139,6 +139,7 @@
                                            data-toggle="modal"
                                            data-target="#statusMoldal"
                                            data-route="{{route('admin.user.approve',['id'=>$user->id])}}">
+
                                             <i class="fa fa-check "
                                                aria-hidden="true"></i>
                                             {{ $user->is_approved == 0 ? 'قبول' : 'رفض' }}
@@ -187,7 +188,7 @@
         <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">@lang('Confirm Approve')</h5>
+                    <h5 class="modal-title">@lang('Confirm') </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -195,11 +196,11 @@
                 <form action="" method="post" id="statusForm">
                     @csrf
                     <div class="modal-body">
-                        <p>@lang('Are you really want to approve this agent')</p>
+                        <p>@lang('Confirm Approve or Reject')</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
-                        <button type="submit" class="btn btn-primary"><span> @lang('Approve')</span> </button>
+                        <button type="submit" class="btn btn-primary"><span> @lang('OK')</span> </button>
                     </div>
                 </form>
             </div>

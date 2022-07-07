@@ -57,7 +57,7 @@ class BalanceCouponController extends Controller
             try {
                 $balance->qr_code = $this->uploadImage($request['image'], config('location.category.path'), config('location.category.size'));
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
         $balance->code = $req['code'];
@@ -65,7 +65,7 @@ class BalanceCouponController extends Controller
         $balance->status = $req['status'];
         $balance->user_id = 0;
         $balance->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     /**
@@ -118,14 +118,14 @@ class BalanceCouponController extends Controller
                 $old = $coupon->qr_code;
                 $coupon->qr_code = $this->uploadImage($request->image, config('location.category.path'), config('location.category.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
         $coupon->code = $req['code'];
         $coupon->balance = $req['balance'];
         $coupon->status = $req['status'];
         $coupon->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     /**

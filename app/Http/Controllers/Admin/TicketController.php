@@ -125,7 +125,7 @@ class TicketController extends Controller
                             }
                         }
                         if (count($imgs) > 5) {
-                            return $fail("Maximum 5 images can be uploaded");
+                            return $fail(trans("Maximum 5 images can be uploaded"));
                         }
                     }
                 ],
@@ -151,7 +151,7 @@ class TicketController extends Controller
                             'image' => $this->uploadImage($image, $path),
                         ]);
                     } catch (\Exception $exp) {
-                        return back()->with('error', 'Could not upload your ' . $image)->withInput();
+                        return back()->with('error', trans('Could not upload your ') . $image)->withInput();
                     }
                 }
             }
@@ -180,7 +180,7 @@ class TicketController extends Controller
         } elseif ($request->replayTicket == 2) {
             $ticket->status = 3;
             $ticket->save();
-            return back()->with('success', "Ticket has been closed");
+            return back()->with('success', trans("Ticket has been closed"));
         }
     }
 
@@ -215,6 +215,6 @@ class TicketController extends Controller
             }
         }
         $message->delete();
-        return back()->with('success', "Message has been deleted");
+        return back()->with('success', trans("Message has been deleted"));
     }
 }

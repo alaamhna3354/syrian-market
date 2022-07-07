@@ -59,9 +59,9 @@ class PriceRangeController extends Controller
         $range->min_total_amount_to_stay = $req['min_total_amount_to_stay'];
         $range->limit_days = $req['limit_days'];
         if ($range->save()){
-            return back()->with('success', 'Successfully Updated');
+            return back()->with('success', trans('Successfully Updated'));
         }else{
-            return back()->with('error', 'Sorry Try Again Later');
+            return back()->with('error', trans('Sorry Try Again Later'));
         }
     }
 
@@ -115,9 +115,9 @@ class PriceRangeController extends Controller
         $range->min_total_amount_to_stay = $req['min_total_amount_to_stay'];
         $range->limit_days = $req['limit_days'];
         if ($range->save()){
-            return back()->with('success', 'Successfully Updated');
+            return back()->with('success',  trans('Successfully Updated'));
         }else{
-            return back()->with('error', 'Sorry Try Again Later');
+            return back()->with('error',  trans('Sorry Try Again Later'));
         }
     }
 

@@ -168,9 +168,9 @@ class UserController extends Controller
             ];
 
             $this->adminPushNotification('ADDED_USER', $msg, $action);
-            return back()->with('success', 'Successfully Updated');
+            return back()->with('success', trans('Successfully Updated'));
         } else {
-            return back()->with('error', 'User could not be Created.');
+            return back()->with('error', trans('User could not be Created.') );
         }
 
     }
@@ -214,7 +214,7 @@ class UserController extends Controller
                 $old = $user->image ?: null;
                 $user->image = $this->uploadImage($request->image, config('location.user.path'), config('location.user.size'), $old);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Image could not be uploaded.');
+                return back()->with('error', trans('Image could not be uploaded.'));
             }
         }
 
@@ -241,7 +241,7 @@ class UserController extends Controller
         }
         $user->save();
 
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
     public function addBalance()
@@ -333,13 +333,13 @@ class UserController extends Controller
                         "link" => "#"
                     ];
                     $this->adminPushNotification('ADD_BALANCE', $msg, $action);
-                    return back()->with('success', 'Balance Added Successfully.');
+                    return back()->with('success', trans('Balance Added Successfully.'));
                 } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
+                    return back()->with('error', trans('Balance Do Not Added Successfully.'));
                 }
 
             } else {
-                return back()->with('error', 'Balance Do Not Added Successfully.');
+                return back()->with('error', trans('Balance Do Not Added Successfully.'));
             }
 
         } elseif ($agent->is_debt == 1) {
@@ -393,19 +393,19 @@ class UserController extends Controller
                             "link" => "#"
                         ];
                         $this->adminPushNotification('ADD_BALANCE', $msg, $action);
-                        return back()->with('success', 'Balance Added Successfully.');
+                        return back()->with('success',trans('Balance Added Successfully.') );
                     } else {
-                        return back()->with('error', 'Balance Do Not Added Successfully.');
+                        return back()->with('error', trans('Balance Do Not Added Successfully.'));
                     }
 
                 } else {
-                    return back()->with('error', 'Balance Do Not Added Successfully.');
+                    return back()->with('error', trans('Balance Do Not Added Successfully.'));
                 }
             } else {
-                return back()->with('error', 'You Do Not Have Enough Balance');
+                return back()->with('error', trans('You Do Not Have Enough Balance'));
             }
         } else {
-            return back()->with('error', 'You Do Not Have Enough Balance');
+            return back()->with('error',trans('You Do Not Have Enough Balance'));
         }
 
 
@@ -480,17 +480,17 @@ class UserController extends Controller
                         "link" => "#"
                     ];
                     $this->adminPushNotification('ADD_DEBT_PAYMENT', $msg, $action);
-                    return back()->with('success', 'Balance Added Successfully.');
+                    return back()->with('success', trans('Balance Added Successfully.'));
 //                } else {
 //                    return back()->with('error', 'Balance Do Not Added Successfully.');
 //                }
 
             } else {
-                return back()->with('error', 'Balance Do Not Added Successfully.');
+                return back()->with('error', trans('Balance Do Not Added Successfully.'));
             }
         }else{
 
-                return back()->with('error', 'The debt payment must not be greater than the debt.');
+                return back()->with('error',trans('The debt payment must not be greater than the debt.') );
 
         }
 
