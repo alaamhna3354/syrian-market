@@ -19,7 +19,8 @@ class BalanceCouponController extends Controller
      */
     public function index()
     {
-        $coupons = BalanceCoupon::all();
+        $coupons = BalanceCoupon::orderBy('id','desc')->get();
+
         return view('admin.pages.balance_coupon.show-coupon', compact('coupons'));
     }
 

@@ -475,8 +475,7 @@ class HomeController extends Controller
                 } else {
                     return back()->with('error', trans('Please Try Again Later'))->withInput();
                 }
-            }
-            else{
+            }else{
                 return back()->with('error', trans('You must pay off all your debts first'))->withInput();
             }
 

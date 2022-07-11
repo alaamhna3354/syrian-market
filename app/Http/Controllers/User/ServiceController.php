@@ -42,11 +42,25 @@ class ServiceController extends Controller
                 ->whereYear('created_at', date('Y'))
                 ->where('user_id', $user->id)
                 ->paginate(config('basic.paginate'));
+            $totalUnPaidCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', date('Y'))
+                ->where('user_id', $user->id)
+                ->where('is_paid',0 )
+                ->paginate(config('basic.paginate'));
             $totalThis_month_commission_rate = 0;
+            $total_un_paid_commission_rate = 0;
             foreach ($totalCommissionsThisMonth as $key1 => $commissionThisMonth) {
 //                $agent = $commissionThisMonth->user;
 //                if ($agent->parent->id == $user->id) {
                     $totalThis_month_commission_rate += $commissionThisMonth->commission_rate;
+//                } else {
+//                    $totalCommissionsThisMonth->forget($key1);
+//                }
+            }
+            foreach ($totalUnPaidCommissionsThisMonth as $key2 => $commissionThisMonthUnPaid) {
+//                $agent = $commissionThisMonth->user;
+//                if ($agent->parent->id == $user->id) {
+                $total_un_paid_commission_rate += $commissionThisMonthUnPaid->commission_rate;
 //                } else {
 //                    $totalCommissionsThisMonth->forget($key1);
 //                }
@@ -57,7 +71,7 @@ class ServiceController extends Controller
                 $commission_rate +=  $commission->commission_rate;
             }
             $total = Fund::where('user_id', $user->id)->where('status', 1)->sum('amount');
-            return view('agent.pages.dashboard',compact('totalThis_month_commission_rate','transactions','commission_rate','total'));
+            return view('agent.pages.dashboard',compact('total_un_paid_commission_rate','totalThis_month_commission_rate','transactions','commission_rate','total'));
         }elseif ($user->is_agent == 1 && $user->is_approved == 0){
             return view('user.pages.waitForApproved', compact('categories'));
         }else{

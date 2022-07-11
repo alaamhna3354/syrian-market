@@ -203,6 +203,29 @@
                     </div>
                 </div>
             </div>
+
+
+
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card shadow ">
+                    <div class="card-body">
+                        <div class="d-flex d-lg-flex d-md-block align-items-center justify-content-between">
+                            <div>
+                                <div class="d-inline-flex align-items-center">
+                                    <h2 class="text-white shadow-h  mb-1 font-weight-medium">
+                                        <sup class="set-doller">{{config('basic.currency_symbol')}}</sup>{{$total_un_paid_commission_rate}}
+                                    </h2>
+                                </div>
+                                <h6 class="text-white shadow-h  font-weight-normal mb-0 w-100 text-truncate">@lang('Your Not Paid Earnings')</h6>
+                            </div>
+
+                            <div class=" mt-md-3 mt-lg-0">
+                                <span class="opacity-7 text-muted"><i class="fas fa-money-bill-alt fa-2x"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
