@@ -25,6 +25,7 @@
                            <li><h4>@lang('pay cash')</h4></li>
                            <li><h4>@lang('Invite 10 people from your friends and open their accounts through you within a period not exceeding 15 days after opening the agency')</h4></li>
                            <li><h4>@lang('Your balance must be at least 500$')</h4></li>
+                           <li><h4>@lang('Acceptance of the profit rate determined by the management')</h4></li>
 
                        </ul>
                     </div>
