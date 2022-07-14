@@ -186,10 +186,23 @@ class OrderController extends Controller
 
                 }
             }
+            $status = $order->status;
             $order->status = $req['status'];
         }
         $order->reason = $req['reason'];
         $order->save();
+        $msg = [
+            'status' => $order->status,
+            'order_id' => $order->id,
+        ];
+        $action = [
+            "link" => '#',
+            "icon" => "fa fa-money-bill-alt text-white"
+        ];
+        if ($status != $order->status){
+            $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
+        }
+
 
         $this->sendMailSms($order->users, 'ORDER_UPDATE', [
             'order_id' => $order->id,
@@ -261,6 +274,16 @@ class OrderController extends Controller
         }
         $order->status = $req['statusChange'];
         $order->save();
+        $msg = [
+            'status' => $order->status,
+            'order_id' => $order->id,
+        ];
+        $action = [
+            "link" => '#',
+            "icon" => "fa fa-money-bill-alt text-white"
+        ];
+
+        $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
         return back()->with('success', 'Successfully Updated');
     }
 
