@@ -129,6 +129,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                            {{$users->appends(@$_GET)->links()}}
                         </div>
 
                     </div>
