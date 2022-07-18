@@ -26,8 +26,8 @@
                             <label>@lang('Select Category')</label>
                             <select class="form-control" id="category_id" name="category_id" onchange="showExtraField()">
                                 <option disabled value="" selected hidden>@lang('Select Category')</option>
-                                @foreach($categories as $categorie)
-                                    <option value="{{ $categorie->id  }}" id="{{$categorie->type}}">@lang($categorie->category_title)</option>
+                                @foreach($categories as $key=>$categorie)
+                                    <option value="{{ $categorie->id  }}" id="{{$categorie->type}}_{{$key}}">@lang($categorie->category_title)</option>
                                 @endforeach
                             </select>
                             @if($errors->has('category_id'))
@@ -238,8 +238,8 @@
             var opti = document.getElementById('category_id').options;
             opt=opti[opti.selectedIndex].id;
             // opt=opt.options[opt.selectedIndex].id;
-
-            if (opt == "5SIM" ){
+            console.log(opt.includes('5SIM'))
+            if (opt.includes('5SIM')){
                 $('#extra').attr('style','display : block;');
                 // $('#country').attr(require);
             }
