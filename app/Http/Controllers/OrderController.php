@@ -233,9 +233,10 @@ class OrderController extends Controller
 
         $req = $request->all();
         $order = Order::find($request->id);
+
+        $user = $order->users;
         if($req['statusChange']=='refunded') {
             if ($order->status != 'refunded') {
-                $user = $order->users;
                 $user->balance += $order->price;
                 $transaction1 = new Transaction();
                 $transaction1->user_id = $user->id;
