@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => config('basic.time_zone', 'UTC'),
+    'timezone' => config('basic.time_zone', 'Asia/Damascus'),
 
     /*
     |--------------------------------------------------------------------------

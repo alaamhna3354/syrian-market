@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         if ($blockIoGateway == 1) {
             $schedule->command('blockIo:ipn')->everyThirtyMinutes();
         }
-        $schedule->command('downgrade:users_level')->hourly()->emailOutputTo('HammamZarefa@gmail.com');
+        $schedule->command('downgrade:users_level')->hourly();
     }
 
     /**
