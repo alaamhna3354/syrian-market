@@ -141,6 +141,7 @@ class OrderController extends Controller
 //        dd($request);
         $req = Purify::clean($request->all());
         $order = Order::with('users')->find($id);
+        $user = $order->users;
         $order->start_counter = $req['start_counter'] == '' ? null : $req['start_counter'];
         $order->api_order_id = $request->api_order_id;
         $order->link = $req['link'];
@@ -149,7 +150,6 @@ class OrderController extends Controller
 //            $order->status = $req['status'];
             if($req['status']=='refunded') {
                 if ($order->status != 'refunded') {
-                    $user = $order->users;
                     $user->balance += $order->price;
                     $transaction1 = new Transaction();
                     $transaction1->user_id = $user->id;
