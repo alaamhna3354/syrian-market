@@ -32,8 +32,8 @@
                             <select class="form-control" id="category_id" name="category_id" onchange="showExtraField()">
                                 <option value="{{old('category_id',$service->category_id)}}" selected
                                         hidden>@lang('Change Category')</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id  }}" @if($service->category_id == $category->id ) selected @endif id="{{$category->type}}">{{ $category->category_title  }}</option>
+                                @foreach($categories as $key=>$category)
+                                    <option value="{{ $category->id  }}" @if($service->category_id == $category->id ) selected @endif id="{{$category->type}}_{{$key}}">{{ $category->category_title  }}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('category_id'))
@@ -244,7 +244,7 @@
             opt=opti[opti.selectedIndex].id;
             // opt=opt.options[opt.selectedIndex].id;
 
-            if (opt == "5SIM" ){
+            if (opt.includes('5SIM')){
                 $('#extra').attr('style','display : block;');
                 $('#country').attr('require');
                 $('#product').attr('product');
@@ -262,7 +262,7 @@
             opt=opti[opti.selectedIndex].id;
             // opt=opt.options[opt.selectedIndex].id;
 
-            if (opt == "5SIM" ){
+            if (opt.includes('5SIM') ){
                 $('#extra').attr('style','display : block;');
                 $('#country').attr('require');
                 $('#product').attr('product');
