@@ -21,6 +21,7 @@
                         <th scope="col">@lang('Order No.')</th>
                         <th scope="col">@lang('User')</th>
                         <th scope="col">@lang('Order Details')</th>
+                        <th scope="col">@lang('Service Details')</th>
                         <th scope="col">@lang('Codes')</th>
                         <th scope="col">@lang('Details')</th>
                         <th scope="col">@lang('Created')</th>
@@ -50,6 +51,14 @@
                                 @lang('Quantity'): @lang($order->quantity)<br>
                                 @lang('Start counter'):<br>
                                 @lang('Start counter'):
+                            </td>
+
+                            <td data-label="@lang('Service Details')">
+                                <h5>@lang(optional($order->service)->service_title) </h5>
+                                @lang('Category'): @lang(optional($order->service)->category->category_title)<br>
+                                @lang('order price'): {{$order->price}} {{config('basic.currency_symbol')}}<br>
+                                @lang('service price'): {{$order->service->price}} {{config('basic.currency_symbol')}}<br>
+
                             </td>
 
                             <td data-label="@lang('Codes')">{{$order->codes}}</td>
