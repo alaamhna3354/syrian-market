@@ -169,7 +169,7 @@ class OrderController extends Controller
 
             $user = Auth::user();
             if ($user->balance < $price) {
-                dd($user->balance);
+//                dd($user->balance);
                 return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
 
 
