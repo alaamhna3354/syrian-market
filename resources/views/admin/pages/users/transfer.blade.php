@@ -146,7 +146,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($commissions as $commission)
+                                @forelse($commissions as $key=>$commission)
                                     <tr>
                                         <td class="text-center">
                                             <input type="checkbox" id="chk-{{ $commission->id }}"
@@ -155,7 +155,7 @@
                                                    data-id="{{ $commission->id }}">
                                             <label for="chk-{{ $commission->id }}"></label>
                                         </td>
-                                        <td data-label="@lang('No.')">{{loopIndex($commissions) + $loop->index	 }}</td>
+                                        <td data-label="@lang('No.')">{{$key+1}}</td>
                                         <td data-label="@lang('User')">@lang($commission->user->username)</td>
                                         <td data-label="@lang('Order')">@lang($commission->order_id)</td>
                                         <td data-label="@lang('Commission Rate')">{{getAmount($commission->commission_rate, config('basic.fraction_number'))}} {{trans(config('basic.currency'))}}</td>
@@ -172,7 +172,7 @@
                                 @endforelse
                                 </tbody>
                             </table>
-                            {{$commissions->appends(@$_GET)->links()}}
+{{--                            {{$commissions->appends(@$_GET)->links()}}--}}
 
                         </div>
                     </div>
@@ -202,7 +202,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($commissionsThisMonth as $commission)
+                                @forelse($commissionsThisMonth as $key=>$commission)
                                     <tr>
                                         <td class="text-center">
                                             <input type="checkbox" id="chk-{{ $commission->id }}"
@@ -211,7 +211,7 @@
                                                    data-id="{{ $commission->id }}">
                                             <label for="chk-{{ $commission->id }}"></label>
                                         </td>
-                                        <td data-label="@lang('No.')">{{loopIndex($commissions) + $loop->index	 }}</td>
+                                        <td data-label="@lang('No.')">{{$key+1}}</td>
                                         <td data-label="@lang('User')">@lang($commission->user->username)</td>
                                         <td data-label="@lang('Order')">@lang($commission->order_id)</td>
                                         <td data-label="@lang('Commission Rate')">{{getAmount($commission->commission_rate, config('basic.fraction_number'))}} {{trans(config('basic.currency'))}}</td>
@@ -228,7 +228,7 @@
                                 @endforelse
                                 </tbody>
                             </table>
-                            {{$commissions->appends(@$_GET)->links()}}
+{{--                            {{$commissions->appends(@$_GET)->links()}}--}}
 
                         </div>
                     </div>

@@ -269,21 +269,21 @@ class UsersController extends Controller
         $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->where('user_id', $userid)
-            ->paginate(config('basic.paginate'));
+            ->get();
 
         $commissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->where('user_id', $userid)
-            ->paginate(config('basic.paginate'));
+            ->get();
 //dd($userid);
         $totalCommissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))->where('is_paid', 0)
             ->where('user_id', $userid)
-            ->paginate(config('basic.paginate'));
+            ->get();
         $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))->where('is_paid', 0)
             ->where('user_id', $userid)
-            ->paginate(config('basic.paginate'));
+            ->get();
 //        dd($totalCommissionsThisMonth);
         $commission_rate = 0;
         $this_month_commission_rate = 0;
@@ -344,7 +344,7 @@ class UsersController extends Controller
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
             ->where('user_id', $userid)
-            ->paginate(config('basic.paginate'));
+            ->get();
         $commission_rate = 0;
         if (count($commissions) == 0) {
             return back()->with('error', trans('All Earnings of last month was been transfer before'));
