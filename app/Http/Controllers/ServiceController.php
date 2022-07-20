@@ -91,9 +91,9 @@ class ServiceController extends Controller
             'category_id' => 'required|string',
             'min_amount' => 'required|numeric',
             'max_amount' => 'required|numeric',
-//            'price' => 'required|numeric',
-////            'special_price' => 'required|numeric',
-//            'agent_commission_rate' => 'required|numeric',
+            'price' => 'required|numeric',
+//            'special_price' => 'required|numeric',
+            'agent_commission_rate' => 'required|numeric',
         ];
         foreach ($ranges as $range){
             $rules['price_'.$range->id] = 'required|numeric';
@@ -110,8 +110,8 @@ class ServiceController extends Controller
         $service->category_id = $req['category_id'];
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
-        $service->agent_commission_rate = 0;
-        $service->price = 0;
+        $service->agent_commission_rate = $req['agent_commission_rate'];
+        $service->price = $req['price'];
 //        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
         $service->is_available = $req['is_available'];
@@ -204,10 +204,10 @@ class ServiceController extends Controller
             'service_title' => 'required|string|max:150',
             'category_id' => 'required|string',
             'min_amount' => 'required',
-//            'price' => 'required',
+            'price' => 'required',
             'max_amount' => 'required',
 //            'special_price' => 'required|numeric',
-//            'agent_commission_rate' => 'required|numeric',
+            'agent_commission_rate' => 'required|numeric',
         ];
         foreach ($ranges as $range){
             $rules['price_'.$range->id] = 'required|numeric';
@@ -222,10 +222,10 @@ class ServiceController extends Controller
         $service->category_id = $req['category_id'];
         $service->min_amount = $req['min_amount'];
         $service->max_amount = $req['max_amount'];
-        $service->price = 0;
+        $service->price = $req['price'];
 //        $service->special_price = $req['special_price'];
         $service->service_status = $req['service_status'];
-        $service->agent_commission_rate = 0;
+        $service->agent_commission_rate = $req['agent_commission_rate'];
         if (isset($req['country']) && isset($req['product'] ))
             $service->api_service_params=$req['country'].'/any/'.$req['product'];
         $service->is_available = $req['is_available'];
