@@ -89,7 +89,7 @@ class EmailTemplateController extends Controller
         Artisan::call('config:clear');
         Artisan::call('view:clear');
 
-        session()->flash('success', 'Email Configuration Has Been Updated');
+        session()->flash('success', trans('Email Configuration Has Been Updated'));
         return back();
     }
 
@@ -166,7 +166,7 @@ class EmailTemplateController extends Controller
         $emailtemplate->email_from = $templateData['email_from'];
         $emailtemplate->template = $templateData['template'];
         $emailtemplate->save();
-        return back()->with('success', 'Update Successfully');
+        return back()->with('success', trans('Update Successfully'));
     }
 
 

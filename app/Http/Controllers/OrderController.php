@@ -211,7 +211,7 @@ class OrderController extends Controller
             'remains' => $order->remains,
             'order_status' => $order->status
         ]);
-        return back()->with('success', 'successfully updated');
+        return back()->with('success', trans( 'successfully updated'));
     }
 
 
@@ -225,7 +225,7 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         $order->delete();
-        return back()->with('success', 'Successfully Deleted');
+        return back()->with('success', trans( 'Successfully Deleted'));
     }
 
     public function statusChange(Request $request)
@@ -285,7 +285,7 @@ class OrderController extends Controller
         ];
 
         $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans( 'Successfully Updated'));
     }
 
 

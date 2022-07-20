@@ -61,7 +61,7 @@ class CouponController extends Controller
         $coupon->is_percent = $req['is_percent'];
         $coupon->status = $req['status'];
         $coupon->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     /**
@@ -118,7 +118,7 @@ class CouponController extends Controller
         $coupon->is_percent = $req['is_percent'];
         $coupon->status = $req['status'];
         $coupon->save();
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans('Successfully Updated'));
     }
 
     /**
