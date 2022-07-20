@@ -348,6 +348,8 @@ class OrderController extends Controller
                     $serviceCode->is_used = 1;
                     $serviceCode->user_id = $user->id;
                     $serviceCode->save();
+                    $order->status = "completed";
+                    $order->save();
                     if ($user->is_agent == 1 && $user->is_approved == 1) {
                         return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                     } else {

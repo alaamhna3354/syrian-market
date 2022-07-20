@@ -48,14 +48,14 @@
                                 <div class="error text-danger">@lang($errors->first('min_amount')) </div>
                             @endif
                         </div>
-                        <div class="form-group">
-                            <label>@lang('Price')</label>
-                            <input type="text" class="form-control square" name="price" placeholder="0.00"
-                                   value="{{ old('price') }}">
-                            @if($errors->has('price'))
-                                <div class="error text-danger">@lang($errors->first('price')) </div>
-                            @endif
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>@lang('Price')</label>--}}
+{{--                            <input type="text" class="form-control square" name="price" placeholder="0.00"--}}
+{{--                                   value="{{ old('price') }}">--}}
+{{--                            @if($errors->has('price'))--}}
+{{--                                <div class="error text-danger">@lang($errors->first('price')) </div>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
 {{--                        <div class="form-group">--}}
 {{--                            <label>@lang('Special Price')</label>--}}
 {{--                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"--}}
@@ -75,14 +75,14 @@
                                 <div class="error text-danger">@lang($errors->first('max_amount')) </div>
                             @endif
                         </div>
-                        <div class="form-group">
-                            <label>@lang('Agent Commission Rate')</label>
-                            <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"
-                                   value="{{ old('agent_commission_rate') }}">
-                            @if($errors->has('agent_commission_rate'))
-                                <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
-                            @endif
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>@lang('Agent Commission Rate')</label>--}}
+{{--                            <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"--}}
+{{--                                   value="{{ old('agent_commission_rate') }}">--}}
+{{--                            @if($errors->has('agent_commission_rate'))--}}
+{{--                                <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group ">

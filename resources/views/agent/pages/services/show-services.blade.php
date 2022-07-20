@@ -157,6 +157,12 @@
 @endsection
 @push('js')
     <script>
+
+        $("#btn-add").on("click",function (){
+            $('#btn-add').addClass('disble');
+            // $('#btn-add').attr("disabled", "disabled")
+            // $('#btn-add').attr("disabled", "");
+        })
         "use strict";
         // fun 1
         $(".get-name").on("click", function () {
