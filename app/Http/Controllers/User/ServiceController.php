@@ -41,12 +41,12 @@ class ServiceController extends Controller
             $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', date('Y'))
                 ->where('user_id', $user->id)
-                ->paginate(config('basic.paginate'));
+                ->get();
             $totalUnPaidCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', date('Y'))
                 ->where('user_id', $user->id)
                 ->where('is_paid',0 )
-                ->paginate(config('basic.paginate'));
+                ->get();
             $totalThis_month_commission_rate = 0;
             $total_un_paid_commission_rate = 0;
             foreach ($totalCommissionsThisMonth as $key1 => $commissionThisMonth) {
