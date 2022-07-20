@@ -61,7 +61,7 @@ class SmsControlController extends Controller
             $smsControl->headerData = $headerData;
             $smsControl->save();
 
-            return back()->with('success', 'SMS configuration Saved');
+            return back()->with('success', trans('SMS configuration Saved'));
         }
     }
 
@@ -131,6 +131,6 @@ class SmsControlController extends Controller
         $smstemplate->sms_status = $req['sms_status'];
         $smstemplate->sms_body = $req['sms_body'];
         $smstemplate->save();
-        return back()->with('success','Successfully Updated');
+        return back()->with('success',trans('Successfully Updated'));
     }
 }
