@@ -88,8 +88,9 @@ class LoginController extends Controller
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
+        $remember_me = $request->has('remember') ? true : false;
         if ($this->guard()->validate($this->credentials($request))) {
-            if (Auth::attempt([$this->username() => $request->username, 'password' => $request->password,'status'=>1])) {
+            if (Auth::attempt([$this->username() => $request->username, 'password' => $request->password,'status'=>1],$remember_me)) {
 
                 return $this->sendLoginResponse($request);
             } else {
