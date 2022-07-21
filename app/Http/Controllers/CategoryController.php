@@ -232,7 +232,7 @@ class CategoryController extends Controller
     public function deactiveMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', 'You do not select User Id!!');
+            session()->flash('error', trans('You do not select User Id!!'));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);

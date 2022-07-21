@@ -65,7 +65,7 @@ class OrderManageController extends Controller
     public function usersOrderChangeStatus(Request $request)
     {
         $status = $request->status;
-        dd($request);
+//        dd($request);
         if ($request->strIds == null) {
             session()->flash('error', "You have not selected any order.");
             return response()->json(['error' => 1]);

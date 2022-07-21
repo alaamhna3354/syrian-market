@@ -73,13 +73,13 @@ class ApiProviderController extends Controller
             return back()->with('error', $error)->withInput();
         endif;
         $ApiProvider->save();
-        return back()->with('success', 'successfully updated');
+        return back()->with('success', trans( 'successfully updated'));
     }
 
     public function activeMultiple(Request $request)
     {
         if($request->strIds == null){
-            session()->flash('error','You do not select Id!');
+            session()->flash('error',trans( 'You do not select Id!'));
             return response()->json([ 'error' => 1 ]);
         }else{
             $ids = explode(",",$request->strIds);
@@ -87,7 +87,7 @@ class ApiProviderController extends Controller
             $apiProvider->update([
                 'status' => 1,
             ]);
-            session()->flash('success','Updated Successfully!');
+            session()->flash('success',trans( 'Updated Successfully!'));
             return response()->json([ 'success' => 1 ]);
         }
 
@@ -96,7 +96,7 @@ class ApiProviderController extends Controller
     public function deActiveMultiple(Request $request)
     {
         if($request->strIds == null){
-            session()->flash('error','You do not select Id!');
+            session()->flash('error',trans( 'You do not select Id!'));
             return response()->json([ 'error' => 1 ]);
         }else{
             $ids = explode(",",$request->strIds);
@@ -104,7 +104,7 @@ class ApiProviderController extends Controller
             $apiProvider->update([
                 'status' => 0,
             ]);
-            session()->flash('success','Updated Successfully.');
+            session()->flash('success',trans( 'Updated Successfully!'));
             return response()->json([ 'success' => 1 ]);
         }
     }
@@ -142,7 +142,7 @@ class ApiProviderController extends Controller
         elseif (isset($currencyData->error)):
             $error = $currencyData->error;
         else:
-            $error = "Please Check your API URL Or API Key";
+            $error = trans( "Please Check your API URL Or API Key");
         endif;
         $provider->status = $request['status'];
         $provider->description = $request['description'];
@@ -150,7 +150,7 @@ class ApiProviderController extends Controller
             return back()->with('error', $error)->withInput();
         endif;
         $provider->save();
-        return back()->with('success', 'successfully updated');
+        return back()->with('success', trans( 'Updated Successfully!'));
     }
 
     /**
@@ -161,7 +161,7 @@ class ApiProviderController extends Controller
     public function destroy(ApiProvider $apiProvider)
     {
         $apiProvider->delete();
-        return back()->with('success', 'Successfully Deleted'); ;
+        return back()->with('success', trans( 'Successfully Deleted')); ;
     }
 
     /*
@@ -171,7 +171,7 @@ class ApiProviderController extends Controller
     {
         $ids = $request->strIds;
         ApiProvider::whereIn('id',explode(",",$ids))->delete();
-        return back()->with('success','Delete Success');
+        return back()->with('success',trans( 'Successfully Deleted'));
     }
 
     public function changeStatus($id)
@@ -184,7 +184,7 @@ class ApiProviderController extends Controller
         }
         $apiProvider->status = $status;
         $apiProvider->save();
-        return back()->with('success', 'Successfully Changed');
+        return back()->with('success', trans( 'Successfully Changed'));
     }
 
 

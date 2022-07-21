@@ -141,6 +141,7 @@ class OrderController extends Controller
 //        dd($request);
         $req = Purify::clean($request->all());
         $order = Order::with('users')->find($id);
+        $user = $order->users;
         $order->start_counter = $req['start_counter'] == '' ? null : $req['start_counter'];
         $order->api_order_id = $request->api_order_id;
         $order->link = $req['link'];
@@ -149,7 +150,6 @@ class OrderController extends Controller
 //            $order->status = $req['status'];
             if($req['status']=='refunded') {
                 if ($order->status != 'refunded') {
-                    $user = $order->users;
                     $user->balance += $order->price;
                     $transaction1 = new Transaction();
                     $transaction1->user_id = $user->id;
@@ -211,7 +211,7 @@ class OrderController extends Controller
             'remains' => $order->remains,
             'order_status' => $order->status
         ]);
-        return back()->with('success', 'successfully updated');
+        return back()->with('success', trans( 'successfully updated'));
     }
 
 
@@ -225,7 +225,7 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         $order->delete();
-        return back()->with('success', 'Successfully Deleted');
+        return back()->with('success', trans( 'Successfully Deleted'));
     }
 
     public function statusChange(Request $request)
@@ -233,9 +233,10 @@ class OrderController extends Controller
 
         $req = $request->all();
         $order = Order::find($request->id);
+
+        $user = $order->users;
         if($req['statusChange']=='refunded') {
             if ($order->status != 'refunded') {
-                $user = $order->users;
                 $user->balance += $order->price;
                 $transaction1 = new Transaction();
                 $transaction1->user_id = $user->id;
@@ -284,7 +285,7 @@ class OrderController extends Controller
         ];
 
         $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans( 'Successfully Updated'));
     }
 
 

@@ -97,10 +97,10 @@ class ServiceCodeController extends Controller
 
         $save = $service_code->save();
         if ($save){
-            $success = 'Successfully Added';
+            $success = trans( 'Successfully Added');
             return back()->with('success', $success);
         }else{
-            return back()->with('error', 'Please Check The Data')->withInput();
+            return back()->with('error',trans( 'Please Check The Data') )->withInput();
         }
 
     }
@@ -154,7 +154,7 @@ class ServiceCodeController extends Controller
 //            }
         }
 
-        return back()->with('success', 'Successfully Added');
+        return back()->with('success', trans( 'Successfully Added'));
     }
 
     public function serviceCodeActive(Request $request)
@@ -165,7 +165,7 @@ class ServiceCodeController extends Controller
             $ser->is_active = 1;
             $ser->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans( 'Successfully Updated'));
     }
 
     public function serviceCodeDeActive(Request $request)
@@ -176,7 +176,7 @@ class ServiceCodeController extends Controller
             $ser->is_active = 0;
             $ser->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans( 'Successfully Updated'));
     }
 
     public function edit($id)
@@ -210,10 +210,10 @@ class ServiceCodeController extends Controller
 
         $save = $service_code->save();
         if ($save){
-            $success = 'Successfully Updated';
+            $success = trans( 'Successfully Updated');
             return back()->with('success', $success);
         }else{
-            return back()->with('error', 'Please Check The Data')->withInput();
+            return back()->with('error', trans( 'Please Check The Data'))->withInput();
         }
     }
 }

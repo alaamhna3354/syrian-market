@@ -135,18 +135,18 @@ class HomeController extends Controller
                     $this->sendMailSms($user, 'ADD_BALANCE', $msg);
 
                     if ($transaction->save() && $fund->save()) {
-                        return back()->with('success', 'Balance Is Updated Successfully.');
+                        return back()->with('success', trans('Balance Is Updated Successfully.'));
                     } else {
-                        return back()->with('error', 'Please Try Again There Are An Error');
+                        return back()->with('error', trans('Please Try Again There Are An Error'));
                     }
                 } else {
-                    return back()->with('error', 'Please Try Again There Are An Error');
+                    return back()->with('error', trans('Please Try Again There Are An Error'));
                 }
             } else {
-                return back()->with('error', 'Please Try Again There Are An Error');
+                return back()->with('error', trans('Please Try Again There Are An Error'));
             }
         } else {
-            return back()->with('error', 'Coupon Is Not Found.');
+            return back()->with('error', trans('Coupon Is Not Found.'));
         }
     }
 
@@ -233,7 +233,7 @@ class HomeController extends Controller
                             $transactionForUser->user_id = $user->id;
                             $transactionForUser->trx_type = '+';
                             $transactionForUser->amount = $user->debt_balance;
-                            $transactionForUser->remarks = 'Charge Balance From reserve balance';
+                            $transactionForUser->remarks = trans('Charge Balance From reserve balance');
                             $transactionForUser->trx_id = strRandom();
                             $transactionForUser->charge = 0;
 
@@ -280,21 +280,21 @@ class HomeController extends Controller
 
 
                         } else {
-                            return back()->with('error', 'sorry You do not have a reserve balance');
+                            return back()->with('error', trans('sorry You do not have a reserve balance'));
                         }
                     }
                     else
-                        return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
+                        return back()->with('error',trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent') );
                 } else {
-                    return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, please contact the agent');
+                    return back()->with('error', trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent'));
                 }
             } else {
-                return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance.');
+                return back()->with('error', trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent'));
             }
 //        } else {
 //            return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, You have debts ');
 //        }
-        return back()->with('success', 'Balance Is Updated Successfully.');
+        return back()->with('success', trans('Balance Is Updated Successfully.'));
     }
 
 
@@ -339,10 +339,10 @@ class HomeController extends Controller
                 function ($fail) use ($image, $allowedExtensions) {
                     $ext = strtolower($image->getClientOriginalExtension());
                     if (($image->getSize() / 1000000) > 2) {
-                        return $fail("Images MAX  2MB ALLOW!");
+                        return $fail(trans("Images MAX  2MB ALLOW!"));
                     }
                     if (!in_array($ext, $allowedExtensions)) {
-                        return $fail("Only png, jpg, jpeg images are allowed");
+                        return $fail(trans("Only png, jpg, jpeg images are allowed"));
                     }
                 }
             ]
@@ -353,11 +353,11 @@ class HomeController extends Controller
             try {
                 $user->image = $this->uploadImage($image, $path);
             } catch (\Exception $exp) {
-                return back()->with('error', 'Could not upload your ' . $image)->withInput();
+                return back()->with('error', trans('Could not upload your ') . $image)->withInput();
             }
         }
         $user->save();
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success',trans( 'Updated Successfully.'));
     }
 
 
@@ -393,7 +393,7 @@ class HomeController extends Controller
         }
         $user->save();
 
-        return back()->with('success', 'Updated Successfully.');
+        return back()->with('success', trans( 'Updated Successfully.'));
     }
 
 
@@ -415,9 +415,9 @@ class HomeController extends Controller
             if (Hash::check($request->current_password, $user->password)) {
                 $user->password = bcrypt($request->password);
                 $user->save();
-                return back()->with('success', 'Password Changes successfully.');
+                return back()->with('success', trans( 'Password Changes successfully.'));
             } else {
-                throw new \Exception('Current password did not match');
+                throw new \Exception(trans( 'Current password did not match'));
             }
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());

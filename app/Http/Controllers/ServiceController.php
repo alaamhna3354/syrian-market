@@ -128,16 +128,16 @@ class ServiceController extends Controller
             $apiServiceData = json_decode($apiLiveData);
             foreach ($apiServiceData as $current):
                 if ($current->service == $req['api_service_id']):
-                    $success = "Successfully Update Api service";
+                    $success = trans( "Successfully Update Api service");
                     $service->api_provider_price = $current->rate;
                     break;
                 endif;
             endforeach;
             if (!isset($success)):
-                return back()->with('error', 'Please Check again Api Service ID')->withInput();
+                return back()->with('error', trans( 'Please Check again Api Service ID') )->withInput();
             endif;
         else:
-            $success = "Successfully Updated";
+            $success = trans("Successfully Updated");
         endif;
 
         if ($service->save()){
@@ -152,7 +152,7 @@ class ServiceController extends Controller
             }
             return back()->with('success', $success);
         }else{
-            return back()->with('error', 'Sorry There Are An Error');
+            return back()->with('error', trans('Sorry There Are An Error'));
         }
 
     }
@@ -166,7 +166,7 @@ class ServiceController extends Controller
             $ser->service_status = 1;
             $ser->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans("Successfully Updated"));
     }
 
     public function serviceDeActive(Request $request)
@@ -177,7 +177,7 @@ class ServiceController extends Controller
             $ser->service_status = 0;
             $ser->save();
         }
-        return back()->with('success', 'Successfully Updated');
+        return back()->with('success', trans("Successfully Updated"));
     }
 
     public function edit($id)
@@ -239,16 +239,16 @@ class ServiceController extends Controller
             $apiServiceData = json_decode($apiLiveData);
             foreach ($apiServiceData as $current):
                 if ($current->service == $req['api_service_id']):
-                    $success = "Successfully Update Api service";
+                    $success = trans("Successfully Update Api service");
                     $service->api_provider_price = $current->rate;
                     break;
                 endif;
             endforeach;
             if (!isset($success)):
-                return back()->with('error', 'Please Check again Api Service ID')->withInput();
+                return back()->with('error', trans('Please Check again Api Service ID'))->withInput();
             endif;
         else:
-            $success = "Successfully Updated";
+            $success = trans("Successfully Updated");
         endif;
 
         if ($service->save()){
@@ -273,7 +273,7 @@ class ServiceController extends Controller
             }
             return back()->with('success', $success);
         }else{
-            return back()->with('error', 'Sorry There Are An Error');
+            return back()->with('error', trans('Sorry There Are An Error'));
         }
     }
 
@@ -290,7 +290,7 @@ class ServiceController extends Controller
                 $services->update([
                     'service_status' => 1,
                 ]);
-                session()->flash('success', 'Updated Successfully.');
+                session()->flash('success', trans("Successfully Updated"));
                 return response()->json(['success' => 1]);
             }
         }
@@ -300,7 +300,7 @@ class ServiceController extends Controller
     public function deactiveMultiple(Request $request)
     {
         if ($request->strIds == null) {
-            session()->flash('error', "You didn't select any row");
+            session()->flash('error', trans("You didn't select any row"));
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
@@ -309,7 +309,7 @@ class ServiceController extends Controller
                 $services->update([
                     'service_status' => 0,
                 ]);
-                session()->flash('success', 'Updated Successfully.');
+                session()->flash('success', trans("Successfully Updated"));
                 return response()->json(['success' => 1]);
             }
         }

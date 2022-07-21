@@ -135,7 +135,7 @@ class UserController extends Controller
         $user->phone_code = $req['phone_code'];
         $user->phone = $req['phone'];
         $user->address = $req['address'];
-        $user->language_id = $req['language_id'];
+        $user->language_id = $req['language_id'] ?? 1;
         $user->password = Hash::make($req['password']);
         $user->api_token = Str::random(60);
         $user->email_verification = ($basic->email_verification) ? 0 : 1;

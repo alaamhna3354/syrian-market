@@ -245,7 +245,7 @@ class FrontendController extends Controller
 
         Mail::to($basicEmail)->send(new SendMail($email_from, $subject, $message, $name));
 
-        return back()->with('success', 'Mail has been sent');
+        return back()->with('success', trans('Mail has been sent'));
     }
 //$2y$10$fI4stKwL9RqRUOVai8vKm.3XWE.xrvjEmuBiQGn.Md3chHG78.PvO
     public function getLink($getLink, $id)
@@ -279,7 +279,7 @@ class FrontendController extends Controller
         $data = new Subscriber();
         $data->email = $request->email;
         $data->save();
-        return redirect(url()->previous() . '#subscribe')->with('success', 'Subscribe successfully');
+        return redirect(url()->previous() . '#subscribe')->with('success', trans('Subscribe successfully'));
     }
 
     public function language($code)

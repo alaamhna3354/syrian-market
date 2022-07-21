@@ -84,14 +84,14 @@ class VerificationController extends Controller
                 'code' => $user->verify_code
             ]);
 
-            return back()->with('success', 'Email verification code has been sent');
+            return back()->with('success', trans('Email verification code has been sent'));
         } elseif ($type === 'mobile') {
             $this->sms($user,'VERIFICATION_CODE',[
                 'code' => $user->verify_code
             ]);
-            return back()->with('success', 'SMS verification code has been sent');
+            return back()->with('success', trans('SMS verification code has been sent'));
         } else {
-            throw ValidationException::withMessages(['error' => 'Sending Failed']);
+            throw ValidationException::withMessages(['error' =>  trans('Sending Failed')]);
         }
     }
 
@@ -113,7 +113,7 @@ class VerificationController extends Controller
             $user->save();
             return redirect()->intended(route('user.home'));
         }
-        throw ValidationException::withMessages(['error' => 'Verification code didn\'t match!']);
+        throw ValidationException::withMessages(['error' =>  trans('Verification code did not match!')]);
     }
 
     public function smsVerify(Request $request)
@@ -135,6 +135,6 @@ class VerificationController extends Controller
 
             return redirect()->intended(route('user.home'));
         }
-        throw ValidationException::withMessages(['error' => 'Verification code didn\'t match!']);
+        throw ValidationException::withMessages(['error' => trans('Verification code did not match!')]);
     }
 }
