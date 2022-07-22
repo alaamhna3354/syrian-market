@@ -127,7 +127,7 @@
                 @endif
                 <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
                     <input type="checkbox" name="agree" class="agree" id="agree">
-                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
+                    <label for="player_name" id="checklabel">@lang('نعم قمت بتأكيد الطلب')</label>
                 </div>
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
@@ -234,7 +234,14 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
                 itemSelected = true;
+                if($('.agree').is(':checked')){
+                    $('#btn-add').removeClass('disble');
+                    $('#btn-add').removeAttr("disabled");
+                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`); 
+                    $("#checklabel").css("color","#fff");
+                    }
             }
+           
             event.preventDefault();
         });
          // fun 4
@@ -249,13 +256,21 @@
                 $('#btn-add').removeAttr("disabled");
             }
            }
+           else{
+            if(itemSelected == false){
+                $("#checklabel").html(`يجب عليك أختيار باقة`); 
+                $("#checklabel").css("color","red");
+            }
+           }
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            if(itemSelected && $("#player_number").val().length != 0 ){
+           
+             if(itemSelected && $("#player_number").val().length != 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
+
 
         });
         {{--"use strict";--}}

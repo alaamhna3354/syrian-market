@@ -219,7 +219,14 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
                 itemSelected = true;
+                if($('.agree').is(':checked')){
+                    $('#btn-add').removeClass('disble');
+                    $('#btn-add').removeAttr("disabled");
+                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`); 
+                    $("#checklabel").css("color","#fff");
+                    }
             }
+           
             event.preventDefault();
         });
          // fun 4
@@ -234,13 +241,21 @@
                 $('#btn-add').removeAttr("disabled");
             }
            }
+           else{
+            if(itemSelected == false){
+                $("#checklabel").html(`يجب عليك أختيار باقة`); 
+                $("#checklabel").css("color","red");
+            }
+           }
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            if(itemSelected && $("#player_number").val().length != 0 ){
+           
+             if(itemSelected && $("#player_number").val().length != 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
+
 
         });
         {{--"use strict";--}}
