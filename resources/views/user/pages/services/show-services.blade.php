@@ -141,8 +141,8 @@
     </div>
 @endsection
 @push('js')
-    <script>
-        "use strict";
+<script>
+ "use strict";
         var itemSelected = false;
         // fun 1
         $(".get-name").on("click", function() {
@@ -186,17 +186,16 @@
             if($(this).hasClass("disable")){
                 event.preventDefault();
             }
-            else if($(this).hasClass("active")){
-                $(this).removeClass('active');
-                $('.chosen-item').removeClass('active');
-                $('#cards-services .item').removeClass('un-active');
-                $(".total").val('0');
-                $('.quantity').val('0');
-                itemSelected = false;
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
-                $(".agree").removeAttr('checked').checkboxradio('refresh');
-            }
+            // else if($(this).hasClass("active")){
+            //     $(this).removeClass('active');
+            //     $('.chosen-item').removeClass('active');
+            //     $('#cards-services .item').removeClass('un-active');
+            //     $(".total").val('0');
+            //     $('.quantity').val('0');
+            //     itemSelected = false;
+            //     $('#btn-add').addClass('disble');
+            //     $('#btn-add').attr("disabled","");
+            // }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
@@ -220,12 +219,19 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
                 itemSelected = true;
+                if($('.agree').is(':checked')){
+                    $('#btn-add').removeClass('disble');
+                    $('#btn-add').removeAttr("disabled");
+                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`); 
+                    $("#checklabel").css("color","#fff");
+                    }
             }
+           
             event.preventDefault();
         });
          // fun 4
          $('.agree').on('click', function (event) {
-           if(itemSelected){
+           if(itemSelected ){
             if (!$('.agree').is(':checked')) {
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
@@ -235,11 +241,22 @@
                 $('#btn-add').removeAttr("disabled");
             }
            }
+           else{
+            if(itemSelected == false){
+                $("#checklabel").html(`يجب عليك أختيار باقة`); 
+                $("#checklabel").css("color","red");
+            }
+           }
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            $('#btn-add').addClass('disble');
-            $('#btn-add').attr("disabled","");
+           
+             if(itemSelected && $("#player_number").val().length != 0 ){
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }   
+
+
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}

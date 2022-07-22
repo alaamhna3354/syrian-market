@@ -127,7 +127,7 @@
                 @endif
                 <div class="col-10 col-sm-12 mb-2 d-flex align-items-center">
                     <input type="checkbox" name="agree" class="agree" id="agree">
-                    <label for="player_name">@lang('نعم قمت بتأكيد الطلب')</label>
+                    <label for="player_name" id="checklabel">@lang('نعم قمت بتأكيد الطلب')</label>
                 </div>
                 <div class="col-12 mt-4 text-center ">
                     <div class="chosen-item">
@@ -201,16 +201,16 @@
             if($(this).hasClass("disable")){
                 event.preventDefault();
             }
-            else if($(this).hasClass("active")){
-                $(this).removeClass('active');
-                $('.chosen-item').removeClass('active');
-                $('#cards-services .item').removeClass('un-active');
-                $(".total").val('0');
-                $('.quantity').val('0');
-                itemSelected = false;
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
-            }
+            // else if($(this).hasClass("active")){
+            //     $(this).removeClass('active');
+            //     $('.chosen-item').removeClass('active');
+            //     $('#cards-services .item').removeClass('un-active');
+            //     $(".total").val('0');
+            //     $('.quantity').val('0');
+            //     itemSelected = false;
+            //     $('#btn-add').addClass('disble');
+            //     $('#btn-add').attr("disabled","");
+            // }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
@@ -234,12 +234,19 @@
                     $(".price-val").html(`${valu*price}$`);
                 });
                 itemSelected = true;
+                if($('.agree').is(':checked')){
+                    $('#btn-add').removeClass('disble');
+                    $('#btn-add').removeAttr("disabled");
+                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`); 
+                    $("#checklabel").css("color","#fff");
+                    }
             }
+           
             event.preventDefault();
         });
          // fun 4
          $('.agree').on('click', function (event) {
-           if(itemSelected){
+           if(itemSelected ){
             if (!$('.agree').is(':checked')) {
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
@@ -249,11 +256,22 @@
                 $('#btn-add').removeAttr("disabled");
             }
            }
+           else{
+            if(itemSelected == false){
+                $("#checklabel").html(`يجب عليك أختيار باقة`); 
+                $("#checklabel").css("color","red");
+            }
+           }
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            $('#btn-add').addClass('disble');
-            $('#btn-add').attr("disabled","");
+           
+             if(itemSelected && $("#player_number").val().length != 0 ){
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }   
+
+
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
