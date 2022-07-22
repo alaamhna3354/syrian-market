@@ -157,26 +157,22 @@
 @endsection
 @push('js')
     <script>
-
-        $("#btn-add").on("click",function (){
-            $('#btn-add').addClass('disble');
-            // $('#btn-add').attr("disabled", "disabled")
-            // $('#btn-add').attr("disabled", "");
-        })
-        "use strict";
+ "use strict";
+        var itemSelected = false;
         // fun 1
-        $(".get-name").on("click", function () {
+        $(".get-name").on("click", function() {
             var category_id = $('.inp-hid-catg').val();
             var player_number = $('#player_number').val();
-            if (player_number == "") {
+            if(player_number == ""){
                 $('.vald-player-number').addClass('active');
-            } else {
+            }
+            else{
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url: '/user/player/' + category_id + '/' + player_number,
-                    type: "GET",
-                    success: function (response) {
+                    url:'/user/player/'+category_id+'/'+player_number,
+                    type:"GET",
+                    success:function(response){
                         console.log(response);
                         $('#player_name').val(response.username);
                         $(".get-name").removeClass('fa-spinner active');
@@ -185,39 +181,45 @@
             }
         });
         // fun 2
-        $("#player_number").on("keyup", function () {
-            if (player_number != "") {
+        $("#player_number").on("keyup", function() {
+            if(player_number != ""){
                 $('.vald-player-number').removeClass('active');
-            } else {
+            }
+            else{
                 $('.vald-player-number').addClass('active');
             }
         });
         // fun 3
-        $(".myInput").on("keyup", function () {
+        $(".myInput").on("keyup", function() {
             var value = this.value.toLowerCase().trim();
-            $(".it").show().filter(function () {
+            $(".it").show().filter(function() {
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
-
+       
         $('#cards-services .item').on('click', function (event) {
-            if ($(this).hasClass("disable")) {
+            if($(this).hasClass("disable")){
                 event.preventDefault();
-            } else if ($(this).hasClass("active")) {
+            }
+            else if($(this).hasClass("active")){
                 $(this).removeClass('active');
                 $('.chosen-item').removeClass('active');
                 $('#cards-services .item').removeClass('un-active');
                 $(".total").val('0');
                 $('.quantity').val('0');
-            } else {
+                itemSelected = false;
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }
+            else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
-                var name = $(this).children(`.name`).attr("data-name");
-                var price = $(this).children(`.price`).attr("data-price").replace('$', '');
+                var name =  $(this).children(`.name`).attr("data-name");
+                var price =  $(this).children(`.price`).attr("data-price").replace('$','');
                 // get & set id
-                var id = $(this).children(`.name`).attr("data-id");
+                var id =  $(this).children(`.name`).attr("data-id");
                 $('.inp-hid-serv').val(id);
 
                 $(".name-val").html(name);
@@ -225,24 +227,33 @@
                 $(".total").val(`${price}$`);
                 $('.quantity').val('1');
                 $('.quantity-val').html('1');
-                $(".quantity").keyup(function () {
-                    var valu = $(this).val();
+                $(".quantity").keyup(function(){
+                    var valu =  $(this).val();
                     $(".quantity-val").html(valu);
-                    $(".total").val(`${valu * price}$`);
-                    $(".price-val").html(`${valu * price}$`);
+                    $(".total").val(`${valu*price}$`);
+                    $(".price-val").html(`${valu*price}$`);
                 });
+                itemSelected = true;
             }
             event.preventDefault();
         });
-        // fun 4
-        $('.agree').on('click', function (event) {
+         // fun 4
+         $('.agree').on('click', function (event) {
+           if(itemSelected){
             if (!$('.agree').is(':checked')) {
                 $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled", "");
-            } else {
+                $('#btn-add').attr("disabled","");
+            }
+            else{
                 $('#btn-add').removeClass('disble');
                 $('#btn-add').removeAttr("disabled");
             }
+           }
+        });
+        // fun 5
+        $('#btn-add').on('click', function (event) {
+            $('#btn-add').addClass('disble');
+            $('#btn-add').attr("disabled","");
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}

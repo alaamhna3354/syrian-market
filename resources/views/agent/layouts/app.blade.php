@@ -20,7 +20,9 @@
         <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
     </footer>
 
-
+    <button class="scroll-top2 scroll-to-target2 open2">
+        <a href="https://wa.me/00971505889285" target="_blank"><i class="fab fa-whatsapp"></i></a> 
+    </button>
 </div>
 
 
