@@ -143,6 +143,7 @@
 @push('js')
     <script>
         "use strict";
+        var itemSelected = false;
         // fun 1
         $(".get-name").on("click", function() {
             var category_id = $('.inp-hid-catg').val();
@@ -191,6 +192,10 @@
                 $('#cards-services .item').removeClass('un-active');
                 $(".total").val('0');
                 $('.quantity').val('0');
+                itemSelected = false;
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+                $(".agree").removeAttr('checked').checkboxradio('refresh');
             }
             else{
                 $('#cards-services .item').removeClass('active');
@@ -214,11 +219,13 @@
                     $(".total").val(`${valu*price}$`);
                     $(".price-val").html(`${valu*price}$`);
                 });
+                itemSelected = true;
             }
             event.preventDefault();
         });
          // fun 4
          $('.agree').on('click', function (event) {
+           if(itemSelected){
             if (!$('.agree').is(':checked')) {
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
@@ -227,6 +234,12 @@
                 $('#btn-add').removeClass('disble');
                 $('#btn-add').removeAttr("disabled");
             }
+           }
+        });
+        // fun 5
+        $('#btn-add').on('click', function (event) {
+            $('#btn-add').addClass('disble');
+            $('#btn-add').attr("disabled","");
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}

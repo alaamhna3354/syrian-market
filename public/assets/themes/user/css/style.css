@@ -945,7 +945,7 @@ margin-inline-end: 4px;
 	opacity: 0;
 }
 .scroll-top.open {
-	bottom: 30px;
+	bottom: 90px;
 	opacity: 1;
 }
 .scroll-top::after {
@@ -960,10 +960,52 @@ margin-inline-end: 4px;
 	background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 80%);
 }
 .scroll-top:hover {
-	background: #a3a3a3;
+	background: #db4205;
 }
-.scroll-top:hover {
-	background: #a3a3a3;
+.scroll-top2 {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    bottom: 100%;
+    left: 50px;
+    font-size: 16px;
+    border-radius: 50%;
+    z-index: 98;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    background: #ff5917;
+    transition: 1s ease;
+    border: none;
+    opacity: 0;
+}
+.scroll-top2 a{
+    color: #fff;
+}
+.scroll-top i{
+    font-size: 20px;
+}
+.scroll-top2 i{
+    font-size: 20px;
+}
+.scroll-top2.open2 {
+    bottom: 30px;
+    opacity: 1;
+}
+.scroll-top2::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    top: 100%;
+    left: 5%;
+    height: 10px;
+    width: 90%;
+    opacity: 1;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 80%);
+}
+.scroll-top2:hover {
+    background: #db4205;
 }
 .dropdown-menu a{
     color: #fff !important;
