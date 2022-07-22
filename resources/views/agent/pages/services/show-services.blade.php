@@ -201,16 +201,16 @@
             if($(this).hasClass("disable")){
                 event.preventDefault();
             }
-            else if($(this).hasClass("active")){
-                $(this).removeClass('active');
-                $('.chosen-item').removeClass('active');
-                $('#cards-services .item').removeClass('un-active');
-                $(".total").val('0');
-                $('.quantity').val('0');
-                itemSelected = false;
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
-            }
+            // else if($(this).hasClass("active")){
+            //     $(this).removeClass('active');
+            //     $('.chosen-item').removeClass('active');
+            //     $('#cards-services .item').removeClass('un-active');
+            //     $(".total").val('0');
+            //     $('.quantity').val('0');
+            //     itemSelected = false;
+            //     $('#btn-add').addClass('disble');
+            //     $('#btn-add').attr("disabled","");
+            // }
             else{
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
@@ -239,7 +239,7 @@
         });
          // fun 4
          $('.agree').on('click', function (event) {
-           if(itemSelected){
+           if(itemSelected ){
             if (!$('.agree').is(':checked')) {
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
@@ -252,8 +252,11 @@
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            $('#btn-add').addClass('disble');
-            $('#btn-add').attr("disabled","");
+            if(itemSelected && $("#player_number").val().length != 0 ){
+                $('#btn-add').addClass('disble');
+                $('#btn-add').attr("disabled","");
+            }   
+
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
