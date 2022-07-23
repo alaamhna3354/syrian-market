@@ -266,13 +266,12 @@
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-           
-             if(itemSelected && $("#player_number").val().length != 0 ){
+            setTimeout(function() {
+                if(itemSelected && $("#player_number").val().length != 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
-
-
+                }, 1000);
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
