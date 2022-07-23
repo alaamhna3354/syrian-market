@@ -89,7 +89,8 @@
                 @if($category->type == "GAME")
                     <div class=" col-10  mb-2" >
                         <label for="player_number">@lang('Player number')</label>
-                        <input type="text" name="link" id="player_number" placeholder="" required>
+                        <input type="text" name="link" id="player_number" placeholder="" required
+                        oninvalid="setCustomValidity('أدخل رقم اللاعب من فضلك ')">
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
                     </div>
@@ -97,7 +98,7 @@
                         <!-- <i class="fas fa-sync-alt get-name"></i> -->
                         <i class="fas fa-crosshairs get-name "></i>
                     </div>
-                    <div class="col-10 col-sm-12 mb-2">
+                    <div class="col-10 col-sm-12 mb-2 mt-3">
                         <label for="player_name">@lang('Player name')</label>
                         <input type="text" name="player_name" id="player_name">
                     </div>
