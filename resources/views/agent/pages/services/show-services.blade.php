@@ -225,8 +225,15 @@
 
                 $(".name-val").html(name);
                 $(".price-val").html(`${price}$`);
-                $(".total").val(`${price}$`);
-                $('.quantity').val('1');
+                if($('.quantity').val() > 1){
+                $(".total").val(` ${price * $('.quantity').val()} $`);
+
+                }
+                else{
+                    $(".total").val(` ${price} $`);
+                    $('.quantity').val('1');
+                }
+                // $('.quantity').val('1');
                 $('.quantity-val').html('1');
                 $(".quantity").keyup(function(){
                     var valu =  $(this).val();

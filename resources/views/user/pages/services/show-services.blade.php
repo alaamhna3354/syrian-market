@@ -79,7 +79,7 @@
             <div class="row">
                 <div class="col-12  mb-2">
                     <label for="">@lang('quantity')</label>
-                    <input type="number" name="quantity" class="quantity">
+                    <input type="number" name="quantity" class="quantity" value="1">
                     
                 </div>
                 <div class="col-12  mb-2">
@@ -210,8 +210,15 @@
 
                 $(".name-val").html(name);
                 $(".price-val").html(`${price}$`);
-                $(".total").val(`${price}$`);
-                $('.quantity').val('1');
+                if($('.quantity').val() > 1){
+                $(".total").val(` ${price * $('.quantity').val()} $`);
+
+                }
+                else{
+                    $(".total").val(` ${price} $`);
+                    $('.quantity').val('1');
+                }
+                // $('.quantity').val('1');
                 $('.quantity-val').html('1');
                 $(".quantity").keyup(function(){
                     var valu =  $(this).val();
@@ -251,13 +258,12 @@
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-           
-             if(itemSelected && $("#player_number").val().length != 0 ){
+            setTimeout(function() {
+                if(itemSelected && $("#player_number").val().length != 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
-
-
+                }, 1000);
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
