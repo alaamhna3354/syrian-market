@@ -278,7 +278,7 @@
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
-                }, 1000);
+                }, 10);
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}
