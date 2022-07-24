@@ -105,7 +105,8 @@
                     <div class=" col-10  mb-2">
                         <label for="player_number">@lang('Player number')</label>
                         <input type="text" name="link" id="player_number" placeholder="" required
-                        oninvalid="setCustomValidity('أدخل رقم اللاعب من فضلك ')">
+                        oninvalid="setCustomValidity('أدخل رقم اللاعب من فضلك ')"
+                        onchange="try{setCustomValidity('')}catch(e){}">
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
                     </div>
@@ -274,7 +275,7 @@
         // fun 5
         $('#btn-add').on('click', function (event) {
             setTimeout(function() {
-                if(itemSelected && $("#player_number").val().length != 0 ){
+                if(itemSelected && $("#player_number").val().length > 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
             }   
