@@ -138,7 +138,7 @@ trait Notify
         if ($templateObj) {
             $template = $templateObj->body;
             foreach ($params as $code => $value) {
-                $template = str_replace('[[' . $code . ']]', $value, $template);
+                $template = str_replace('[[' . $code . ']]', __($value), $template);
             }
             $action['text'] = $template;
         }
