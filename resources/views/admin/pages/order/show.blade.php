@@ -62,7 +62,7 @@
                             </td>
 
                             <td data-label="@lang('Codes')">{{$order->codes}}</td>
-                            <td data-label="@lang('Details')">{{$order->details}}</td>
+                            <td data-label="@lang('Details')">{!!  $order->details!!}</td>
                             <td data-label="@lang('Created')">{{dateTime($order->created_at , 'd M Y, h:i A')}} </td>
                             <td data-label="@lang('Status')">
                                 @if($order->status=='awaiting') <span
@@ -204,6 +204,15 @@
             })
 
         });
+function copy($link) {
+    /* Copy the text inside the text field */
+    navigator.clipboard.writeText($link);
+
+    Toastify({
+        text: "تم النسخ",
+        duration: 3000
+    }).showToast();
+}
 
     </script>
 @endpush

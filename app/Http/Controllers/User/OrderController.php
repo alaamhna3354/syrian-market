@@ -195,7 +195,7 @@ class OrderController extends Controller
                 }
 
             } elseif ($service->category->type == 'GAME') {
-                $order->details = trans('Player Id is : ') . $req['link'] . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
+                $order->details = trans('Player Id is : ') ."<span id='number' style=\"color:blue\" onclick='copy(".$req['link'].")' >". $req['link']."</span>". trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
             } elseif ($service->category->type == '5SIM') {
 
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);

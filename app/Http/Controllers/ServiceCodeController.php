@@ -20,8 +20,9 @@ class ServiceCodeController extends Controller
      */
     public function index()
     {
-        $service_codes = ServiceCode::with('service')->paginate(config('basic.paginate'));
+        $service_codes = ServiceCode::orderby('id','desc')->with('service')->paginate(config('basic.paginate'));
         $services = Service::with('service_code')->has('service_code')->paginate(config('basic.paginate'));
+
         return view('admin.pages.service_codes.show-service_codes', compact('service_codes','services'));
     }
 

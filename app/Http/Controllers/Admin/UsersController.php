@@ -266,24 +266,24 @@ class UsersController extends Controller
 //            }
 //        }
 
-        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+        $commissions = AgentCommissionRate::orderby('id','desc')->whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->where('user_id', $userid)
             ->get();
 
-        $commissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+        $commissionsThisMonth = AgentCommissionRate::orderby('id','desc')->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->where('user_id', $userid)
-            ->get();
+            ->orderby('id','desc')->get();
 //dd($userid);
         $totalCommissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))->where('is_paid', 0)
             ->where('user_id', $userid)
-            ->get();
-        $totalCommissionsThisMonth = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+            ->orderby('id','desc')->get();
+        $totalCommissionsThisMonth = AgentCommissionRate::orderby('id','desc')->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))->where('is_paid', 0)
             ->where('user_id', $userid)
-            ->get();
+            ->orderby('id','desc')->get();
 //        dd($totalCommissionsThisMonth);
         $commission_rate = 0;
         $this_month_commission_rate = 0;
@@ -340,7 +340,7 @@ class UsersController extends Controller
 //                $users_ids[$key] = $child->id;
 //            }
 //        }
-        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->subMonth()->month)
+        $commissions = AgentCommissionRate::orderby('id','desc')->whereMonth('created_at', Carbon::now()->subMonth()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
             ->where('user_id', $userid)
@@ -409,7 +409,7 @@ class UsersController extends Controller
 //        }
 
         $userid = $user->id;
-        $commissions = AgentCommissionRate::whereMonth('created_at', Carbon::now()->month)
+        $commissions = AgentCommissionRate::orderby('id','desc')->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', date('Y'))
             ->where('is_paid', 0)
             ->where('user_id', $userid)
