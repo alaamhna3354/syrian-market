@@ -107,7 +107,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($service->service_code as $service_code)
+                        @foreach($service->service_code->sortByDesc('id') as $service_code)
                             <tr>
                                 <td class="text-center check-box-width-50">
                                     <input type="checkbox"

@@ -13,6 +13,7 @@
     <link href="{{asset('assets/admin/css/style_ar.css')}}" rel="stylesheet">
     <link href="{{asset('assets/admin/css/select2.min.css')}}" rel="stylesheet">
     <link href="{{asset('assets/admin/css/custom.css')}}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @stack('style')
 </head>
 <body>
@@ -78,6 +79,7 @@
 <script src="{{ asset('assets/global/js/axios.min.js') }}"></script>
 <script src="{{ asset('assets/global/js/vue.min.js') }}"></script>
 <script src="{{ asset('assets/global/js/pusher.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 @stack('js')
 @stack('extra-script')
 
