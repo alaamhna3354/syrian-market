@@ -7,6 +7,7 @@ use App\Http\Traits\Notify;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -74,8 +75,57 @@ class OrderManageController extends Controller
 
             if (count($ids) > 0) {
                 $logs = Order::whereIn('id', $ids)->with('users')->get()->map(function ($item) use($status){
+
+                    $user = $item->users;
+                    if ($status == "refunded"){
+                        $user->balance += $item->price;
+                        $transaction1 = new Transaction();
+                        $transaction1->user_id = $user->id;
+                        $transaction1->trx_type = '+';
+                        $transaction1->amount = $item->price;
+                        $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
+                        $transaction1->trx_id = strRandom();
+                        $transaction1->charge = 0;
+
+                        if ($item->agentCommissionRate != null){
+                            $agentCommissionRate = $item->agentCommissionRate;
+                            if ($agentCommissionRate->is_paid == 1){
+                                $agent = $user->parent;
+                                $agent->balance -= $agentCommissionRate->commission_rate;
+                                if ($agent->save()){
+                                    $transaction = new Transaction();
+                                    $transaction->user_id = $agent->id;
+                                    $transaction->trx_type = '-';
+                                    $transaction->amount = $agentCommissionRate->commission_rate;
+                                    $transaction->remarks = 'استرجاع الارباح من الوكيل بعد تحويل حالة الطلب الى مسترجع';
+                                    $transaction->trx_id = strRandom();
+                                    $transaction->charge = 0;
+                                    $transaction->save();
+                                }
+
+                            }
+
+//                    dd($agentCommissionRate);
+                            $agentCommissionRate->delete();
+                        }
+                        if ($user->save()){
+                            $transaction1->save();
+                        }
+                    }
+
                     $item->status = $status;
                     $item->save();
+
+                    $msg = [
+                        'status' => $item->status,
+                        'order_id' => $item->id,
+                    ];
+                    $action = [
+                        "link" => '#',
+                        "icon" => "fa fa-money-bill-alt text-white"
+                    ];
+
+                    $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
 
                     $msg = [
                         'order_id' => $item->id,
@@ -230,8 +280,10 @@ class OrderManageController extends Controller
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
+
             if (count($ids) > 0) {
                 $order = Order::whereIn('id', $ids);
+                dd($order);
                 $order->update([
                     'status' => 'refunded',
                 ]);
