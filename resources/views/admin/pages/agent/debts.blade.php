@@ -28,7 +28,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($user->debts()->limit(10)->get() as $debt)
+                        @foreach($user->debts()->get() as $debt)
                             <tr>
                                 <td class="text-center">
                                     <input type="checkbox" id="chk-{{ $debt->id }}"
