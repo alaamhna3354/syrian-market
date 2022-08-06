@@ -46,18 +46,26 @@
                             </td>
 
                             <td data-label="@lang('Order Details')">
+
+
                                 <h5>@lang(optional($order->service)->service_title) </h5>
                                 @lang('Link'): @lang($order->link)<br>
                                 @lang('Quantity'): @lang($order->quantity)<br>
                                 @lang('Start counter'):<br>
                                 @lang('Start counter'):
+                                <br>
+                                <span
+                                    onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional($order->service)->category->category_title)')">
+                                    <i class="fa fa-copy" style="font-size: 25px;"></i>
+                                </span>
                             </td>
 
                             <td data-label="@lang('Service Details')">
                                 <h5>@lang(optional($order->service)->service_title) </h5>
                                 @lang('Category'): @lang(optional($order->service)->category->category_title)<br>
                                 @lang('order price'): {{$order->price}} {{config('basic.currency_symbol')}}<br>
-                                @lang('service price'): {{$order->service->price}} {{config('basic.currency_symbol')}}<br>
+                                @lang('service price'): {{$order->service->price}} {{config('basic.currency_symbol')}}
+                                <br>
 
                             </td>
 
@@ -82,7 +90,7 @@
                                 @elseif($order->status == 'refunded') <span
                                     class="badge badge-pill badge-danger">{{'Refunded'}}</span>
                                 @elseif($order->status == 'code-waiting') <span
-                                        class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
+                                    class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
                                 @endif
                             </td>
                             <td data-label="@lang('Action')">
@@ -97,7 +105,8 @@
                                                 class="fa fa-edit text-warning pr-2"
                                                 aria-hidden="true"></i> @lang('Edit')
                                         </a>
-                                        <a href="javascript:void(0)" class="dropdown-item status-change" data-toggle="modal"
+                                        <a href="javascript:void(0)" class="dropdown-item status-change"
+                                           data-toggle="modal"
                                            data-target="#statusMoldal"
                                            data-route="{{ route('admin.order.status.change',['id'=>$order->id] ) }} ">
                                             <i class="fa fa-check pr-2 text-success"
@@ -105,7 +114,8 @@
                                         </a>
 
 
-                                        <a href="javascript:void(0)" class="dropdown-item delete-order" data-toggle="modal"
+                                        <a href="javascript:void(0)" class="dropdown-item delete-order"
+                                           data-toggle="modal"
                                            data-target="#deleteModal"
                                            data-route="{{ route('admin.order.destroy',[$order->id])}} ">
                                             <i class="fa fa-trash-alt pr-2 text-danger"
@@ -167,11 +177,10 @@
             });
 
 
-
             //all checked click function
 
             $(document).on('click', '.usersOrderChangeStatus', function () {
-                 status = $(this).data('status');
+                status = $(this).data('status');
                 $('.text-status').text(status)
             });
 
@@ -187,7 +196,6 @@
                 var strIds = allVals.join(",");
 
 
-
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')},
                     url: "{{ route('admin.usersOrderChangeStatus') }}",
@@ -198,21 +206,23 @@
                     datatType: 'json',
                     type: "get",
                     success: function (data) {
-                         location.reload();
+                        location.reload();
                     }
                 });
             })
 
         });
-function copy($link) {
-    /* Copy the text inside the text field */
-    navigator.clipboard.writeText($link);
 
-    Toastify({
-        text: "تم النسخ",
-        duration: 3000
-    }).showToast();
-}
+        function copy($link) {
+            /* Copy the text inside the text field */
+            console.log($link)
+            navigator.clipboard.writeText($link);
+
+            Toastify({
+                text: "تم النسخ",
+                duration: 3000
+            }).showToast();
+        }
 
     </script>
 @endpush
