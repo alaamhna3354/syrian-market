@@ -228,7 +228,7 @@
                                 </table>
                             </div>
                         <div class="clearfix"></div>
-{{--                         {{ $user->order()->latest()->paginate(10)->appends($_GET)->links() }}--}}
+                         {{ $user->order()->latest()->paginate(20)->appends($_GET)->links() }}
                         @endforeach
                     </div>
                 </div>

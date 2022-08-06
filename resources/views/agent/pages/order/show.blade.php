@@ -231,7 +231,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- {{ $orders->appends($_GET)->links() }} -->
+                         {{ $orders->appends($_GET)->links() }}
 
                     </div>
                 </div>
