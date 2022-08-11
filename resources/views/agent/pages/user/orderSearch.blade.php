@@ -24,6 +24,13 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+                                        <input type="text" name="username" value="{{@request()->username}}"
+                                               class="form-control"
+                                               placeholder="@lang('Username')">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
                                         <input type="text" name="service" value="{{@request()->service}}"
                                                class="form-control get-service"
                                                placeholder="@lang('Service')">
@@ -135,7 +142,7 @@
                         </div>
 
 
-                        @foreach(auth()->user()->children as $key=>$user)
+                        @foreach($user->children as $key=>$user)
                             <ol class="breadcrumb center-items">
                                 <li class="active">@lang($user->username)</li>
                             </ol>

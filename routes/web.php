@@ -128,6 +128,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('/users/orders', 'Agent\UserController@usersOrder')->name('users.orders');
         Route::get('/users/orderSearch', 'Agent\UserController@usersOrderSearch')->name('users.OrderSearch');
 
+        Route::get('/users/debtSearch', 'Agent\UserController@usersDebtSearch')->name('users.debtSearch');
+
         Route::get('/profile', 'Agent\HomeController@profile')->name('profile');
         Route::post('/updateProfile', 'Agent\HomeController@updateProfile')->name('updateProfile');
         Route::put('/updateInformation', 'Agent\HomeController@updateInformation')->name('updateInformation');
@@ -249,6 +251,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/user_fundLog-search/{id}', 'Admin\UsersController@user_fundLogSearch')->name('user_fundLog.search');
 //        Route::get('user_fundLog/search', 'Admin\PaymentLogController@user_fundLog')->name('user_fundLog.search');
 
+        Route::get('/user_debt-search/{id}', 'Admin\UsersController@user_debtSearch')->name('user_debt.search');
         Route::get('/agent/transfer/{id}', 'Admin\UsersController@transfer')->name('agent.transfer');
         Route::post('/agent/transfereEarn', 'Admin\UsersController@transferEarn')->name('agent.transferEarn');
         Route::post('/agent/transferThisMonthEarn', 'Admin\UsersController@transferThisMonthEarn')->name('agent.transferThisMonthEarn');
