@@ -18,15 +18,15 @@
                                    id="check-all">
                             <label for="check-all"></label>
                         </th>
-                        <th scope="col">@lang('Order No.')</th>
-                        <th scope="col">@lang('User')</th>
-                        <th scope="col">@lang('Order Details')</th>
-                        <th scope="col">@lang('Service Details')</th>
-                        <th scope="col">@lang('Codes')</th>
-                        <th scope="col">@lang('Details')</th>
-                        <th scope="col">@lang('Created')</th>
-                        <th scope="col">@lang('Status')</th>
-                        <th scope="col">@lang('Action')</th>
+                        <th scope="col" style="width: 5%">@lang('Order No.')</th>
+                        <th scope="col" style="width: 10%">@lang('User')</th>
+                        <th scope="col" style="width: 15%">@lang('Order Details')</th>
+                        <th scope="col" style="width: 15%">@lang('Service Details')</th>
+                        <th scope="col" style="width: 15%">@lang('Codes')</th>
+                        <th scope="col" style="width: 15%">@lang('Details')</th>
+                        <th scope="col" style="width: 10%">@lang('Created')</th>
+                        <th scope="col" style="width: 10%">@lang('Status')</th>
+                        <th scope="col" style="width: 5%">@lang('Action')</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,7 +69,7 @@
 
                             </td>
 
-                            <td data-label="@lang('Codes')">{{$order->codes}}</td>
+                            <td data-label="@lang('Codes')">{{$order->code}}</td>
                             <td data-label="@lang('Details')">{!!  $order->details!!}</td>
                             <td data-label="@lang('Created')">{{dateTime($order->created_at , 'd M Y, h:i A')}} </td>
                             <td data-label="@lang('Status')">
