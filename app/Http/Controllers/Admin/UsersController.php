@@ -495,6 +495,34 @@ class UsersController extends Controller
         return view('admin.pages.agent.user_debts', compact('user', 'userid'));
     }
 
+
+
+    public function user_debtSearch(Request $request,$id)
+    {
+        $search = $request->all();
+        $user = User::findOrFail($id);
+        $dateSearch = $request->datetrx;
+        $ids = [];
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $user1 = User::with('transaction')->orderBy('id', 'asc')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['user_name']}%");
+            })
+            ->get();
+        foreach ($user1 as $id){
+            array_push($ids,$id->id);
+        }
+        foreach ($user->children as $key=>$userSearch){
+            if (!in_array($userSearch->id,$ids)){
+                $user->children->forget($key);
+            }
+        }
+//        dd($user);
+
+        return view('admin.pages.agent.user_debts', compact('user'));
+    }
+
     public function debts($id)
     {
         $user = User::findOrFail($id);

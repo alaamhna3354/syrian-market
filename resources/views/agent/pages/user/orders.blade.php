@@ -24,6 +24,13 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+                                        <input type="text" name="username" value="{{@request()->username}}"
+                                               class="form-control"
+                                               placeholder="@lang('Username')">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
                                         <input type="text" name="service" value="{{@request()->service}}"
                                                class="form-control get-service"
                                                placeholder="@lang('Service')">

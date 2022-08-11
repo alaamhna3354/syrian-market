@@ -512,6 +512,7 @@ class UserController extends Controller
 //        dd($search);
         $status = @$request->status;
         $dateSearch = @$request->date_order;
+        $username = @$request->username;
         $agent = Auth::user();
         $children = $agent->children;
 //        dd($children);
@@ -534,9 +535,55 @@ class UserController extends Controller
                 ->latest()
                 ->paginate(config('basic.paginate'));
         }
+        $user = Auth::user();
+        $search = $request->all();
+        $dateSearch = $request->datetrx;
+        $ids = [];
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $user1 = User::with('transaction')->orderBy('id', 'asc')
+            ->when($username, function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['username']}%");
+            })
+            ->get();
+        foreach ($user1 as $id){
+            array_push($ids,$id->id);
+        }
+        foreach ($user->children as $key=>$userSearch){
+            if (!in_array($userSearch->id,$ids)){
+                $user->children->forget($key);
+            }
+        }
 //        dd($orders);
 
-        return view('agent.pages.user.orderSearch', compact('orders'));
+        return view('agent.pages.user.orderSearch', compact('orders','user'));
+    }
+
+    public function usersDebtSearch(Request $request)
+    {
+        $search = $request->all();
+        $user = Auth::user();
+        $dateSearch = $request->datetrx;
+//        dd($search['user_name']);
+        $ids = [];
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $user1 = User::with('transaction')->orderBy('id', 'asc')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->where('username', 'LIKE', "%{$search['user_name']}%");
+            })
+            ->get();
+        foreach ($user1 as $id){
+            array_push($ids,$id->id);
+        }
+        foreach ($user->children as $key=>$userSearch){
+            if (!in_array($userSearch->id,$ids)){
+                $user->children->forget($key);
+            }
+        }
+//        dd($user);
+
+        return view('agent.pages.user.debts', compact('user'));
     }
 
     public function statusSearch(Request $request, $name = 'awaiting')

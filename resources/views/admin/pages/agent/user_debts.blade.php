@@ -4,7 +4,30 @@
 @endsection
 @section('content')
 {{--    @include('admin.pages.order.partials.search-bar')--}}
+<div class="page-header card card-primary m-0 m-md-4 my-4 m-md-0 p-5">
+    <div class="row justify-content-between">
+        <div class="col-md-12">
+            <form action="{{route('admin.user_debt.search',$user->id)}}" method="get">
+                <div class="row">
 
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="user_name" value="{{@request()->user_name}}" class="form-control get-username"
+                                   placeholder="@lang('Username')">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="submit" class="btn w-100 btn-primary"><i class="fas fa-search"></i> @lang('Search')</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     @foreach($user->children as $user)
         <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
             <div class="card-header">

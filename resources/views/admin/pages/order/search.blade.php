@@ -49,7 +49,11 @@
                             @lang('Link:') {{ $order->link }}<br>
                             @lang('quantity:') {{ $order->quantity }} <br>
                             @lang("Start counter:")<br>
-                            @lang('Remains:')
+                            @lang('Remains:')<br>
+                            <span
+                                onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional($order->service)->category->category_title)')">
+                                    <i class="fa fa-copy" style="font-size: 25px;"></i>
+                                </span>
                         </td><td data-label="@lang('Service Details')">
                             <h5>@lang(optional($order->service)->service_title) </h5>
                             @lang('Category'): @lang(optional($order->service)->category->category_title)<br>
@@ -195,6 +199,17 @@
 
 
         });
+
+        function copy($link) {
+            /* Copy the text inside the text field */
+            console.log($link)
+            navigator.clipboard.writeText($link);
+
+            Toastify({
+                text: "تم النسخ",
+                duration: 3000
+            }).showToast();
+        }
 
 
     </script>
