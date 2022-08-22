@@ -409,7 +409,7 @@
     top:  0;
     left: 0;
     display: none;
-    
+
 }
 #contentProgress{
     position: absolute;
@@ -478,7 +478,7 @@ margin-inline-end: 4px;
     border-radius: 5px;
 
   }
-  
+
   #myBar {
     width: 1%;
     background-color: #fe5916;
@@ -493,7 +493,7 @@ margin-inline-end: 4px;
     border-radius: 5px;
 
   }
-  
+
   #myBar2 {
     width: 1%;
     background-color: #fe5916;
@@ -1149,11 +1149,17 @@ margin-inline-end: 4px;
         padding: 0;
         display: flex;
         flex-wrap: wrap;
-    } 
+    }
     .nav-pills li{
        width: 33%;
        font-size: 14px;
        text-align: center;
        font-weight: bold;
-    } 
+    }
+}
+
+@media (max-width: 400px) {
+    .footer p {
+        font-size: 10px!important;
+    }
 }
