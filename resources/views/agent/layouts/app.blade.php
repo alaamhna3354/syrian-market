@@ -17,11 +17,14 @@
     </div>
 
     <footer class="footer text-center text-white wid-res">
-        <p>{{trans('Copyright')}} © {{date('Y')}} {{trans(config('basic.site_title'))}}. {{trans('All Rights Reserved')}}</p>
+        <p>تم التطوير من قبل شركة كودا . {{trans('All Rights Reserved')}}
+            <a href="https://wa.me/+97698660351" target="_blank"><i class="fab fa-whatsapp" style="color: #0cc243;font-size: 20px;"></i></a>
+            <a href="mailto:aaaaahm.sy@gmail.com" target="_blank"><i class="fa fa-envelope" style="color: #1a73e8;font-size: 20px;"></i></a>
+        </p>
     </footer>
 
     <button class="scroll-top2 scroll-to-target2 open2">
-        <a href="https://wa.me/+963994769080" target="_blank"><i class="fab fa-whatsapp"></i></a> 
+        <a href="https://wa.me/+963994769080" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </button>
 </div>
 
