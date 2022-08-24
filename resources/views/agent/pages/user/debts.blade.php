@@ -108,7 +108,7 @@
                                 {{--                    {{ $orders->appends($_GET)->links() }}--}}
                             </div>
                         <div class="clearfix"></div>
-                         {{ $user->order()->latest()->paginate(20)->appends($_GET)->links() }}
+                         {{ $user->debts()->latest()->paginate(config('basic..paginate'))->appends($_GET)->links() }}
                         @endforeach
                     </div>
                 </div>

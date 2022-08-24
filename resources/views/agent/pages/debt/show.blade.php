@@ -128,7 +128,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{--                    <!-- {{ $debts->appends($_GET)->links() }} -->--}}
+                                            {{ Auth::user()->debts()->latest()->paginate(config('basic..paginate'))->appends($_GET)->links() }}
 
                     </div>
                 </div>

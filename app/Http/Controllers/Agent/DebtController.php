@@ -36,7 +36,7 @@ class DebtController extends Controller
 
     public function myDebt()
     {
-        $debts = Debt::where('user_id',$this->user->id)->orderBy('id','desc')->get();
+        $debts = Debt::where('user_id',$this->user->id)->orderBy('id','desc')->paginate(config('basic..paginate'));
         return view('agent.pages.debt.show', compact('debts'));
     }
 
