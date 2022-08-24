@@ -25,7 +25,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group price">
                                                 <label class="shadow-h text-white">@lang('User')</label>
-                                                <select name="user_id" class="form-control">
+                                                <select name="user_id" class="form-control" id="user_id">
                                                     <option value="" disabled selected>@lang('Select User')</option>
                                                     @foreach(auth()->user()->children as $item)
                                                         <option value="{{$item->id}}">{{$item->username}}</option>
@@ -65,7 +65,14 @@
     </div>
 @endsection
 @push('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        $(function(){
+            $("#user_id").select2();
+        });
+    </script>
+    <script>
+
         "use strict";
         $(document).ready(function () {
             var catId = "{{ old('category', $selectService->category_id ?? '') }}";
