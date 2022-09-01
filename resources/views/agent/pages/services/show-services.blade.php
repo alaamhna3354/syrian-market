@@ -121,7 +121,7 @@
                 @elseif($category->type == "BALANCE" || $category->type == "OTHER")
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
-                        <input type="text" name="special_field"
+                        <input type="text" name="link"
                                placeholder="@lang('add') {{$category->special_field}}">
                     </div>
                 @else
