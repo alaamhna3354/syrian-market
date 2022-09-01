@@ -289,27 +289,28 @@ class OrderController extends Controller
 //            } else {
 //
 //            }
-            $user->balance -= $price;
-            $user->save();
-            $transaction = new Transaction();
-            $transaction->user_id = $user->id;
-            $transaction->trx_type = '-';
-            $transaction->amount = $price;
-            $transaction->remarks = 'Place order';
-            $transaction->trx_id = strRandom();
-            $transaction->charge = 0;
-            $transaction->save();
+            if ($service->category->type != '5SIM') {
+                $user->balance -= $price;
+                $user->save();
+                $transaction = new Transaction();
+                $transaction->user_id = $user->id;
+                $transaction->trx_type = '-';
+                $transaction->amount = $price;
+                $transaction->remarks = 'Place order';
+                $transaction->trx_id = strRandom();
+                $transaction->charge = 0;
+                $transaction->save();
 
-            if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
-                $commision = new AgentCommissionRate();
-                $rate = $service->agent_commission_rate;
-                $commision->user_id = $user->parent->id;
-                $commision->order_id = $order->id;
-                $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
-                $commision->save();
+                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
+                    $commision = new AgentCommissionRate();
+                    $rate = $service->agent_commission_rate;
+                    $commision->user_id = $user->parent->id;
+                    $commision->order_id = $order->id;
+                    $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
+                    $commision->save();
 
+                }
             }
-
             $msg = [
                 'username' => $user->username,
                 'price' => $price,
@@ -596,6 +597,16 @@ class OrderController extends Controller
         $transaction->trx_id = strRandom();
         $transaction->charge = 0;
         $transaction->save();
+
+        if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
+            $commision = new AgentCommissionRate();
+            $rate = $order->service->agent_commission_rate;
+            $commision->user_id = $user->parent->id;
+            $commision->order_id = $order->id;
+            $commision->commission_rate = ($order->service->price * $rate / 100) ;
+            $commision->save();
+
+        }
         return $result['sms'][0]['code'];
 //        $notify[] = ['success', 'Successfully placed your order!'];
 //        return back()->withNotify($notify);
