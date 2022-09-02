@@ -52,8 +52,11 @@ class DashboardController extends Controller
         $transactions = Transaction::selectRaw('SUM((CASE WHEN remarks LIKE "DEPOSIT Via%" AND created_at >=' . $last30 . ' THEN charge WHEN remarks LIKE "Place order%" AND created_at >=' . $last30 . ' THEN amount END)) AS profit_30_days')
             ->selectRaw('SUM((CASE WHEN remarks LIKE "DEPOSIT Via%" AND created_at >= CURDATE() THEN charge WHEN remarks LIKE "Place order%" AND created_at >= CURDATE() THEN amount END)) AS profit_today')
             ->get()->toArray();
-        $refundedOrder=Order::select('price')->where('status','refunded')->where('created_at' ,'>=', $last30)->sum('price');
-        $transactions[0]['profit_30_days'] = $transactions[0]['profit_30_days']-$refundedOrder;
+        $refundedOrderLastMonth=Order::select('price')->where('status','refunded')->where('created_at' ,'>=', $last30)->sum('price');
+        $refundedOrderToday=Order::selectRaw('price')->where('status','refunded')->where('created_at' ,'>=', Carbon::today())->sum('price');
+        $transactions[0]['profit_30_days'] = $transactions[0]['profit_30_days']-$refundedOrderLastMonth;
+        $transactions[0]['profit_today'] = $transactions[0]['profit_today']-$refundedOrderToday;
+
         $data['transactionProfit'] = collect($transactions)->collapse() ;
 
 
