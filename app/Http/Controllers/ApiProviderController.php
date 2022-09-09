@@ -345,7 +345,7 @@ class ApiProviderController extends Controller
     public function fivesim($params)
     {
 
-        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $token =env('fivesim_token', 'null');
         $ch = curl_init();
         $url = 'https://5sim.net/v1/user/buy/activation/' . $params;
 
@@ -372,7 +372,7 @@ class ApiProviderController extends Controller
     {
         $order=Order::find($orderID);
         $id=$order->order_id_api;
-        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $token =env('fivesim_token', 'null');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://5sim.net/v1/user/check/' . $id);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -401,7 +401,7 @@ class ApiProviderController extends Controller
 
     public function finishOrder($id,$orderid)
     {
-        $token = 'eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODYzOTIzOTEsImlhdCI6MTY1NDg1NjM5MSwicmF5IjoiZDk5YzRkZGZiZGViY2M4Njc1NTc1Y2E5ZjMyMzY1MjQiLCJzdWIiOjQ0NzgyM30.FGZ8vzi2FLALCJQq9i0A4QSf0DsLH6xPVwiSg_0vdidP0GbEm7wF-LjXwRm9EAjAAsFNEj2U16dUuAMWCX3szdTvTbmdOcGJ8V-TdfTSofvpPKpKPUIwrVfX2aW1_hobRSlIC0WFvgcvybAsMHcDscMWaNsFw4S-n1dkNsMm-pMd73N7PHnnbvrwY1EjZBRCD6O98WrI9v-Wk6VAIpdBMt2ZgT6t5Pj4wYvRLVlRqUKGDInbNN4StfC25vI4GoWFY0muQCR4_Ufth0L-gOrAjmPxvaIt7ybnWd60lTGsXkKaQk1poWaw4bpZqSm3zVcuDr9aHX_h105idt5y-am-Jg';
+        $token =env('fivesim_token', 'null');
         $ch = curl_init();
         $finishOrderUrl = 'https://5sim.net/v1/user/finish/' . $id;
         curl_setopt($ch, CURLOPT_URL, $finishOrderUrl);
