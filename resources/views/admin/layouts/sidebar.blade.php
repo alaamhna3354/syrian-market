@@ -338,7 +338,12 @@
 
 
                 <li class="nav-small-cap"><span class="hide-menu">@lang('Controls')</span></li>
-
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="{{ route('admin.admins.index') }}" aria-expanded="false">
+                        <i class="fas fa-users"></i>
+                        <span class="hide-menu">@lang('All Admin')</span>
+                    </a>
+                </li>
                 {{--<li class="sidebar-item">--}}
                 {{--<a class="sidebar-link sidebar-link" href="{{route('admin.basic-controls')}}" aria-expanded="false">--}}
                 {{--<i class="fas fa-cogs"></i>--}}

@@ -4,7 +4,11 @@
 @section('content')
     <div class="p-3">
         <h2 class="mt-3 text-center">@lang('Admin Login')</h2>
-
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <form method="POST" action="{{ route('admin.login') }}" aria-label="{{ __('Login') }}">
             @csrf
             <div class="row mb-5">

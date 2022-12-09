@@ -83,8 +83,6 @@ class CategoryController extends Controller
         }else{
             $cat->special_field = null;
         }
-
-
         $cat->save();
         return back()->with('success', trans('Successfully Updated'));
     }
@@ -184,7 +182,7 @@ class CategoryController extends Controller
 
     public function statusChange(Request $request, $id)
     {
-        $cat = Category::find($id);
+        $cat = Category::findorfail($id);
         if ($cat['status'] == 0) {
             $status = 1;
         } else {

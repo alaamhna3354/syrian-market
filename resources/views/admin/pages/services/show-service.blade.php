@@ -159,14 +159,14 @@
                                     @if($service->service_status == 0)
                                         <a href="javascript:void(0)" class="btn btn-success btn-rounded btn-sm status-change" data-toggle="modal"
                                            data-target="#statusMoldal"
-                                           data-route="{{route('admin.category.status.change',['id'=>$service->id])}}">
+                                           data-route="{{route('admin.service.status.change',['id'=>$service->id])}}">
                                             <i class="fa fa-check-circle  "
                                                aria-hidden="true"></i>
                                         </a>
                                     @else
                                         <a href="javascript:void(0)" class="btn btn-danger btn-rounded btn-sm status-change" data-toggle="modal"
                                            data-target="#statusMoldal"
-                                           data-route="{{route('admin.category.status.change',['id'=>$service->id])}}">
+                                           data-route="{{route('admin.service.status.change',['id'=>$service->id])}}">
                                             <i class="fa fa-times-circle  "
                                                aria-hidden="true"></i>
                                         </a>
