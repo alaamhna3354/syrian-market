@@ -15,26 +15,28 @@ class AdminRoleChecker
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next,$role)
+    public function handle(Request $request, Closure $next, $roles)
     {
-        $role = explode(',', $role);
+
+        $role = explode('|', $roles);
+
         if (Auth::user() &&  in_array(auth()->user()->role , $role)) {
             return $next($request);
         }
 
         //If user role is student
-        if(Auth::check() && (auth()->user()->role === 'Super' || auth()->user()->role === 'Admin'))
-        {
-            return route('admin.dashboard');
-        }
-
-        //If user role is teacher
-        if(Auth::check() && auth()->user()->role ==='SellMan')
-        {
-            return  route('admin.order');
-        }
+//        if(Auth::check() && (auth()->user()->role === 'Super' || auth()->user()->role === 'Admin'))
+//        {
+//            return route('admin.dashboard');
+//        }
+//
+//        //If user role is teacher
+//        if(Auth::check() && auth()->user()->role ==='SellMan')
+//        {
+//            return  route('admin.order');
+//        }
 
         abort(403, 'Unauthorized action.');
-        return $next($request);
+
     }
 }

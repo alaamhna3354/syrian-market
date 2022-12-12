@@ -197,7 +197,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/password', 'Admin\DashboardController@password')->name('password');
         Route::put('/password', 'Admin\DashboardController@passwordUpdate')->name('passwordUpdate');
 
-        Route::group(['middleware' => ['adminRoleChecker:Super,Admin']], function () {
+        Route::group(['middleware' => 'adminRoleChecker:Super|Admin'], function () {
             Route::get('/dashboard', 'Admin\DashboardController@dashboard')->name('dashboard');
             Route::get('/add-debt-payment/{id}', 'Admin\UsersController@addDebtPayment')->name('add-debt-payment');
             Route::Post('/pay-a-debt/{id}', 'Admin\UsersController@payDebt')->name('pay-a-debt');
@@ -454,11 +454,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::resource('price_range', 'Admin\PriceRangeController');
             Route::post('/price_range/update/{id}', 'Admin\PriceRangeController@update')->name('price_range.update');
         });
+
+
         Route::get('/order', 'OrderController@index')->name('order');
         Route::post('/order/status', 'OrderController@statusChange')->name('order.status.change');
         Route::get('/order/edit/{id}', 'OrderController@edit')->name('order.edit');
         Route::post('/order/update/{id}', 'OrderController@update')->name('order.update');
-        Route::delete('/order/destroy/{id}', 'OrderController@destroy')->name('order.destroy');
+        Route::delete('/order/destroy/{id}', 'OrderController@destroy')->name('order.destroy')->middleware(['adminRoleChecker:Super,Admin']);;
         Route::get('/get-service', 'OrderController@getservice')->name('get.service');
         Route::get('/get-user', 'OrderController@getuser')->name('get.user');
         Route::get('/search-order', 'OrderController@search')->name('order-search');

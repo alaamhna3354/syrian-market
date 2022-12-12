@@ -30,6 +30,7 @@
                     </thead>
                     <tbody>
                     @forelse($admins as $admin)
+                        @if($admin->role!='Super')
                         <tr>
                             <td data-label="@lang('No.')">{{ $loop->index	 }}</td>
                             <td data-label="@lang('Name')">@lang($admin->name)</td>
@@ -41,7 +42,7 @@
                                 <img id="image_preview_container" class="preview-image" src="{{ getFile(config('location.admin.path').$admin->image) }}"
                                                                   alt="preview image" width="50px">
                             </td>
-                            <td data-label="@lang('Role')">{{$admin->role}}</td>
+                            <td data-label="@lang('Role')">{{__($admin->role)}}</td>
                             <td data-label="@lang('Status')">
                                 <span
                                         class="badge badge-pill {{ $admin->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $admin->status == 0 ? 'Inactive' : 'Active' }}</span>
@@ -55,6 +56,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @endif
                     @empty
                         <tr>
                             <td class="text-center text-danger" colspan="9">@lang('No User Data')</td>

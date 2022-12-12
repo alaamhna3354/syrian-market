@@ -57,32 +57,32 @@
 
         </div>
 
-        <div class="col-xl-2 d-flex justify-content-md-end justify-content-start">
-            <div class="dropdown">
-                <button class="btn  btn-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span><i class="fas fa-bars pr-2"></i> @lang('Action')</span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="awaiting">@lang('Awaiting')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="pending">@lang('Pending')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="processing">@lang('Processing')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="progress">@lang('In Progress')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="completed">@lang('Completed')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="partial">@lang('Partial')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="canceled">@lang('Canceled')</button>
-                    <button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"
-                            data-target="#usersOrderChangeStatus" data-status="refunded">@lang('Refunded')</button>
-                </div>
-            </div>
-        </div>
+        {{--<div class="col-xl-2 d-flex justify-content-md-end justify-content-start">--}}
+            {{--<div class="dropdown">--}}
+                {{--<button class="btn  btn-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"--}}
+                        {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                    {{--<span><i class="fas fa-bars pr-2"></i> @lang('Action')</span>--}}
+                {{--</button>--}}
+                {{--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="awaiting">@lang('Awaiting')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="pending">@lang('Pending')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="processing">@lang('Processing')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="progress">@lang('In Progress')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="completed">@lang('Completed')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="partial">@lang('Partial')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="canceled">@lang('Canceled')</button>--}}
+                    {{--<button class="dropdown-item usersOrderChangeStatus" type="button" data-toggle="modal"--}}
+                            {{--data-target="#usersOrderChangeStatus" data-status="refunded">@lang('Refunded')</button>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        {{--</div>--}}
 
     </div>
 </div>

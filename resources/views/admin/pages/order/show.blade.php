@@ -13,11 +13,11 @@
                 <table class="categories-show-table table table-hover table-striped table-bordered">
                     <thead class="thead-primary">
                     <tr>
-                        <th scope="col" class="text-center">
-                            <input type="checkbox" class="form-check-input check-all tic-check" name="check-all"
-                                   id="check-all">
-                            <label for="check-all"></label>
-                        </th>
+                        {{--<th scope="col" class="text-center">--}}
+                        {{--<input type="checkbox" class="form-check-input check-all tic-check" name="check-all"--}}
+                        {{--id="check-all">--}}
+                        {{--<label for="check-all"></label>--}}
+                        {{--</th>--}}
                         <th scope="col" style="width: 5%">@lang('Order No.')</th>
                         <th scope="col" style="width: 10%">@lang('User')</th>
                         <th scope="col" style="width: 15%">@lang('Order Details')</th>
@@ -32,12 +32,12 @@
                     <tbody>
                     @foreach($orders as $order)
                         <tr>
-                            <td class="text-center">
-                                <input type="checkbox" id="chk-{{ $order->id }}"
-                                       class="form-check-input row-tic tic-check"
-                                       name="check" value="{{ $order->id }}" data-id="{{ $order->id }}">
-                                <label for="chk-{{ $order->id }}"></label>
-                            </td>
+                            {{--<td class="text-center">--}}
+                            {{--<input type="checkbox" id="chk-{{ $order->id }}"--}}
+                            {{--class="form-check-input row-tic tic-check"--}}
+                            {{--name="check" value="{{ $order->id }}" data-id="{{ $order->id }}">--}}
+                            {{--<label for="chk-{{ $order->id }}"></label>--}}
+                            {{--</td>--}}
                             <td data-label="@lang('Order No.')">{{$order->id}}</td>
                             <td data-label="@lang('User')">
                                 <a href="{{route('admin.user-edit',$order->user_id)}}" target="_blank">
@@ -51,11 +51,11 @@
                                 <h5>@lang(optional($order->service)->service_title) </h5>
                                 @lang('Link'): @lang($order->link)<br>
                                 @lang('Quantity'): @lang($order->quantity)<br>
-                                @lang('Start counter'):<br>
-                                @lang('Start counter'):
-                                <br>
+                                {{--@lang('Start counter'):<br>--}}
+                                {{--@lang('Start counter'):--}}
+                                {{--<br>--}}
                                 <span
-                                    onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional($order->service)->category->category_title)')">
+                                        onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional($order->service)->category->category_title)')">
                                     <i class="fa fa-copy" style="font-size: 25px;"></i>
                                 </span>
                             </td>
@@ -74,23 +74,23 @@
                             <td data-label="@lang('Created')">{{dateTime($order->created_at , 'd M Y, h:i A')}} </td>
                             <td data-label="@lang('Status')">
                                 @if($order->status=='awaiting') <span
-                                    class="badge badge-pill badge-warning">{{'Awaiting'}}</span>
+                                        class="badge badge-pill badge-warning">{{'Awaiting'}}</span>
                                 @elseif($order->status == 'pending') <span
-                                    class="badge badge-pill badge-info">{{'Pending'}}</span>
+                                        class="badge badge-pill badge-info">{{'Pending'}}</span>
                                 @elseif($order->status == 'processing') <span
-                                    class="badge badge-pill badge-info">{{'Processing'}}</span>
+                                        class="badge badge-pill badge-info">{{'Processing'}}</span>
                                 @elseif($order->status == 'progress') <span
-                                    class="badge badge-pill badge-warning">{{'In progress'}}</span>
+                                        class="badge badge-pill badge-warning">{{'In progress'}}</span>
                                 @elseif($order->status == 'completed') <span
-                                    class="badge badge-pill badge-success">{{'Completed'}}</span>
+                                        class="badge badge-pill badge-success">{{'Completed'}}</span>
                                 @elseif($order->status == 'partial') <span
-                                    class="badge badge-pill badge-warning">{{'Partial'}}</span>
+                                        class="badge badge-pill badge-warning">{{'Partial'}}</span>
                                 @elseif($order->status == 'canceled') <span
-                                    class="badge badge-pill badge-danger">{{'Canceled'}}</span>
+                                        class="badge badge-pill badge-danger">{{'Canceled'}}</span>
                                 @elseif($order->status == 'refunded') <span
-                                    class="badge badge-pill badge-danger">{{'Refunded'}}</span>
+                                        class="badge badge-pill badge-danger">{{'Refunded'}}</span>
                                 @elseif($order->status == 'code-waiting') <span
-                                    class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
+                                        class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
                                 @endif
                             </td>
                             <td data-label="@lang('Action')">
@@ -102,8 +102,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a class="dropdown-item"
                                            href="{{ route('admin.order.edit',[$order->id]) }}"><i
-                                                class="fa fa-edit text-warning pr-2"
-                                                aria-hidden="true"></i> @lang('Edit')
+                                                    class="fa fa-edit text-warning pr-2"
+                                                    aria-hidden="true"></i> @lang('Edit')
                                         </a>
                                         <a href="javascript:void(0)" class="dropdown-item status-change"
                                            data-toggle="modal"
@@ -112,16 +112,15 @@
                                             <i class="fa fa-check pr-2 text-success"
                                                aria-hidden="true"></i> @lang('Change Status')
                                         </a>
-
-
-                                        <a href="javascript:void(0)" class="dropdown-item delete-order"
-                                           data-toggle="modal"
-                                           data-target="#deleteModal"
-                                           data-route="{{ route('admin.order.destroy',[$order->id])}} ">
-                                            <i class="fa fa-trash-alt pr-2 text-danger"
-                                               aria-hidden="true"></i> @lang('Delete')
-                                        </a>
-
+                                        @if(auth()->user()->role!='SellMan')
+                                            <a href="javascript:void(0)" class="dropdown-item delete-order"
+                                               data-toggle="modal"
+                                               data-target="#deleteModal"
+                                               data-route="{{ route('admin.order.destroy',[$order->id])}} ">
+                                                <i class="fa fa-trash-alt pr-2 text-danger"
+                                                   aria-hidden="true"></i> @lang('Delete')
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -133,13 +132,8 @@
             </div>
         </div>
     </div>
-
-
-
     @include('admin.pages.order.partials.modal')
-
 @endsection
-
 @push('js-lib')
     <script src="{{ asset('assets/global/js/jquery-ui.min.js') }}"></script>
 @endpush

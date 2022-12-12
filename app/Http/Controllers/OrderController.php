@@ -190,6 +190,7 @@ class OrderController extends Controller
             $order->status = $req['status'];
         }
         $order->reason = $req['reason'];
+        $order->updated_by=auth()->id();
         $order->save();
         $msg = [
             'status' => $order->status,
@@ -274,6 +275,7 @@ class OrderController extends Controller
             }
         }
         $order->status = $req['statusChange'];
+        $order->updated_by=auth()->id();
         $order->save();
         $msg = [
             'status' => $order->status,

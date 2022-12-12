@@ -10,8 +10,17 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
-    protected $redirectTo = '/admin/dashboard';
+//    protected $redirectTo = '/admin/dashboard';
+    public function redirectTo()
+    {
 
+        $role=auth()->user()->role;
+        if($role=='Super' || $role=='Admin')
+            return route('admin.dashboard');
+        elseif ($role=='SellMan')
+            return route('admin.order');
+//        return route('home');
+    }
     public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');
@@ -33,7 +42,7 @@ class LoginController extends Controller
         ]);
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         if(auth()->guard('admin')->attempt(array($fieldType => $input['username'], 'password' => $input['password']))){
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('admin.order'));
         }else{
             return redirect()->route('admin.login')
                 ->with('error',trans('Email-Address And Password Are Wrong.'));
@@ -43,8 +52,6 @@ class LoginController extends Controller
         exit();
 
         $this->validateLogin($request);
-
-
 
 
         if (Auth::guard('admin')->validate($this->credentials($request))) {
@@ -121,6 +128,8 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        return redirect()->intended(route('admin.dashboard'));
+        return redirect()->intended($this->redirectTo());
     }
+
+
 }
