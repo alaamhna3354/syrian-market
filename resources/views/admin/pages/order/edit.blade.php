@@ -113,9 +113,11 @@
                                 <option value="processing">@lang('Processing')</option>
                                 <option value="progress">@lang('In progress')</option>
                                 <option value="completed">@lang('Completed')</option>
-                                <option value="partial">@lang('Partial')</option>
-                                <option value="canceled">@lang('Canceled')</option>
-                                <option value="refunded">@lang('Refunded')</option>
+                                @if(auth()->user()->role!='SellMan')
+                                    <option value="partial">@lang('Partial')</option>
+                                    <option value="canceled">@lang('Canceled')</option>
+                                    <option value="refunded">@lang('Refunded')</option>
+                                @endif
                             </select>
                             <div class="invalid-feedback">@lang('Please fill in the Service Type')</div>
                         </div>

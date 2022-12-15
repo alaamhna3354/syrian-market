@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckAdminStatus;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -37,7 +38,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\LanguageMiddleware::class
+            \App\Http\Middleware\LanguageMiddleware::class,
+            CheckAdminStatus::class
         ],
 
         'api' => [
@@ -65,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'userCheck' => \App\Http\Middleware\CheckUserStatus::class,
         'DemoMode' => \App\Http\Middleware\DemoMode::class,
+        'adminRoleChecker'=>\App\Http\Middleware\AdminRoleChecker::class
     ];
 }

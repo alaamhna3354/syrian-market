@@ -14,7 +14,7 @@ class UpdatePriceRangeTable extends Migration
     public function up()
     {
         Schema::table('price_ranges', function (Blueprint $table) {
-            $table->decimal('min_total_amount_to_stay');
+            $table->decimal('min_total_amount_to_stay')->default(0);
         });
     }
 

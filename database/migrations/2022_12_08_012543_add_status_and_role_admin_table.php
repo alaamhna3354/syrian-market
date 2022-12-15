@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateConfiguresTable extends Migration
+class AddStatusAndRoleAdminTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class UpdateConfiguresTable extends Migration
      */
     public function up()
     {
-        Schema::table('configures', function (Blueprint $table) {
-            $table->decimal('min_balance',11.,2)->default(0);
+        Schema::table('admins', function (Blueprint $table) {
+            $table->boolean('status')->default(1);
+            $table->enum('role',['Super','Admin','SellMan'])->default('Admin');
         });
     }
 

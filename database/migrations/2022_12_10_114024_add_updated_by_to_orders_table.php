@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateConfiguresTable extends Migration
+class AddUpdatedByToOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdateConfiguresTable extends Migration
      */
     public function up()
     {
-        Schema::table('configures', function (Blueprint $table) {
-            $table->decimal('min_balance',11.,2)->default(0);
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreignId('updated_by')->nullable();
         });
     }
 
@@ -25,6 +25,8 @@ class UpdateConfiguresTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('order', function (Blueprint $table) {
+            //
+        });
     }
 }

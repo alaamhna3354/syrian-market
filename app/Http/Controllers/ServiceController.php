@@ -323,4 +323,17 @@ class ServiceController extends Controller
         $service = Service::where('service_title', 'LIKE', "%{$request->data}%")->get()->pluck('service_title');
         return response()->json($service);
     }
+
+    public function statusChange(Request $request, $id)
+    {
+        $service = Service::findorfail($id);
+        if ($service['service_status'] == 0) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
+        $service->service_status = $status;
+        $service->save();
+        return back()->with('success', trans('Successfully Updated'));
+    }
 }

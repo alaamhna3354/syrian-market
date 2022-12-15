@@ -14,7 +14,7 @@ class EditServiceCodesTableAddCodesColumn extends Migration
     public function up()
     {
         Schema::table('service_codes', function (Blueprint $table) {
-            $table->bigInteger('user_id');
+            $table->foreignId('user_id')->nullable();
         });
     }
 

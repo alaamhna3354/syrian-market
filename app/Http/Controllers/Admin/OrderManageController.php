@@ -66,13 +66,11 @@ class OrderManageController extends Controller
     public function usersOrderChangeStatus(Request $request)
     {
         $status = $request->status;
-//        dd($request);
         if ($request->strIds == null) {
             session()->flash('error', "You have not selected any order.");
             return response()->json(['error' => 1]);
         } else {
             $ids = explode(",", $request->strIds);
-
             if (count($ids) > 0) {
                 $logs = Order::whereIn('id', $ids)->with('users')->get()->map(function ($item) use($status){
 
@@ -104,8 +102,6 @@ class OrderManageController extends Controller
                                 }
 
                             }
-
-//                    dd($agentCommissionRate);
                             $agentCommissionRate->delete();
                         }
                         if ($user->save()){
@@ -114,6 +110,7 @@ class OrderManageController extends Controller
                     }
 
                     $item->status = $status;
+                    $item->updated_by=auth()->id();
                     $item->save();
 
                     $msg = [

@@ -7,8 +7,10 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Ixudra\Curl\Facades\Curl;
 use Stevebauman\Purify\Facades\Purify;
+use App\Http\Controllers\User\OrderController as OrderController ;
 use Validator;
 class ApiProviderController extends Controller
 {
@@ -414,12 +416,14 @@ class ApiProviderController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        Log::info([$httpcode]);
         if ($httpcode!=200) {
             return 0;
         }
         curl_close($ch);
         $result = json_decode($result, True);
-        $res= (new user\OrderController())->finish5SImOrder($orderid,$result);
+
+        $res= (new OrderController())->finish5SImOrder($orderid,$result);
         return $res;
     }
 
