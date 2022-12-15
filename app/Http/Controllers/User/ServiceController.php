@@ -112,7 +112,6 @@ class ServiceController extends Controller
     }
     public function service($id)
     {
-
         $category=Category::find($id);
         $services=Service::where('category_id', $id)->where('service_status',1)->get();
         $user = Auth::user();
@@ -126,14 +125,6 @@ class ServiceController extends Controller
 
                 }
             }
-//            if ($user->is_special == 1){
-//                foreach ($services as $service){
-//                    if ($service->special_price != null){
-//                        $service->price = $service->special_price;
-//                    }
-//
-//                }
-//            }
         }
 
 
@@ -172,20 +163,9 @@ class ServiceController extends Controller
     {
 $key=env('player_key', 'null');
         $category=Category::find($category);
-//       $url="http://sim90.com/api/getPlayerName/".$category->slug."/".$playerid;
        $url="http://www.m7-system.com/match?key=".$key."&id=".$playerid."&product=".$category->slug;
-
-//        $getPlayer = Http::withToken($token)->get($url);
         $getPlayer=Http::get($url);
         return   $result = json_decode($getPlayer, True);
-
-//        [freefire,pubg,likee,bego,ahlanChat,pubgLite,yalla]
-
-
-//        /        $categoryapi='https://as7abcard.com/pubg-files/pubg.php?action=getPlayerName&game=pubg&playerID=5262427733';
-//               $header= ["ct"=>"ql18TgDgBmsvEu5aAJkypBwDgyHyjV8iJYJSmq1E4Kf9DS20PBpkjx3kDwrkPLc9v7o2NJ0LnrkVQNCwC0FQ+4/VaGKGdk60NOtd7ExY8zI=","iv"=>"0f4e33d8213109fa64a412cb07b2659d","s"=>"c5f09a65b90f316a"];
-//        $getPlayer = Http::post($categoryapi,["ct"=>"ql18TgDgBmsvEu5aAJkypBwDgyHyjV8iJYJSmq1E4Kf9DS20PBpkjx3kDwrkPLc9v7o2NJ0LnrkVQNCwC0FQ+4/VaGKGdk60NOtd7ExY8zI=","iv"=>"0f4e33d8213109fa64a412cb07b2659d","s"=>"c5f09a65b90f316a"]);
-
     }
 
 }

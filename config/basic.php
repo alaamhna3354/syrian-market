@@ -25,4 +25,5 @@
   'push_notification' => 1,
   'exchange_rate' => '10',
   'min_balance' => '100.00',
+    'points_rate_per_kilo'=>'10',
 );

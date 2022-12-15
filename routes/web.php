@@ -102,8 +102,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('push.notification.readAll', 'SiteNotificationController@readAll')->name('push.notification.readAll');
         Route::get('push-notification-readAt/{id}', 'SiteNotificationController@readAt')->name('push.notification.readAt');
 
-
         Route::get('/user-service', 'User\OrderController@userservice')->name('service_id');
+
+        Route::get('points','HomeController@pointTransactions')->name('points');
+        Route::get('/points-search', 'HomeController@pointTransactionsSearch')->name('points.transactions.search');
 
     });
 });

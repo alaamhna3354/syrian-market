@@ -17,7 +17,7 @@
                             <select class="form-control" id="category" name="category_id" disabled>
                                 @foreach($categories as $category)
                                     <option
-                                        value="{{$category->id}}" {{ ($order->category_id == $category->id) ? 'selected' : ''}}>{{ $category->category_title  }}</option>
+                                            value="{{$category->id}}" {{ ($order->category_id == $category->id) ? 'selected' : ''}}>{{ $category->category_title  }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -32,7 +32,7 @@
                             <select class="form-control" name="service_id" id="service" disabled>
                                 @foreach($category->service as $service)
                                     <option
-                                        value="{{$service->id}}" {{ ($order->service_id == $service->id) ? 'selected' : '' }} >{{ $service->service_title  }}</option>
+                                            value="{{$service->id}}" {{ ($order->service_id == $service->id) ? 'selected' : '' }} >{{ $service->service_title  }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -111,11 +111,13 @@
                                 <option value="awaiting">@lang('Awaiting')</option>
                                 <option value="pending">@lang('Pending')</option>
                                 <option value="processing">@lang('Processing')</option>
-                                <option value="progress">@lang('In progress')</option>
+                                {{--<option value="progress">@lang('In progress')</option>--}}
                                 <option value="completed">@lang('Completed')</option>
-                                <option value="partial">@lang('Partial')</option>
-                                <option value="canceled">@lang('Canceled')</option>
-                                <option value="refunded">@lang('Refunded')</option>
+                                @if(auth()->user()->role!='SellMan')
+                                    <option value="partial">@lang('Partial')</option>
+                                    <option value="canceled">@lang('Canceled')</option>
+                                    <option value="refunded">@lang('Refunded')</option>
+                                @endif
                             </select>
                             <div class="invalid-feedback">@lang('Please fill in the Service Type')</div>
                         </div>

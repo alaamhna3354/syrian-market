@@ -1,5 +1,3 @@
-
-
 <div class="modal fade" id="statusMoldal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -19,11 +17,13 @@
                             <option value="awaiting">@lang('Awaiting')</option>
                             <option value="pending">@lang('Pending')</option>
                             <option value="processing">@lang('Processing')</option>
-                            <option value="progress">@lang('In progress')</option>
+                            {{--<option value="progress">@lang('In progress')</option>--}}
                             <option value="completed">@lang('Completed')</option>
-                            <option value="partial">@lang('Partial')</option>
-                            <option value="canceled">@lang('Canceled')</option>
-                            <option value="refunded">@lang('Refunded')</option>
+                            @if(auth()->user()->role!='SellMan')
+                                <option value="partial">@lang('Partial')</option>
+                                <option value="canceled">@lang('Canceled')</option>
+                                <option value="refunded">@lang('Refunded')</option>
+                            @endif
                         </select>
                     </div>
                 </div>

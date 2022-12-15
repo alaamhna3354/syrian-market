@@ -16,6 +16,7 @@ use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserPriceRange;
+use App\Services\PointsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -26,12 +27,15 @@ class OrderController extends Controller
 {
     use Notify;
 
-    public function __construct()
+    private $pointService;
+
+    public function __construct(PointsService $pointsService)
     {
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
             return $next($request);
         });
+        $this->pointService = $pointsService;
     }
 
     /**
@@ -126,7 +130,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
         $req = Purify::clean($request->all());
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
@@ -163,30 +166,23 @@ class OrderController extends Controller
 
         if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
             $userRate = ($service->user_rate) ?? $service->price;
-
-
             $price = round(($quantity * $userRate), 2);
-
             $user = Auth::user();
             if ($user->balance < $price) {
 //                dd($user->balance);
                 return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
-
-
             }
 
             $order = new Order();
             $order->user_id = $user->id;
             $order->category_id = $req['category'];
             $order->service_id = $req['service'];
-
             $order->link = $req['link'];
             $order->quantity = $req['quantity'];
             $order->status = 'processing';
             $order->price = $price;
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
-
 
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
@@ -195,7 +191,7 @@ class OrderController extends Controller
                 }
 
             } elseif ($service->category->type == 'GAME') {
-                $order->details = trans('Player Id is : ') ."<span id='number' style=\"color:blue\" onclick='copy(".$req['link'].")' >". $req['link']."</span>". trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
+                $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
             } elseif ($service->category->type == '5SIM') {
 
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);
@@ -256,39 +252,12 @@ class OrderController extends Controller
                         ];
                         $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
                         $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
-
-
                     }
                 }
             }
 
 ////////////////////////            End change Price Range     /////////////////////////////
 
-
-//            if ($user->balance < $price) {
-//                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1 && $user->is_debt == 1 && $user->balance + $user->debt_balance >= $price) {
-//                    if ($user->balance >= 0) {
-//                        $agentDiscount = $price - $user->balance;
-//                    } else {
-//                        $agentDiscount = $price;
-//                    }
-//                    $debt = new Debt();
-//                    $debt->debt = $agentDiscount;
-//                    $debt->order_id = $order->id;
-//                    $debt->user_id = $user->id;
-//                    $debt->agent_id = $user->parent->id;
-//                    $debt->save();
-//                    $user->balance -= $price;
-//                    $user->parent->balance -= $agentDiscount;
-//                    $user->save();
-//                    $user->parent->save();
-//                } else {
-//                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
-//                }
-//
-//            } else {
-//
-//            }
             if ($service->category->type != '5SIM') {
                 $user->balance -= $price;
                 $user->save();
@@ -300,7 +269,8 @@ class OrderController extends Controller
                 $transaction->trx_id = strRandom();
                 $transaction->charge = 0;
                 $transaction->save();
-
+                if ($service->points > 0)
+                    $ptrx = $this->pointService->earnPoints('Buy', $service->points, 'Earn ' . $service->points . ' for buying ' .$service->category->category_title.' > ' .$service->id);
                 if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                     $commision = new AgentCommissionRate();
                     $rate = $service->agent_commission_rate;
@@ -321,31 +291,9 @@ class OrderController extends Controller
                 "icon" => "fas fa-cart-plus text-white"
             ];
             $this->adminPushNotification('ORDER_CREATE', $msg, $action);
-//            $usermsg = [
-//                'order_id' => $order->id,
-//                'status' => $order->status
-//            ];
-//            $useraction = [
-//                "link" => '#',
-//                "icon" => "fas fa-cart-plus text-white"
-//            ];
-//            $this->userPushNotification($user, 'ORDER_CREATE', $usermsg, $useraction);
-
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
-//                    $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
-//                        'order_id' => $order->id,
-//                        'order_at' => $order->created_at,
-//                        'service' => optional($order->service)->service_title,
-//                        'status' => $order->status,
-//                        'paid_amount' => $price,
-//                        'remaining_balance' => $user->balance,
-//                        'currency' => $basic->currency,
-//                        'transaction' => $transaction->trx_id,
-//                        'your-code' => $serviceCode->code,
-//
-//                    ]);
                     $serviceCode->is_used = 1;
                     $serviceCode->user_id = $user->id;
                     $serviceCode->save();
@@ -362,40 +310,19 @@ class OrderController extends Controller
                     return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
             } elseif ($service->category->type == '5SIM') {
-
-//                $this->sendMailSms($user, 'ORDER_CONFIRM_FOR_GAME', [
-//                    'order_id' => $order->id,
-//                    'order_at' => $order->created_at,
-//                    'service' => optional($order->service)->service_title,
-//                    'status' => $order->status,
-//                    'currency' => $basic->currency,
-//                    'your-code' => $order->code,
-//
-//                ]);
                 if ($user->is_agent == 1 && $user->is_approved == 1) {
                     return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                 } else {
                     return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
-//                return back()->with('success', trans('Your order has been submitted'));
 
             } else {
-//                $this->sendMailSms($user, 'ORDER_CONFIRM', [
-//                    'order_id' => $order->id,
-//                    'order_at' => $order->created_at,
-//                    'service' => optional($order->service)->service_title,
-//                    'status' => $order->status,
-//                    'paid_amount' => $price,
-//                    'remaining_balance' => $user->balance,
-//                    'currency' => $basic->currency,
-//                    'transaction' => $transaction->trx_id,
-//                ]);
+
                 if ($user->is_agent == 1 && $user->is_approved == 1) {
                     return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                 } else {
                     return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
-//                return back()->with('success', trans('Your order has been submitted'));
             }
 
         } else {
@@ -597,13 +524,15 @@ class OrderController extends Controller
         $transaction->trx_id = strRandom();
         $transaction->charge = 0;
         $transaction->save();
+        if ($order->service->point > 0)
+            $this->pointService->earnPoints('Buy', $order->service->point, 'Earn ' . $order->service->point . ' for buying product number ' . $order->service);
 
         if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
             $commision = new AgentCommissionRate();
             $rate = $order->service->agent_commission_rate;
             $commision->user_id = $user->parent->id;
             $commision->order_id = $order->id;
-            $commision->commission_rate = ($order->service->price * $rate / 100) ;
+            $commision->commission_rate = ($order->service->price * $rate / 100);
             $commision->save();
 
         }

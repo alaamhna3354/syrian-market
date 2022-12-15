@@ -11,6 +11,7 @@ use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Language;
 use App\Models\Order;
+use App\Models\PointsTransaction;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -425,4 +426,29 @@ class HomeController extends Controller
 
     }
 
+    public function pointTransactions()
+    {
+        $pointTransactions = $this->user->pointsTransactions()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view('user.pages.points.index', compact('pointTransactions'));
+    }
+
+    public function pointTransactionsSearch(Request $request)
+    {
+        $search = $request->all();
+        $dateSearch = $request->datetrx;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $pointTransaction = PointsTransaction::where('user_id', $this->user->id)->with('user')
+            ->when(@$search['remark'], function ($query) use ($search) {
+                return $query->where('remarks', 'LIKE', "%{$search['remark']}%");
+            })
+            ->when($date == 1, function ($query) use ($dateSearch) {
+                return $query->whereDate("created_at", $dateSearch);
+            })
+            ->paginate(config('basic.paginate'));
+        $pointTransactions = $pointTransaction->appends($search);
+
+
+        return view('user.pages.points.index', compact('pointTransactions'));
+
+    }
 }
