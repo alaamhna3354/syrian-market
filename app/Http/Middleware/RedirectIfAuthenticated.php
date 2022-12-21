@@ -21,11 +21,11 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             if ($guard == 'admin') {
-                $role = Auth::user()->role;
-                if ($role == 'Super' || $role == 'Admin')
+//                $role = Auth::user()->role;
+//                if ($role == 'Super' || $role == 'Admin')
                     return redirect('/admin/dashboard');
-                elseif ($role == 'SellMan')
-                    return redirect('/admin/order');
+//                elseif ($role == 'SellMan')
+//                    return redirect('/admin/order');
             } else {
                 return redirect()->route('user.home');
             }

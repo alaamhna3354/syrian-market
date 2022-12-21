@@ -186,8 +186,12 @@ class OrderController extends Controller
 
                 }
             }
+
             $status = $order->status;
+            if($req['status']=='completed' && $status=='processing')
+                $order->execution_time=$order->created_at->diffInSeconds(now());
             $order->status = $req['status'];
+
         }
         $order->reason = $req['reason'];
         $order->updated_by=auth()->id();
@@ -234,7 +238,6 @@ class OrderController extends Controller
 
         $req = $request->all();
         $order = Order::find($request->id);
-
         $user = $order->users;
         if($req['statusChange']=='refunded') {
             if ($order->status != 'refunded') {
@@ -274,6 +277,8 @@ class OrderController extends Controller
 
             }
         }
+        if($req['statusChange']=='completed' && $order->status=='processing')
+            $order->execution_time=$order->created_at->diffInSeconds(now());
         $order->status = $req['statusChange'];
         $order->updated_by=auth()->id();
         $order->save();
