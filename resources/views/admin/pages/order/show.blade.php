@@ -26,6 +26,10 @@
                         <th scope="col" style="width: 15%">@lang('Details')</th>
                         <th scope="col" style="width: 10%">@lang('Created')</th>
                         <th scope="col" style="width: 10%">@lang('Status')</th>
+                        <th scope="col" style="width: 10%">@lang('Execution Time')</th>
+                        @if(auth()->user()->role=='Super' || auth()->user()->role=='Admin')
+                            <th scope="col" style="width: 10%">@lang('Executed By')</th>
+                        @endif
                         <th scope="col" style="width: 5%">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -93,6 +97,10 @@
                                         class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
                                 @endif
                             </td>
+                            <td data-label="@lang('Execution Time')">{{$order->execution_time ? $order->execution_time. ' '. __('Second') : ' '}} </td>
+                            @if(auth()->user()->role=='Super' || auth()->user()->role=='Admin')
+                                <td data-label="@lang('Executed by')">{{ @$order->admin->name }} </td>
+                            @endif
                             <td data-label="@lang('Action')">
                                 <div class="dropdown show">
                                     <a class="dropdown-toggle p-3" href="#" id="dropdownMenuLink" data-toggle="dropdown"
