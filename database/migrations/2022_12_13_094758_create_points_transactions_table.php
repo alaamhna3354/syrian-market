@@ -19,6 +19,8 @@ class CreatePointsTransactionsTable extends Migration
             $table->enum('remarks',['Buy','Marketer'])->default('Buy');
             $table->integer('amount')->default(0);
             $table->string('note')->nullable();
+            $table->foreignId('order_id');
+            $table->enum('status',['active','replaced','refunded'])->default('active');
             $table->timestamps();
         });
     }

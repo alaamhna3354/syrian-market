@@ -143,5 +143,13 @@ return [
         'button_link' => 'url',
         'link' => 'url',
         'icon' => 'icon'
+    ],
+    'points' => [
+        'image' => 'file',
+        'thumbnail' => 'file',
+        'youtube_link' => 'url',
+        'button_link' => 'url',
+        'link' => 'url',
+        'icon' => 'icon'
     ]
 ];

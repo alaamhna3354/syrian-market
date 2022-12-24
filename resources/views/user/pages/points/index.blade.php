@@ -7,8 +7,8 @@
         <div class="row justify-content-between ">
             <div class="col-md-12">
                 {{--<ol class="breadcrumb center-items">--}}
-                    {{--<li><a href="{{route('user.home')}}">@lang('Home')</a></li>--}}
-                    {{--<li class="active">@lang('My Points')</li>--}}
+                {{--<li><a href="{{route('user.home')}}">@lang('Home')</a></li>--}}
+                {{--<li class="active">@lang('My Points')</li>--}}
                 {{--</ol>--}}
 
                 <div class="row">
@@ -20,10 +20,15 @@
                             </ol>
                         </div>
                     </div>
-                    <div  class="col-md-3">
+                    <div class="col-md-3">
                         <button class="btn waves-effect waves-light w-100 btn-primary"
                                 data-toggle="modal" id="replaceButton" data-target="#replacePoints">
                             @lang('Replace points')</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn waves-effect waves-light w-100 btn-primary"
+                                data-toggle="modal" id="howToEarnButon" data-target="#howToEarbPoints">
+                            @lang('How to earn points?')</button>
                     </div>
                 </div>
                 <div class="card my-3">
@@ -52,7 +57,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <button style="padding: 12px 15px;margin: 0;"
-                                                type="submit" class="btn waves-effect waves-light w-100 btn-primary" id="replacepoint"><i
+                                                type="submit" class="btn waves-effect waves-light w-100 btn-primary"
+                                                id="replacepoint"><i
                                                     class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>
@@ -74,11 +80,11 @@
                                 <thead>
                                 <tr>
                                     <th>@lang('SL No.')</th>
-                                    <th>@lang('Transaction ID')</th>
                                     <th>@lang('Amount')</th>
                                     <th>@lang('Remarks')</th>
                                     <th>@lang('Time')</th>
                                     <th>@lang('Details')</th>
+                                    {{--<th>@lang('Status')</th>--}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -87,13 +93,14 @@
                                         <td data-label="@lang('SL No.')">{{loopIndex($pointTransactions) + $loop->index}}</td>
                                         <td data-label="@lang('Amount')">
                                         <span
-                                                class="font-weight-bold text-success">{{getAmount($transaction->amount, config('basic.fraction_number'))}}</span>
+                                                class="font-weight-bold text-{{$transaction->status=='active' ? 'success' : 'danger'}}">{{getAmount($transaction->amount, config('basic.fraction_number'))}}</span>
                                         </td>
                                         <td data-label="@lang('Remarks')"> @lang($transaction->remarks)</td>
                                         <td data-label="@lang('Time')">
                                             {{ dateTime($transaction->created_at, 'd M Y h:i A') }}
                                         </td>
                                         <td data-label="@lang('Note')"> @lang($transaction->note)</td>
+                                        {{--<td data-label="@lang('Status')"> @lang($transaction->status)</td>--}}
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -120,37 +127,64 @@
                 </div>
                 <div class="modal-body" id="smallBody">
                     <div>
-                        <p class="text-danger ">@lang('Every 1000 points') = {{config('basic.points_rate_per_kilo') . ' ' . trans(config('basic.currency'))}}</p>
-                        <h3>@lang('Your points value') = {{(auth()->user()->points * config('basic.points_rate_per_kilo')/1000) . ' ' . trans(config('basic.currency'))}}</h3>
+                        <p class="text-danger ">@lang('Every 1000 points')
+                            = {{config('basic.points_rate_per_kilo') . ' ' . trans(config('basic.currency'))}}</p>
+                        <h3>@lang('Your points value')
+                            = {{(auth()->user()->points * config('basic.points_rate_per_kilo')/1000) . ' ' . trans(config('basic.currency'))}}</h3>
                         <div class="modal-footer">
-                            <a href="" class="btn btn-primary ">@lang('Replace')</a>
+                            <form action="{{route('user.points.replace')}}" method="post">
+                                @csrf
+                                @if(auth()->user()->points >= config('basic.min_points_allowed_to_replace'))
+                                    <button type="submit" class="btn btn-primary ">@lang('Replace')</button>
+                                    @else
+                                    <p class="text-danger ">@lang('Minimum points amount allowed to transfer is') :
+                                         {{config('basic.min_points_allowed_to_replace')}}  @lang('Point')</p>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- How to earn points modal -->
+    <div class="modal fade" id="howToEarbPoints" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="smallBody">
+                   {{config("templates.points.field_name")}}
+                </div>
+            </div>
+        </div>
+    </div>1
 @endsection
 @push('extra-script')
     <script>
         // display a modal (small modal)
-        $(document).on('click', '#smallButton', function(event) {
+        $(document).on('click', '#smallButton', function (event) {
             event.preventDefault();
             let href = $(this).attr('data-attr');
             $.ajax({
                 url: href,
-                beforeSend: function() {
+                beforeSend: function () {
                     $('#loader').show();
                 },
                 // return the result
-                success: function(result) {
+                success: function (result) {
                     $('#smallModal').modal("show");
                     $('#smallBody').html(result).show();
                 },
-                complete: function() {
+                complete: function () {
                     $('#loader').hide();
                 },
-                error: function(jqXHR, testStatus, error) {
+                error: function (jqXHR, testStatus, error) {
                     console.log(error);
                     alert("Page " + href + " cannot open. Error:" + error);
                     $('#loader').hide();

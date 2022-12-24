@@ -270,7 +270,7 @@ class OrderController extends Controller
                 $transaction->charge = 0;
                 $transaction->save();
                 if ($service->points > 0)
-                    $ptrx = $this->pointService->earnPoints('Buy', $service->points, 'Earn ' . $service->points . ' for buying ' .$service->category->category_title.' > ' .$service->id);
+                    $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' .$service->category->category_title.' > ' .$service->id . ' QTY ' .$order->quantity,$order->id);
                 if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                     $commision = new AgentCommissionRate();
                     $rate = $service->agent_commission_rate;
@@ -525,7 +525,7 @@ class OrderController extends Controller
         $transaction->charge = 0;
         $transaction->save();
         if ($order->service->point > 0)
-            $this->pointService->earnPoints('Buy', $order->service->point, 'Earn ' . $order->service->point . ' for buying product number ' . $order->service);
+            $this->pointService->earnPoints('Buy', $order->service->point, 'Earn ' . $order->service->point . ' for buying product number ' . $order->service,$order->id);
 
         if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
             $commision = new AgentCommissionRate();

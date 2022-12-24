@@ -1,10 +1,10 @@
 <?php return array (
   'site_title' => 'Syria Market',
-  'time_zone' => 'Asia/Damascus',
+  'time_zone' => 'Europe/Istanbul',
   'currency' => 'USD',
   'currency_symbol' => '$',
   'theme' => 'minimal',
-  'fraction_number' => 2,
+  'fraction_number' => 4,
   'paginate' => 20,
   'email_verification' => 0,
   'email_notification' => 1,
@@ -24,6 +24,9 @@
   ),
   'push_notification' => 1,
   'exchange_rate' => '10',
-  'min_balance' => '100.00',
-    'points_rate_per_kilo'=>'10',
+  'min_balance' => '0.00',
+  'points_rate_per_kilo' => '10',
+  'min_points_allowed_to_replace' => 100,
+    'marketer_joining_fee'=>10,
+    'golden_marketer_joining_fee'=>10
 );

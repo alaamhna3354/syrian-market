@@ -137,7 +137,7 @@
                 let channel = pusher.subscribe('admin-notification.' + "{{ Auth::guard('admin')->id() }}");
                 channel.bind('App\\Events\\AdminNotification', function (data) {
                     app.items.unshift(data.message);
-                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-light-button-2580.mp3');
+                    const audio = new Audio({{asset('assets/admin/notification/admin.mp3')}});
                     audio.play();
                     if (Platform.OS === 'android') {
                         Notifications.createChannelAndroidAsync('notification-sound-channel', {
@@ -150,7 +150,7 @@
                 });
                 channel.bind('App\\Events\\UpdateAdminNotification', function (data) {
                     app.getNotifications();
-                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-light-button-2580.mp3');
+                    const audio = new Audio({{asset('assets/admin/notification/admin.mp3')}});
                     audio.play();
                     if (Platform.OS === 'android') {
                         Notifications.createChannelAndroidAsync('notification-sound-channel', {

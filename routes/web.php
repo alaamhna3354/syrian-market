@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         Route::get('points','HomeController@pointTransactions')->name('points');
         Route::get('/points-search', 'HomeController@pointTransactionsSearch')->name('points.transactions.search');
+        Route::post('points-replace','HomeController@replacePoints')->name('points.replace');
 
     });
 });

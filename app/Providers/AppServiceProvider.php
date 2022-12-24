@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
             view()->composer($data['theme'] . 'partials.footer', function ($view) {
                 $view->with('languages', Language::orderBy('name')->where('is_active', 1)->get());
 
-                $templateSection = ['contact-us'];
+                $templateSection = ['contact-us','points'];
                 $view->with('templates', Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name'));
 
                 $contentSection = ['support','social'];
