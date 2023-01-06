@@ -39,8 +39,14 @@ class Order extends Model
     {
         return $this->belongsTo(Category::class, 'category_id','id');
     }
+
     public function pointTransactions()
     {
         return $this->hasMany(PointsTransaction::class);
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class,'updated_by');
+
     }
 }
