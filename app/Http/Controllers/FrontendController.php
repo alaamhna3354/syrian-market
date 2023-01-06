@@ -56,7 +56,7 @@ class FrontendController extends Controller
 
     public function blog()
     {
-        $data['title'] = "Blog";
+        $data['title'] = "Guide";
         $contentSection = ['blog'];
         $data['contentDetails'] = ContentDetails::select('id', 'content_id', 'description', 'created_at')
             ->whereHas('content', function ($query) use ($contentSection) {
@@ -68,6 +68,7 @@ class FrontendController extends Controller
                 }])
             ->get()->groupBy('content.name');
         $data['levels'] = PriceRange::all();
+        $data['pointsSection']=Template::where('section_name','points')->first();
 
         return view($this->theme . 'blog', $data);
     }

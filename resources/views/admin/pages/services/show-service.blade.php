@@ -27,16 +27,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4 col-xl-3">
-                            <div class="form-group">
-                                <select name="provider" id="provider" class="form-control statusfield">
-                                    <option value="-1" @if(@request()->provider == '-1') selected @endif>@lang('All Provider')</option>
-                                    @foreach($apiProviders as $provider)
-                                        <option value="{{ $provider->id }}" @if(@request()->provider == $provider->id) selected @endif>@lang($provider->api_name)</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+
 
                         <div class="col-md-4 col-xl-3">
                             <div class="form-group">
@@ -222,45 +213,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal"><span>@lang('No')</span></button>
                         <button type="submit" class="btn btn-primary"><span>@lang('Yes')</span></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="importServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog " role="document">
-            <div class="modal-content">
-                <div class="modal-header modal-colored-header bg-primary">
-                    <h5 class="modal-title">@lang('Confirm Import Services')</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('admin.api.services') }}" method="post" id="getServicesForm">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="body-centent">
-                            <div class="dropdown">
-                                <select class="form-control" name="api_provider_id">
-                                    <option selected="" disabled>@lang('Select API Provider')</option>
-                                    @foreach($apiProviders as $apiProvider)
-                                        <option value="{{ $apiProvider->id }}">{{ $apiProvider->api_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-light" data-dismiss="modal">
-                            <span><i class="fas fa-power-off"></i> @lang('Cancel')</span>
-                        </button>
-
-                        <button type="submit" class="btn btn-primary">
-                            <span><i class="fas fa-search"></i> @lang('Get Services')</span>
-                        </button>
-
                     </div>
                 </form>
             </div>

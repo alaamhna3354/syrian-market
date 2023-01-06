@@ -90,6 +90,45 @@
                         @enderror
                     </div>
 
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('1 Kilo points equal in USD')</label>
+                        <input type="number" name="points_rate_per_kilo" value="{{ old('1 Kilo points equal in USD') ?? $control->points_rate_per_kilo ?? 10 }}"
+                               required="required" class="form-control ">
+                        @error('points_rate_per_kilo')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Marketer Joining Fee')</label>
+                        <input type="number" name="marketer_joining_fee" value="{{ old('Marketer Joining Fee') ?? $control->marketer_joining_fee ?? 0 }}"
+                               required="required" class="form-control ">
+                        @error('marketer_joining_fee')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Golden Marketer Joining Fee')</label>
+                        <input type="number" name="golden_marketer_joining_fee" value="{{ old('Golden Marketer Joining Fee') ?? $control->golden_marketer_joining_fee ?? 0 }}"
+                               required="required" class="form-control ">
+                        @error('golden_marketer_joining_fee')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Min Points Allowed To Replace')</label>
+                        <input type="number" name="min_points_allowed_to_replace" value="{{ old('Min Points Allowed To Replace') ?? $control->min_points_allowed_to_replace ?? '10' }}"
+                               required="required" class="form-control ">
+                        @error('min_points_allowed_to_replace')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
 
                 </div>
 

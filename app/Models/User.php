@@ -145,8 +145,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-
-
     public function sendPasswordResetNotification($token)
     {
         $this->mail($this, 'PASSWORD_RESET', $params = [
@@ -159,7 +157,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->referral_link = route('register', ['ref' => $this->username]);
     }
 
+    public function pointsTransactions()
+    {
+        return $this->hasMany(PointsTransaction::class);
+    }
 
+    public function getPointsBalanceByPointTransactionsAttribute()
+    {
+        return $this->activePointsTransactions()->sum('amount');
+    }
 
+    public function activePointsTransactions()
+    {
+        return $this->pointsTransactions()->where('status','active');
+    }
 
 }
