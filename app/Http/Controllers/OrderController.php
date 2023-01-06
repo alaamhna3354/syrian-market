@@ -5,19 +5,33 @@ namespace App\Http\Controllers;
 use App\Http\Traits\Notify;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\PointsTransaction;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\PointsService;
 use Illuminate\Http\Request;
 use Stevebauman\Purify\Facades\Purify;
 
 class OrderController extends Controller
 {
     use Notify;
+    private $pointsService;
+
+    public function __construct(PointsService $pointsService)
+    {
+        $this->pointsService=$pointsService;
+    }
+
     /*
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * OrderController constructor.
+     */
+
+
     public function index()
     {
 
@@ -158,7 +172,7 @@ class OrderController extends Controller
                     $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
                     $transaction1->trx_id = strRandom();
                     $transaction1->charge = 0;
-
+                    $pointsTransaction=$this->pointsService->refundPoints('Refund Order',$order->id);
                     if ($order->agentCommissionRate != null){
                         $agentCommissionRate = $order->agentCommissionRate;
                         if ($agentCommissionRate->is_paid == 1){
@@ -174,16 +188,12 @@ class OrderController extends Controller
                                 $transaction->charge = 0;
                                 $transaction->save();
                             }
-
                         }
-
-//                    dd($agentCommissionRate);
                         $agentCommissionRate->delete();
                     }
                     if ($user->save()){
                         $transaction1->save();
                     }
-
                 }
             }
             $status = $order->status;
@@ -246,7 +256,7 @@ class OrderController extends Controller
                 $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
                 $transaction1->trx_id = strRandom();
                 $transaction1->charge = 0;
-
+                $user=$this->pointsService->refundPoints('Refund Order',$order->id,$user);
                 if ($order->agentCommissionRate != null){
                     $agentCommissionRate = $order->agentCommissionRate;
                     if ($agentCommissionRate->is_paid == 1){
@@ -262,16 +272,12 @@ class OrderController extends Controller
                             $transaction->charge = 0;
                             $transaction->save();
                         }
-
                     }
-
-//                    dd($agentCommissionRate);
                     $agentCommissionRate->delete();
                 }
                 if ($user->save()){
                     $transaction1->save();
                 }
-
             }
         }
         $order->status = $req['statusChange'];
@@ -296,9 +302,6 @@ class OrderController extends Controller
         $user = User::where('name', 'LIKE', "%{$request->user}%")->get()->pluck('name');
         return response()->json($user);
     }
-
-
-
 
     /*
      * user drop search
@@ -387,5 +390,35 @@ class OrderController extends Controller
         $transaction =  $transaction->appends($search);
 
         return view('admin.pages.inventory.index', compact('transaction','users'));
+    }
+
+    public function pointsTransaction()
+    {
+        $pointsTransaction = PointsTransaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        return view('admin.pages.points-transaction.index', compact('pointsTransaction'));
+    }
+
+    public function pointsTransactionSearch(Request $request)
+    {
+        $search = $request->all();
+        $dateSearch = $request->datetrx;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $pointsTransaction = PointsTransaction::with('user')->orderBy('id', 'DESC')
+            ->when($search['user_name'], function ($query) use ($search) {
+                return $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('email', 'LIKE', "%{$search['user_name']}%")
+                        ->orWhere('username', 'LIKE', "%{$search['user_name']}%");
+                });
+            })
+            ->when($search['remark'], function ($query) use ($search) {
+                return $query->where('remarks', 'LIKE', "%{$search['remark']}%");
+            })
+            ->when($date == 1, function ($query) use ($dateSearch) {
+                return $query->whereDate("created_at", $dateSearch);
+            })
+            ->paginate(config('basic.paginate'));
+        $pointsTransaction =  $pointsTransaction->appends($search);
+
+        return view('admin.pages.points-transaction.index', compact('pointsTransaction'));
     }
 }

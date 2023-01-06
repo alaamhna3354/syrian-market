@@ -91,6 +91,17 @@
                 <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                    href="{{ route('agent.transaction') }}">@lang('Transactions') </a>
             </li>
+
+            <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-gift m-2"></i>
+                <a class="nav-link {{ Request::routeIs('user.points') ? 'active' : '' }}"
+                   href="{{ route('user.points') }}">@lang('My Points')
+                    <sup style="color:#fe5917">  @lang('New') </sup>
+                </a>
+
+            </li>
+
+
             <li class="nav-item dropdown d-flex align-items-center">
                 <i class="fa fa-globe m-2"></i>
                 <a class="nav-link dropdown-toggle lin" href="#" id="navbarDropdown" role="button"

@@ -296,6 +296,15 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item">
+                        <a class="sidebar-link sidebar-link" href="{{ route('admin.user-points.transaction') }}"
+                           aria-expanded="false">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="hide-menu">@lang('Points Transactions')
+                                <sup style="font-weight: bold;background-color: red;" class="mr-3">@lang('New')</sup>
+                            </span>
+                        </a>
+                    </li>
 
                     <li class="nav-small-cap"><span class="hide-menu">@lang('Support Tickets')</span></li>
 
@@ -468,22 +477,23 @@
 
 
                     <li class="sidebar-item {{menuActive(['admin.template.show*'],3)}}">
-                    <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span class="hide-menu">@lang('Manage Content')</span>
-                    </a>
-                    <ul aria-expanded="false" class="collapse first-level base-level-line {{menuActive(['admin.template.show*'],1)}}">
+                        <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span class="hide-menu">@lang('Manage Content')</span>
+                        </a>
+                        <ul aria-expanded="false"
+                            class="collapse first-level base-level-line {{menuActive(['admin.template.show*'],1)}}">
 
-                    @foreach(array_diff(array_keys(config('templates')),['message','template_media']) as $name)
-                    <li class="sidebar-item {{ menuActive(['admin.template.show'.$name]) }}">
-                    <a class="sidebar-link {{ menuActive(['admin.template.show'.$name]) }}"
-                    href="{{ route('admin.template.show',$name) }}">
-                    <span class="hide-menu">@lang(ucfirst(kebab2Title($name)))</span>
-                    </a>
-                    </li>
-                    @endforeach
+                            @foreach(array_diff(array_keys(config('templates')),['message','template_media']) as $name)
+                                <li class="sidebar-item {{ menuActive(['admin.template.show'.$name]) }}">
+                                    <a class="sidebar-link {{ menuActive(['admin.template.show'.$name]) }}"
+                                       href="{{ route('admin.template.show',$name) }}">
+                                        <span class="hide-menu">@lang(ucfirst(kebab2Title($name)))</span>
+                                    </a>
+                                </li>
+                            @endforeach
 
-                    </ul>
+                        </ul>
                     </li>
 
 

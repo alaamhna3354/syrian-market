@@ -16,7 +16,7 @@ class CreatePointsTransactionsTable extends Migration
         Schema::create('points_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->enum('remarks',['Buy','Marketer'])->default('Buy');
+            $table->enum('remarks',['Buy','Marketer','Refund'])->default('Buy');
             $table->integer('amount')->default(0);
             $table->string('note')->nullable();
             $table->foreignId('order_id');

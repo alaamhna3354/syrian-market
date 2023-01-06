@@ -108,7 +108,26 @@
                     </h4>
                 </div>
                 </div>
-
+            {{--points--}}
+            <hr>
+            <div class="row">
+                <div class="col-lg-12 text-center d-flex justify-content-center">
+                    <h1 class="mb-4 tit">@lang('Points')</h1>
+                </div>
+                <div class="col-lg-12 text-center">
+                    <h3>
+                        <br>{{$pointsSection->description->title}}
+                    </h3>
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 text-center mt-4">
+                    <img class="imag" src="{{asset($themeTrue.'imgs/earn-point.png')}}" alt="" width="50%">
+                </div>
+                <div class="col-lg-6 col-sm-12 col-12 mt-4">
+                        <div class="card-body" >
+                            {!! $pointsSection->description->short_description !!}
+                        </div>
+                </div>
+            </div>
         </div>
     </section>
 <style>

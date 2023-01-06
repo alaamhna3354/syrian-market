@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+@extends('agent.layouts.app')
 @section('title')
     @lang('My Points')
 @endsection
@@ -10,7 +10,6 @@
                 {{--<li><a href="{{route('user.home')}}">@lang('Home')</a></li>--}}
                 {{--<li class="active">@lang('My Points')</li>--}}
                 {{--</ol>--}}
-
                 <div class="row">
                     <div class="col-md-6 ">
                         <div class="card-header">

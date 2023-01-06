@@ -145,11 +145,16 @@ return [
         'icon' => 'icon'
     ],
     'points' => [
-        'image' => 'file',
-        'thumbnail' => 'file',
-        'youtube_link' => 'url',
-        'button_link' => 'url',
-        'link' => 'url',
-        'icon' => 'icon'
-    ]
+        'field_name' => [
+            'title' => 'text',
+            'sub_title' => 'text',
+            'short_title' => 'text',
+            'short_description' => 'textarea'
+        ],
+        'validation' => [
+            'title.*' => 'required|max:100',
+            'sub_title.*' => 'required|max:100',
+            'short_description.*' => 'required|max:2000',
+        ]
+    ],
 ];

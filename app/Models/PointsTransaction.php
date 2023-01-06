@@ -12,7 +12,7 @@ class PointsTransaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(PointsTransaction::class);
+        return $this->belongsTo(User::class);
     }
     public function order()
     {

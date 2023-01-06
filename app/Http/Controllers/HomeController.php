@@ -12,6 +12,7 @@ use App\Models\Gateway;
 use App\Models\Language;
 use App\Models\Order;
 use App\Models\PointsTransaction;
+use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -429,7 +430,8 @@ class HomeController extends Controller
     public function pointTransactions()
     {
         $pointTransactions = $this->user->pointsTransactions()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
-        return view('user.pages.points.index', compact('pointTransactions'));
+        $pointsSection=Template::where('section_name','points')->first();
+        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions','pointsSection'));
     }
 
     public function pointTransactionsSearch(Request $request)
@@ -472,8 +474,9 @@ class HomeController extends Controller
                 $transactionForUser->remarks = trans('Replace Points');
                 $transactionForUser->trx_id = strRandom();
                 $transactionForUser->charge = 0;
+                $transactionForUser->save();
                 DB::commit();
-                return back()->with('success', trans('Replaced Successfully.'));
+                return back()->with('success', trans('Replaced Successfully'));
             } catch (\Exception $e) {
                 DB::rollback();
                 return back()->with('error', $e->getMessage());

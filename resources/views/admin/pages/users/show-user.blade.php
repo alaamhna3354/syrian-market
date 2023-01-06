@@ -89,6 +89,7 @@
                         <th scope="col">@lang('Email')</th>
                         <th scope="col">@lang('Phone')</th>
                         <th scope="col">@lang('Balance')</th>
+                        <th scope="col">@lang('Points')</th>
                         <th scope="col">@lang('Status')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
@@ -107,6 +108,7 @@
                             <td data-label="@lang('Email')">@lang($user->email)</td>
                             <td data-label="@lang('Phone')">@lang(($user->phone)? : 'N/A')</td>
                             <td data-label="@lang('Balance')">{{getAmount($user->balance, config('basic.fraction_number'))}} {{trans(config('basic.currency'))}}</td>
+                            <td data-label="@lang('Points')">@lang($user->points)</td>
                             <td data-label="@lang('Status')">
                                 <span
                                     class="badge badge-pill {{ $user->status == 0 ? 'badge-danger' : 'badge-success' }}">{{ $user->status == 0 ? 'Inactive' : 'Active' }}</span>
