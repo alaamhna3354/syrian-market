@@ -43,6 +43,7 @@ class Order extends Model
     public function pointTransactions()
     {
         return $this->hasMany(PointsTransaction::class);
+    }
 
     public function admin()
     {
