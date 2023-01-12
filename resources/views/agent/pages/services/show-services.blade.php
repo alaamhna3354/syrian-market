@@ -46,6 +46,14 @@
                         <div class="icon">
                             <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                         </div>
+                        @if($service->points>0)
+                            <div class="points">
+                                <span>  {{$service->points}}</span>
+                                <div class="desc">
+                                    {{$service->points }} @lang('Point')
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
                         <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>

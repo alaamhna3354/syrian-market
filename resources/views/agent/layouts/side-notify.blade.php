@@ -25,6 +25,15 @@
                 <a class="nav-link {{ Request::routeIs('agent.products')  ? 'active' : '' }}"
                    href="{{ route('agent.products') }}">@lang('products') </a>
             </li>
+
+            <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-gift m-2"></i>
+                <a class="nav-link {{ Request::routeIs('user.points') ? 'active' : '' }}"
+                   href="{{ route('user.points') }}">@lang('My Points')
+                    <sup style="color:#fe5917">  @lang('New') </sup>
+                </a>
+            </li>
+
             <li class="nav-item dropdown {{ (Request::routeIs('agent.users') || Request::routeIs('agent.user.create') || Request::routeIs('agent.users.orders')) ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                    role="button"
@@ -91,6 +100,8 @@
                 <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                    href="{{ route('agent.transaction') }}">@lang('Transactions') </a>
             </li>
+
+
             <li class="nav-item dropdown d-flex align-items-center">
                 <i class="fa fa-globe m-2"></i>
                 <a class="nav-link dropdown-toggle lin" href="#" id="navbarDropdown" role="button"

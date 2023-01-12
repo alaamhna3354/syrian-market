@@ -65,6 +65,14 @@
                                 <div class="error text-danger">@lang($errors->first('price')) </div>
                             @endif
                         </div>
+                        <div class="form-group">
+                            <label>@lang('Points')</label>
+                            <input type="number" class="form-control square" name="points" placeholder="0"
+                                   value="{{ old('points',$service->points) }}">
+                            @if($errors->has('points'))
+                                <div class="error text-danger">@lang($errors->first('points')) </div>
+                            @endif
+                        </div>
 {{--                        <div class="form-group">--}}
 {{--                            <label>@lang('Special Price')</label>--}}
 {{--                            <input type="text" class="form-control square" name="special_price" placeholder="0.00"--}}
@@ -200,30 +208,6 @@
                             </label>
                         </div>
                     </div>
-                </div>
-                <div id="moreField d-none" hidden>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label " for="apiprovider">@lang('API Provider Name')</label>
-                                <select class="form-control" name="api_provider_id">
-                                    <option value="0" hidden>@lang('Select API Provider name')</option>
-                                    @foreach($apiProviders as $apiProvider)
-                                        <option value="{{ $apiProvider->id  }}">{{ $apiProvider->api_name  }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang('API Service ID')</label>
-                                <input type="text" class="form-control square" name="api_service_id"
-                                       value="{{old('api_service_id',$service->api_service_id)}}"
-                                       placeholder="Api Service ID">
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div class="form-group">
                     <label class="control-label " for="description">@lang('Description')</label>

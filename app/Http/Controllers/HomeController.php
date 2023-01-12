@@ -11,10 +11,13 @@ use App\Models\Fund;
 use App\Models\Gateway;
 use App\Models\Language;
 use App\Models\Order;
+use App\Models\PointsTransaction;
+use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Stevebauman\Purify\Facades\Purify;
@@ -215,82 +218,81 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 //        if ($user->debt == 0) {
-            if ($user->user_id != null && $user->user_id != 0) {
-                if ($user->is_debt == 1) {
-                    if($user->parent->balance>=$user->debt_balance) {
-                        if ($user->debt_balance > 0) {
-                            $user->balance += $user->debt_balance;
-                            $user->is_debt = 0;
-                            $user->debt += $user->debt_balance;
-                            $user->save();
-                            if ($user->parent != null) {
-                                $user->parent->balance -= $user->debt_balance;
-                                $user->parent->save();
-                            }
-
-
-                            $transactionForUser = new Transaction();
-                            $transactionForUser->user_id = $user->id;
-                            $transactionForUser->trx_type = '+';
-                            $transactionForUser->amount = $user->debt_balance;
-                            $transactionForUser->remarks = trans('Charge Balance From reserve balance');
-                            $transactionForUser->trx_id = strRandom();
-                            $transactionForUser->charge = 0;
-
-                            $fund = new Fund();
-                            $fund->user_id = $user->id;
-                            $fund->gateway_id = null;
-                            $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
-                            $fund->amount = $user->debt_balance;
-                            $fund->charge = 0;
-                            $fund->rate = 0;
-                            $fund->final_amount = $user->debt_balance;
-                            $fund->btc_amount = 0;
-                            $fund->btc_wallet = "";
-                            $fund->transaction = strRandom();
-                            $fund->try = 0;
-                            $fund->status = 1;
-
-                            $debt = new Debt();
-                            $debt->order_id = 0;
-                            $debt->user_id = $user->id;
-                            $debt->agent_id = $user->user_id;
-                            $debt->debt = $user->debt_balance;
-                            $debt->status = 1;
-                            $debt->despite = 0;
-                            $debt->save();
-                            $transactionForUser->save();
-                            $fund->save();
-
-                            $msg = [
-                                'amount' => $user->debt_balance,
-                                'currency' => $fund->gateway_currency,
-                                'main_balance' => $user->balance,
-                                'username' => $user->username
-                            ];
-                            $action = [
-                                "link" => '#',
-                                "icon" => "fa fa-money-bill-alt text-white"
-                            ];
-                            if ($user->parent != null) {
-                                $this->userPushNotification($user->parent, 'USE_SPARE_BALANCE', $msg, $action);
-                            } else {
-                                $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
-                            }
-
-
-                        } else {
-                            return back()->with('error', trans('sorry You do not have a reserve balance'));
+        if ($user->user_id != null && $user->user_id != 0) {
+            if ($user->is_debt == 1) {
+                if ($user->parent->balance >= $user->debt_balance) {
+                    if ($user->debt_balance > 0) {
+                        $user->balance += $user->debt_balance;
+                        $user->is_debt = 0;
+                        $user->debt += $user->debt_balance;
+                        $user->save();
+                        if ($user->parent != null) {
+                            $user->parent->balance -= $user->debt_balance;
+                            $user->parent->save();
                         }
+
+
+                        $transactionForUser = new Transaction();
+                        $transactionForUser->user_id = $user->id;
+                        $transactionForUser->trx_type = '+';
+                        $transactionForUser->amount = $user->debt_balance;
+                        $transactionForUser->remarks = trans('Charge Balance From reserve balance');
+                        $transactionForUser->trx_id = strRandom();
+                        $transactionForUser->charge = 0;
+
+                        $fund = new Fund();
+                        $fund->user_id = $user->id;
+                        $fund->gateway_id = null;
+                        $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+                        $fund->amount = $user->debt_balance;
+                        $fund->charge = 0;
+                        $fund->rate = 0;
+                        $fund->final_amount = $user->debt_balance;
+                        $fund->btc_amount = 0;
+                        $fund->btc_wallet = "";
+                        $fund->transaction = strRandom();
+                        $fund->try = 0;
+                        $fund->status = 1;
+
+                        $debt = new Debt();
+                        $debt->order_id = 0;
+                        $debt->user_id = $user->id;
+                        $debt->agent_id = $user->user_id;
+                        $debt->debt = $user->debt_balance;
+                        $debt->status = 1;
+                        $debt->despite = 0;
+                        $debt->save();
+                        $transactionForUser->save();
+                        $fund->save();
+
+                        $msg = [
+                            'amount' => $user->debt_balance,
+                            'currency' => $fund->gateway_currency,
+                            'main_balance' => $user->balance,
+                            'username' => $user->username
+                        ];
+                        $action = [
+                            "link" => '#',
+                            "icon" => "fa fa-money-bill-alt text-white"
+                        ];
+                        if ($user->parent != null) {
+                            $this->userPushNotification($user->parent, 'USE_SPARE_BALANCE', $msg, $action);
+                        } else {
+                            $this->adminPushNotification('USE_SPARE_BALANCE', $msg, $action);
+                        }
+
+
+                    } else {
+                        return back()->with('error', trans('sorry You do not have a reserve balance'));
                     }
-                    else
-                        return back()->with('error',trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent') );
-                } else {
+                } else
                     return back()->with('error', trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent'));
-                }
             } else {
                 return back()->with('error', trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent'));
             }
+        } else {
+            return back()->with('error', trans('sorry You are not entitled to benefit from the reserve balance, please contact the agent'));
+        }
 //        } else {
 //            return back()->with('error', 'sorry You are not entitled to benefit from the reserve balance, You have debts ');
 //        }
@@ -357,7 +359,7 @@ class HomeController extends Controller
             }
         }
         $user->save();
-        return back()->with('success',trans( 'Updated Successfully.'));
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
 
@@ -393,7 +395,7 @@ class HomeController extends Controller
         }
         $user->save();
 
-        return back()->with('success', trans( 'Updated Successfully.'));
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
 
@@ -415,9 +417,9 @@ class HomeController extends Controller
             if (Hash::check($request->current_password, $user->password)) {
                 $user->password = bcrypt($request->password);
                 $user->save();
-                return back()->with('success', trans( 'Password Changes successfully.'));
+                return back()->with('success', trans('Password Changes successfully.'));
             } else {
-                throw new \Exception(trans( 'Current password did not match'));
+                throw new \Exception(trans('Current password did not match'));
             }
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -425,4 +427,61 @@ class HomeController extends Controller
 
     }
 
+    public function pointTransactions()
+    {
+        $pointTransactions = $this->user->pointsTransactions()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
+        $pointsSection=Template::where('section_name','points')->first();
+        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions','pointsSection'));
+    }
+
+    public function pointTransactionsSearch(Request $request)
+    {
+        $search = $request->all();
+        $dateSearch = $request->datetrx;
+        $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
+        $pointTransaction = PointsTransaction::where('user_id', $this->user->id)->with('user')
+            ->when(@$search['remark'], function ($query) use ($search) {
+                return $query->where('remarks', 'LIKE', "%{$search['remark']}%");
+            })
+            ->when($date == 1, function ($query) use ($dateSearch) {
+                return $query->whereDate("created_at", $dateSearch);
+            })
+            ->paginate(config('basic.paginate'));
+        $pointTransactions = $pointTransaction->appends($search);
+
+
+        return view('user.pages.points.index', compact('pointTransactions'));
+
+    }
+
+    public function replacePoints()
+    {
+        $user = auth()->user();
+        $amount=$user->points * config('basic.points_rate_per_kilo') / 1000;
+        if ($user->points_balance_by_point_transactions == $user->points) {
+            DB::beginTransaction();
+            try {
+                $user->balance += $amount;
+                $user->points = 0;
+                $user->save();
+                foreach ($user->activePointsTransactions as $pointsTransaction)
+                    $pointsTransaction->update(['status'=> 'replaced']);
+
+                $transactionForUser = new Transaction();
+                $transactionForUser->user_id = $user->id;
+                $transactionForUser->trx_type = '+';
+                $transactionForUser->amount = $amount;
+                $transactionForUser->remarks = trans('Replace Points');
+                $transactionForUser->trx_id = strRandom();
+                $transactionForUser->charge = 0;
+                $transactionForUser->save();
+                DB::commit();
+                return back()->with('success', trans('Replaced Successfully'));
+            } catch (\Exception $e) {
+                DB::rollback();
+                return back()->with('error', $e->getMessage());
+            }
+        } else
+            return back()->with('error', 'Something error please contact admin');
+    }
 }

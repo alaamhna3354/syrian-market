@@ -32,6 +32,14 @@
             @endif
 
             <li class="nav-item d-flex align-items-center">
+                <i class="fa fa-gift m-2"></i>
+                <a class="nav-link {{ Request::routeIs('user.points') ? 'active' : '' }}"
+                   href="{{ route('user.points') }}">@lang('My Points')
+                    <sup style="color:#fe5917">  @lang('New') </sup>
+                </a>
+            </li>
+
+            <li class="nav-item d-flex align-items-center">
             <i class="fas fa-list-alt m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
                    href="{{route('user.order.index')}}">@lang('Orders')</a>
@@ -82,6 +90,9 @@
                 <a class="nav-link {{ Request::routeIs('user.transaction') ? 'active' : '' }}"
                    href="{{ route('user.transaction') }}">@lang('Transactions') </a>
             </li>
+
+
+
 {{--            @if(auth()->user()->user_id == 0 || auth()->user()->user_id == null)--}}
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-edit m-2"></i>

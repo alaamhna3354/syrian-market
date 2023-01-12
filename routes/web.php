@@ -102,8 +102,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('push.notification.readAll', 'SiteNotificationController@readAll')->name('push.notification.readAll');
         Route::get('push-notification-readAt/{id}', 'SiteNotificationController@readAt')->name('push.notification.readAt');
 
-
         Route::get('/user-service', 'User\OrderController@userservice')->name('service_id');
+
+        Route::get('points','HomeController@pointTransactions')->name('points');
+        Route::get('/points-search', 'HomeController@pointTransactionsSearch')->name('points.transactions.search');
+        Route::post('points-replace','HomeController@replacePoints')->name('points.replace');
 
     });
 });
@@ -144,6 +147,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
             Route::put('/reply/{ticket}', 'Agent\SupportController@reply')->name('reply');
             Route::get('/download/{ticket}', 'Agent\SupportController@download')->name('download');
         });
+
+//        Route::get('points','HomeController@pointTransactions')->name('points');
 
         Route::resource('order', 'Agent\OrderController');
         Route::get('/orders', 'Agent\OrderController@search')->name('order.search');
@@ -368,13 +373,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             // transaction
             Route::get('/transaction', 'OrderController@transaction')->name('user-transaction');
             Route::get('/inventory', 'OrderController@inventory')->name('user-inventory');
-            Route::get('/transaction-search', 'OrderController@transactionSearch')->name('transaction.search');
+
             Route::get('/inventory-search', 'OrderController@inventorySearch')->name('inventory.search');
             // jquery autocomplete search
             Route::get('/get-trx-id-search', 'OrderController@gettrxidsearch')->name('get.trx-id-search');
             Route::get('/get-trx-user-search', 'OrderController@getTrxUserSearch')->name('get.trx-user-search');
+            Route::get('/points-transaction', 'OrderController@pointsTransaction')->name('user-points.transaction');
             // search
-
+            Route::get('/pointstransaction-search', 'OrderController@pointsTransactionSearch')->name('points-transaction.search');
             /*
              * Support Ticket
              */
