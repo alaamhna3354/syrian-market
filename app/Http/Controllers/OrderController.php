@@ -172,7 +172,7 @@ class OrderController extends Controller
                     $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
                     $transaction1->trx_id = strRandom();
                     $transaction1->charge = 0;
-                    $pointsTransaction=$this->pointsService->refundPoints('Refund Order',$order->id);
+                    $pointsTransaction=$this->pointsService->refundPoints('Refund Order',$order->id,$user);
                     if ($order->agentCommissionRate != null){
                         $agentCommissionRate = $order->agentCommissionRate;
                         if ($agentCommissionRate->is_paid == 1){

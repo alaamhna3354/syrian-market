@@ -19,7 +19,7 @@
                 <i class="fab fa-jedi-order m-2"></i>
                 <style>
                     .fa-jedi-order::before {
-                    content: "\f50e";
+                        content: "\f50e";
                     }
                 </style>
                 <a class="nav-link {{ Request::routeIs('agent.products')  ? 'active' : '' }}"
@@ -33,7 +33,23 @@
                     <sup style="color:#fe5917">  @lang('New') </sup>
                 </a>
             </li>
-
+            @if(!auth()->user()->marketer)
+                <li class="nav-item d-flex align-items-center">
+                    <i class="fa fa-bullhorn m-2"></i>
+                    <a class="nav-link {{ Request::routeIs('user.marketer.join') ? 'active' : '' }}"
+                       href="{{ route('user.marketer.join') }}">@lang('Join as marketer')
+                        <sup style="color:#fe5917;">  @lang('New') </sup>
+                    </a>
+                </li>
+                @else
+                <li class="nav-item d-flex align-items-center">
+                    <i class="fa fa-bullhorn m-2"></i>
+                    <a class="nav-link {{ Request::routeIs('user.marketers') ? 'active' : '' }}"
+                       href="{{ route('user.marketers') }}">@lang('Marketing')
+                        <sup style="color:#fe5917;">  @lang('New') </sup>
+                    </a>
+                </li>
+            @endif
             <li class="nav-item dropdown {{ (Request::routeIs('agent.users') || Request::routeIs('agent.user.create') || Request::routeIs('agent.users.orders')) ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                    role="button"
@@ -48,16 +64,20 @@
                         <i class="fa fa-users m-2"></i>
                         @lang('Users') </a>
 
-                    <a class="dropdown-item {{menuActive('agent.user.create')}}" href="{{ route('agent.user.create') }}">
+                    <a class="dropdown-item {{menuActive('agent.user.create')}}"
+                       href="{{ route('agent.user.create') }}">
                         <i class="fa fa-user-plus m-2"></i>@lang('Add User')
                     </a>
-                    <a class="dropdown-item {{menuActive('agent.users.orders')}}" href="{{ route('agent.users.orders') }}">
+                    <a class="dropdown-item {{menuActive('agent.users.orders')}}"
+                       href="{{ route('agent.users.orders') }}">
                         <i class="fa fa-shopping-cart m-2"></i> @lang('Users Orders')
                     </a>
-                    <a class="dropdown-item {{menuActive('agent.user.add-balance')}}" href="{{ route('agent.user.add-balance') }}">
+                    <a class="dropdown-item {{menuActive('agent.user.add-balance')}}"
+                       href="{{ route('agent.user.add-balance') }}">
                         <i class="fas fa-hand-holding-usd m-2"></i> @lang('Add Balance To User')
                     </a>
-                    <a class="dropdown-item {{menuActive('agent.add-debt-payment')}}" href="{{ route('agent.add-debt-payment') }}">
+                    <a class="dropdown-item {{menuActive('agent.add-debt-payment')}}"
+                       href="{{ route('agent.add-debt-payment') }}">
                         <i class="fas fa-piggy-bank m-2"></i> @lang('Add Debt Payment')
                     </a>
                     <a class="dropdown-item {{menuActive('agent.debt.index*')}}" href="{{ route('agent.debt.index') }}">
@@ -73,7 +93,7 @@
 
 
             <li class="nav-item d-flex align-items-center">
-            <i class="fas fa-clipboard-list m-2"></i>
+                <i class="fas fa-clipboard-list m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
                    href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
             </li>
@@ -105,7 +125,8 @@
             <li class="nav-item dropdown d-flex align-items-center">
                 <i class="fa fa-globe m-2"></i>
                 <a class="nav-link dropdown-toggle lin" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: transparent;">
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                   style="background-color: transparent;">
                     @lang('languages')
                     <i data-feather="chevron-down" class="svg-icon m-1"></i>
                 </a>
@@ -137,15 +158,18 @@
                     {{--<i data-feather="key" class="svg-icon mr-2 ml-1"></i> @lang('API Setting')--}}
                     {{--</a>--}}
 
-                    <a class="dropdown-item {{menuActive('agent.ticket.create')}}" href="{{ route('agent.ticket.create') }}">
+                    <a class="dropdown-item {{menuActive('agent.ticket.create')}}"
+                       href="{{ route('agent.ticket.create') }}">
                         <i class="fab fa-hire-a-helper mr-2 ml-1 icon-color"></i>@lang('Open Ticket')
                     </a>
-                    <a class="dropdown-item {{menuActive('agent.ticket.list')}}" href="{{ route('agent.ticket.list') }}">
+                    <a class="dropdown-item {{menuActive('agent.ticket.list')}}"
+                       href="{{ route('agent.ticket.list') }}">
                         <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Show Ticket')
                     </a>
 
                     @if(auth()->user()->is_debt == 1)
-                        <a class="dropdown-item {{menuActive('agent.use_spare_balance')}}" href="{{ route('agent.use_spare_balance') }}">
+                        <a class="dropdown-item {{menuActive('agent.use_spare_balance')}}"
+                           href="{{ route('agent.use_spare_balance') }}">
                             <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Use Spare Balance')
                         </a>
                     @endif
@@ -153,7 +177,7 @@
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i
-                            data-feather="power" class="svg-icon mr-2 ml-1"></i>
+                                data-feather="power" class="svg-icon mr-2 ml-1"></i>
                         {{ __('Logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

@@ -257,6 +257,17 @@
                     </li>
 
                     <li class="list-divider"></li>
+                    <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Marketer')</span></li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link sidebar-link" href="{{ route('admin.marketers') }}" aria-expanded="false">
+                            <i class="fas fa-users"></i>
+                            <span class="hide-menu">@lang('All Marketers')
+                                <sup style="font-weight: bold;background-color: red;" class="mr-3">@lang('New')</sup>
+                            </span>
+
+                        </a>
+                    </li>
+                    <li class="list-divider"></li>
 
 
                     <li class="nav-small-cap"><span class="hide-menu">@lang('Payment Settings')</span></li>

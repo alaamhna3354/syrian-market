@@ -38,12 +38,72 @@
                     <sup style="color:#fe5917">  @lang('New') </sup>
                 </a>
             </li>
+            @cannot('marketer')
+                <li class="nav-item d-flex align-items-center">
+                    <div class="fires">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                    </div>
+                    <a class="nav-link {{ Request::routeIs('user.marketer.join') ? 'active' : '' }}"
+                       href="{{ route('user.marketer.join') }}">@lang('Join as marketer')
+                        <sup class="blinker" style="color:#fe5917;">  @lang('New') </sup>
+                    </a>
+                </li>
 
-            <li class="nav-item d-flex align-items-center">
-            <i class="fas fa-list-alt m-2"></i>
-                <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
-                   href="{{route('user.order.index')}}">@lang('Orders')</a>
-            </li>
+                <li class="nav-item d-flex align-items-center">
+                    <i class="fas fa-list-alt m-2"></i>
+                    <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
+                       href="{{route('user.order.index')}}">@lang('Orders')</a>
+                </li>
+            @endcannot
             {{--<li class="nav-item dropdown {{ Request::routeIs('user.order*') ? 'active' : '' }}">--}}
             {{--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"--}}
             {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
@@ -92,14 +152,13 @@
             </li>
 
 
-
-{{--            @if(auth()->user()->user_id == 0 || auth()->user()->user_id == null)--}}
+            {{--            @if(auth()->user()->user_id == 0 || auth()->user()->user_id == null)--}}
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-edit m-2"></i>
                 <a class="nav-link {{ Request::routeIs('registerAsAgent') ? 'active' : '' }}"
                    href="{{ route('registerAsAgent') }}">@lang('Sign up As Agent') </a>
             </li>
-{{--            @endif--}}
+            {{--            @endif--}}
 
             {{--<li class="nav-item ">--}}
             {{--<a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"--}}
@@ -150,9 +209,10 @@
                         <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Show Ticket')
                     </a>
                     @if(auth()->user()->is_debt == 1)
-                    <a class="dropdown-item {{menuActive('user.use_spare_balance')}}" href="{{ route('user.use_spare_balance') }}">
-                        <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Use Spare Balance')
-                    </a>
+                        <a class="dropdown-item {{menuActive('user.use_spare_balance')}}"
+                           href="{{ route('user.use_spare_balance') }}">
+                            <i class="fas fa-ticket-alt mr-2 ml-1 icon-color"></i> @lang('Use Spare Balance')
+                        </a>
                     @endif
 
 
@@ -160,7 +220,7 @@
                     <a class="dropdown-item" href="{{ route('logout') }}"
                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i
-                            data-feather="power" class="svg-icon mr-2 ml-1"></i>
+                                data-feather="power" class="svg-icon mr-2 ml-1"></i>
                         {{ __('Logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -179,23 +239,23 @@
         <div class="featureDate">
             <div class="category categoryNew new">
 @lang($notice->highlight_text)
-        </div>
-        <span>{{dateTime($notice->created_at,'d M, Y')}}</span>
+            </div>
+            <span>{{dateTime($notice->created_at,'d M, Y')}}</span>
             </div>
 
             <h3 class="featureTitle">
                 @lang($notice->title)
-        </h3>
+            </h3>
 
 
-        <div class="featureContent">
-            <p>
+            <div class="featureContent">
+                <p>
 @lang($notice->details)
 
-        </p>
+            </p>
+        </div>
     </div>
-</div>
 @endforeach
 
-    </div> -->
+        </div> -->
 </div>
