@@ -373,7 +373,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             // transaction
             Route::get('/transaction', 'OrderController@transaction')->name('user-transaction');
             Route::get('/inventory', 'OrderController@inventory')->name('user-inventory');
-
+            Route::get('/transaction-search', 'OrderController@transactionSearch')->name('transaction.search');
             Route::get('/inventory-search', 'OrderController@inventorySearch')->name('inventory.search');
             // jquery autocomplete search
             Route::get('/get-trx-id-search', 'OrderController@gettrxidsearch')->name('get.trx-id-search');
