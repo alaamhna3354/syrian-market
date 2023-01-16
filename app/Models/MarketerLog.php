@@ -15,10 +15,10 @@ class MarketerLog extends Model
         return $this->belongsTo(Marketer::class);
     }
 
-    public function children()
-    {
-        return $this->hasMany(Marketer::class,'parent_id');
-    }
+//    public function children()
+//    {
+//        return $this->hasMany(Marketer::class,'parent_id');
+//    }
 
     public function invitedBy()
     {

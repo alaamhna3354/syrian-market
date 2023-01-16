@@ -59,7 +59,7 @@
                         <th scope="col">@lang('Remaining invitation')</th>
                         <th scope="col">@lang('Golden')</th>
                         <th scope="col">@lang('Note')</th>
-                        <th scope="col">@lang('Joined By')</th>
+                        <th scope="col">@lang('Joined by')</th>
                         <th scope="col">@lang('Joined at')</th>
                         <th scope="col">@lang('Status')</th>
                         <th scope="col">@lang('Action')</th>
@@ -78,30 +78,14 @@
                             <td data-label="@lang('Joined at')">{{$marketer->created_at->format('d M,Y h:i A')}}</td>
                             <td data-label="@lang('Status')">
                                 <span
-                                    class="badge badge-pill">{{ $marketer->status }}</span>
+                                    class="badge badge-pill">{{ trans($marketer->status) }}</span>
                             </td>
                             <td data-label="@lang('Action')">
-                                <div class="dropdown show">
-                                    <a class="dropdown-toggle p-3" href="#" id="dropdownMenuLink" data-toggle="dropdown"
-                                       aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <div class=" show">
+                                    <div class="-menu" aria-labelledby="">
                                         <a class="dropdown-item" href="{{ route('admin.marketer.info',$marketer->id) }}">
                                             <i class="fa fa-edit text-warning pr-2"
                                                aria-hidden="true"></i> @lang('Info')
-                                        </a>
-                                        <a class="dropdown-item" href="{{ route('admin.user.customRate',$marketer->id) }}">
-                                            <i class="fa fa-money-bill-alt text-dark pr-2"
-                                               aria-hidden="true"></i> @lang('Custom Rate')
-                                        </a>
-
-                                        <a class="dropdown-item" href="{{ route('admin.user-order',$marketer->id) }}">
-                                            <i class="fa fa-eye text-info pr-2" aria-hidden="true"></i> @lang('Order')
-                                        </a>
-                                        <a class="dropdown-item" href="{{ route('admin.send-email',$marketer->id) }}">
-                                            <i class="fa fa-envelope text-success pr-2"
-                                               aria-hidden="true"></i> @lang('Send Email')
                                         </a>
                                     </div>
                                 </div>

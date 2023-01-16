@@ -31,7 +31,6 @@ class PointsService
         $ptrx->amount = $amount;
         $ptrx->note = $note;
         $ptrx->order_id = $order;
-        $ptrx->save();
         return $ptrx->save();
     }
 

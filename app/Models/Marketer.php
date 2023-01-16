@@ -28,12 +28,18 @@ class Marketer extends Model
     {
         return $this->hasMany(MarketerLog::class);
     }
-    public function parents()
+
+    public function childrenLog()
     {
-        return $this->belongsToMany(Marketer::class,'marketer_logs','id');
+        return $this->hasMany(MarketerLog::class,'parent_id');
     }
+
+//    public function parents()
+//    {
+//        return $this->belongsToMany(Marketer::class,'marketer_logs','id');
+//    }
     public function childern()
     {
-        return $this->belongsToMany(Marketer::class,'marketer_logs','parent_id');
+        return $this->belongsToMany(Marketer::class,'marketer_logs','marketer_id','parent_id')->wherePivot('status','joined');
     }
 }

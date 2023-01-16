@@ -16,7 +16,7 @@
                         <div class="card-header">
                             <ol class="breadcrumb center-items">
                                 <li class="active"><h4>@lang('Marketers join through you')
-                                        : {{$marketer->childMarketers->count()}} @lang('Marketers')</h4></li>
+                                        : {{$marketer->childern->count()}} @lang('Marketers')</h4></li>
                             </ol>
                         </div>
                     </div>
@@ -44,29 +44,27 @@
                     @endcan
                 </div>
                 <div class="card my-3">
-                    <div class="card-body">
+                    <div class="card-body" style="background: #00000077;color: aliceblue;">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>@lang('Your invitation code'): {{$marketer->invitation_code}}
-                                        <i class="fa fa-copy" style="font-size: 16px;"
-                                           onclick="copy('{{$marketer->invitation_code}}')"></i>
-                                    </label>
+                                    <label>@lang('Your invitation code'): </label></br>
+                                    <span> {{$marketer->invitation_code}}
+                                    <i class="fa fa-copy" style="font-size: 16px;"
+                                       onclick="copy('{{$marketer->invitation_code}}')"></i>
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label>@lang('Joining date: ')
-                                    : {{ dateTime($marketer->created_at, 'd M Y h:i A') }}</label>
+                                <label>@lang('Joining date') :</label></br>
+                                <span >{{ dateTime($marketer->created_at, 'd M Y h:i A') }}</span>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-3">
-                                    <label>@lang('Status'): @lang($marketer->status)</label>
-                                </div>
+                                    <label>@lang('Status'):</label></br><span> @lang($marketer->status)</span>
                             </div>
                             <div class="col-md-3">
-                                <div class="col-md-3">
-                                    <label>@lang('Remaining invitation'): {{$marketer->remaining_invitation}}</label>
-                                </div>
+                                    <label>@lang('Remaining invitation'):</label></br>
+                                    <span>{{$marketer->remaining_invitation}}</span>
                             </div>
                         </div>
                     </div>
@@ -91,7 +89,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($marketer->childMarketers as $childMarketer)
+                                @foreach($marketer->childern as $childMarketer)
                                     <tr>
                                         <td data-label="@lang('Name')">{{$childMarketer->user->firstname .' '.$childMarketer->user->lastname}}</td>
                                         <td data-label="@lang('Remarks')"> @lang($childMarketer->status)</td>
@@ -173,35 +171,11 @@
         </div>
     </div>
 
-    <!-- How to earn points modal -->
-    {{--<div class="modal fade" id="howToEarbPoints" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel"--}}
-    {{--aria-hidden="true">--}}
-    {{--<div class="modal-dialog modal-lg" role="document">--}}
-    {{--<div class="modal-content">--}}
-    {{--<div class="modal-header">--}}
-    {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
-    {{--<span aria-hidden="true">&times;</span>--}}
-    {{--</button>--}}
-    {{--</div>--}}
-    {{--<div class="modal-body" id="smallBody">--}}
-    {{--<div class="card card-primary">--}}
-    {{--<div class="card-header">--}}
-    {{--<ol class="breadcrumb center-items">--}}
-    {{--<li class="active">{{$pointsSection->description->title}}</li>--}}
-    {{--</ol>--}}
-    {{--</div>--}}
-    {{--<div class="card-body" style="background: #000;color: white">--}}
-    {{--{!! $pointsSection->description->short_description !!}--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-
 @endsection
 @push('extra-script')
     <script>
+
+
         // display a modal (small modal)
         $(document).on('click', '#smallButton', function (event) {
             event.preventDefault();
@@ -228,7 +202,14 @@
             })
         });
 
+
+
+        </script>
+@endpush
+@push('js')
+    <script>
         function copy($link) {
+            console.log($link)
             /* Copy the text inside the text field */
             navigator.clipboard.writeText($link);
             Toastify({
@@ -236,4 +217,5 @@
                 duration: 3000
             }).showToast();
         }
+    </script>
 @endpush

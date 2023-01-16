@@ -1,5 +1,4 @@
 <div class="fixedsidebar ">
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="d-flex justify-content-center logo-side">
             <a class="navbar-brand" href="{{route('home')}}" style="margin:0">
@@ -15,7 +14,6 @@
                    href="{{ route('user.home') }}">@lang('Home') </a>
             </li>
             <li class="nav-item d-flex align-items-center">
-
                 <i class="fab fa-jedi-order m-2"></i>
                 <style>
                     .fa-jedi-order::before {
@@ -33,15 +31,67 @@
                     <sup style="color:#fe5917">  @lang('New') </sup>
                 </a>
             </li>
-            @if(!auth()->user()->marketer)
+            @cannot('marketer')
                 <li class="nav-item d-flex align-items-center">
-                    <i class="fa fa-bullhorn m-2"></i>
+                    <div class="fires">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                    </div>
                     <a class="nav-link {{ Request::routeIs('user.marketer.join') ? 'active' : '' }}"
                        href="{{ route('user.marketer.join') }}">@lang('Join as marketer')
-                        <sup style="color:#fe5917;">  @lang('New') </sup>
+                        <sup class="blinker" style="color:#fe5917;">  @lang('New') </sup>
                     </a>
                 </li>
-                @else
+            @endcannot
+            @can('marketer')
                 <li class="nav-item d-flex align-items-center">
                     <i class="fa fa-bullhorn m-2"></i>
                     <a class="nav-link {{ Request::routeIs('user.marketers') ? 'active' : '' }}"
@@ -49,7 +99,8 @@
                         <sup style="color:#fe5917;">  @lang('New') </sup>
                     </a>
                 </li>
-            @endif
+            @endcannot
+
             <li class="nav-item dropdown {{ (Request::routeIs('agent.users') || Request::routeIs('agent.user.create') || Request::routeIs('agent.users.orders')) ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                    role="button"
@@ -85,6 +136,7 @@
                     </a>
                 </div>
             </li>
+
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-list-alt m-2"></i>
                 <a class="nav-link {{ Request::routeIs('agent.order.index*')  ? 'active' : '' }}"
@@ -93,14 +145,14 @@
 
 
             <li class="nav-item d-flex align-items-center">
-                <i class="fas fa-clipboard-list m-2"></i>
-                <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
-                   href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
-            </li>
-            <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-piggy-bank m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.addFund*')  ? 'active' : '' }}"
                    href="{{route('agent.addFund')}}">@lang('Add Fund')</a>
+            </li>
+            <li class="nav-item d-flex align-items-center">
+                <i class="fas fa-clipboard-list m-2"></i>
+                <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
+                   href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
             </li>
 
             <li class="nav-item d-flex align-items-center">
@@ -121,7 +173,6 @@
                    href="{{ route('agent.transaction') }}">@lang('Transactions') </a>
             </li>
 
-
             <li class="nav-item dropdown d-flex align-items-center">
                 <i class="fa fa-globe m-2"></i>
                 <a class="nav-link dropdown-toggle lin" href="#" id="navbarDropdown" role="button"
@@ -138,6 +189,7 @@
                     @endforeach
                 </div>
             </li>
+
             <li class="nav-item dropdown {{ (Request::routeIs('agent.profile') || Request::routeIs('agent.api.docs') || Request::routeIs('agent.ticket*')) ? 'active' : '' }}">
                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
                    role="button"

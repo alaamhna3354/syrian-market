@@ -29,7 +29,7 @@
                             <option disabled>Select Timezone</option>
                             @foreach ($control->time_zone_all as $time_zone_local)
                                 <option
-                                    value="{{ $time_zone_local }}" {{ $time_zone_local == $control->time_zone ? 'selected' : '' }}>@lang($time_zone_local)</option>
+                                        value="{{ $time_zone_local }}" {{ $time_zone_local == $control->time_zone ? 'selected' : '' }}>@lang($time_zone_local)</option>
                             @endforeach
                         </select>
 
@@ -37,7 +37,6 @@
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
 
 
                     <div class="form-group col-sm-3 col-12">
@@ -83,7 +82,8 @@
 
                     <div class="form-group col-sm-3 col-12">
                         <label class="font-weight-bold">@lang('Minimum balance to apply to join as an agent')</label>
-                        <input type="text" name="min_balance" value="{{ old('min_balance') ?? $control->min_balance ?? '500' }}"
+                        <input type="text" name="min_balance"
+                               value="{{ old('min_balance') ?? $control->min_balance ?? '500' }}"
                                required="required" class="form-control ">
                         @error('min_balance')
                         <span class="text-danger">{{ $message }}</span>
@@ -92,7 +92,8 @@
 
                     <div class="form-group col-sm-3 col-12">
                         <label class="font-weight-bold">@lang('1 Kilo points equal in USD')</label>
-                        <input type="number" name="points_rate_per_kilo" value="{{ old('1 Kilo points equal in USD') ?? $control->points_rate_per_kilo ?? 10 }}"
+                        <input type="number" name="points_rate_per_kilo"
+                               value="{{ old('1 Kilo points equal in USD') ?? $control->points_rate_per_kilo ?? 10 }}"
                                required="required" class="form-control ">
                         @error('points_rate_per_kilo')
                         <span class="text-danger">{{ $message }}</span>
@@ -102,7 +103,8 @@
 
                     <div class="form-group col-sm-3 col-12">
                         <label class="font-weight-bold">@lang('Marketer Joining Fee')</label>
-                        <input type="number" name="marketer_joining_fee" value="{{ old('Marketer Joining Fee') ?? $control->marketer_joining_fee ?? 0 }}"
+                        <input type="number" name="marketer_joining_fee"
+                               value="{{ old('Marketer Joining Fee') ?? $control->marketer_joining_fee ?? 0 }}"
                                required="required" class="form-control ">
                         @error('marketer_joining_fee')
                         <span class="text-danger">{{ $message }}</span>
@@ -112,7 +114,8 @@
 
                     <div class="form-group col-sm-3 col-12">
                         <label class="font-weight-bold">@lang('Golden Marketer Joining Fee')</label>
-                        <input type="number" name="golden_marketer_joining_fee" value="{{ old('Golden Marketer Joining Fee') ?? $control->golden_marketer_joining_fee ?? 0 }}"
+                        <input type="number" name="golden_marketer_joining_fee"
+                               value="{{ old('Golden Marketer Joining Fee') ?? $control->golden_marketer_joining_fee ?? 0 }}"
                                required="required" class="form-control ">
                         @error('golden_marketer_joining_fee')
                         <span class="text-danger">{{ $message }}</span>
@@ -121,20 +124,53 @@
 
                     <div class="form-group col-sm-3 col-12">
                         <label class="font-weight-bold">@lang('Min Points Allowed To Replace')</label>
-                        <input type="number" name="min_points_allowed_to_replace" value="{{ old('Min Points Allowed To Replace') ?? $control->min_points_allowed_to_replace ?? '10' }}"
+                        <input type="number" name="min_points_allowed_to_replace"
+                               value="{{ old('Min Points Allowed To Replace') ?? $control->min_points_allowed_to_replace ?? '10' }}"
                                required="required" class="form-control ">
                         @error('min_points_allowed_to_replace')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Invite marketers points')</label>
+                        <input type="number" name="marketer_joining_points"
+                               value="{{ old('Invite marketers point') ?? $control->marketer_joining_points ?? 10 }}"
+                               required="required" class="form-control ">
+                        @error('marketer_joining_points')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Invitation number each join')</label>
+                        <input type="number" name="marketer_invitation_number_each_join"
+                               value="{{ old('marketer_invitation_number_each_join') ?? $control->marketer_invitation_number_each_join ?? 10 }}"
+                               required="required" class="form-control ">
+                        @error('marketer_invitation_number_each_join')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Auto generate invitation code')</label>
+                        <br>
+                        <select name="auto_generate_invitation_code">
+                            <option value="0" {{ $control->auto_generate_invitation_code == 0 ? 'selected': '' }}>
+                                @lang('No')
+                            </option>
+                            <option value="1" {{ $control->auto_generate_invitation_code == 1 ? 'selected': '' }}>
+                                @lang('Yes')
+                            </option>
+                        </select>
+                    </div>
 
 
                 </div>
 
 
                 <button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3"><span><i
-                            class="fas fa-save pr-2"></i> @lang('Save Changes')</span></button>
+                                class="fas fa-save pr-2"></i> @lang('Save Changes')</span></button>
             </form>
         </div>
     </div>

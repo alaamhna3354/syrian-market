@@ -38,8 +38,26 @@ class MarketerController extends Controller
     public function info(Marketer $marketer)
     {
         $invitation_logs=$marketer->log;
+        $childrenLog=$marketer->childrenLog;
+        return view('admin.pages.marketers.info',compact('marketer','invitation_logs','childrenLog'));
+    }
 
-        return view('admin.pages.marketers.info',compact('marketer','invitation_logs'));
+    public function update(Request $request,$id)
+    {
+        $marketer = Marketer::findOrFail($id);
+        $validated = $request->validate([
+            'invitation_code' => 'sometimes|required',
+            'remaining_invitation' => 'sometimes|required',
+        ]);
+
+        $marketer->invitation_code = $request->invitation_code;
+        $marketer->remaining_invitation = $request->remaining_invitation;
+        $marketer->status = $request->status;
+        $marketer->is_golden = $request->is_golden;
+        $marketer->notes = $request->note;
+        $marketer->save();
+
+        return back()->with('success', trans('Updated Successfully.'));
     }
 
 }

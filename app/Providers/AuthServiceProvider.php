@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('agent', function(User $user) {
-            return $user->is_agent ;
+            return $user->is_agent && $user->is_approved;
         });
 
         Gate::define('marketer', function(User $user) {
@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->marketer && $user->marketer->status=='active' ;
         });
         Gate::define('normal_marketer', function(User $user) {
-            return $user->marketer->is_golden==0 && $user->marketer->status=='active' ;
+            return $user->marketer->is_golden==0 && $user->marketer->status=='active' && $user->marketer->parent_id;
         });
     }
 }

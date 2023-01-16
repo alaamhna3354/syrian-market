@@ -96,7 +96,7 @@ class MarketerController extends Controller
             $marketer->remaining_invitation += config('basic.marketer_invitation_number_each_join');
             $marketer->save();
 
-            $points = $this->pointsService->earnPoints('Marketer', config('basic.marketer_joining_points'), 'invaited marketer ' . $user->username, '', $parent_marketer->user);
+            $points = $this->pointsService->earnPoints('Marketer', config('basic.marketer_joining_points'), 'invaited marketer ' . $user->username, $parent_marketer->id, $parent_marketer->user);
             $log = $this->log($marketer->id, $parent_marketer->id, 'Joined as normal marketer and got ' . config('basic.marketer_invitation_number_each_join') . 'activations code ', 'joined', config('basic.marketer_joining_fee'), 0);
             DB::commit();
             return redirect(route('user.marketers'))->with('success', trans('Your order has been submitted'));
@@ -135,6 +135,7 @@ class MarketerController extends Controller
             if ($user->marketer) {
                 $marketer = $user->marketer;
                 $marketer->status = 'active';
+                $marketer->parent_id=null;
             } else {
                 $marketer = new Marketer();
                 $marketer->invitation_code = $this->generateInvitationCode();
@@ -189,12 +190,16 @@ class MarketerController extends Controller
     public function goldenMareketerRefund()
     {
         $marketer = auth()->user()->marketer;
-        if ((new DateTime)->diff($marketer->created_at)->days > 3 || $marketer->is_golden == 0)
-            return back()->with('error', trans("You can't swap after 3 days of joining"))->withInput();
+        if ((new DateTime)->diff($marketer->created_at)->days > 7 || $marketer->is_golden == 0)
+            return back()->with('error', trans("You can't refund after 7 days of joining"))->withInput();
+
+        if($marketer->remaining_invitation < 8)
+                return back()->with('error', trans("You can't refund if you invite more than 2 marketers"))->withInput();
+
         DB::beginTransaction();
         try {
             $marketer->status = 'disabled';
-            $marketer->remaining_invitation -= 10;
+            $marketer->remaining_invitation = 0;
             $marketer->is_golden = 0;
             $marketer->save();
             $marketer->user->balance += config('basic.golden_marketer_joining_fee');

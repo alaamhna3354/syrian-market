@@ -15,6 +15,7 @@ use App\Models\PointsTransaction;
 use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -430,8 +431,8 @@ class HomeController extends Controller
     public function pointTransactions()
     {
         $pointTransactions = $this->user->pointsTransactions()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
-        $pointsSection=Template::where('section_name','points')->first();
-        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions','pointsSection'));
+        $pointsSection = Template::where('section_name', 'points')->first();
+        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions', 'pointsSection'));
     }
 
     public function pointTransactionsSearch(Request $request)
@@ -457,15 +458,21 @@ class HomeController extends Controller
     public function replacePoints()
     {
         $user = auth()->user();
-        $amount=$user->points * config('basic.points_rate_per_kilo') / 1000;
-        if ($user->points_balance_by_point_transactions == $user->points) {
+        $pendingPoints = 0;
+//        if ($user->marketer) {
+//            $pendingTransaction = PointsTransaction::where('user_id', $user->id)->where('remarks', 'Marketer')->where('order_id', $user->marketer->id)->whereDate('created_at', '>', Carbon::now()->subDays(4))->get();
+//            $pendingPoints=$pendingTransaction->sum('amount');
+//        }
+        $amount = ($user->points - $pendingPoints) * config('basic.points_rate_per_kilo') / 1000;
+       // dd($pendingPoints);
+        if ($amount > 0) {
             DB::beginTransaction();
             try {
                 $user->balance += $amount;
-                $user->points = 0;
+                $user->points = $pendingPoints;
                 $user->save();
                 foreach ($user->activePointsTransactions as $pointsTransaction)
-                    $pointsTransaction->update(['status'=> 'replaced']);
+                    $pointsTransaction->update(['status' => 'replaced']);
 
                 $transactionForUser = new Transaction();
                 $transactionForUser->user_id = $user->id;
@@ -476,7 +483,7 @@ class HomeController extends Controller
                 $transactionForUser->charge = 0;
                 $transactionForUser->save();
                 DB::commit();
-                return back()->with('success', trans('Replaced Successfully'));
+                return back()->with('success', trans('Replaced Successfully and there is some pending points'));
             } catch (\Exception $e) {
                 DB::rollback();
                 return back()->with('error', $e->getMessage());

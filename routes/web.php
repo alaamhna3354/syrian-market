@@ -479,6 +479,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::get('/marketers', 'Admin\MarketerController@index')->name('marketers');
             Route::get('/marketers/search', 'Admin\MarketerController@search')->name('marketers.search');
             Route::get('marketer/info/{marketer}','Admin\MarketerController@info')->name('marketer.info');
+            Route::post('marketer/update/{marketer}','Admin\MarketerController@update')->name('marketer.update');
         });
 
 

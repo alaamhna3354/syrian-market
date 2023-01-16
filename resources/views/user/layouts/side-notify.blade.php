@@ -1,13 +1,4 @@
-<!-- <div class="fixed-icon rfixedicon ">
-    <i class="fa fa-bars"></i>
-</div> -->
-
 <div class="fixedsidebar ">
-    <!-- rfixed -->
-<!--<div class="fs-header d-flex align-items-center justify-content-between">
-         <h5 class="text-white">@lang("What's new on $basic->site_title")</h5>
-        <div class="btn-close close-sidebar">&times;</div>
-    </div>-->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="d-flex justify-content-center logo-side">
             <a class="navbar-brand" href="{{route('home')}}" style="margin:0">
@@ -23,14 +14,13 @@
                    href="{{ route('user.home') }}">@lang('Home') </a>
 
             </li>
-            @if(Auth::user()->is_agent == 1 && Auth::user()->is_approved == 0)
+            @can('agent')
                 <li class="nav-item d-flex align-items-center">
                     <i class="fab fa-product-hunt m-2"></i>
                     <a class="nav-link {{ Request::routeIs('user.products')  ? 'active' : '' }}"
                        href="{{ route('user.products') }}">@lang('products') </a>
                 </li>
-            @endif
-
+            @endcan
             <li class="nav-item d-flex align-items-center">
                 <i class="fa fa-gift m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.points') ? 'active' : '' }}"
@@ -97,30 +87,62 @@
                         <sup class="blinker" style="color:#fe5917;">  @lang('New') </sup>
                     </a>
                 </li>
-
+            @endcannot
+            @can('marketer')
                 <li class="nav-item d-flex align-items-center">
-                    <i class="fas fa-list-alt m-2"></i>
-                    <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
-                       href="{{route('user.order.index')}}">@lang('Orders')</a>
+                    <i class="fa fa-bullhorn m-2"></i>
+                    <a class="nav-link {{ Request::routeIs('user.marketers') ? 'active' : '' }}"
+                       href="{{ route('user.marketers') }}">@lang('Marketing')
+                        <sup style="color:#fe5917;">  @lang('New') </sup>
+                    </a>
                 </li>
             @endcannot
-            {{--<li class="nav-item dropdown {{ Request::routeIs('user.order*') ? 'active' : '' }}">--}}
-            {{--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"--}}
-            {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-            {{--@lang('Order')--}}
-            {{--<i data-feather="chevron-down" class="svg-icon"></i>--}}
-            {{--</a>--}}
-            {{--<div class="dropdown-menu" aria-labelledby="navbarDropdown">--}}
-            {{--<a class="dropdown-item {{menuActive('user.order.create')}}" href="{{ route('user.order.create') }}">@lang('New Order')</a>--}}
-            {{--<a class="dropdown-item {{menuActive('user.order.mass')}}" href="{{ route('user.order.mass') }}">@lang('Mass Order')</a>--}}
-            {{--<a class="dropdown-item {{menuActive('user.order.index')}}" href="{{ route('user.order.index') }}">@lang('All Order')</a>--}}
-            {{--</div>--}}
-            {{--</li>--}}
 
-            {{--<li class="nav-item">--}}
-            {{--<a class="nav-link {{ Request::routeIs('user.service*')  ? 'active' : '' }}"--}}
-            {{--href="{{ route('user.service.show') }}">@lang('Services') </a>--}}
-            {{--</li>--}}
+            @can('agent')
+                <li class="nav-item dropdown {{ (Request::routeIs('agent.users') || Request::routeIs('agent.user.create') || Request::routeIs('agent.users.orders')) ? 'active' : '' }}">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdownUser"
+                       role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        <i class="fa fa-users m-2"></i>
+                        <span>@lang('Users')</span>
+                        <i data-feather="chevron-down" class="svg-icon"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                        <a class="dropdown-item {{menuActive('agent.users')}}" href="{{ route('agent.users') }}">
+                            <i class="fa fa-users m-2"></i>
+                            @lang('Users') </a>
+
+                        <a class="dropdown-item {{menuActive('agent.user.create')}}"
+                           href="{{ route('agent.user.create') }}">
+                            <i class="fa fa-user-plus m-2"></i>@lang('Add User')
+                        </a>
+                        <a class="dropdown-item {{menuActive('agent.users.orders')}}"
+                           href="{{ route('agent.users.orders') }}">
+                            <i class="fa fa-shopping-cart m-2"></i> @lang('Users Orders')
+                        </a>
+                        <a class="dropdown-item {{menuActive('agent.user.add-balance')}}"
+                           href="{{ route('agent.user.add-balance') }}">
+                            <i class="fas fa-hand-holding-usd m-2"></i> @lang('Add Balance To User')
+                        </a>
+                        <a class="dropdown-item {{menuActive('agent.add-debt-payment')}}"
+                           href="{{ route('agent.add-debt-payment') }}">
+                            <i class="fas fa-piggy-bank m-2"></i> @lang('Add Debt Payment')
+                        </a>
+                        <a class="dropdown-item {{menuActive('agent.debt.index*')}}"
+                           href="{{ route('agent.debt.index') }}">
+                            <i class="far fa-address-book m-2"></i> @lang('Users Debts')
+                        </a>
+                    </div>
+                </li>
+            @endcan
+
+            <li class="nav-item d-flex align-items-center">
+                <i class="fas fa-list-alt m-2"></i>
+                <a class="nav-link {{ Request::routeIs('user.order.index*')  ? 'active' : '' }}"
+                   href="{{route('user.order.index')}}">@lang('Orders')</a>
+            </li>
+
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-piggy-bank m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.addFund*')  ? 'active' : '' }}"
@@ -133,6 +155,13 @@
                        href="{{route('user.debts')}}">@lang('Debts')</a>
                 </li>
             @endif
+            @can('agent')
+                <li class="nav-item d-flex align-items-center">
+                    <i class="fas fa-clipboard-list m-2"></i>
+                    <a class="nav-link {{ Request::routeIs('agent.debt.my-debt')  ? 'active' : '' }}"
+                       href="{{route('agent.debt.my-debt')}}">@lang('Debts')</a>
+                </li>
+            @endcan
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-hand-holding-usd m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"
@@ -152,18 +181,13 @@
             </li>
 
 
-            {{--            @if(auth()->user()->user_id == 0 || auth()->user()->user_id == null)--}}
+           @cannot('agent')
             <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-edit m-2"></i>
                 <a class="nav-link {{ Request::routeIs('registerAsAgent') ? 'active' : '' }}"
                    href="{{ route('registerAsAgent') }}">@lang('Sign up As Agent') </a>
             </li>
-            {{--            @endif--}}
-
-            {{--<li class="nav-item ">--}}
-            {{--<a class="nav-link {{ Request::routeIs('user.use-balance-coupon') ? 'active' : '' }}"--}}
-            {{--href="{{ route('user.use-balance-coupon') }}">@lang('Use Balance Coupon') </a>--}}
-            {{--</li>--}}
+            @endcannot
 
             <li class="nav-item dropdown d-flex align-items-center">
                 <i class="fa fa-globe m-2"></i>
@@ -232,30 +256,30 @@
 
     </div>
 </div>
-<!-- <div class="fs-wrapper">
-        @foreach($notices as $notice)
+{{--<!-- <div class="fs-wrapper">--}}
+        {{--@foreach($notices as $notice)--}}
 
-    <div class="content">
-        <div class="featureDate">
-            <div class="category categoryNew new">
-@lang($notice->highlight_text)
-            </div>
-            <span>{{dateTime($notice->created_at,'d M, Y')}}</span>
-            </div>
+    {{--<div class="content">--}}
+        {{--<div class="featureDate">--}}
+            {{--<div class="category categoryNew new">--}}
+{{--@lang($notice->highlight_text)--}}
+            {{--</div>--}}
+            {{--<span>{{dateTime($notice->created_at,'d M, Y')}}</span>--}}
+            {{--</div>--}}
 
-            <h3 class="featureTitle">
-                @lang($notice->title)
-            </h3>
+            {{--<h3 class="featureTitle">--}}
+                {{--@lang($notice->title)--}}
+            {{--</h3>--}}
 
 
-            <div class="featureContent">
-                <p>
-@lang($notice->details)
+            {{--<div class="featureContent">--}}
+                {{--<p>--}}
+{{--@lang($notice->details)--}}
 
-            </p>
-        </div>
-    </div>
-@endforeach
+            {{--</p>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--@endforeach--}}
 
-        </div> -->
+        {{--</div> -->--}}
 </div>
