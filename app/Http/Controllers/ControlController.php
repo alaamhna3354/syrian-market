@@ -60,6 +60,10 @@ class ControlController extends Controller
         config(['basic.sms_verification' => (int)$reqData['sms_verification']]);
         config(['basic.email_verification' => (int)$reqData['email_verification']]);
         config(['basic.min_balance' => $reqData['min_balance']]);
+        config(['basic.points_rate_per_kilo' => $reqData['points_rate_per_kilo']]);
+        config(['basic.min_points_allowed_to_replace' => (int)$reqData['min_points_allowed_to_replace']]);
+        config(['basic.marketer_joining_fee' => $reqData['marketer_joining_fee']]);
+        config(['basic.golden_marketer_joining_fee' => $reqData['golden_marketer_joining_fee']]);
 
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
@@ -99,6 +103,10 @@ class ControlController extends Controller
         config(['basic.fraction_number' => (int)$reqData['fraction_number']]);
         config(['basic.paginate' => (int)$reqData['paginate']]);
         config(['basic.min_balance' => $reqData['min_balance']]);
+        config(['basic.points_rate_per_kilo' => $reqData['points_rate_per_kilo']]);
+        config(['basic.min_points_allowed_to_replace' => (int)$reqData['min_points_allowed_to_replace']]);
+        config(['basic.marketer_joining_fee' => $reqData['marketer_joining_fee']]);
+        config(['basic.golden_marketer_joining_fee' => $reqData['golden_marketer_joining_fee']]);
 
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
