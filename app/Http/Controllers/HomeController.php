@@ -458,19 +458,17 @@ class HomeController extends Controller
     public function replacePoints()
     {
         $user = auth()->user();
-        $pendingPoints = 0;
-//        if ($user->marketer) {
-//            $pendingTransaction = PointsTransaction::where('user_id', $user->id)->where('remarks', 'Marketer')->where('order_id', $user->marketer->id)->whereDate('created_at', '>', Carbon::now()->subDays(4))->get();
-//            $pendingPoints=$pendingTransaction->sum('amount');
-//        }
-        $amount = ($user->points - $pendingPoints) * config('basic.points_rate_per_kilo') / 1000;
-       // dd($pendingPoints);
+
+        $replacableAmount = $user->activePointsTransactions->sum('amount');
+        $amount=  $replacableAmount * config('basic.points_rate_per_kilo') / 1000;
         if ($amount > 0) {
             DB::beginTransaction();
             try {
                 $user->balance += $amount;
-                $user->points = $pendingPoints;
+                $user->points = $user->points - $replacableAmount;
                 $user->save();
+//                $user->activepointTransactions->forget($pendingTransaction);
+//                dd($user->activepointTransactions);
                 foreach ($user->activePointsTransactions as $pointsTransaction)
                     $pointsTransaction->update(['status' => 'replaced']);
 

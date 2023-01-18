@@ -19,7 +19,7 @@ class OrderController extends Controller
 
     public function __construct(PointsService $pointsService)
     {
-        $this->pointsService=$pointsService;
+        $this->pointsService = $pointsService;
     }
 
     /*
@@ -36,7 +36,7 @@ class OrderController extends Controller
     {
 
         $page_title = "All Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->has('service')->paginate(config('basic..paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->has('service')->paginate(config('basic..paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
@@ -79,56 +79,56 @@ class OrderController extends Controller
     public function awaiting(Request $request, $name = 'awaiting')
     {
         $page_title = "Awaiting Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function pending(Request $request, $name = 'pending')
     {
         $page_title = "Pending Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function processing(Request $request, $name = 'processing')
     {
         $page_title = "Processing Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function progress(Request $request, $name = 'progress')
     {
         $page_title = "Progress Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function completed(Request $request, $name = 'completed')
     {
         $page_title = "Completed Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function partial(Request $request, $name = 'partial')
     {
         $page_title = "Partial Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function canceled(Request $request, $name = 'canceled')
     {
         $page_title = "Canceled Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
     public function refunded(Request $request, $name = 'refunded')
     {
         $page_title = "Refunded Orders";
-        $orders = Order::orderby('id','desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
+        $orders = Order::orderby('id', 'desc')->with('service', 'users')->where('status', $name)->paginate(config('basic.paginate'));
         return view('admin.pages.order.show', compact('orders', 'page_title'));
     }
 
@@ -162,7 +162,7 @@ class OrderController extends Controller
         $order->remains = $req['remains'] == '' ? null : $req['remains'];
         if ($request->status) {
 //            $order->status = $req['status'];
-            if($req['status']=='refunded') {
+            if ($req['status'] == 'refunded') {
                 if ($order->status != 'refunded') {
                     $user->balance += $order->price;
                     $transaction1 = new Transaction();
@@ -172,13 +172,14 @@ class OrderController extends Controller
                     $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
                     $transaction1->trx_id = strRandom();
                     $transaction1->charge = 0;
-                    $pointsTransaction=$this->pointsService->refundPoints('Refund Order',$order->id,$user);
-                    if ($order->agentCommissionRate != null){
+                    if ($order->service->points > 0)
+                        $user = $this->pointsService->refundPoints('Refund Order', $order->id, $user);
+                    if ($order->agentCommissionRate != null) {
                         $agentCommissionRate = $order->agentCommissionRate;
-                        if ($agentCommissionRate->is_paid == 1){
+                        if ($agentCommissionRate->is_paid == 1) {
                             $agent = $user->parent;
                             $agent->balance -= $agentCommissionRate->commission_rate;
-                            if ($agent->save()){
+                            if ($agent->save()) {
                                 $transaction = new Transaction();
                                 $transaction->user_id = $agent->id;
                                 $transaction->trx_type = '-';
@@ -191,20 +192,20 @@ class OrderController extends Controller
                         }
                         $agentCommissionRate->delete();
                     }
-                    if ($user->save()){
+                    if ($user->save()) {
                         $transaction1->save();
                     }
                 }
             }
 
             $status = $order->status;
-            if($req['status']=='completed' && $status=='processing')
-                $order->execution_time=$order->created_at->diffInSeconds(now());
+            if ($req['status'] == 'completed' && $status == 'processing')
+                $order->execution_time = $order->created_at->diffInSeconds(now());
             $order->status = $req['status'];
 
         }
         $order->reason = $req['reason'];
-        $order->updated_by=auth()->id();
+        $order->updated_by = auth()->id();
         $order->save();
         $msg = [
             'status' => $order->status,
@@ -214,7 +215,7 @@ class OrderController extends Controller
             "link" => '#',
             "icon" => "fa fa-money-bill-alt text-white"
         ];
-        if ($status != $order->status){
+        if ($status != $order->status) {
             $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
         }
 
@@ -226,7 +227,7 @@ class OrderController extends Controller
             'remains' => $order->remains,
             'order_status' => $order->status
         ]);
-        return back()->with('success', trans( 'successfully updated'));
+        return back()->with('success', trans('successfully updated'));
     }
 
 
@@ -240,7 +241,7 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         $order->delete();
-        return back()->with('success', trans( 'Successfully Deleted'));
+        return back()->with('success', trans('Successfully Deleted'));
     }
 
     public function statusChange(Request $request)
@@ -249,7 +250,7 @@ class OrderController extends Controller
         $req = $request->all();
         $order = Order::find($request->id);
         $user = $order->users;
-        if($req['statusChange']=='refunded') {
+        if ($req['statusChange'] == 'refunded') {
             if ($order->status != 'refunded') {
                 $user->balance += $order->price;
                 $transaction1 = new Transaction();
@@ -259,13 +260,14 @@ class OrderController extends Controller
                 $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
                 $transaction1->trx_id = strRandom();
                 $transaction1->charge = 0;
-                $user=$this->pointsService->refundPoints('Refund Order',$order->id,$user);
-                if ($order->agentCommissionRate != null){
+                if ($order->service->points > 0)
+                    $user = $this->pointsService->refundPoints('Refund Order', $order->id, $user);
+                if ($order->agentCommissionRate != null) {
                     $agentCommissionRate = $order->agentCommissionRate;
-                    if ($agentCommissionRate->is_paid == 1){
+                    if ($agentCommissionRate->is_paid == 1) {
                         $agent = $user->parent;
                         $agent->balance -= $agentCommissionRate->commission_rate;
-                        if ($agent->save()){
+                        if ($agent->save()) {
                             $transaction = new Transaction();
                             $transaction->user_id = $agent->id;
                             $transaction->trx_type = '-';
@@ -278,15 +280,15 @@ class OrderController extends Controller
                     }
                     $agentCommissionRate->delete();
                 }
-                if ($user->save()){
+                if ($user->save()) {
                     $transaction1->save();
                 }
             }
         }
-        if($req['statusChange']=='completed' && $order->status=='processing')
-            $order->execution_time=$order->created_at->diffInSeconds(now());
+        if ($req['statusChange'] == 'completed' && $order->status == 'processing')
+            $order->execution_time = $order->created_at->diffInSeconds(now());
         $order->status = $req['statusChange'];
-        $order->updated_by=auth()->id();
+        $order->updated_by = auth()->id();
         $order->save();
         $msg = [
             'status' => $order->status,
@@ -298,7 +300,7 @@ class OrderController extends Controller
         ];
 
         $this->userPushNotification($user, 'CHANGED_STATUS', $msg, $action);
-        return back()->with('success', trans( 'Successfully Updated'));
+        return back()->with('success', trans('Successfully Updated'));
     }
 
 
@@ -367,7 +369,7 @@ class OrderController extends Controller
                 return $query->whereDate("created_at", $dateSearch);
             })
             ->paginate(config('basic.paginate'));
-        $transaction =  $transaction->appends($search);
+        $transaction = $transaction->appends($search);
 
         return view('admin.pages.transaction.index', compact('transaction'));
     }
@@ -378,8 +380,9 @@ class OrderController extends Controller
         $user = User::findOrFail(2);
 //        dd($user->transactions());
         $transaction = Transaction::with('user')->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
-        return view('admin.pages.inventory.index', compact('transaction','users'));
+        return view('admin.pages.inventory.index', compact('transaction', 'users'));
     }
+
     public function inventorySearch(Request $request)
     {
         $search = $request->all();
@@ -392,9 +395,9 @@ class OrderController extends Controller
                 return $query->where('username', 'LIKE', "%{$search['user_name']}%");
             })
             ->get();
-        $transaction =  $transaction->appends($search);
+        $transaction = $transaction->appends($search);
 
-        return view('admin.pages.inventory.index', compact('transaction','users'));
+        return view('admin.pages.inventory.index', compact('transaction', 'users'));
     }
 
     public function pointsTransaction()
@@ -422,7 +425,7 @@ class OrderController extends Controller
                 return $query->whereDate("created_at", $dateSearch);
             })
             ->paginate(config('basic.paginate'));
-        $pointsTransaction =  $pointsTransaction->appends($search);
+        $pointsTransaction = $pointsTransaction->appends($search);
 
         return view('admin.pages.points-transaction.index', compact('pointsTransaction'));
     }

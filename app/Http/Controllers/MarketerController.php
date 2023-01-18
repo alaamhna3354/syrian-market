@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Marketer;
 use App\Models\MarketerLog;
+use App\Models\PointsTransaction;
 use App\Services\PointsService;
 use App\Services\TransactionService;
 use CoinGate\Exception;
@@ -68,7 +69,7 @@ class MarketerController extends Controller
         if($user->id == $parent_marketer->user_id)
             return back()->with('error', trans("You can't invite your self"))->withInput();
 
-        if (!($user->balance > config('basic.marketer_joining_fee')))
+        if (!($user->balance >= config('basic.marketer_joining_fee')))
             return back()->with('error', trans("Your balance is not enough"))->withInput();
 
         DB::beginTransaction();
@@ -96,7 +97,7 @@ class MarketerController extends Controller
             $marketer->remaining_invitation += config('basic.marketer_invitation_number_each_join');
             $marketer->save();
 
-            $points = $this->pointsService->earnPoints('Marketer', config('basic.marketer_joining_points'), 'invaited marketer ' . $user->username, $parent_marketer->id, $parent_marketer->user);
+            $points = $this->pointsService->earnPoints('Marketer', config('basic.marketer_joining_points'), 'invaited marketer ' . $user->username, $marketer->id, $parent_marketer->user,'pending');
             $log = $this->log($marketer->id, $parent_marketer->id, 'Joined as normal marketer and got ' . config('basic.marketer_invitation_number_each_join') . 'activations code ', 'joined', config('basic.marketer_joining_fee'), 0);
             DB::commit();
             return redirect(route('user.marketers'))->with('success', trans('Your order has been submitted'));
@@ -123,7 +124,7 @@ class MarketerController extends Controller
     public function goldenMarketer(Request $request)
     {
         $user = auth()->user();
-        if (!($user->balance > config('basic.golden_marketer_joining_fee')))
+        if (!($user->balance >= config('basic.golden_marketer_joining_fee')))
             return back()->with('error', trans("Your balance is not enough"))->withInput();
 
         DB::beginTransaction();
@@ -177,6 +178,9 @@ class MarketerController extends Controller
 
             $marketerPoints = $this->pointsService->earnPoints('Marketer', config('basic.marketer_joining_points') / 2, 'Swap marketer account');
             $parentPoints = $this->pointsService->refundMarketerPoints(config('basic.marketer_joining_points') / 2, 'Refended for marketer swap', $parent->user);
+            $pointTransaction=PointsTransaction::where('user_id',$parent->user->id)->where('order_id',$marketer->id)->where('status','pending')->first();
+            if($pointTransaction && (new DateTime)->diff($pointTransaction->created_at)->days < 4)
+                $pointTransaction->update(['status'=>'active']);
             $log = $this->log($marketer->id, $parent->id, 'Swapped (disable account ang get points)', 'swap', 0, config('basic.marketer_joining_points') / 2);
 
             DB::commit();

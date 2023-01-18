@@ -25,7 +25,7 @@
   'push_notification' => 1,
   'exchange_rate' => '10',
   'min_balance' => '0.00',
-  'points_rate_per_kilo' => '1.5',
+  'points_rate_per_kilo' => '11.7',
   'min_points_allowed_to_replace' => 1000,
   'marketer_joining_fee' => 10,
   'golden_marketer_joining_fee' => 10,

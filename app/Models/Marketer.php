@@ -40,6 +40,6 @@ class Marketer extends Model
 //    }
     public function childern()
     {
-        return $this->belongsToMany(Marketer::class,'marketer_logs','marketer_id','parent_id')->wherePivot('status','joined');
+        return $this->belongsToMany(Marketer::class,'marketer_logs','parent_id','marketer_id')->wherePivot('status','joined');
     }
 }

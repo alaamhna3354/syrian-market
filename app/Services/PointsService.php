@@ -19,7 +19,7 @@ use Ramsey\Uuid\Type\Integer;
 class PointsService
 {
 
-    public function earnPoints($type, $amount, $note, $order = null,$user = null)
+    public function earnPoints($type, $amount, $note, $order = null,$user = null,$status='active')
     {
         if(!$user)
             $user = auth()->user();
@@ -31,6 +31,7 @@ class PointsService
         $ptrx->amount = $amount;
         $ptrx->note = $note;
         $ptrx->order_id = $order;
+        $ptrx->status=$status;
         return $ptrx->save();
     }
 

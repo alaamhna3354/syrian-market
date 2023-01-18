@@ -114,8 +114,6 @@ class ControlController extends Controller
         config(['basic.marketer_joining_points' => (int)$reqData['marketer_joining_points']]);
         config(['basic.marketer_invitation_number_each_join' => (int)$reqData['marketer_invitation_number_each_join']]);
         config(['basic.auto_generate_invitation_code' => $reqData['auto_generate_invitation_code']]);
-
-
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
         fclose($fp);

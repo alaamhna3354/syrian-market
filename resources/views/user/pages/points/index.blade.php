@@ -84,7 +84,7 @@
                                     <th>@lang('Remarks')</th>
                                     <th>@lang('Time')</th>
                                     <th>@lang('Details')</th>
-                                    {{--<th>@lang('Status')</th>--}}
+                                    <th>@lang('Status')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -100,7 +100,7 @@
                                             {{ dateTime($transaction->created_at, 'd M Y h:i A') }}
                                         </td>
                                         <td data-label="@lang('Note')"> @lang($transaction->note)</td>
-                                        {{--<td data-label="@lang('Status')"> @lang($transaction->status)</td>--}}
+                                        <td data-label="@lang('Status')"> @lang($transaction->status)</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
