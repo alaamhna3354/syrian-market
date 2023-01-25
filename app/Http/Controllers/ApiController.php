@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Validator;
+use Nette\Utils\DateTime;
 use Stevebauman\Purify\Facades\Purify;
 
 class ApiController extends Controller
@@ -46,7 +47,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $actionList = ['balance', 'services', 'add', 'status', 'orders', 'categories', 'player'];
+        $actionList = ['balance', 'services', 'add', 'status', 'orders', 'categories', 'player','check_sms','sync_orders'];
         if (!in_array($req['action'], $actionList)) {
             return response()->json(['errors' => ['action' => trans("Invalid request action")]], 422);
         }
@@ -158,6 +159,11 @@ class ApiController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
             $result = $this->five_sim->checkSMS($req['order']);
+            return response()->json($result, 200);
+        }
+        elseif (strtolower($req['action']) == 'sync_orders') {
+            $date=now()->subMinutes(30);
+            $result = Order::select('id','status')->where('user_id',$user->id)->where('updated_at','>=',$date)->where('updated_at','>','created_at')->get();
             return response()->json($result, 200);
         }
     }
@@ -315,6 +321,7 @@ class ApiController extends Controller
                 $result['order'] = $order->id;
                 $result['code'] = $order->code;
                 $result['details'] = $order->details;
+                $result['order_status']=$order->status;
 
                 $this->adminPushNotification('ORDER_CREATE', $msg, $action);
                 DB::commit();
