@@ -23,10 +23,12 @@ class ApiController extends Controller
 {
     use Notify;
     private $serviceController;
+    private $five_sim;
 
-    public function __construct(\App\Http\Controllers\User\ServiceController $serviceController)
+    public function __construct(\App\Http\Controllers\User\ServiceController $serviceController, ApiProviderController $apiProviderController)
     {
         $this->serviceController = $serviceController;
+        $this->five_sim = $apiProviderController;
     }
 
     public function place_order()
@@ -59,7 +61,6 @@ class ApiController extends Controller
 
 
         $basic = (object)config('basic');
-
         if (strtolower($req['action']) == 'balance') {
             $result['status'] = 'success';
             $result['balance'] = $user->balance;
@@ -95,13 +96,13 @@ class ApiController extends Controller
             if (!$order) {
                 return response()->json(['errors' => ['message' => trans("Invalid Order")]], 422);
             }
-
             $result['status'] = $order->status;
-            $result['charge'] = $order->service['api_provider_price'];
-            $result['start_count'] = (int)$order->start_count;
-            $result['remains'] = (int)$order->remains;
             $result['currency'] = $basic->currency;
+            $result['order'] = $order->id;
+            $result['code'] = $order->code;
+            $result['details'] = $order->details;
             return response()->json($result, 200);
+
         } elseif (strtolower($req['action']) == 'orders') {
             $validator = Validator::make($req, [
                 'orders' => 'required'
@@ -114,9 +115,8 @@ class ApiController extends Controller
                 return [
                     'order' => $order->id,
                     'status' => $order->status,
-                    'charge' => $order->service['api_provider_price'],
-                    'start_count' => (int)$order->start_count,
-                    'remains' => (int)$order->remains
+                    'code' => $order->code,
+                    'details' => $order->details
                 ];
             });
             return response()->json($result, 200);
@@ -140,9 +140,7 @@ class ApiController extends Controller
                 return $player_name;
             }
             return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        elseif (strtolower($req['action']) == 'add') {
+        } elseif (strtolower($req['action']) == 'add') {
             $validator = Validator::make($req, [
                 'service' => 'required',
                 'link' => 'required'
@@ -152,6 +150,15 @@ class ApiController extends Controller
             }
             $result = $this->placeOrder($req, $user);
             return $result;
+        } elseif (strtolower($req['action']) == 'check_sms') {
+            $validator = Validator::make($req, [
+                'order' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            $result = $this->five_sim->checkSMS($req['order']);
+            return response()->json($result, 200);
         }
     }
 
@@ -285,8 +292,6 @@ class ApiController extends Controller
                     $transaction->trx_id = strRandom();
                     $transaction->charge = 0;
                     $transaction->save();
-                    if ($service->points > 0)
-                        $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' . $service->category->category_title . ' > ' . $service->id . ' QTY ' . $order->quantity, $order->id);
                     if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                         $commision = new AgentCommissionRate();
                         $rate = $service->agent_commission_rate;
@@ -308,6 +313,8 @@ class ApiController extends Controller
                 ];
                 $result['status'] = 'success';
                 $result['order'] = $order->id;
+                $result['code'] = $order->code;
+                $result['details'] = $order->details;
 
                 $this->adminPushNotification('ORDER_CREATE', $msg, $action);
                 DB::commit();
