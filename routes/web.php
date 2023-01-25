@@ -43,6 +43,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');
 
+        Route::get('balance-transfer', 'HomeController@transferBalance')->name('balance.transfer');
+        Route::post('transfer', 'HomeController@transfer')->name('balance-transfer');
 
         //transaction
         Route::get('/transaction', 'HomeController@transaction')->name('transaction');
