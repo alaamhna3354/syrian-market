@@ -17,6 +17,7 @@ use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
 use Dompdf\Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -461,30 +462,36 @@ class HomeController extends Controller
         $user = auth()->user();
         $amount = $user->points * config('basic.points_rate_per_kilo') / 1000;
         if ($user->points_balance_by_point_transactions == $user->points) {
-            DB::beginTransaction();
-            try {
-                $user->balance += $amount;
-                $user->points = 0;
-                $user->save();
-                foreach ($user->activePointsTransactions as $pointsTransaction)
-                    $pointsTransaction->update(['status' => 'replaced']);
+            $replacableAmount = $user->activePointsTransactions->sum('amount');
+            $amount = $replacableAmount * config('basic.points_rate_per_kilo') / 1000;
+            if ($amount > 0) {
+                DB::beginTransaction();
+                try {
+                    $user->balance += $amount;
+                    $user->points = $user->points - $replacableAmount;
+                    $user->save();
+//                $user->activepointTransactions->forget($pendingTransaction);
+//                dd($user->activepointTransactions);
+                    foreach ($user->activePointsTransactions as $pointsTransaction)
+                        $pointsTransaction->update(['status' => 'replaced']);
 
-                $transactionForUser = new Transaction();
-                $transactionForUser->user_id = $user->id;
-                $transactionForUser->trx_type = '+';
-                $transactionForUser->amount = $amount;
-                $transactionForUser->remarks = trans('Replace Points');
-                $transactionForUser->trx_id = strRandom();
-                $transactionForUser->charge = 0;
-                $transactionForUser->save();
-                DB::commit();
-                return back()->with('success', trans('Replaced Successfully'));
-            } catch (\Exception $e) {
-                DB::rollback();
-                return back()->with('error', $e->getMessage());
-            }
-        } else
-            return back()->with('error', 'Something error please contact admin');
+                    $transactionForUser = new Transaction();
+                    $transactionForUser->user_id = $user->id;
+                    $transactionForUser->trx_type = '+';
+                    $transactionForUser->amount = $amount;
+                    $transactionForUser->remarks = trans('Replace Points');
+                    $transactionForUser->trx_id = strRandom();
+                    $transactionForUser->charge = 0;
+                    $transactionForUser->save();
+                    DB::commit();
+                    return back()->with('success', trans('Replaced Successfully and there is some pending points'));
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return back()->with('error', $e->getMessage());
+                }
+            } else
+                return back()->with('error', 'Something error please contact admin');
+        }
     }
 
     public function transferBalance()

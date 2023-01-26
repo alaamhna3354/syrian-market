@@ -35,7 +35,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
     Route::post('/mail-verify', 'VerificationController@mailVerify')->name('mailVerify');
     Route::post('/sms-verify', 'VerificationController@smsVerify')->name('smsVerify');
     Route::middleware('userCheck')->group(function () {
-
         Route::get('/dashboard', 'User\ServiceController@index')->name('home');
 //        Route::get('/dashboard', 'HomeController@index')->name('home');
         Route::get('use_spare_balance', 'HomeController@use_spare_balance')->name('use_spare_balance');
@@ -106,13 +105,29 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         Route::get('/user-service', 'User\OrderController@userservice')->name('service_id');
 
-        Route::get('points','HomeController@pointTransactions')->name('points');
+        Route::get('points', 'HomeController@pointTransactions')->name('points');
         Route::get('/points-search', 'HomeController@pointTransactionsSearch')->name('points.transactions.search');
-        Route::post('points-replace','HomeController@replacePoints')->name('points.replace');
+        Route::post('points-replace', 'HomeController@replacePoints')->name('points.replace');
 
+        //Marketer
+        Route::middleware('can:join_as_marketer')->group(function () {
+            Route::get('marketer-join', 'MarketerController@create')->name('marketer.join');
+            Route::post('marketer-join', 'MarketerController@store')->name('marketer.store');
+            Route::get('random-code','MarketerController@getRandomInvitaionCode')->name('marketer.random-code');
+            Route::post('marketer-golden-join', 'MarketerController@goldenMarketer')->name('marketer.golden.store');
+        });
+        Route::middleware('can:marketer')->group(function () {
+            Route::get('marketers', 'MarketerController@index')->name('marketers');
+            Route::middleware('can:active_marketer')->group(function (){
+                Route::post('swap','MarketerController@swap')->name('marketer.swap')->middleware('can:normal_marketer');
+                Route::post('marketer-golden-refund', 'MarketerController@goldenMareketerRefund')->name('marketer.golden.refund')->middleware('can:golden_marketer');
+            });
+
+
+        });
     });
 });
-Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
+Route::group(['middleware' => ['auth','can:agent'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
     Route::middleware('userCheck')->group(function () {
         Route::get('/users', 'Agent\UserController@index')->name('users');
         Route::get('/products', 'Agent\ServiceController@show')->name('products');
@@ -461,6 +476,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
             Route::resource('price_range', 'Admin\PriceRangeController');
             Route::post('/price_range/update/{id}', 'Admin\PriceRangeController@update')->name('price_range.update');
+
+            //Marketers
+            Route::get('/marketers', 'Admin\MarketerController@index')->name('marketers');
+            Route::get('/marketers/search', 'Admin\MarketerController@search')->name('marketers.search');
+            Route::get('marketer/info/{marketer}','Admin\MarketerController@info')->name('marketer.info');
+            Route::post('marketer/update/{marketer}','Admin\MarketerController@update')->name('marketer.update');
         });
 
 

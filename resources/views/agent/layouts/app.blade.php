@@ -8,9 +8,9 @@
      data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full" class="mini-sidebar ">
 
     @include('agent.layouts.header')
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-
-@include('agent.layouts.side-notify')
+@include('user.layouts.side-notify')
 
     <div class="page-wrapper main-page d-block wid-res" style="width:100%">
         @yield('content')

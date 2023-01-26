@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +26,26 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('agent', function(User $user) {
+            return $user->is_agent && $user->is_approved;
+        });
+
+        Gate::define('marketer', function(User $user) {
+            return $user->marketer ;
+        });
+
+        Gate::define('golden_marketer', function(User $user) {
+            return $user->marketer->is_golden && $user->marketer->status=='active' ;
+        });
+
+        Gate::define('join_as_marketer', function(User $user) {
+            return @$user->marketer->status=="disabled" || !$user->marketer ;
+        });
+        Gate::define('active_marketer', function(User $user) {
+            return $user->marketer && $user->marketer->status=='active' ;
+        });
+        Gate::define('normal_marketer', function(User $user) {
+            return $user->marketer->is_golden==0 && $user->marketer->status=='active' && $user->marketer->parent_id;
+        });
     }
 }
