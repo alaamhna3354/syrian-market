@@ -27,21 +27,24 @@
                                 @lang('Get more codes')</a>
                         </div>
                     @endcan()
-
-                    @can('normal_marketer')
-                        <div class="col-md-3">
-                            <button class="btn waves-effect waves-light w-100 btn-primary"
-                                    data-toggle="modal" id="" data-target="#swap">
-                                <span>@lang('Swap')</span></button>
-                        </div>
-                    @endcan
-                    @can('golden_marketer')
-                        <div class="col-md-3">
-                            <button class="btn waves-effect waves-light w-100 btn-primary"
-                                    data-toggle="modal" id="" data-target="#refund">
-                                <span>@lang('Refund')</span></button>
-                        </div>
-                    @endcan
+                    @if(config('basic.marketers_swap')==1)
+                        @can('normal_marketer')
+                            <div class="col-md-3">
+                                <button class="btn waves-effect waves-light w-100 btn-primary"
+                                        data-toggle="modal" id="" data-target="#swap">
+                                    <span>@lang('Swap')</span></button>
+                            </div>
+                        @endcan
+                    @endif
+                    @if(config('basic.golden_refund')==1)
+                        @can('golden_marketer')
+                            <div class="col-md-3">
+                                <button class="btn waves-effect waves-light w-100 btn-primary"
+                                        data-toggle="modal" id="" data-target="#refund">
+                                    <span>@lang('Refund')</span></button>
+                            </div>
+                        @endcan
+                    @endif
                 </div>
                 <div class="card my-3">
                     <div class="card-body" style="background: #00000077;color: aliceblue;">
@@ -50,21 +53,21 @@
                                 <div class="form-group">
                                     <label>@lang('Your invitation code'): </label></br>
                                     <span> {{$marketer->invitation_code}}
-                                    <i class="fa fa-copy" style="font-size: 16px;"
-                                       onclick="copy('{{$marketer->invitation_code}}')"></i>
+                                        <i class="fa fa-copy" style="font-size: 16px;"
+                                           onclick="copy('{{$marketer->invitation_code}}')"></i>
                                     </span>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label>@lang('Joining date') :</label></br>
-                                <span >{{ dateTime($marketer->created_at, 'd M Y h:i A') }}</span>
+                                <span>{{ dateTime($marketer->created_at, 'd M Y h:i A') }}</span>
                             </div>
                             <div class="col-md-3">
-                                    <label>@lang('Status'):</label></br><span> @lang($marketer->status)</span>
+                                <label>@lang('Status'):</label></br><span> @lang($marketer->status)</span>
                             </div>
                             <div class="col-md-3">
-                                    <label>@lang('Remaining invitation'):</label></br>
-                                    <span>{{$marketer->remaining_invitation}}</span>
+                                <label>@lang('Remaining invitation'):</label></br>
+                                <span>{{$marketer->remaining_invitation}}</span>
                             </div>
                         </div>
                     </div>
@@ -203,8 +206,7 @@
         });
 
 
-
-        </script>
+    </script>
 @endpush
 @push('js')
     <script>

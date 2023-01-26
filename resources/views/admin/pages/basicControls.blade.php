@@ -165,6 +165,32 @@
                         </select>
                     </div>
 
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Enable golden refund')?</label>
+                        <br>
+                        <select name="golden_refund">
+                            <option value="0" {{ $control->golden_refund == 0 ? 'selected': '' }}>
+                                @lang('No')
+                            </option>
+                            <option value="1" {{ $control->golden_refund == 1 ? 'selected': '' }}>
+                                @lang('Yes')
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-sm-3 col-12">
+                        <label class="font-weight-bold">@lang('Enable Marketers Swap')?</label>
+                        <br>
+                        <select name="marketers_swap">
+                            <option value="0" {{ $control->marketers_swap == 0 ? 'selected': '' }}>
+                                @lang('No')
+                            </option>
+                            <option value="1" {{ $control->marketers_swap == 1 ? 'selected': '' }}>
+                                @lang('Yes')
+                            </option>
+                        </select>
+                    </div>
+
 
                 </div>
 

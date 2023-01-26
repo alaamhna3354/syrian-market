@@ -56,15 +56,17 @@
                             <div class="signup">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input class="form-control" id="invitation_code" type="text" name="invitation_code"
+                                        <div class="service item form-group">
+                                            <input class="form-control" id="invitation_code" type="text"
+                                                   name="invitation_code"
                                                    value="{{old('invitation_code')}}"
                                                    placeholder="@lang('Invitation Code')" required
-                                            @if(config('basic.auto_generate_invitation_code')) readonly @endif>
+                                                   @if(config('basic.auto_generate_invitation_code')) readonly @endif
+                                                   style="background-image: url({{asset($themeTrue.'imgs/firegif_2.gif')}});    background-size: contain;">
                                             @error('email')
                                             <p class="text-danger  mt-1">{{ $message }}</p>
                                             @enderror
-
+                                            {{--<img src="{{asset($themeTrue.'imgs/firegif_2.gif')}}" alt="user">--}}
                                         </div>
                                     </div>
                                     @if(config('basic.auto_generate_invitation_code'))
@@ -74,7 +76,9 @@
                                     @endif
                                 </div>
                             </div>
-                            <button class="btn mt-20" type="submit">@lang('Pay fee and join')</button>
+                            <button class="btn mt-20" type="submit"> @lang('Pay fee and join') {{config('basic.marketer_joining_fee').'$'}}</button>
+                            <i class='fas fa-question-circle' data-toggle="tooltip" data-html="true" title="@lang('Invitation code hint')" style="color: #fe5917;">
+                            </i>
                         </form>
                     </div>
                 </div>
@@ -87,9 +91,12 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('user.marketer.golden.store') }}" class="form-content w-100">
                         @csrf
-                        <button class="btn mt-20" type="submit">@lang('Pay fee and join')</button>
+                        <button class="btn mt-20" type="submit">@lang('Pay fee and join') {{config('basic.golden_marketer_joining_fee').'$'}}</button>
+                        <i class='fas fa-question-circle' data-toggle="tooltip" data-html="true" title="@lang('Golden marketer hint')" style="color: #fe5917;">
+                        </i>
                     </form>
                 </div>
+
             </div>
 
         </div>
@@ -111,11 +118,11 @@
             }
         });
 
-        $("#random-code").click(function(e){
+        $("#random-code").click(function (e) {
             e.preventDefault();
             $.ajax({
-                url : "/user/random-code",
-                success : function(data){
+                url: "/user/random-code",
+                success: function (data) {
                     $('#invitation_code').val(data);
                 }
             });

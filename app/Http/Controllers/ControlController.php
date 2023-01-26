@@ -66,6 +66,8 @@ class ControlController extends Controller
         config(['basic.marketer_joining_points' => (int)$reqData['marketer_joining_points']]);
         config(['basic.marketer_invitation_number_each_join' => (int)$reqData['marketer_invitation_number_each_join']]);
         config(['basic.auto_generate_invitation_code' => $reqData['auto_generate_invitation_code']]);
+        config(['basic.golden_refund' => $reqData['golden_refund']]);
+        config(['basic.marketers_swap' => $reqData['marketers_swap']]);
 
 
         $fp = fopen(base_path() . '/config/basic.php', 'w');
@@ -114,6 +116,8 @@ class ControlController extends Controller
         config(['basic.marketer_joining_points' => (int)$reqData['marketer_joining_points']]);
         config(['basic.marketer_invitation_number_each_join' => (int)$reqData['marketer_invitation_number_each_join']]);
         config(['basic.auto_generate_invitation_code' => $reqData['auto_generate_invitation_code']]);
+        config(['basic.golden_refund' => $reqData['golden_refund']]);
+        config(['basic.marketers_swap' => $reqData['marketers_swap']]);
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
         fclose($fp);

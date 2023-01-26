@@ -14,14 +14,15 @@ use App\Models\PointsTransaction;
 use App\Models\Transaction;
 use App\Models\User;
 use FontLib\Table\Type\post;
+use Nette\Utils\DateTime;
 use Ramsey\Uuid\Type\Integer;
 
 class PointsService
 {
 
-    public function earnPoints($type, $amount, $note, $order = null,$user = null,$status='active')
+    public function earnPoints($type, $amount, $note, $order = null, $user = null, $status = 'active')
     {
-        if(!$user)
+        if (!$user)
             $user = auth()->user();
         $user->points = $user->points + $amount;
         $user->save();
@@ -31,11 +32,11 @@ class PointsService
         $ptrx->amount = $amount;
         $ptrx->note = $note;
         $ptrx->order_id = $order;
-        $ptrx->status=$status;
+        $ptrx->status = $status;
         return $ptrx->save();
     }
 
-    public function refundPoints($note, $order,$user)
+    public function refundPoints($note, $order, $user)
     {
         //check if have poins balance
         //sub points balance if enouf
@@ -67,26 +68,36 @@ class PointsService
         }
     }
 
-    public function refundMarketerPoints($amount,$note,$user=null)
+    public function refundMarketerPoints($amount, $note, $user = null)
     {
         //check if have poins balance
         //sub points balance if enouf
         //or sub from balance
 
-            try {
-                if(!$user)
-                    $user = auth()->user();
-                $user->points = $user->points - $amount;
-                $user->save();
-                $ptrx = new PointsTransaction();
-                $ptrx->user_id = $user->id;
-                $ptrx->remarks = 'Marketer';
-                $ptrx->amount = $amount;
-                $ptrx->note = $note;
-                $ptrx->status = 'refunded';
-                return $ptrx->save();
-            } catch (\Exception $e) {
-                return back()->with('error', $e->getMessage());
-            }
+        try {
+            if (!$user)
+                $user = auth()->user();
+            $user->points = $user->points - $amount;
+            $user->save();
+            $ptrx = new PointsTransaction();
+            $ptrx->user_id = $user->id;
+            $ptrx->remarks = 'Marketer';
+            $ptrx->amount = $amount;
+            $ptrx->note = $note;
+            $ptrx->status = 'refunded';
+            return $ptrx->save();
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
+    }
+
+    public function checkPending($user)
+    {
+        $pendingTransactions=PointsTransaction::where('user_id',$user)->where('status','pending')->where('remarks','Marketer')->get();
+        foreach ($pendingTransactions as $transaction)
+        {
+            if((new DateTime())->diff($transaction->created_at)->days > 3)
+                $transaction->update(['status'=>'active']);
+        }
+    }
 }

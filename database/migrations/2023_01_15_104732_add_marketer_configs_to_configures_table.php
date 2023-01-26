@@ -17,6 +17,8 @@ class AddMarketerConfigsToConfiguresTable extends Migration
             $table->integer('marketer_joining_points')->default(500);
             $table->integer('marketer_invitation_number_each_join')->default(10);
             $table->boolean('auto_generate_invitation_code')->default(false);
+            $table->boolean('golden_refund')->default(true);
+            $table->boolean('marketers_swap')->default(true);
         });
     }
 

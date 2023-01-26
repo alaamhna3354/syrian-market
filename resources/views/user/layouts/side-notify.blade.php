@@ -169,6 +169,13 @@
             </li>
 
             <li class="nav-item d-flex align-items-center">
+                <i class="fas fa-hand-holding-usd m-2"></i>
+                <a class="nav-link {{ Request::routeIs('user.balance.transfer') ? 'active' : '' }}"
+                   href="{{ route('user.balance.transfer') }}">@lang('Balance Transfer')
+                    <sup class="blinker" style="color:#fe5917;">  @lang('New') </sup></a>
+            </li>
+
+            <li class="nav-item d-flex align-items-center">
                 <i class="fas fa-credit-card m-2"></i>
                 <a class="nav-link {{ Request::routeIs('user.fund-history') ? 'active' : '' }}"
                    href="{{ route('user.fund-history') }}">@lang('Fund History')</a>

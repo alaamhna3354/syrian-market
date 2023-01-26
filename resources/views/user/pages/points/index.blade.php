@@ -93,7 +93,7 @@
                                         <td data-label="@lang('SL No.')">{{loopIndex($pointTransactions) + $loop->index}}</td>
                                         <td data-label="@lang('Amount')">
                                         <span
-                                                class="font-weight-bold text-{{$transaction->status=='active' ? 'success' : 'danger'}}">{{$transaction->amount}}</span>
+                                                class="font-weight-bold text-{{$transaction->status=='active' ? 'success' : ($transaction->status=='pending' ? 'info' : 'danger')}}">{{$transaction->amount}}</span>
                                         </td>
                                         <td data-label="@lang('Remarks')"> @lang($transaction->remarks)</td>
                                         <td data-label="@lang('Time')">

@@ -117,7 +117,7 @@ class MarketerController extends Controller
 
     public function getRandomInvitaionCode()
     {
-        $marketer = Marketer::select('invitation_code')->where('status', 'active')->orderBy('remaining_invitation', 'desc')->orderBy('created_at')->first();
+        $marketer = Marketer::select('invitation_code')->where('status', 'active')->where('remaining_invitation',10)->orderBy('created_at')->first();
         return $marketer->invitation_code;
     }
 
@@ -156,6 +156,8 @@ class MarketerController extends Controller
 
     public function swap()
     {
+        if(config('basic.marketers_swap')==0)
+            return back()->with('error', trans("Swapping process disabled by admin"))->withInput();
         $marketer = auth()->user()->marketer;
         $parent = $marketer->parentMarketer;
         if(!$marketer || !$parent)
@@ -193,13 +195,16 @@ class MarketerController extends Controller
 
     public function goldenMareketerRefund()
     {
+        if(config('basic.golden_refund')==0)
+            return back()->with('error', trans("Refund process disabled by admin"))->withInput();
         $marketer = auth()->user()->marketer;
         if ((new DateTime)->diff($marketer->created_at)->days > 7 || $marketer->is_golden == 0)
             return back()->with('error', trans("You can't refund after 7 days of joining"))->withInput();
 
         if($marketer->remaining_invitation < 8)
                 return back()->with('error', trans("You can't refund if you invite more than 2 marketers"))->withInput();
-
+        if($marketer->remaining_invitation < 10 && ((10 - $marketer->remaining_invitation) * config('basic.marketer_joining_points') > $marketer->user->points))
+            return back()->with('error', trans("You can't refund if you replace your points"))->withInput();
         DB::beginTransaction();
         try {
             $marketer->status = 'disabled';
@@ -210,6 +215,7 @@ class MarketerController extends Controller
             $marketer->user->save();
             $transaction = $this->transactionService->create('+', config('basic.golden_marketer_joining_fee'), 'Golden marketer refund fee');
             $log = $this->log($marketer->id, null, 'Refund Golden fee  and disable account', 'refund',0,0);
+            $points = $this->pointsService->refundMarketerPoints((10 - $marketer->remaining_invitation) * config('basic.marketer_joining_points'), 'Refended golden marketer');
             DB::commit();
             return back()->with('success', trans("Swapped Successfully"))->withInput();
         } catch (\Exception $e) {
