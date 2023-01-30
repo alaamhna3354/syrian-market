@@ -172,10 +172,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->pointsTransactions()->where('status','active');
     }
 
-    public function marketer()
-    {
-        return $this->hasOne(Marketer::class);
-    }
-
-
 }

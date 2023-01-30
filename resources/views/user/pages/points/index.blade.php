@@ -84,7 +84,7 @@
                                     <th>@lang('Remarks')</th>
                                     <th>@lang('Time')</th>
                                     <th>@lang('Details')</th>
-                                    <th>@lang('Status')</th>
+                                    {{--<th>@lang('Status')</th>--}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,14 +93,14 @@
                                         <td data-label="@lang('SL No.')">{{loopIndex($pointTransactions) + $loop->index}}</td>
                                         <td data-label="@lang('Amount')">
                                         <span
-                                                class="font-weight-bold text-{{$transaction->status=='active' ? 'success' : ($transaction->status=='pending' ? 'info' : 'danger')}}">{{$transaction->amount}}</span>
+                                                class="font-weight-bold text-{{$transaction->status=='active' ? 'success' : 'danger'}}">{{$transaction->amount}}</span>
                                         </td>
                                         <td data-label="@lang('Remarks')"> @lang($transaction->remarks)</td>
                                         <td data-label="@lang('Time')">
                                             {{ dateTime($transaction->created_at, 'd M Y h:i A') }}
                                         </td>
                                         <td data-label="@lang('Note')"> @lang($transaction->note)</td>
-                                        <td data-label="@lang('Status')"> @lang($transaction->status)</td>
+                                        {{--<td data-label="@lang('Status')"> @lang($transaction->status)</td>--}}
                                     </tr>
                                 @endforeach
                                 </tbody>

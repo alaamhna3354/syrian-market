@@ -17,9 +17,6 @@ class AddPointsRateFieldToConfiguresTable extends Migration
             $table->float('points_rate_per_kilo')->default(10);
             $table->integer('marketer_joining_fee')->default(0);
             $table->integer('golden_marketer_joining_fee')->default(0);
-            $table->integer('marketer_joining_points')->default(100);
-            $table->integer('marketer_invitation_number_each_join')->default(10);
-            $table->boolean('auto_generate_invitation_code')->default(false);
         });
     }
 

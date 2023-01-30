@@ -8,7 +8,7 @@
      data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full" class="mini-sidebar ">
 
     @include('user.layouts.header')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 
 @include('user.layouts.side-notify')
 
@@ -49,7 +49,6 @@
 <script src="{{ asset('assets/global/js/axios.min.js') }}"></script>
 <script src="{{ asset('assets/global/js/vue.min.js') }}"></script>
 <script src="{{ asset('assets/global/js/pusher.min.js') }}"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 @include('user.layouts.notification')
 @stack('js')
@@ -166,7 +165,7 @@
                 channel.bind('App\\Events\\UpdateUserNotification', function (data) {
                     app.getNotifications();
                     const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3');
-                    audio.play();
+                    audio.play();\
 
                     if (Platform.OS === 'android') {
                         Notifications.createChannelAndroidAsync('notification-sound-channel', {

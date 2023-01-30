@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Traits\Notify;
-use App\Http\Traits\Upload;
 use App\Models\Fund;
 use App\Models\Gateway;
 use Illuminate\Http\Request;
+
 class PaymentController extends Controller
 {
-    use Notify, Upload;
-
     public function addFundRequest(Request $request)
     {
 
@@ -34,18 +31,13 @@ class PaymentController extends Controller
         $payable = getAmount($request->amount + $charge);
         $final_amo = getAmount($payable * $gate->convention_rate);
         $user = auth()->user();
+
         $fund = $this->newFund($request, $user, $gate, $charge, $final_amo);
 
         session()->put('track', $fund['transaction']);
 
-        if( 1000 > $fund->gateway->id ){
-            $method_currency = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? 'USD' : $fund->gateway_currency;
-            $isCrypto = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? true : false;
-        }else{
-            $method_currency = $fund->gateway_currency;
-            $isCrypto = false;
-        }
-
+        $method_currency = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? 'USD' : $fund->gateway_currency;
+        $isCrypto = (checkTo($fund->gateway->currencies, $fund->gateway_currency) == 1) ? true : false;
 
         return [
             'gateway_image' => getFile(config('location.gateway.path') . $gate->image),
@@ -64,7 +56,6 @@ class PaymentController extends Controller
 
     public function depositConfirm(Request $request)
     {
-
         $track = session()->get('track');
         $order = Fund::where('transaction', $track)->orderBy('id', 'DESC')->with(['gateway','user'])->first();
         if (is_null($order)) {
@@ -73,15 +64,14 @@ class PaymentController extends Controller
         if ($order->status != 0) {
             return redirect()->route('user.addFund')->with('error', 'Invalid Fund Request');
         }
-        if(999 < $order->gateway_id){
-            return view('user.payment.manual', compact('order'));
-        }
-
         $method = $order->gateway->code;
         try {
+
             $getwayObj = 'App\\Services\\Gateway\\' . $method . '\\Payment';
             $data = $getwayObj::prepareData($order, $order->gateway);
             $data = json_decode($data);
+
+
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
@@ -95,140 +85,8 @@ class PaymentController extends Controller
         return view($data->view, compact('data', 'page_title', 'order'));
     }
 
-    public function fromSubmit(Request  $request)
-    {
-        $basic = (object) config('basic');
-        $track = session()->get('track');
-        $data = Fund::where('transaction', $track)->orderBy('id', 'DESC')->with(['gateway', 'user'])->first();
-        if (is_null($data)) {
-            return redirect()->route('user.addFund')->with('error', 'Invalid Fund Request');
-        }
-        if ($data->status != 0) {
-            return redirect()->route('user.addFund')->with('error', 'Invalid Fund Request');
-        }
-        $gateway = $data->gateway;
-        $params = optional($data->gateway)->parameters;
-
-
-        $rules = [];
-        $inputField = [];
-
-        $verifyImages = [];
-
-        if ($params != null) {
-            foreach ($params as $key => $cus) {
-                $rules[$key] = [$cus->validation];
-                if ($cus->type == 'file') {
-                    array_push($rules[$key], 'image');
-                    array_push($rules[$key], 'mimes:jpeg,jpg,png');
-                    array_push($rules[$key], 'max:2048');
-                    array_push($verifyImages, $key);
-                }
-                if ($cus->type == 'text') {
-                    array_push($rules[$key], 'max:191');
-                }
-                if ($cus->type == 'textarea') {
-                    array_push($rules[$key], 'max:300');
-                }
-                $inputField[] = $key;
-            }
-        }
-
-        $this->validate($request, $rules);
-
-
-        $path = config('location.deposit.path').date('Y').'/'.date('m').'/'.date('d');
-        $collection = collect($request);
-
-        $reqField = [];
-        if ($params != null) {
-            foreach ($collection as $k => $v) {
-                foreach ($params as $inKey => $inVal) {
-                    if ($k != $inKey) {
-                        continue;
-                    } else {
-                        if ($inVal->type == 'file') {
-                            if ($request->hasFile($inKey)) {
-                                try {
-                                    $reqField[$inKey] = [
-                                        'field_name' => $this->uploadImage($request[$inKey], $path),
-                                        'type' => $inVal->type,
-                                    ];
-                                } catch (\Exception $exp) {
-                                    session()->flash('error', 'Could not upload your ' . $inKey);
-                                    return back()->withInput();
-                                }
-                            }
-                        } else {
-                            $reqField[$inKey] = $v;
-                            $reqField[$inKey] = [
-                                'field_name' => $v,
-                                'type' => $inVal->type,
-                            ];
-                        }
-                    }
-                }
-            }
-            $data->detail = $reqField;
-        } else {
-            $data->detail = null;
-        }
-
-        $data->created_at = now();
-        $data->status = 2; // pending
-        $data->update();
-
-        $msg = [
-            'username' => $data->user->username,
-            'amount' => getAmount($data->amount),
-            'currency' => $basic->currency,
-            'gateway' => $gateway->name
-        ];
-        $action = [
-            "link" => route('admin.user.fundLog', $data->user_id),
-            "icon" => "fa fa-money-bill-alt text-white"
-        ];
-        $this->adminPushNotification('PAYMENT_REQUEST', $msg, $action);
-
-        session()->flash('success', 'You request has been taken.');
-        return redirect()->route('user.fund-history');
-    }
-
     public function gatewayIpn(Request $request, $code, $trx = null, $type = null)
     {
-        if(isset($request->m_orderid)){
-            $trx  = $request->m_orderid;
-        }
-
-        if($code == 'coinbasecommerce'){
-            $input = fopen("php://input", "r");
-            @file_put_contents(time().'_coinbasecommerce.txt', $input);
-
-            $gateway = Gateway::where('code', $code)->first();
-
-            $postdata = file_get_contents("php://input");
-            //$postdata = file_get_contents("1644427281_coinbasecommerce.txt");
-            $res = json_decode($postdata);
-
-            if(isset($res->event)){
-                $order = Fund::where('transaction', $res->event->data->metadata->trx)->orderBy('id', 'DESC')->with(['gateway','user'])->first();
-                //$headers = apache_request_headers();
-                //$sentSign = $headers['X-Cc-Webhook-Signature'];
-                $sentSign = $request->header('X-Cc-Webhook-Signature');
-
-                $sig = hash_hmac('sha256', $postdata, $gateway->parameters->secret);
-                @file_put_contents(time().'_coinbasecommerce_sign.txt', $sentSign);
-
-                if ($sentSign == $sig) {
-                    if ($res->event->type == 'charge:confirmed' && $order->status == 0) {
-                        BasicService::preparePaymentUpgradation($order);
-                    }
-                }
-            }
-
-            session()->flash('success', 'You request has been processing.');
-            return redirect()->route('user.fund-history');
-        }
 
         try {
             $gateway = Gateway::where('code', $code)->first();
@@ -238,7 +96,7 @@ class PaymentController extends Controller
                 if (!$order) throw new \Exception( 'Invalid Payment Request.');
             }
             $getwayObj = 'App\\Services\\Gateway\\' . $code . '\\Payment';
-            $data = $getwayObj::ipn($request, $gateway, @$order, @$trx, @$type);
+            $data = $getwayObj::ipn($request, $gateway, $order, $trx, $type);
 
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
@@ -281,7 +139,6 @@ class PaymentController extends Controller
         $fund->transaction = strRandom();
         $fund->try = 0;
         $fund->status = 0;
-        $fund->detail=$request->detail;
         $fund->save();
         return $fund;
     }
