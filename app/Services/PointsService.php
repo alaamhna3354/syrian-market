@@ -14,14 +14,16 @@ use App\Models\PointsTransaction;
 use App\Models\Transaction;
 use App\Models\User;
 use FontLib\Table\Type\post;
+use Nette\Utils\DateTime;
 use Ramsey\Uuid\Type\Integer;
 
 class PointsService
 {
 
-    public function earnPoints($type, $amount, $note, $order = null)
+    public function earnPoints($type, $amount, $note, $order = null, $user = null, $status = 'active')
     {
-        $user = auth()->user();
+        if (!$user)
+            $user = auth()->user();
         $user->points = $user->points + $amount;
         $user->save();
         $ptrx = new PointsTransaction();
@@ -30,11 +32,11 @@ class PointsService
         $ptrx->amount = $amount;
         $ptrx->note = $note;
         $ptrx->order_id = $order;
-        $ptrx->save();
+        $ptrx->status = $status;
         return $ptrx->save();
     }
 
-    public function refundPoints($note, $order,$user)
+    public function refundPoints($note, $order, $user)
     {
         //check if have poins balance
         //sub points balance if enouf
@@ -61,8 +63,41 @@ class PointsService
                 $ptrx->save();
                 return $user;
             } catch (\Exception $e) {
-                return back()->with('error', $e->getMessage());
+                return $user;
             }
+        }
+    }
+
+    public function refundMarketerPoints($amount, $note, $user = null)
+    {
+        //check if have poins balance
+        //sub points balance if enouf
+        //or sub from balance
+
+        try {
+            if (!$user)
+                $user = auth()->user();
+            $user->points = $user->points - $amount;
+            $user->save();
+            $ptrx = new PointsTransaction();
+            $ptrx->user_id = $user->id;
+            $ptrx->remarks = 'Marketer';
+            $ptrx->amount = $amount;
+            $ptrx->note = $note;
+            $ptrx->status = 'refunded';
+            return $ptrx->save();
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function checkPending($user)
+    {
+        $pendingTransactions=PointsTransaction::where('user_id',$user)->where('status','pending')->where('remarks','Marketer')->get();
+        foreach ($pendingTransactions as $transaction)
+        {
+            if((new DateTime())->diff($transaction->created_at)->days > 3)
+                $transaction->update(['status'=>'active']);
         }
     }
 }

@@ -27,6 +27,11 @@
   'min_balance' => '0.00',
   'points_rate_per_kilo' => '11.7',
   'min_points_allowed_to_replace' => 1000,
-  'marketer_joining_fee' => '.610',
-  'golden_marketer_joining_fee' => '10.6',
+  'marketer_joining_fee' => 10,
+  'golden_marketer_joining_fee' => 10,
+  'marketer_joining_points' => 500,
+  'marketer_invitation_number_each_join' => 10,
+  'auto_generate_invitation_code' => '0',
+  'golden_refund' => '0',
+  'marketers_swap' => '1',
 );

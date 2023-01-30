@@ -14,4 +14,14 @@ class Gateway extends Model
         'currencies' => 'object',
         'extra_parameters' => 'object'
     ];
+
+    public function scopeAutomatic()
+    {
+        return $this->where('id', '<', 1000);
+    }
+
+    public function scopeManual()
+    {
+        return $this->where('id', '>=', 1000);
+    }
 }

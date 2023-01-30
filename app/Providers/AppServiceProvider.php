@@ -8,7 +8,9 @@ use App\Models\Language;
 use App\Models\Notice;
 use App\Models\Template;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 
