@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::get('add-fund', 'HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');
+        Route::post('addFundConfirm', 'PaymentController@fromSubmit')->name('addFund.fromSubmit');
 
         Route::get('balance-transfer', 'HomeController@transferBalance')->name('balance.transfer');
         Route::post('transfer', 'HomeController@transfer')->name('balance-transfer');
@@ -185,6 +186,7 @@ Route::group(['middleware' => ['auth','can:agent'], 'prefix' => 'agent', 'as' =>
         Route::get('add-fund', 'Agent\HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'Agent\PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'Agent\PaymentController@depositConfirm')->name('addFund.confirm');
+        Route::post('addFundConfirm', 'PaymentController@fromSubmit')->name('addFund.fromSubmit');
 
         Route::get('/use-balance-coupon', 'Agent\HomeController@useBalanceCoupon')->name('use-balance-coupon');
         Route::Post('/add-balance-coupon', 'Agent\HomeController@addBalanceCoupon')->name('add-balance-coupon');
@@ -231,6 +233,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::get('payment-methods/edit/{id}', 'Admin\PaymentMethodController@edit')->name('edit.payment.methods');
             Route::put('payment-methods/update/{id}', 'Admin\PaymentMethodController@update')->name('update.payment.methods');
 
+            Route::get('payment/pending', 'Admin\PaymentLogController@pending')->name('payment.pending');
+            Route::put('payment/action/{id}', 'Admin\PaymentLogController@action')->name('payment.action');
             Route::get('payment/log', 'Admin\PaymentLogController@index')->name('payment.log');
             Route::get('payment/search', 'Admin\PaymentLogController@search')->name('payment.search');
 
@@ -386,6 +390,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::get('/notify-template/edit/{id}', 'Admin\NotifyController@edit')->name('notify-template.edit');
             Route::post('/notify-template/update/{id}', 'Admin\NotifyController@update')->name('notify-template.update');
 
+            // Manual Methods
+            Route::get('payment-methods/manual', 'Admin\ManualGatewayController@index')->name('deposit.manual.index');
+            Route::get('payment-methods/manual/new', 'Admin\ManualGatewayController@create')->name('deposit.manual.create');
+            Route::post('payment-methods/manual/new', 'Admin\ManualGatewayController@store')->name('deposit.manual.store');
+            Route::get('payment-methods/manual/edit/{id}', 'Admin\ManualGatewayController@edit')->name('deposit.manual.edit');
+            Route::put('payment-methods/manual/update/{id}', 'Admin\ManualGatewayController@update')->name('deposit.manual.update');
 
             // transaction
             Route::get('/transaction', 'OrderController@transaction')->name('user-transaction');
