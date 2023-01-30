@@ -1,4 +1,4 @@
-@extends('user.layouts.app')
+@extends('agent.layouts.app')
 @section('title')
     @lang('Add Fund')
 @endsection
@@ -44,6 +44,7 @@
          aria-labelledby="primary-header-modalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
+
                 <div class="modal-header modal-colored-header bg-primary">
                     <h4 class="modal-title method-name" id="primary-header-modalLabel"></h4>
 
@@ -51,7 +52,10 @@
                             aria-hidden="true">×
                     </button>
                 </div>
+
+
                 <div class="modal-body">
+
                     <div class="payment-form">
                         <p class="text-danger depositLimit"></p>
                         <p class="text-danger depositCharge"></p>
@@ -70,10 +74,13 @@
                     <div class="payment-info text-center">
                         <img id="loading" src="{{asset('assets/images/loading.gif')}}" alt=""/>
                     </div>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary checkCalc">@lang('Check')</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -117,7 +124,7 @@
             amount = $('.amount').val();
 
             $.ajax({
-                url: "{{route('user.addFund.request')}}",
+                url: "{{route('agent.addFund.request')}}",
                 type: 'POST',
                 data: {
                     amount,

@@ -48,6 +48,7 @@ class ControlController extends Controller
             'min_balance' => 'required|numeric'
         ]);
 
+
         config(['basic.site_title' => $reqData['site_title']]);
         config(['basic.time_zone' => trim($reqData['time_zone'])]);
         config(['basic.currency' => $reqData['currency']]);
@@ -61,14 +62,8 @@ class ControlController extends Controller
         config(['basic.min_balance' => $reqData['min_balance']]);
         config(['basic.points_rate_per_kilo' => $reqData['points_rate_per_kilo']]);
         config(['basic.min_points_allowed_to_replace' => (int)$reqData['min_points_allowed_to_replace']]);
-        config(['basic.marketer_joining_fee' => (int)$reqData['marketer_joining_fee']]);
-        config(['basic.golden_marketer_joining_fee' => (int)$reqData['golden_marketer_joining_fee']]);
-        config(['basic.marketer_joining_points' => (int)$reqData['marketer_joining_points']]);
-        config(['basic.marketer_invitation_number_each_join' => (int)$reqData['marketer_invitation_number_each_join']]);
-        config(['basic.auto_generate_invitation_code' => $reqData['auto_generate_invitation_code']]);
-        config(['basic.golden_refund' => $reqData['golden_refund']]);
-        config(['basic.marketers_swap' => $reqData['marketers_swap']]);
-
+        config(['basic.marketer_joining_fee' => $reqData['marketer_joining_fee']]);
+        config(['basic.golden_marketer_joining_fee' => $reqData['golden_marketer_joining_fee']]);
 
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
@@ -88,7 +83,6 @@ class ControlController extends Controller
     }
     public function updateBasicControls(Request $request)
     {
-
         $configure = Configure::firstOrNew();
         $reqData = Purify::clean($request->except('_token', '_method'));
         $request->validate([
@@ -111,13 +105,9 @@ class ControlController extends Controller
         config(['basic.min_balance' => $reqData['min_balance']]);
         config(['basic.points_rate_per_kilo' => $reqData['points_rate_per_kilo']]);
         config(['basic.min_points_allowed_to_replace' => (int)$reqData['min_points_allowed_to_replace']]);
-        config(['basic.marketer_joining_fee' => (int)$reqData['marketer_joining_fee']]);
-        config(['basic.golden_marketer_joining_fee' => (int)$reqData['golden_marketer_joining_fee']]);
-        config(['basic.marketer_joining_points' => (int)$reqData['marketer_joining_points']]);
-        config(['basic.marketer_invitation_number_each_join' => (int)$reqData['marketer_invitation_number_each_join']]);
-        config(['basic.auto_generate_invitation_code' => $reqData['auto_generate_invitation_code']]);
-        config(['basic.golden_refund' => $reqData['golden_refund']]);
-        config(['basic.marketers_swap' => $reqData['marketers_swap']]);
+        config(['basic.marketer_joining_fee' => $reqData['marketer_joining_fee']]);
+        config(['basic.golden_marketer_joining_fee' => $reqData['golden_marketer_joining_fee']]);
+
         $fp = fopen(base_path() . '/config/basic.php', 'w');
         fwrite($fp, '<?php return ' . var_export(config('basic'), true) . ';');
         fclose($fp);

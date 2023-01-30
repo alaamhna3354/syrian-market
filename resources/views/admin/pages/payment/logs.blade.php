@@ -62,7 +62,6 @@
                         <th scope="col">@lang('Charge')</th>
                         <th scope="col">@lang('Payable')</th>
                         <th scope="col">@lang('Status')</th>
-                        <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -74,7 +73,14 @@
                             <td data-label="@lang('Username')"><a
                                     href="{{route('admin.user-edit', $fund->user_id)}}" target="_blank">{{ optional($fund->user)->username }}</a>
                             </td>
-                            <td data-label="@lang('Method')">{{ optional($fund->gateway)->name }}</td>
+                            @if($fund->gateway_id == null)
+                                <td data-label="@lang('Method')">@lang('يدوي')</td>
+
+                            @else
+                                <td data-label="@lang('Method')">@lang(optional($fund->gateway)->name)</td>
+                            @endif
+{{--                            <td data-label="@lang('Method')">--}}
+{{--                                {{ optional($fund->gateway)->name }}</td>--}}
                             <td data-label="@lang('Amount')"
                                 class="font-weight-bold">{{ getAmount($fund->amount ) }} {{ $basic->currency }}</td>
                             <td data-label="@lang('Charge')"
@@ -90,54 +96,6 @@
                                     <span class="badge badge-success">@lang('Approved')</span>
                                 @elseif($fund->status == 3)
                                     <span class="badge badge-danger">@lang('Rejected')</span>
-                                @endif
-                            </td>
-
-                            <td data-label="@lang('Action')">
-                                @php
-                                    if($fund->detail){
-                                            $details =[];
-                                              foreach($fund->detail as $k => $v){
-                                                    if($v->type == "file"){
-                                                        $details[kebab2Title($k)] = [
-                                                            'type' => $v->type,
-                                                            'field_name' => getFile(config('location.deposit.path').date('Y',strtotime($fund->created_at)).'/'.date('m',strtotime($fund->created_at)).'/'.date('d',strtotime($fund->created_at)) .'/'.$v->field_name)
-                                                            ];
-                                                    }else{
-                                                        $details[kebab2Title($k)] =[
-                                                            'type' => $v->type,
-                                                            'field_name' => $v->field_name
-                                                        ];
-                                                    }
-                                              }
-                                        }else{
-                                            $details = null;
-                                        }
-                                @endphp
-
-                                @if($fund->gateway_id > 999)
-                                    <button
-                                        class="edit_button   btn  {{($fund->status == 2) ?  'btn-primary' : 'btn-success'}} text-white  btn-sm "
-                                        data-toggle="modal" data-target="#myModal"
-                                        data-title="{{($fund->status == 2) ?  trans('Edit') : trans('Details')}}"
-
-                                        data-id="{{ $fund->id }}"
-                                        data-feedback="{{ $fund->feedback }}"
-                                        data-info="{{json_encode($details)}}"
-                                        data-amount="{{ getAmount($fund->amount)}} {{ $basic->currency }}"
-                                        data-username="{{ optional($fund->user)->username }}"
-                                        data-route="{{route('admin.payment.action',$fund->id)}}"
-                                        data-status="{{$fund->status}}">
-
-                                        @if(($fund->status == 2))
-                                            <i class="fa fa-pencil-alt"></i>
-                                        @else
-                                            <i class="fa fa-eye"></i>
-                                        @endif
-
-                                    </button>
-                                @else
-                                    -
                                 @endif
                             </td>
                         </tr>
@@ -156,43 +114,6 @@
         </div>
     </div>
 
-
-    <!-- Modal for Edit button -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content ">
-                <div class="modal-header modal-colored-header bg-primary">
-                    <h4 class="modal-title" id="myModalLabel">@lang('Deposit Information')</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-
-                <form role="form" method="POST" class="actionRoute" action="" enctype="multipart/form-data">
-                    @csrf
-                    @method('put')
-                    <div class="modal-body">
-                        <ul class="list-group withdraw-detail">
-                        </ul>
-
-                        <div class="get-feedback">
-
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@lang('Close')</button>
-                        @if(Request::routeIs('admin.payment.pending'))
-                            <input type="hidden" class="action_id" name="id">
-                            <button type="submit" class="btn btn-primary" name="status"
-                                    value="1">@lang('Approve')</button>
-                            <button type="submit" class="btn btn-danger" name="status"
-                                    value="3">@lang('Reject')</button>
-                        @endif
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 @endsection
 
 
@@ -202,45 +123,14 @@
             top: -5px;
         }
     </style>
-@endpush
-
+    @endpush
 @push('js')
     <script>
         "use strict";
         $(document).ready(function () {
-            $('select[name=status]').select2({
+
+            $('#status').select2({
                 selectOnClose: true
-            });
-
-            $(document).on("click", '.edit_button', function (e) {
-                var id = $(this).data('id');
-                var feedback = $(this).data('feedback');
-
-                $(".action_id").val(id);
-                $(".actionRoute").attr('action', $(this).data('route'));
-                var details = Object.entries($(this).data('info'));
-                var list = [];
-                details.map(function (item, i) {
-                    if (item[1].type == 'file') {
-                        var singleInfo = `<br><img src="${item[1].field_name}" alt="..." class="w-100">`;
-                    } else {
-                        var singleInfo = `<span class="font-weight-bold ml-3">${item[1].field_name}</span>  `;
-                    }
-                    list[i] = ` <li class="list-group-item"><span class="font-weight-bold "> ${item[0].replace('_', " ")} </span> : ${singleInfo}</li>`
-                });
-                $('.withdraw-detail').html(list);
-
-                if (feedback == '') {
-                    var $res = `<div class="form-group"><br>
-                                <label class="font-weight-bold">{{trans('Send You Feedback')}}</label>
-                                <textarea name="feedback" class="form-control" row="3" required>{{old('feedback')}}</textarea>
-                            </div>`
-                } else {
-                    var $res = `<h5>{{trans('Feedback')}}</h5>
-                    <p>${feedback}</p>`
-                }
-
-                $('.get-feedback').html($res)
             });
         });
     </script>

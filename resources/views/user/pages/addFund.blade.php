@@ -13,7 +13,6 @@
             @foreach($gateways as $key => $gateway)
                 <div class="col-xl-2 col-lg-3 col-md-4  col-sm-6 col-6 ">
                     <div class="card text-center">
-                        <h2>{{$gateway->name}}</h2>
                         <img src="{{ getFile(config('location.gateway.path').$gateway->image)}}"
                              alt="{{$gateway->name}}" class="gateway">
                         <div class="card-footer bg-white deposit-footer">
