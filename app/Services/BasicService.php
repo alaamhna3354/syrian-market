@@ -45,7 +45,7 @@ class BasicService
     public function preparePaymentUpgradation($order)
     {
 
-        if ($order->status == 0) {
+        if ($order->status == 0 || $order->status==2) {
             $order['status'] = 1;
             $order->update();
 
