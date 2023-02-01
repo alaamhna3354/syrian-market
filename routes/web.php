@@ -126,6 +126,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
 
         });
+        Route::post('username', 'HomeController@getUsernameByEmail')->name('user.username');
     });
 });
 Route::group(['middleware' => ['auth','can:agent'], 'prefix' => 'agent', 'as' => 'agent.'], function () {

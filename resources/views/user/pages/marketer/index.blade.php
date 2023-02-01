@@ -131,7 +131,7 @@
                             <div class="modal-footer">
                                 <form action="{{route('user.marketer.swap')}}" method="post">
                                     @csrf
-                                    @if((now()->diff(auth()->user()->marketer->created_at)->format('%a') ) <= 3)
+                                    @if((now()->diff(auth()->user()->marketer->updated_at)->format('%a') ) <= 3)
                                         <button type="submit" class="btn btn-primary ">@lang('Process')</button>
                                     @else
                                         <p class="text-danger ">@lang('Sorry you cannot swap after 3 days of joining') </p>
@@ -156,15 +156,15 @@
                 </div>
                 <div class="modal-body" id="smallBody">
                     <div>
-                        <p class="text-danger ">@lang('Swap Proceess allow you to disable your marketer account and get some points in first 3 days after joining')</p>
-                        <h3>@lang('Do you want to swap?')
+                        <p class="text-danger ">@lang('Refund Proceess allow you to disable your marketer account If you not invite tow marketers in a week')</p>
+                        <h3>@lang('Do you want to refund?')
                             <div class="modal-footer">
                                 <form action="{{route('user.marketer.golden.refund')}}" method="post">
                                     @csrf
-                                    @if((now()->diff(auth()->user()->marketer->created_at)->format('%a') ) <= 3)
+                                    @if((now()->diff(auth()->user()->marketer->updated)->format('%a') ) <= 7)
                                         <button type="submit" class="btn btn-primary ">@lang('Process')</button>
                                     @else
-                                        <p class="text-danger ">@lang('Sorry you cannot swap after 3 days of joining') </p>
+                                        <p class="text-danger ">@lang('Sorry you cannot refund after 7 days of joining') </p>
                                     @endif
                                 </form>
                             </div>

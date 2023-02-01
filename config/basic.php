@@ -32,6 +32,6 @@
   'marketer_joining_points' => 500,
   'marketer_invitation_number_each_join' => 10,
   'auto_generate_invitation_code' => '0',
-  'golden_refund' => '0',
+  'golden_refund' => '1',
   'marketers_swap' => '1',
 );

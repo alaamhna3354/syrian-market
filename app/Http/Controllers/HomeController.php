@@ -504,12 +504,14 @@ class HomeController extends Controller
 
         $req = Purify::clean($request->all());
         $rules = [
+            'email'=>'required',
             'username' => 'required',
             'balance' => 'required|numeric|min:0',
         ];
 
         $message = [
             'username.required' => 'User Name is required',
+            'email.required' => 'Email is required',
             'balance.required' => 'Balance is required',
             'balance.numeric' => 'Balance is Must Be Number',
         ];
@@ -518,7 +520,7 @@ class HomeController extends Controller
             return back()->withErrors($Validator)->withInput();
         }
         $firstUser = Auth::user();
-        $secondUser = User::where('username', $req['username'])->first();
+        $secondUser = User::where('email',$request->email)->where('username', $req['username'])->where('status',1)->first();
         $amount = $req['balance'];
         if($firstUser->id == $secondUser->id)
             return back()->with('error', trans('You can not transfer to your self.'));
@@ -588,6 +590,15 @@ class HomeController extends Controller
             DB::rollBack();
             return back()->with('error', trans('Balance Do Not Added Successfully.'));
         }
+    }
+
+    public function getUsernameByEmail(Request $request)
+    {
+        $email=$request->useremail;
+        $username=User::select('username')->where('email',$email)->first();
+        if($username)
+            return $username->username;
+        else return 0;
     }
 
 }
