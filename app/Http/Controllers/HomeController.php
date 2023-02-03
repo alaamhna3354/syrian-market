@@ -463,9 +463,9 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        $replacableAmount = $user->activePointsTransactions->sum('amount');
+        $replacableAmount = $user->points - $user->pointsTransactions->where('status','pending')->sum('amount');
         $amount=  $replacableAmount * config('basic.points_rate_per_kilo') / 1000;
-        if ($amount > 0) {
+        if ($amount > 0 ) {
             DB::beginTransaction();
             try {
                 $user->balance += $amount;
