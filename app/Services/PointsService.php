@@ -77,15 +77,27 @@ class PointsService
         try {
             if (!$user)
                 $user = auth()->user();
-            $user->points = $user->points - $amount;
-            $user->save();
-            $ptrx = new PointsTransaction();
-            $ptrx->user_id = $user->id;
-            $ptrx->remarks = 'Marketer';
-            $ptrx->amount = $amount;
-            $ptrx->note = $note;
-            $ptrx->status = 'refunded';
-            return $ptrx->save();
+            if ($user->points >= $amount) {
+                $user->points = $user->points - $amount;
+                $user->save();
+                $ptrx = new PointsTransaction();
+                $ptrx->user_id = $user->id;
+                $ptrx->remarks = 'Marketer';
+                $ptrx->amount = $amount;
+                $ptrx->note = $note;
+                $ptrx->status = 'refunded';
+                return $ptrx->save();
+            } else {
+                $user->balance = $user->balance - ($amount * config('basic.points_rate_per_kilo') / 1000);
+                $transaction = new Transaction();
+                $transaction->user_id = $user->id;
+                $transaction->trx_type = '-';
+                $transaction->amount = ($amount * config('basic.points_rate_per_kilo') / 1000);
+                $transaction->remarks = ' استرجاع قيمة ربح نقاط بسبب استرجاع قيمة اشتراك مسوق ذهبي وعدم توفر رصيد نقاط كافي';
+                $transaction->trx_id = strRandom();
+                $transaction->charge = 0;
+                $transaction->save();
+            }
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -93,11 +105,10 @@ class PointsService
 
     public function checkPending($user)
     {
-        $pendingTransactions=PointsTransaction::where('user_id',$user)->where('status','pending')->where('remarks','Marketer')->get();
-        foreach ($pendingTransactions as $transaction)
-        {
-            if((new DateTime())->diff($transaction->created_at)->days > 3)
-                $transaction->update(['status'=>'active']);
+        $pendingTransactions = PointsTransaction::where('user_id', $user)->where('status', 'pending')->where('remarks', 'Marketer')->get();
+        foreach ($pendingTransactions as $transaction) {
+            if ((new DateTime())->diff($transaction->created_at)->days > 3)
+                $transaction->update(['status' => 'active']);
         }
     }
 }

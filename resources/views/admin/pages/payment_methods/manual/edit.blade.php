@@ -1,4 +1,4 @@
-@extends('SMM_Matrix_v2.0_-_Nulled_Social_Media_Marketing_Tool.codecanyon-34394810-smm-matrix-social-media-marketing-tool.project.resources.views.admin.layouts.app')
+@extends('admin.layouts.app')
 @section('title')
     {{ trans($page_title) }}
 @endsection

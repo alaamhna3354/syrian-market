@@ -83,7 +83,7 @@
             else {
                 $('.vald-email').attr('hidden', true);
                 $.ajax({
-                    url: '/user/username/',
+                    url: '/user/username',
                     type: "post",
                     data: {useremail: email, "_token": "{{ csrf_token() }}"},
                     success: function (response) {
