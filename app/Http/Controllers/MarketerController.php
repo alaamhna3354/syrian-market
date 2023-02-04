@@ -148,6 +148,7 @@ class MarketerController extends Controller
             }
             $marketer->is_golden = 1;
             $marketer->remaining_invitation += config('basic.marketer_invitation_number_each_join');
+            $marketer->last_action= null;
             $marketer->save();
             $log = $this->log($marketer->id, null, 'joined as golden marketer and got ' . config('basic.marketer_invitation_number_each_join') . 'invitation code ', 'golden_join', config('basic.golden_marketer_joining_fee'), 0);
             DB::commit();

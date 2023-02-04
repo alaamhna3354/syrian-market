@@ -137,7 +137,7 @@
                 {{--                <li class="list-divider"></li>--}}
 
 
-                {{--Manage API Providers--}}
+                Manage API Providers
                 {{--<li class="nav-small-cap"><span class="hide-menu">@lang('Api Providers')</span></li>--}}
                 {{--<li class="sidebar-item">--}}
                 {{--<a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.create')}}"--}}
@@ -145,13 +145,13 @@
                 {{--class="hide-menu">@lang('Add Provider')</span>--}}
                 {{--</a>--}}
                 {{--</li>--}}
-                {{--<li class="sidebar-item">--}}
-                {{--<a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.index')}}"--}}
-                {{--aria-expanded="false">--}}
-                {{--<i class="fas fa-list-alt"></i>--}}
-                {{--<span class="hide-menu">@lang('Api Providers')</span>--}}
-                {{--</a>--}}
-                {{--</li>--}}
+                <li class="sidebar-item">
+                <a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.index')}}"
+                aria-expanded="false">
+                <i class="fas fa-list-alt"></i>
+                <span class="hide-menu">@lang('Api Providers')</span>
+                </a>
+                </li>
 
                 {{--<li class="list-divider"></li>--}}
 
