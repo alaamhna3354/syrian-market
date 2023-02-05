@@ -137,7 +137,7 @@
                 {{--                <li class="list-divider"></li>--}}
 
 
-                {{--Manage API Providers--}}
+                Manage API Providers
                 {{--<li class="nav-small-cap"><span class="hide-menu">@lang('Api Providers')</span></li>--}}
                 {{--<li class="sidebar-item">--}}
                 {{--<a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.create')}}"--}}
@@ -145,13 +145,13 @@
                 {{--class="hide-menu">@lang('Add Provider')</span>--}}
                 {{--</a>--}}
                 {{--</li>--}}
-                {{--<li class="sidebar-item">--}}
-                {{--<a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.index')}}"--}}
-                {{--aria-expanded="false">--}}
-                {{--<i class="fas fa-list-alt"></i>--}}
-                {{--<span class="hide-menu">@lang('Api Providers')</span>--}}
-                {{--</a>--}}
-                {{--</li>--}}
+                <li class="sidebar-item">
+                <a class="sidebar-link sidebar-link" href="{{route('admin.provider.api-provider.index')}}"
+                aria-expanded="false">
+                <i class="fas fa-list-alt"></i>
+                <span class="hide-menu">@lang('Api Providers')</span>
+                </a>
+                </li>
 
                 {{--<li class="list-divider"></li>--}}
 
@@ -257,6 +257,18 @@
                     </li>
 
                     <li class="list-divider"></li>
+                    <li class="nav-small-cap"><span class="hide-menu">@lang('Manage Marketer')</span></li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link sidebar-link" href="{{ route('admin.marketers') }}"
+                           aria-expanded="false">
+                            <i class="fas fa-users"></i>
+                            <span class="hide-menu">@lang('All Marketers')
+                                <sup style="font-weight: bold;background-color: red;" class="mr-3">@lang('New')</sup>
+                            </span>
+
+                        </a>
+                    </li>
+                    <li class="list-divider"></li>
 
 
                     <li class="nav-small-cap"><span class="hide-menu">@lang('Payment Settings')</span></li>
@@ -266,6 +278,21 @@
                            aria-expanded="false">
                             <i class="fas fa-credit-card"></i>
                             <span class="hide-menu">@lang('Payment Methods')</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {{menuActive(['admin.deposit.manual.index','admin.deposit.manual.create','admin.deposit.manual.edit'],3)}}">
+                        <a class="sidebar-link" href="{{route('admin.deposit.manual.index')}}"
+                           aria-expanded="false">
+                            <i class="fa fa-university"></i>
+                            <span class="hide-menu">@lang('Manual Gateway')</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {{menuActive(['admin.payment.pending'],3)}}">
+                        <a class="sidebar-link" href="{{route('admin.payment.pending')}}" aria-expanded="false">
+                            <i class="fas fa-spinner"></i>
+                            <span class="hide-menu">@lang('Deposit Request')</span>
                         </a>
                     </li>
 

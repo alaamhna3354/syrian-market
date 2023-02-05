@@ -58,6 +58,7 @@ class ApiProviderController extends Controller
         $ApiProvider->api_name = $apiProviderData['api_name'];
         $ApiProvider->api_key = $apiProviderData['api_key'];
         $ApiProvider->url = $apiProviderData['url'];
+        $ApiProvider->is_custom=$apiProviderData['is_custom'];
         $apiLiveData = Curl::to($apiProviderData['url'])->withData(['key'=>$apiProviderData['api_key'], 'action'=>'balance'])->post();
         $currencyData = json_decode($apiLiveData);
 //        dd($currencyData);

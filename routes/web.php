@@ -35,14 +35,16 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
     Route::post('/mail-verify', 'VerificationController@mailVerify')->name('mailVerify');
     Route::post('/sms-verify', 'VerificationController@smsVerify')->name('smsVerify');
     Route::middleware('userCheck')->group(function () {
-
         Route::get('/dashboard', 'User\ServiceController@index')->name('home');
 //        Route::get('/dashboard', 'HomeController@index')->name('home');
         Route::get('use_spare_balance', 'HomeController@use_spare_balance')->name('use_spare_balance');
         Route::get('add-fund', 'HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'PaymentController@depositConfirm')->name('addFund.confirm');
+        Route::post('addFundConfirm', 'PaymentController@fromSubmit')->name('addFund.fromSubmit');
 
+        Route::get('balance-transfer', 'HomeController@transferBalance')->name('balance.transfer');
+        Route::post('transfer', 'HomeController@transfer')->name('balance-transfer');
 
         //transaction
         Route::get('/transaction', 'HomeController@transaction')->name('transaction');
@@ -104,13 +106,30 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
 
         Route::get('/user-service', 'User\OrderController@userservice')->name('service_id');
 
-        Route::get('points','HomeController@pointTransactions')->name('points');
+        Route::get('points', 'HomeController@pointTransactions')->name('points');
         Route::get('/points-search', 'HomeController@pointTransactionsSearch')->name('points.transactions.search');
-        Route::post('points-replace','HomeController@replacePoints')->name('points.replace');
+        Route::post('points-replace', 'HomeController@replacePoints')->name('points.replace');
 
+        //Marketer
+        Route::middleware('can:join_as_marketer')->group(function () {
+            Route::get('marketer-join', 'MarketerController@create')->name('marketer.join');
+            Route::post('marketer-join', 'MarketerController@store')->name('marketer.store');
+            Route::get('random-code','MarketerController@getRandomInvitaionCode')->name('marketer.random-code');
+            Route::post('marketer-golden-join', 'MarketerController@goldenMarketer')->name('marketer.golden.store');
+        });
+        Route::middleware('can:marketer')->group(function () {
+            Route::get('marketers', 'MarketerController@index')->name('marketers');
+            Route::middleware('can:active_marketer')->group(function (){
+                Route::post('swap','MarketerController@swap')->name('marketer.swap')->middleware('can:normal_marketer');
+                Route::post('marketer-golden-refund', 'MarketerController@goldenMareketerRefund')->name('marketer.golden.refund')->middleware('can:golden_marketer');
+            });
+
+
+        });
+        Route::post('username', 'HomeController@getUsernameByEmail')->name('user.username');
     });
 });
-Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
+Route::group(['middleware' => ['auth','can:agent'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
     Route::middleware('userCheck')->group(function () {
         Route::get('/users', 'Agent\UserController@index')->name('users');
         Route::get('/products', 'Agent\ServiceController@show')->name('products');
@@ -168,6 +187,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'agent', 'as' => 'agent.'], 
         Route::get('add-fund', 'Agent\HomeController@addFund')->name('addFund');
         Route::post('add-fund', 'Agent\PaymentController@addFundRequest')->name('addFund.request');
         Route::get('addFundConfirm', 'Agent\PaymentController@depositConfirm')->name('addFund.confirm');
+        Route::post('addFundConfirm', 'PaymentController@fromSubmit')->name('addFund.fromSubmit');
 
         Route::get('/use-balance-coupon', 'Agent\HomeController@useBalanceCoupon')->name('use-balance-coupon');
         Route::Post('/add-balance-coupon', 'Agent\HomeController@addBalanceCoupon')->name('add-balance-coupon');
@@ -214,6 +234,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::get('payment-methods/edit/{id}', 'Admin\PaymentMethodController@edit')->name('edit.payment.methods');
             Route::put('payment-methods/update/{id}', 'Admin\PaymentMethodController@update')->name('update.payment.methods');
 
+            Route::get('payment/pending', 'Admin\PaymentLogController@pending')->name('payment.pending');
+            Route::put('payment/action/{id}', 'Admin\PaymentLogController@action')->name('payment.action');
             Route::get('payment/log', 'Admin\PaymentLogController@index')->name('payment.log');
             Route::get('payment/search', 'Admin\PaymentLogController@search')->name('payment.search');
 
@@ -369,6 +391,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::get('/notify-template/edit/{id}', 'Admin\NotifyController@edit')->name('notify-template.edit');
             Route::post('/notify-template/update/{id}', 'Admin\NotifyController@update')->name('notify-template.update');
 
+            // Manual Methods
+            Route::get('payment-methods/manual', 'Admin\ManualGatewayController@index')->name('deposit.manual.index');
+            Route::get('payment-methods/manual/new', 'Admin\ManualGatewayController@create')->name('deposit.manual.create');
+            Route::post('payment-methods/manual/new', 'Admin\ManualGatewayController@store')->name('deposit.manual.store');
+            Route::get('payment-methods/manual/edit/{id}', 'Admin\ManualGatewayController@edit')->name('deposit.manual.edit');
+            Route::put('payment-methods/manual/update/{id}', 'Admin\ManualGatewayController@update')->name('deposit.manual.update');
 
             // transaction
             Route::get('/transaction', 'OrderController@transaction')->name('user-transaction');
@@ -459,6 +487,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
             Route::resource('price_range', 'Admin\PriceRangeController');
             Route::post('/price_range/update/{id}', 'Admin\PriceRangeController@update')->name('price_range.update');
+
+            //Marketers
+            Route::get('/marketers', 'Admin\MarketerController@index')->name('marketers');
+            Route::get('/marketers/search', 'Admin\MarketerController@search')->name('marketers.search');
+            Route::get('marketer/info/{marketer}','Admin\MarketerController@info')->name('marketer.info');
+            Route::post('marketer/update/{marketer}','Admin\MarketerController@update')->name('marketer.update');
         });
 
 

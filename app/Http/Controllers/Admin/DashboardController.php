@@ -44,6 +44,7 @@ class DashboardController extends Controller
         $users = User::selectRaw('COUNT(id) AS totalUser')
             ->selectRaw('SUM(balance) AS totalUserBalance')
             ->selectRaw('COUNT((CASE WHEN created_at >= CURDATE()  THEN id END)) AS todayJoin')
+            ->selectRaw('SUM(points) AS totalActivePoints' )
             ->get()->makeHidden(['fullname', 'mobile'])->toArray();
 
         $data['userRecord'] = collect($users)->collapse();
@@ -53,7 +54,7 @@ class DashboardController extends Controller
             ->selectRaw('SUM((CASE WHEN remarks LIKE "DEPOSIT Via%" AND created_at >= CURDATE() THEN charge WHEN remarks LIKE "Place order%" AND created_at >= CURDATE() THEN amount END)) AS profit_today')
             ->get()->toArray();
         $refundedOrderLastMonth=Order::select('price')->where('status','refunded')->where('created_at' ,'>=', $last30)->sum('price');
-        $refundedOrderToday=Order::selectRaw('price')->where('status','refunded')->where('created_at' ,'>=', Carbon::today())->sum('price');
+        $refundedOrderToday=Order::selectRaw('price')->where('status','refunded')->whereRaw('created_at >=CURDATE()')->sum('price');
         $transactions[0]['profit_30_days'] = $transactions[0]['profit_30_days']-$refundedOrderLastMonth;
         $transactions[0]['profit_today'] = $transactions[0]['profit_today']-$refundedOrderToday;
 

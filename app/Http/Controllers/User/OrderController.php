@@ -504,7 +504,7 @@ class OrderController extends Controller
     {
 
         $order = Order::find($id);
-        $user = auth()->user();
+        $user = $order->user;
         if ($user->balance < $order->price) {
             $notify[] = ['error', 'Insufficient balance. Please deposit and try again!'];
             return back()->withNotify($notify);

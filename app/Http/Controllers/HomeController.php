@@ -15,24 +15,29 @@ use App\Models\PointsTransaction;
 use App\Models\Template;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use App\Models\User;
+use Carbon\Carbon;
+use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Stevebauman\Purify\Facades\Purify;
+use App\Services\PointsService;
 
 class HomeController extends Controller
 {
     use Upload, Notify;
-
+    private $pointService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(PointsService $pointsService)
     {
+        $this->pointService=$pointsService;
         $this->middleware(['auth']);
 
         $this->middleware(function ($request, $next) {
@@ -54,7 +59,6 @@ class HomeController extends Controller
         $data['totalTrx'] = Transaction::where('user_id', $this->user->id)->count();
         $data['totalDeposit'] = Fund::where('user_id', $this->user->id)->where('status', 1)->sum('amount');
         $data['ticket'] = Ticket::where('user_id', $this->user->id)->count();
-
         $order['total'] = Order::where('user_id', $this->user->id)->count();
         $order['processing'] = Order::where('user_id', $this->user->id)->where('status', 'processing')->count();
         $order['pending'] = Order::where('user_id', $this->user->id)->where('status', 'pending')->count();
@@ -429,9 +433,10 @@ class HomeController extends Controller
 
     public function pointTransactions()
     {
+        $this->pointService->checkPending(auth()->id());
         $pointTransactions = $this->user->pointsTransactions()->orderBy('id', 'DESC')->paginate(config('basic.paginate'));
-        $pointsSection=Template::where('section_name','points')->first();
-        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions','pointsSection'));
+        $pointsSection = Template::where('section_name', 'points')->first();
+        return view(@auth()->user()->is_agent ? 'agent.pages.points.index' : 'user.pages.points.index', compact('pointTransactions', 'pointsSection'));
     }
 
     public function pointTransactionsSearch(Request $request)
@@ -457,15 +462,19 @@ class HomeController extends Controller
     public function replacePoints()
     {
         $user = auth()->user();
-        $amount=$user->points * config('basic.points_rate_per_kilo') / 1000;
-        if ($user->points_balance_by_point_transactions == $user->points) {
+
+        $replacableAmount = $user->points - $user->pointsTransactions->where('status','pending')->sum('amount');
+        $amount=  $replacableAmount * config('basic.points_rate_per_kilo') / 1000;
+        if ($amount > 0 ) {
             DB::beginTransaction();
             try {
                 $user->balance += $amount;
-                $user->points = 0;
+                $user->points = $user->points - $replacableAmount;
                 $user->save();
+//                $user->activepointTransactions->forget($pendingTransaction);
+//                dd($user->activepointTransactions);
                 foreach ($user->activePointsTransactions as $pointsTransaction)
-                    $pointsTransaction->update(['status'=> 'replaced']);
+                    $pointsTransaction->update(['status' => 'replaced']);
 
                 $transactionForUser = new Transaction();
                 $transactionForUser->user_id = $user->id;
@@ -476,7 +485,7 @@ class HomeController extends Controller
                 $transactionForUser->charge = 0;
                 $transactionForUser->save();
                 DB::commit();
-                return back()->with('success', trans('Replaced Successfully'));
+                return back()->with('success', trans('Replaced Successfully and there is some pending points'));
             } catch (\Exception $e) {
                 DB::rollback();
                 return back()->with('error', $e->getMessage());
@@ -484,4 +493,112 @@ class HomeController extends Controller
         } else
             return back()->with('error', 'Something error please contact admin');
     }
+
+    public function transferBalance()
+    {
+        return view('user.pages.transfer_balance');
+    }
+
+    public function Transfer(Request $request)
+    {
+
+        $req = Purify::clean($request->all());
+        $rules = [
+            'email'=>'required',
+            'username' => 'required',
+            'balance' => 'required|numeric|min:0',
+        ];
+
+        $message = [
+            'username.required' => 'User Name is required',
+            'email.required' => 'Email is required',
+            'balance.required' => 'Balance is required',
+            'balance.numeric' => 'Balance is Must Be Number',
+        ];
+        $Validator = Validator::make($req, $rules, $message);
+        if ($Validator->fails()) {
+            return back()->withErrors($Validator)->withInput();
+        }
+        $firstUser = Auth::user();
+        $secondUser = User::where('email',$request->email)->where('username', $req['username'])->where('status',1)->first();
+        $amount = $req['balance'];
+        if($firstUser->id == $secondUser->id)
+            return back()->with('error', trans('You can not transfer to your self.'));
+        if ($firstUser->balance < $amount || $amount < 0)
+            return back()->with('error', trans('You Do not have balance.'));
+
+        if (!$secondUser)
+            return back()->with('error', trans('User not exist.'));
+
+        DB::beginTransaction();
+        try {
+            $firstUser->balance -= $amount;
+            $secondUser->balance += $amount;
+            $secondUser->debt += $amount;
+
+            $transactionForFirstUser = new Transaction();
+            $transactionForFirstUser->user_id = $firstUser->id;
+            $transactionForFirstUser->trx_type = '-';
+            $transactionForFirstUser->amount = $amount;
+            $transactionForFirstUser->remarks = 'Transfer Balance To ' . $secondUser->username;
+            $transactionForFirstUser->trx_id = strRandom();
+            $transactionForFirstUser->charge = 0;
+
+            $transactionForUser = new Transaction();
+            $transactionForUser->user_id = $secondUser->id;
+            $transactionForUser->trx_type = '+';
+            $transactionForUser->amount = $amount;
+            $transactionForUser->remarks = 'Transfer Balance From ' . $firstUser->username;
+            $transactionForUser->trx_id = strRandom();
+            $transactionForUser->charge = 0;
+
+            $fund = new Fund();
+            $fund->user_id = $secondUser->id;
+            $fund->gateway_id = null;
+            $fund->gateway_currency = config('basic.currency_symbol') == "$" ? 'USD' : config('basic.currency_symbol');
+            $fund->amount = $amount;
+            $fund->charge = 0;
+            $fund->rate = 0;
+            $fund->final_amount = $amount;
+            $fund->btc_amount = 0;
+            $fund->btc_wallet = "";
+            $fund->transaction = strRandom();
+            $fund->try = 0;
+            $fund->status = 1;
+
+            $firstUser->save();
+            $secondUser->save();
+            $transactionForFirstUser->save();
+            $transactionForUser->save();
+            $fund->save();
+            $basic = (object)config('basic');
+            DB::commit();
+            $msg = [
+                'transaction' => $transactionForFirstUser->trx_id,
+                'amount' => $amount,
+                'currency' => $basic->currency,
+                'main_balance' => $firstUser->balance,
+            ];
+            $action = [
+                "icon" => "fas fa-cart-plus text-white",
+                "link" => "#"
+            ];
+            $this->adminPushNotification('ADD_BALANCE', $msg, $action);
+            return back()->with('success', trans('Balance Added Successfully.'));
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', trans('Balance Do Not Added Successfully.'));
+        }
+    }
+
+    public function getUsernameByEmail(Request $request)
+    {
+        $email=$request->useremail;
+        $username=User::select('username')->where('email',$email)->first();
+        if($username)
+            return $username->username;
+        else return 0;
+    }
+
 }

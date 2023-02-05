@@ -54,6 +54,18 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group ">
+                            <label class="d-block">@lang('Custom')</label>
+                            <div class="custom-switch-btn w-md-25">
+                                <input type='hidden' value='1' name='is_custom'>
+                                <input type="checkbox" name="is_custom" class="custom-switch-checkbox" id="is_custom"
+                                       value="0">
+                                <label class="custom-switch-checkbox-label" for="is_custom">
+                                    <span class="custom-switch-checkbox-inner"></span>
+                                    <span class="custom-switch-checkbox-switch"></span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

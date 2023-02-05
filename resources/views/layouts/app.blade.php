@@ -155,6 +155,7 @@
 <script src="{{ asset('assets/admin/js/app-style-switcher.js') }}"></script>
 <script src="{{ asset('assets/admin/js/feather.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/toastr.min.js')}}"></script>
+
 @stack('js')
 @include('admin.layouts.notification')
 
