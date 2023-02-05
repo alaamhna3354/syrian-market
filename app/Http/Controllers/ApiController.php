@@ -12,6 +12,7 @@ use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserPriceRange;
+use App\Models\UserServiceRate;
 use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,15 +69,18 @@ class ApiController extends Controller
             $result['currency'] = $basic->currency;
             return response()->json($result, 200);
 
-        } elseif (strtolower($req['action']) == 'services') {
+        }
+
+        //Services
+        elseif (strtolower($req['action']) == 'services') {
             $result = Service::where('service_status', 1)->orderBy('category_id', 'asc')->get()
-                ->map(function ($service) {
+                ->map(function ($service) use ($user) {
                     return [
                         'service' => $service->id,
                         'name' => $service->service_title,
                         'category' => optional($service->category)->category_title,
                         'category_id' => $service->category,
-                        'rate' => $service->price,
+                        'rate' => $this->servicePrice($service,$user),
                         'min' => $service->min_amount,
                         'max' => $service->max_amount,
                         'is_available' => $service->is_available
@@ -84,7 +88,9 @@ class ApiController extends Controller
                 });
             return response()->json($result, 200);
 
-        } elseif (strtolower($req['action']) == 'status') {
+        }
+        //Status
+        elseif (strtolower($req['action']) == 'status') {
 
             $validator = Validator::make($req, [
                 'order' => 'required'
@@ -102,9 +108,13 @@ class ApiController extends Controller
             $result['order'] = $order->id;
             $result['code'] = $order->code;
             $result['details'] = $order->details;
+            $result['price']= $order->price;
+
             return response()->json($result, 200);
 
-        } elseif (strtolower($req['action']) == 'orders') {
+        }
+        //Orders
+        elseif (strtolower($req['action']) == 'orders') {
             $validator = Validator::make($req, [
                 'orders' => 'required'
             ]);
@@ -117,12 +127,15 @@ class ApiController extends Controller
                     'order' => $order->id,
                     'status' => $order->status,
                     'code' => $order->code,
-                    'details' => $order->details
+                    'details' => $order->details,
+                    'price' => $order->price
                 ];
             });
             return response()->json($result, 200);
 
-        } elseif (strtolower($req['action']) == 'categories') {
+        }
+        //Categories
+        elseif (strtolower($req['action']) == 'categories') {
             $result = Category::where('status', 1)->get()
                 ->map(function ($category) {
                     return [
@@ -133,7 +146,9 @@ class ApiController extends Controller
                     ];
                 });
             return response()->json($result, 200);
-        } elseif (strtolower($req['action']) == 'player') {
+        }
+        //Player
+        elseif (strtolower($req['action']) == 'player') {
             $category = $req['category'];
             $player_id = $req['player'];
             if ($category && $player_id) {
@@ -141,7 +156,9 @@ class ApiController extends Controller
                 return $player_name;
             }
             return response()->json(['errors' => $validator->errors()], 422);
-        } elseif (strtolower($req['action']) == 'add') {
+        }
+        //Add
+        elseif (strtolower($req['action']) == 'add') {
             $validator = Validator::make($req, [
                 'service' => 'required',
                 'link' => 'required'
@@ -151,7 +168,9 @@ class ApiController extends Controller
             }
             $result = $this->placeOrder($req, $user);
             return $result;
-        } elseif (strtolower($req['action']) == 'check_sms') {
+        }
+        //Check SMS
+        elseif (strtolower($req['action']) == 'check_sms') {
             $validator = Validator::make($req, [
                 'order' => 'required'
             ]);
@@ -161,6 +180,8 @@ class ApiController extends Controller
             $result = $this->five_sim->checkSMS($req['order']);
             return response()->json($result, 200);
         }
+
+        //Sync Orders
         elseif (strtolower($req['action']) == 'sync_orders') {
             $date=now()->subMinutes(30);
             $result = Order::select('id','status')->where('user_id',$user->id)->where('updated_at','>=',$date)->where('updated_at','>','created_at')->get();
@@ -322,6 +343,7 @@ class ApiController extends Controller
                 $result['code'] = $order->code;
                 $result['details'] = $order->details;
                 $result['order_status']=$order->status;
+                $result['price']= $order->price;
 
                 $this->adminPushNotification('ORDER_CREATE', $msg, $action);
                 DB::commit();
@@ -349,5 +371,19 @@ class ApiController extends Controller
         } else {
             return response()->json(['error' => ["Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}"]], 422);
         }
+    }
+
+    public function ServicePrice(Service $service,$user)
+    {
+        if (!($service->price != null && $service->price != 0)) {
+            $range = $service->service_price_ranges()->where('price_range_id', 1)->first();
+           return $price = $range->price;
+        }
+        else
+        $userRate=UserServiceRate::select('price')
+            ->where('service_id', $service->id)
+            ->where('user_id',$user->id)->first();
+            $price = ($userRate) ? ($userRate->price): $service->price;
+            return $price;
     }
 }
