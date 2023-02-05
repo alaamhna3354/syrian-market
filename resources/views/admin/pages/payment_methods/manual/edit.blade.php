@@ -158,6 +158,19 @@
                             </div>
 
                             <div class="row justify-content-between">
+                                <div class="col-sm-12 col-md-12">
+                                    <label>@lang('Payment Info')</label>
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control "
+                                               name="payment_info"
+                                               value="{{ $method->payment_info }}"
+                                               required="">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row justify-content-between">
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group">
                                         <label>@lang('Gateway Logo')</label>
