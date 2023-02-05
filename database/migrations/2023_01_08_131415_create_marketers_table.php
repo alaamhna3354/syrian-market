@@ -22,7 +22,7 @@ class CreateMarketersTable extends Migration
             $table->integer('is_golden')->default(false);
             $table->integer('remaining_invitation')->default(0);
             $table->string('notes')->nullable();
-            $table->enum('last_action',['swap','by_marketer','refund','by_golden']);
+            $table->enum('last_action',['swap','by_marketer','refund','by_golden'])->nullable();
             $table->timestamps();
         });
     }
