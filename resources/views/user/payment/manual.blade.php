@@ -6,7 +6,8 @@
     <div class="container">
         <ol class="breadcrumb center-items">
             <li><a href="{{route('user.home')}}">@lang('Home')</a></li>
-            <li class="custom-breadcrumb-li"><a href="{{route('user.addFund')}}" class="text-white">@lang('Add Fund')</a></li>
+            <li class="custom-breadcrumb-li"><a href="{{route('user.addFund')}}"
+                                                class="text-white">@lang('Add Fund')</a></li>
             <li class="active">@lang(optional($order->gateway)->name)</li>
         </ol>
 
@@ -17,10 +18,17 @@
                     <div class="card-body" style="background: #00000077;color: aliceblue;">
                         <div class="row">
                             <div class="col-md-12">
+                                @if($order->gateway->payment_info)
+                                    <span>@lang('Payment address')</span> : {{$order->gateway->payment_info}}
+                                        <i class="fa fa-copy" style="font-size: 16px;"
+                                           onclick="copy('{{$order->gateway->payment_info}}')"></i>
+
+                                @endif
                                 <h3 class="title text-center">{{trans('Please follow the instruction below')}}</h3>
-                                <p class="text-center mt-2 ">{{trans('You have requested to deposit')}}  <b class="text--base">{{getAmount($order->amount)}}
+                                <p class="text-center mt-2 ">{{trans('You have requested to deposit')}} <b
+                                            class="text--base">{{getAmount($order->amount)}}
                                         {{$basic->currency}}</b> , {{trans('Please pay')}}
-                                    <b class="text--base">{{getAmount($order->final_amount)}} {{$order->gateway_currency}}</b>  {{trans('for successful payment')}}
+                                    <b class="text--base">{{getAmount($order->final_amount)}} {{$order->gateway_currency}}</b> {{trans('for successful payment')}}
                                 </p>
 
                                 <p class=" mt-2 ">
@@ -35,8 +43,11 @@
                                             @if($v->type == "text")
                                                 <div class="col-md-12 mt-2">
                                                     <div class="form-group  ">
-                                                        <label>{{trans($v->field_level)}} @if($v->validation == 'required') <span class="text--danger">*</span>  @endif </label>
-                                                        <input type="text" name="{{$k}}"  class="form-control bg-transparent" @if($v->validation == "required") required @endif>
+                                                        <label>{{trans($v->field_level)}} @if($v->validation == 'required')
+                                                                <span class="text--danger">*</span>  @endif </label>
+                                                        <input type="text" name="{{$k}}"
+                                                               class="form-control bg-transparent"
+                                                               @if($v->validation == "required") required @endif>
                                                         @if ($errors->has($k))
                                                             <span class="text--danger">{{ trans($errors->first($k)) }}</span>
                                                         @endif
@@ -45,8 +56,11 @@
                                             @elseif($v->type == "textarea")
                                                 <div class="col-md-12 mt-2">
                                                     <div class="form-group">
-                                                        <label>{{trans($v->field_level)}} @if($v->validation == 'required') <span class="text--danger">*</span>  @endif </label>
-                                                        <textarea name="{{$k}}" class="form-control bg-transparent" rows="3" @if($v->validation == "required") required @endif></textarea>
+                                                        <label>{{trans($v->field_level)}} @if($v->validation == 'required')
+                                                                <span class="text--danger">*</span>  @endif </label>
+                                                        <textarea name="{{$k}}" class="form-control bg-transparent"
+                                                                  rows="3"
+                                                                  @if($v->validation == "required") required @endif></textarea>
                                                         @if ($errors->has($k))
                                                             <span class="text--danger">{{ trans($errors->first($k)) }}</span>
                                                         @endif
@@ -56,7 +70,8 @@
                                                 <div class="col-md-12 mt-2">
                                                     <div class="form-group">
                                                         <div class="fileinput fileinput-new " data-provides="fileinput">
-                                                            <label>{{trans($v->field_level)}} @if($v->validation == 'required') <span class="text--danger">*</span>  @endif </label>
+                                                            <label>{{trans($v->field_level)}} @if($v->validation == 'required')
+                                                                    <span class="text--danger">*</span>  @endif </label>
                                                             <div class="fileinput-new thumbnail withdraw-thumbnail"
                                                                  data-trigger="fileinput">
                                                                 <img class="w-150px"
@@ -68,9 +83,9 @@
                                                             <div class="img-input-div">
                                                                 <span class="btn btn-success btn-file">
                                                                     <span
-                                                                        class="fileinput-new "> @lang('Select') {{$v->field_level}}</span>
+                                                                            class="fileinput-new "> @lang('Select') {{$v->field_level}}</span>
                                                                     <span
-                                                                        class="fileinput-exists"> @lang('Change')</span>
+                                                                            class="fileinput-exists"> @lang('Change')</span>
                                                                     <input type="file" name="{{$k}}" accept="image/*"
                                                                            @if($v->validation == "required") required @endif>
                                                                 </span>
@@ -82,7 +97,7 @@
                                                         @if ($errors->has($k))
                                                             <br>
                                                             <span
-                                                                class="text--danger">{{ __($errors->first($k)) }}</span>
+                                                                    class="text--danger">{{ __($errors->first($k)) }}</span>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -119,4 +134,17 @@
 
 @push('js-lib')
     <script src="{{ asset('assets/global/js/bootstrap-fileinput.js') }}"></script>
+@endpush
+@push('js')
+    <script>
+        function copy($link) {
+            console.log($link)
+            /* Copy the text inside the text field */
+            navigator.clipboard.writeText($link);
+            Toastify({
+                text: "تم النسخ",
+                duration: 3000
+            }).showToast();
+        }
+    </script>
 @endpush
