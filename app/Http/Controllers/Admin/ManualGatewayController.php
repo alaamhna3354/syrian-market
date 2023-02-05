@@ -75,6 +75,7 @@ class ManualGatewayController extends Controller
             $getGateway->parameters = $input_form;
             $getGateway->status = $request->status;
             $getGateway->note = $request->note;
+            $getGateway->payment_info = $request->payment_info;
             if($lastGetway->id < 999){
                 $getGateway->id = 1000;
             }
@@ -158,6 +159,7 @@ class ManualGatewayController extends Controller
             $getGateway->parameters = $input_form;
             $getGateway->status = $request->status;
             $getGateway->note = $request->note;
+            $getGateway->payment_info = $request->payment_info;
             $res = $getGateway->save();
             if (!$res) {
                 throw new \Exception('Unexpected error! Please try again.');

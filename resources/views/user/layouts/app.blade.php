@@ -18,7 +18,7 @@
 
     <footer class="footer text-center text-white wid-res">
         <p>تم التطوير من قبل شركة كودا . {{trans('All Rights Reserved')}}
-            <a href="https://wa.me/+97698660351" target="_blank"><i class="fab fa-whatsapp" style="color: #0cc243;font-size: 20px;"></i></a>
+            <a href="https://wa.me/+31685364242" target="_blank"><i class="fab fa-whatsapp" style="color: #0cc243;font-size: 20px;"></i></a>
             <a href="mailto:aaaaahm.sy@gmail.com" target="_blank"><i class="fa fa-envelope" style="color: #1a73e8;font-size: 20px;"></i></a>
         </p>
     </footer>
