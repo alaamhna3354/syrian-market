@@ -161,9 +161,9 @@ class ServiceController extends Controller
 
     public function getPlayerName($category,$playerid)
     {
-$key=env('player_key', 'null');
+        $key=env('player_key', 'null');
         $category=Category::find($category);
-       $url="http://www.m7-system.com/match?key=".$key."&id=".$playerid."&product=".$category->slug;
+        $url="http://www.m7-system.com/match?key=".$key."&id=".$playerid."&product=".$category->slug;
         $getPlayer=Http::get($url);
         return   $result = json_decode($getPlayer, True);
     }

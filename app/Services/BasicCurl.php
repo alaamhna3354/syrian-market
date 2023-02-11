@@ -4,6 +4,7 @@ namespace App\Services;
 
 class BasicCurl
 {
+
     public function curlPostRequestWithHeaders($url, $headers, $postParam = [])
     {
         $ch = curl_init();

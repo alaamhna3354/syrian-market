@@ -155,16 +155,29 @@
                                     @endif
                                 </div>
                             </div>
-
+                            <div class="row justify-content-between">
+                                <div class="col-sm-12 col-md-12">
+                                    <label>@lang('Payment Info')</label>
+                                    <div class="input-group ">
+                                        <input type="text" class="form-control "
+                                               name="payment_info"
+                                               value="{{ old('payment_info') }}"
+                                               required="">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row justify-content-between">
                                 <div class="col-sm-6 col-md-3">
                                     <div class="form-group">
                                         <label>@lang('Gateway Logo')</label>
 
                                         <div class="image-input ">
-                                            <label for="image-upload" id="image-label"><i class="fas fa-upload"></i></label>
-                                            <input type="file" name="image" placeholder="@lang('Choose image')" id="image">
-                                            <img id="image_preview_container" class="preview-image" src="{{ getFile(config('location.gateway.path'))}}"
+                                            <label for="image-upload" id="image-label"><i
+                                                        class="fas fa-upload"></i></label>
+                                            <input type="file" name="image" placeholder="@lang('Choose image')"
+                                                   id="image">
+                                            <img id="image_preview_container" class="preview-image"
+                                                 src="{{ getFile(config('location.gateway.path'))}}"
                                                  alt="preview image">
                                         </div>
                                     </div>
@@ -175,7 +188,8 @@
                                 <div class="col-sm-12 col-md-9">
                                     <div class="form-group ">
                                         <label>@lang('Note')</label>
-                                        <textarea class="form-control summernote" name="note" id="summernote" rows="15">{{old('note')}}</textarea>
+                                        <textarea class="form-control summernote" name="note" id="summernote"
+                                                  rows="15">{{old('note')}}</textarea>
                                         @error('note')
                                         <span class="text-danger">{{ trans($message) }}</span>
                                         @enderror
@@ -189,7 +203,8 @@
 
                                     <div class="custom-switch-btn">
                                         <input type='hidden' value='1' name='status'>
-                                        <input type="checkbox" name="status" class="custom-switch-checkbox" id="status" value = "0"
+                                        <input type="checkbox" name="status" class="custom-switch-checkbox" id="status"
+                                               value="0"
                                                checked>
                                         <label class="custom-switch-checkbox-label" for="status">
                                             <span class="custom-switch-checkbox-inner"></span>
@@ -199,8 +214,9 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <div class="form-group">
-                                        <a href="javascript:void(0)" class="btn btn-success float-right mt-3" id="generate"><i
-                                                class="fa fa-plus-circle"></i> {{trans('Add Field')}}</a>
+                                        <a href="javascript:void(0)" class="btn btn-success float-right mt-3"
+                                           id="generate"><i
+                                                    class="fa fa-plus-circle"></i> {{trans('Add Field')}}</a>
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +225,8 @@
 
                             </div>
 
-                            <button type="submit" class="btn btn-rounded btn-primary btn-block mt-3">@lang('Save Changes')</button>
+                            <button type="submit"
+                                    class="btn btn-rounded btn-primary btn-block mt-3">@lang('Save Changes')</button>
                         </form>
                     </div>
                 </div>
@@ -231,7 +248,7 @@
 
         $(document).ready(function () {
             setCurrency();
-            $(document).on('change', 'input[name="currency"]', function (){
+            $(document).on('change', 'input[name="currency"]', function () {
                 setCurrency();
             });
 
@@ -254,7 +271,6 @@
                 }, 500)
             });
         })
-
 
 
         $(document).ready(function (e) {
@@ -296,7 +312,9 @@
 
             $('#image').change(function () {
                 let reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = (e) =
+            >
+                {
                     $('#image_preview_container').attr('src', e.target.result);
                 }
                 reader.readAsDataURL(this.files[0]);
@@ -305,7 +323,7 @@
             $('.summernote').summernote({
                 height: 250,
                 callbacks: {
-                    onBlurCodeview: function() {
+                    onBlurCodeview: function () {
                         let codeviewHtml = $(this).siblings('div.note-editor').find('.note-codable').val();
                         $(this).val(codeviewHtml);
                     }
@@ -314,15 +332,16 @@
         });
 
 
-
     </script>
     <script>
         $(document).ready(function (e) {
             "use strict";
 
-            $('#image').change(function(){
+            $('#image').change(function () {
                 let reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = (e) =
+            >
+                {
                     $('#image_preview_container').attr('src', e.target.result);
                 }
                 reader.readAsDataURL(this.files[0]);
