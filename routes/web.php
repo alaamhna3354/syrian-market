@@ -12,6 +12,23 @@ Route::get('/clear', function () {
     return $output->fetch();
 })->name('/clear');
 
+Route::get('/as7ab', function () {
+    $test = new \App\Services\AshabService();
+    $postData = [
+//        'username' => 'hassan94',
+        'email' => 'QalbAlnil',
+        'password' => 'Qalb@123'
+//        'currency' => 'USD'
+    ];
+    $header = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer 79a6b08730b522938f8efb33e57018cb"
+    );
+    $test1 = $test->as7abGetPlayerName('https://private-anon-3d2b1f1e39-as7abcard.apiary-mock.com/api/v1/getPlayerName/', 'dfsdf', 'pubg', $header);
+    dd(json_decode($test1));
+
+})->name('/as7ab');
+
 
 Route::get('queue-work', function () {
     return Illuminate\Support\Facades\Artisan::call('queue:work', ['--stop-when-empty' => true]);
@@ -114,13 +131,13 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::middleware('can:join_as_marketer')->group(function () {
             Route::get('marketer-join', 'MarketerController@create')->name('marketer.join');
             Route::post('marketer-join', 'MarketerController@store')->name('marketer.store');
-            Route::get('random-code','MarketerController@getRandomInvitaionCode')->name('marketer.random-code');
+            Route::get('random-code', 'MarketerController@getRandomInvitaionCode')->name('marketer.random-code');
             Route::post('marketer-golden-join', 'MarketerController@goldenMarketer')->name('marketer.golden.store');
         });
         Route::middleware('can:marketer')->group(function () {
             Route::get('marketers', 'MarketerController@index')->name('marketers');
-            Route::middleware('can:active_marketer')->group(function (){
-                Route::post('swap','MarketerController@swap')->name('marketer.swap')->middleware('can:normal_marketer');
+            Route::middleware('can:active_marketer')->group(function () {
+                Route::post('swap', 'MarketerController@swap')->name('marketer.swap')->middleware('can:normal_marketer');
                 Route::post('marketer-golden-refund', 'MarketerController@goldenMareketerRefund')->name('marketer.golden.refund')->middleware('can:golden_marketer');
             });
 
@@ -129,7 +146,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as' => 'user.'], fu
         Route::post('username', 'HomeController@getUsernameByEmail')->name('user.username');
     });
 });
-Route::group(['middleware' => ['auth','can:agent'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
+Route::group(['middleware' => ['auth', 'can:agent'], 'prefix' => 'agent', 'as' => 'agent.'], function () {
     Route::middleware('userCheck')->group(function () {
         Route::get('/users', 'Agent\UserController@index')->name('users');
         Route::get('/products', 'Agent\ServiceController@show')->name('products');
@@ -349,6 +366,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             Route::post('/api-services', 'ApiProviderController@getApiServices')->name('api.services');
             Route::post('/api-services/import', 'ApiProviderController@import')->name('api.service.import');
             Route::post('/api-services/import/multi', 'ApiProviderController@importMulti')->name('api.service.import.multi');
+            //  custom api service
+            Route::post('/custom-api-services', 'CustomProviderController@getApiServices')->name('custom-api.services');
+            Route::post('/import-custom-api-service', 'CustomProviderController@importApiService')->name('import-custom-api.services');
             // jquery autocomplete search
             Route::get('/get-provider', 'ApiProviderController@providerShow')->name('get.provider');
             //api provider multiple
@@ -491,8 +511,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             //Marketers
             Route::get('/marketers', 'Admin\MarketerController@index')->name('marketers');
             Route::get('/marketers/search', 'Admin\MarketerController@search')->name('marketers.search');
-            Route::get('marketer/info/{marketer}','Admin\MarketerController@info')->name('marketer.info');
-            Route::post('marketer/update/{marketer}','Admin\MarketerController@update')->name('marketer.update');
+            Route::get('marketer/info/{marketer}', 'Admin\MarketerController@info')->name('marketer.info');
+            Route::post('marketer/update/{marketer}', 'Admin\MarketerController@update')->name('marketer.update');
         });
 
 
