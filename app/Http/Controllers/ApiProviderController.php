@@ -228,6 +228,7 @@ class ApiProviderController extends Controller
 
     public function import(Request $request)
     {
+        dd($request);
         $req = $request->all();
         $all_category = Category::all();
         $services = Service::all();

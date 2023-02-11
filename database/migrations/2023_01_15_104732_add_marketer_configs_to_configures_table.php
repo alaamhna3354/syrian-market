@@ -14,7 +14,7 @@ class AddMarketerConfigsToConfiguresTable extends Migration
     public function up()
     {
         Schema::table('configures', function (Blueprint $table) {
-            $table->integer('marketer_joining_points')->default(500);
+//            $table->integer('marketer_joining_points')->default(500);
             $table->integer('marketer_invitation_number_each_join')->default(10);
             $table->boolean('auto_generate_invitation_code')->default(false);
             $table->boolean('golden_refund')->default(true);
