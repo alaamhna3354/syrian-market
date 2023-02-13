@@ -167,7 +167,7 @@
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url: '/user/player/' + category_id + '/' + player_number,
+                    url: '/admin/get-player-name/' +player_number + '/' + category_id ,
                     type: "GET",
                     success: function (response) {
                         console.log(response);

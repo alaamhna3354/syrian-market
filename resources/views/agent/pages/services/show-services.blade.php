@@ -156,7 +156,7 @@
                 {{--                           placeholder="@lang('add Coupon')">--}}
                 {{--                </div>--}}
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
-                <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
+                <input class="inp-hid-catg" type="text" name="category" value="{{$category->slug}}" hidden>
                 <div class="col-12 mt-4 text-center add">
                     <button type="" id="btn-add" class="btn disble" disabled>@lang('Add')</button>
                 </div>
@@ -180,11 +180,11 @@
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url:'/user/player/'+category_id+'/'+player_number,
+                    url: '/admin/get-player-name/' +player_number + '/' + category_id ,
                     type:"GET",
                     success:function(response){
                         console.log(response);
-                        $('#player_name').val(response.username);
+                        $('#player_name').val(response);
                         $(".get-name").removeClass('fa-spinner active');
                     },
                 })
@@ -206,7 +206,7 @@
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
-       
+
         $('#cards-services .item').on('click', function (event) {
             if($(this).hasClass("disable")){
                 event.preventDefault();
@@ -254,11 +254,11 @@
                 if($('.agree').is(':checked')){
                     $('#btn-add').removeClass('disble');
                     $('#btn-add').removeAttr("disabled");
-                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`); 
+                    $("#checklabel").html(`نعم قمت بتأكيد الطلب`);
                     $("#checklabel").css("color","#fff");
                     }
             }
-           
+
             event.preventDefault();
         });
          // fun 4
@@ -275,7 +275,7 @@
            }
            else{
             if(itemSelected == false){
-                $("#checklabel").html(`يجب عليك أختيار باقة`); 
+                $("#checklabel").html(`يجب عليك أختيار باقة`);
                 $("#checklabel").css("color","red");
             }
            }
@@ -286,7 +286,7 @@
                 if(itemSelected && $("#player_number").val().length > 0 ){
                 $('#btn-add').addClass('disble');
                 $('#btn-add').attr("disabled","");
-            }   
+            }
                 }, 10);
         });
         {{--"use strict";--}}
