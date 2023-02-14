@@ -12,22 +12,6 @@ Route::get('/clear', function () {
     return $output->fetch();
 })->name('/clear');
 
-//Route::get('/as7ab', function () {
-//    $test = new \App\Services\AshabService();
-//    $postData = [
-////        'username' => 'hassan94',
-//        'email' => 'QalbAlnil',
-//        'password' => 'Qalb@123'
-////        'currency' => 'USD'
-//    ];
-//    $header = array(
-//        "Content-Type: application/json"
-//    );
-//
-//    $test1 = $test->curlPostRequestWithHeaders('https://as7abcard.com/api/v1/login', $header, $postData);
-//    dd(json_decode($test1));
-//
-//})->name('/as7ab');
 
 
 Route::get('queue-work', function () {
@@ -38,6 +22,7 @@ Route::get('schedule-run', function () {
 });
 
 Route::get('cron', 'FrontendController@cron')->name('cron');
+Route::get('/get-player-name/{playerId}/{game}', 'CustomProviderController@getPlayerName')->name('get-player-name');
 
 
 Route::get('/user', 'Auth\LoginController@showLoginForm')->name('login');

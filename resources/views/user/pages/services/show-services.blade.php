@@ -143,7 +143,7 @@
                 {{--                           placeholder="@lang('add Coupon')">--}}
                 {{--                </div>--}}
                 <input class="inp-hid-serv" type="text" name="service" value="{{$category->id}}" hidden>
-                <input class="inp-hid-catg" type="text" name="category" value="{{$category->id}}" hidden>
+                <input class="inp-hid-catg" type="text" name="category" value="{{$category->slug}}" hidden>
                 <div class="col-12 mt-4 text-center add">
                     <button type="" id="btn-add" class="btn disble" disabled>@lang('Add')</button>
                 </div>
@@ -167,7 +167,7 @@
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url: '/admin/get-player-name/' +player_number + '/' + category_id ,
+                    url: '/get-player-name/' +player_number + '/' + category_id ,
                     type: "GET",
                     success: function (response) {
                         console.log(response);
