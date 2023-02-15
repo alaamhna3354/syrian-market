@@ -10,6 +10,7 @@ use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
+use Symfony\Component\Translation\Exception\ProviderException;
 use function Symfony\Component\String\b;
 
 class CustomProviderController extends Controller
@@ -40,16 +41,12 @@ class CustomProviderController extends Controller
 
     public function getPlayerName($playerId,$game)
     {
-
-//        $ashab = new AshabService();
-
+        $provider =ApiProvider::find(1);
         $header = array(
             "Content-Type: application/json",
-            "Authorization: Bearer 31e56e3013f677c10deeb71609e70788"
+            "Authorization: Bearer ".$provider->api_key
         );
-        $url = 'https://private-anon-12e7f04d1f-as7abcard.apiary-proxy.com/api/v1/' . self::getPlayerNameUrl.'?playerid='.$playerId.'&game='.$game;
-//        dd($url);
-//        $url = 'https://private-anon-12e7f04d1f-as7abcard.apiary-proxy.com/api/v1/' . self::getPlayerNameUrl.'?playerid='.$playerId.'&game=bigo';
+        $url = $provider->url . self::getPlayerNameUrl.'?playerid='.$playerId.'&game='.$game;
         $ashabResponse = $this->ashabCurl($url,$header);
         if ($ashabResponse){
             if ($ashabResponse['result'] == 'success'){
@@ -60,8 +57,6 @@ class CustomProviderController extends Controller
         }else{
             return 'error';
         }
-
-//        dd($ashabResponse);
     }
 
     public function getApiServices(Request $request)
