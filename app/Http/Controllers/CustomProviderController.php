@@ -9,6 +9,7 @@ use App\Services\AshabService;
 use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
 use Symfony\Component\Translation\Exception\ProviderException;
 use function Symfony\Component\String\b;
@@ -86,7 +87,7 @@ class CustomProviderController extends Controller
 
     }
 
-    public function getApiServicesByCategory($category_id,ApiProvider $provider){
+    public function getApiServicesByCategory($category_id,ApiProvider $provider,$min,$max){
         $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
         $url = $provider->url .self::getProductsUrl.$category_id;
         $header = array(
@@ -99,15 +100,15 @@ class CustomProviderController extends Controller
         foreach ($result['products'] as $item){
             $services->add($item);
         }
-        $servicesForCategory = $services->map(function ($service) use ($category_name){
+        $servicesForCategory = $services->map(function ($service) use ($category_name,$min,$max){
             return [
                 'service' => $service['denomination_id'],
                 'name' => $service['product_name'],
                 'category' => $category_name,
                 'dripfeed' => '0',
                 'rate' => $service['product_price'],
-                'min' => 0,
-                'max' => 0,
+                'min' => $min,
+                'max' => $max,
                 'is_available' => $service['product_available']
             ];
         });

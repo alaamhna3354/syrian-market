@@ -11,6 +11,9 @@
                         <th scope="col">@lang('ID')</th>
                         <th scope="col">@lang('Image')</th>
                         <th scope="col">@lang('Name')</th>
+                        <th scope="col">@lang('Is Requires Player Name')</th>
+                        <th scope="col">@lang('Min')</th>
+                        <th scope="col">@lang('Max')</th>
                         <th scope="col">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -31,9 +34,18 @@
                                     {{\Str::limit($service['name'], 30)}}
                                 </a></td>
                             <td class="text-center">
+                                {{isset($service['details']['requiresPlayerName']) ? ($service['details']['requiresPlayerName'] == 1 ? 'Yes' : 'No') : 'No'}}
+                            </td>
+                            <td class="text-center">
+                                {{isset($service['details']['customAmount']['minAmount']) ? $service['details']['customAmount']['minAmount'] : '-'}}
+                            </td>
+                            <td class="text-center">
+                                {{isset($service['details']['customAmount']['maxAmount']) ? $service['details']['customAmount']['maxAmount'] : '-'}}
+                            </td>
+                            <td class="text-center">
                                 <div class="dropdown show">
 
-                                    <a href="{{route('admin.import-custom-api-services-by-category',[$service['id'],$provider])}}" class="dropdown-item">
+                                    <a href="{{route('admin.import-custom-api-services-by-category',[$service['id'],$provider,isset($service['details']['customAmount']['minAmount']) ? $service['details']['customAmount']['minAmount'] : 0,isset($service['details']['customAmount']['maxAmount']) ? $service['details']['customAmount']['maxAmount'] : '0'])}}" class="dropdown-item">
                                         <i class="fas fa-plus text-success pr-2"></i> @lang('Get Services')</a>
 
                                 </div>

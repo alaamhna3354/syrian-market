@@ -33,6 +33,8 @@
                                        data-target="#importMoldalSer"
                                        data-price="{{$service['rate']}}"
                                        data-name="{{$service['name']}}"
+                                       data-min="{{$service['min']}}"
+                                       data-max="{{$service['max']}}"
                                        data-route="{{ route('admin.import-custom-api.services',['id'=>$service['service'],'name'=>$service['name'],'category'=>$service['category'],'rate'=>$service['rate'], 'provider'=>$provider->id]) }}">
                                         <i class="fas fa-plus text-success pr-2"></i> @lang('Import Service')</a>
                                 </div>
@@ -59,7 +61,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label>@lang('Name')</label>
-                            <input id="name" type="text" class="form-control square" readonly
+                            <input id="name" type="text" class="form-control square"
                                    value="">
 
                         </div>
@@ -78,7 +80,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>@lang('Minimum Amount')</label>
-                                    <input type="number" class="form-control square" name="min_amount"
+                                    <input type="number" class="form-control square" name="min_amount" id="min_amount"
                                            value="{{ old('min_amount',1) }}">
                                     @if($errors->has('min_amount'))
                                         <div class="error text-danger">@lang($errors->first('min_amount')) </div>
@@ -106,7 +108,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>@lang('Maximum Amount')</label>
-                                    <input type="number" class="form-control square" name="max_amount"
+                                    <input type="number" class="form-control square" name="max_amount" id="max_amount"
                                            value="{{ old('max_amount',500) }}">
                                     @if($errors->has('max_amount'))
                                         <div class="error text-danger">@lang($errors->first('max_amount')) </div>
@@ -281,6 +283,16 @@
                 let name = $(this).data('name');
                 var nameInput = document.getElementById('name')
                 nameInput.value = name
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let min = $(this).data('min');
+                var minInput = document.getElementById('min_amount')
+                minInput.value = min
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let max = $(this).data('max');
+                var maxInput = document.getElementById('max_amount')
+                maxInput.value = max
             });
             $(document).on('click', '.import-multiple', function () {
                 let route = $(this).data('route');

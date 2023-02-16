@@ -20,6 +20,7 @@ use App\Services\PointsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
 use Stevebauman\Purify\Facades\Purify;
 
@@ -130,7 +131,9 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $req = Purify::clean($request->all());
+//        $req = Purify::clean($request->all());
+        $req = $request->all();
+//        dd($req);
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
             'service' => 'required|integer|min:1|not_in:0',
@@ -164,14 +167,15 @@ class OrderController extends Controller
         else
             $quantity = $request->quantity;
 
-        if ($service->min_amount <= $quantity && $service->max_amount >= $quantity) {
+        if (($service->min_amount <= $quantity && $service->max_amount >= $quantity) || ($service->min_amount == 0 && $service->max_amount == 0)) {
             $userRate = ($service->user_rate) ?? $service->price;
             $price = round(($quantity * $userRate), 2);
             $user = Auth::user();
             if ($user->balance < $price) {
-//                dd($user->balance);
                 return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
+
+
 
             $order = new Order();
             $order->user_id = $user->id;
@@ -183,6 +187,19 @@ class OrderController extends Controller
             $order->price = $price;
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
+        //////////////////////   place Order from custom provider ////////////////////////////
+            if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
+                $apidata = $this->placeOrderFromCustomApiProvider($service,$quantity,$req['link']);
+                if (isset($apidata['orderid'])) {
+                    $order->status_description = "order: {$apidata['orderid']}";
+                    $order->api_order_id = $apidata['orderid'];
+                } else {
+                    if (isset($apidata['result']) && $apidata['result'] == 'error')
+                        return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
+                    $order->status_description = "error: {$apidata['message']}";
+                }
+            }
+            ////////////////////// End  place Order from custom provider ////////////////////////////
 
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
@@ -270,7 +287,7 @@ class OrderController extends Controller
                 $transaction->charge = 0;
                 $transaction->save();
                 if ($service->points > 0)
-                    $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' .$service->category->category_title.' > ' .$service->id . ' QTY ' .$order->quantity,$order->id);
+                    $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' . $service->category->category_title . ' > ' . $service->id . ' QTY ' . $order->quantity, $order->id);
                 if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                     $commision = new AgentCommissionRate();
                     $rate = $service->agent_commission_rate;
@@ -325,7 +342,8 @@ class OrderController extends Controller
                 }
             }
 
-        } else {
+        }
+        else {
             return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
         }
     }
@@ -480,7 +498,8 @@ class OrderController extends Controller
                                 $orderM->status = trans('canceled');
                             }
 
-                        } else {
+                        }
+                        else {
                             $orderM->reason = "Order quantity should be minimum {$serviceid->min_amount} and maximum {$serviceid->max_amount}";
                             $orderM->status = trans('canceled');
                         }
@@ -525,7 +544,7 @@ class OrderController extends Controller
         $transaction->charge = 0;
         $transaction->save();
         if ($order->service->point > 0)
-            $this->pointService->earnPoints('Buy', $order->service->point, 'Earn ' . $order->service->point . ' for buying product number ' . $order->service,$order->id);
+            $this->pointService->earnPoints('Buy', $order->service->point, 'Earn ' . $order->service->point . ' for buying product number ' . $order->service, $order->id);
 
         if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
             $commision = new AgentCommissionRate();
@@ -540,5 +559,25 @@ class OrderController extends Controller
 //        $notify[] = ['success', 'Successfully placed your order!'];
 //        return back()->withNotify($notify);
 
+    }
+
+    public function placeOrderFromCustomApiProvider($service,$quantity,$playerId){
+        $apiproviderdata = ApiProvider::find($service->api_provider_id);
+        $header = array(
+            "Content-Type: application/json",
+            "Authorization: Bearer ".$apiproviderdata->api_key
+        );
+
+        $url = $apiproviderdata->url .'/createOrder/';
+
+        $apiservicedata = Curl::to($url)->withData(
+            [
+                'items' => ['denomination_id'=> $service->api_service_id,'qty' => $quantity],
+                'args' => ['playerid'=> $playerId],
+                'orderToken' => (string) Str::orderedUuid(),
+            ]
+        )->withHeaders($header)
+            ->post();
+        return json_decode($apiservicedata,true);
     }
 }
