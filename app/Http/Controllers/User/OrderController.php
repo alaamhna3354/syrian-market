@@ -187,7 +187,7 @@ class OrderController extends Controller
             $order->price = $price;
             $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
-        //////////////////////   place Order from custom provider ////////////////////////////
+            //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
                 $apidata = $this->placeOrderFromCustomApiProvider($service,$quantity,$req['link']);
                 if (isset($apidata['orderid'])) {
@@ -196,7 +196,7 @@ class OrderController extends Controller
                 } else {
                     if (isset($apidata['result']) && $apidata['result'] == 'error')
                         return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
-                    $order->status_description = "error: {$apidata['message']}";
+                    // $order->status_description = "error: {$apidata['message']}";
                 }
             }
             ////////////////////// End  place Order from custom provider ////////////////////////////
@@ -563,21 +563,42 @@ class OrderController extends Controller
 
     public function placeOrderFromCustomApiProvider($service,$quantity,$playerId){
         $apiproviderdata = ApiProvider::find($service->api_provider_id);
-        $header = array(
+        $order_token = (string) Str::orderedUuid();
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://private-anon-4f7942c0cb-as7abcard.apiary-proxy.com/api/v1/createOrder/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+
+        $fields = <<<EOT
+{
+  "items": [
+    {
+      "denomination_id": $service->api_service_id,
+      "qty": 1
+    }
+  ],
+  "args": {
+    "playerid": $playerId
+  },
+  "orderToken": "{$order_token}"
+}
+EOT;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
             "Authorization: Bearer ".$apiproviderdata->api_key
-        );
+        ));
 
-        $url = $apiproviderdata->url .'/createOrder/';
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        curl_close($ch);
 
-        $apiservicedata = Curl::to($url)->withData(
-            [
-                'items' => ['denomination_id'=> $service->api_service_id,'qty' => $quantity],
-                'args' => ['playerid'=> $playerId],
-                'orderToken' => (string) Str::orderedUuid(),
-            ]
-        )->withHeaders($header)
-            ->post();
-        return json_decode($apiservicedata,true);
+// var_dump($info["http_code"]);
+// dd($response);
+        return json_decode($response,true);
     }
 }

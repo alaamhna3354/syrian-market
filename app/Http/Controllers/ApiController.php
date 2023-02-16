@@ -53,7 +53,7 @@ class ApiController extends Controller
             return response()->json(['errors' => ['action' => trans("Invalid request action")]], 422);
         }
 
-        $user = User::where('api_token', $req['key'])->first(['id', 'api_token', 'status', 'balance','price_range_id']);
+        $user = User::where('api_token', $req['key'])->first(['id', 'api_token', 'status', 'balance','price_range_id','is_const_price_range','user_id','username','is_agent']);
         if (!$user) {
             return response()->json(['errors' => ['key' => "Invalid Key"]], 422);
         }
@@ -373,10 +373,11 @@ class ApiController extends Controller
         }
     }
 
-    public function ServicePrice(Service $service,$user)
+    public function servicePrice(Service $service,$user)
     {
+        $user_range = $user->priceRange;
         if (!($service->price != null && $service->price != 0)) {
-            $range = $service->service_price_ranges()->where('price_range_id', 1)->first();
+            $range = $service->service_price_ranges()->where('price_range_id', $user_range->id)->first();
             return $price = $range->price;
         }
         else
