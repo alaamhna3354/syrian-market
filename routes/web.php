@@ -354,7 +354,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             //  custom api service
             Route::post('/custom-api-services', 'CustomProviderController@getApiServices')->name('custom-api.services');
             Route::post('/import-custom-api-service', 'CustomProviderController@importApiService')->name('import-custom-api.services');
-            Route::get('/import-custom-api-services-by-category/{category}/{provider}', 'CustomProviderController@getApiServicesByCategory')->name('import-custom-api-services-by-category');
+            Route::get('/import-custom-api-services-by-category/{category}/{provider}/{min}/{max}', 'CustomProviderController@getApiServicesByCategory')->name('import-custom-api-services-by-category');
             Route::get('/get-player-name/{playerId}/{game}', 'CustomProviderController@getPlayerName')->name('get-player-name');
 
             // jquery autocomplete search

@@ -175,7 +175,7 @@
                                             <span id="{{$order->id}}">
                                             @if($order->verify )
                                                     {{ $order->verify }}
-                                                @elseif($order->category->type=='5SIM')
+                                                @elseif(isset($order->category->type) && $order->category->type =='5SIM')
                                                     <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
                                                 @endif
                                             </span >
