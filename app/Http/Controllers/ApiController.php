@@ -53,7 +53,7 @@ class ApiController extends Controller
             return response()->json(['errors' => ['action' => trans("Invalid request action")]], 422);
         }
 
-        $user = User::where('api_token', $req['key'])->first(['id', 'api_token', 'status', 'balance']);
+        $user = User::where('api_token', $req['key'])->first(['id', 'api_token', 'status', 'balance','price_range_id','is_const_price_range','user_id','username','is_agent']);
         if (!$user) {
             return response()->json(['errors' => ['key' => "Invalid Key"]], 422);
         }
@@ -277,7 +277,7 @@ class ApiController extends Controller
                     $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 
                     $current_user_price_range = $user->priceRange ? $user->priceRange : 1;
-                    $nextPriceRange = PriceRange::find($current_user_price_range + 1);
+                    $nextPriceRange = PriceRange::find($current_user_price_range->id + 1);
                     if ($nextPriceRange != null) {
                         if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount) {
                             $userPriceRange = new UserPriceRange();
@@ -373,17 +373,18 @@ class ApiController extends Controller
         }
     }
 
-    public function ServicePrice(Service $service,$user)
+    public function servicePrice(Service $service,$user)
     {
+        $user_range = $user->priceRange;
         if (!($service->price != null && $service->price != 0)) {
-            $range = $service->service_price_ranges()->where('price_range_id', 1)->first();
-           return $price = $range->price;
+            $range = $service->service_price_ranges()->where('price_range_id', $user_range->id)->first();
+            return $price = $range->price;
         }
         else
-        $userRate=UserServiceRate::select('price')
-            ->where('service_id', $service->id)
-            ->where('user_id',$user->id)->first();
-            $price = ($userRate) ? ($userRate->price): $service->price;
-            return $price;
+            $userRate=UserServiceRate::select('price')
+                ->where('service_id', $service->id)
+                ->where('user_id',$user->id)->first();
+        $price = ($userRate) ? ($userRate->price): $service->price;
+        return $price;
     }
 }

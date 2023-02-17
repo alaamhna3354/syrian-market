@@ -219,6 +219,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="importServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-colored-header bg-primary">
+                    <h5 class="modal-title">@lang('Confirm Import Services')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('admin.custom-api.services') }}" method="post" id="getServicesForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <select class="form-control" name="api_provider_id">
+                                <option selected="" disabled>@lang('Select API Provider')</option>
+                                @foreach($apiProviders as $apiProvider)
+                                    <option value="{{ $apiProvider->id }}" >@lang($apiProvider->api_name)</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal"><span> @lang('Cancel')</span></button>
+                        <button type="submit" class="btn btn-primary"><span>  @lang('Get Services')</span> </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="description">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\ApiProvider;
 use App\Models\Category;
 use App\Models\PriceRange;
 use App\Models\Service;
@@ -21,8 +22,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
+        $apiProviders = ApiProvider::all();
         $categories = Category::with('service', 'service.provider')->has('service')->paginate(config('basic.paginate'));
-        return view('admin.pages.services.show-service', compact('categories'));
+        return view('admin.pages.services.show-service', compact('categories','apiProviders'));
     }
 
     /*
