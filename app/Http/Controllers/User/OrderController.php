@@ -577,7 +577,7 @@ class OrderController extends Controller
   "items": [
     {
       "denomination_id": $service->api_service_id,
-      "qty": 1
+      "qty": $quantity
     }
   ],
   "args": {
