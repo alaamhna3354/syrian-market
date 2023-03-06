@@ -12,22 +12,6 @@ Route::get('/clear', function () {
     return $output->fetch();
 })->name('/clear');
 
-Route::get('/as7ab', function () {
-    $test = new \App\Services\AshabService();
-    $postData = [
-//        'username' => 'hassan94',
-        'email' => 'QalbAlnil',
-        'password' => 'Qalb@123'
-//        'currency' => 'USD'
-    ];
-    $header = array(
-        "Content-Type: application/json",
-        "Authorization: Bearer 79a6b08730b522938f8efb33e57018cb"
-    );
-    $test1 = $test->as7abGetPlayerName('https://private-anon-3d2b1f1e39-as7abcard.apiary-mock.com/api/v1/getPlayerName/', 'dfsdf', 'pubg', $header);
-    dd(json_decode($test1));
-
-})->name('/as7ab');
 
 
 Route::get('queue-work', function () {
@@ -38,6 +22,7 @@ Route::get('schedule-run', function () {
 });
 
 Route::get('cron', 'FrontendController@cron')->name('cron');
+Route::get('/get-player-name/{playerId}/{game}', 'CustomProviderController@getPlayerName')->name('get-player-name');
 
 
 Route::get('/user', 'Auth\LoginController@showLoginForm')->name('login');
@@ -369,6 +354,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
             //  custom api service
             Route::post('/custom-api-services', 'CustomProviderController@getApiServices')->name('custom-api.services');
             Route::post('/import-custom-api-service', 'CustomProviderController@importApiService')->name('import-custom-api.services');
+            Route::get('/import-custom-api-services-by-category/{category}/{provider}/{min}/{max}', 'CustomProviderController@getApiServicesByCategory')->name('import-custom-api-services-by-category');
+            Route::get('/get-player-name/{playerId}/{game}', 'CustomProviderController@getPlayerName')->name('get-player-name');
+
             // jquery autocomplete search
             Route::get('/get-provider', 'ApiProviderController@providerShow')->name('get.provider');
             //api provider multiple

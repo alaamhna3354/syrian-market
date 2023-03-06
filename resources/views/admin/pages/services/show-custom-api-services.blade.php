@@ -1,25 +1,13 @@
 @extends('admin.layouts.app')
-{{--@section('title', $provider->api_name)--}}
+@section('title', isset($apiServiceLists[0]['category']) ? $apiServiceLists[0]['category'] : $provider->api_name)
 @section('content')
 
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
         <div class="card-body">
-{{--            <h4 class="card-title mb-3">--}}
-{{--                <a href="javascript:void(0)" class="import-multiple btn btn-primary text-white float-right" data-toggle="modal"--}}
-{{--                                       data-target="#importMultipleMoldal"--}}
-{{--                                       data-route="{{ route('admin.api.service.import.multi',['provider'=>$provider->id]) }}">--}}
-{{--                    <span><i class="fas fa-plus text-white pr-2"></i> @lang('Add Bulk Service')</span>--}}
-{{--                </a>--}}
-{{--            </h4>--}}
             <div class="table-responsive ">
                 <table class="table table-hover table-striped table-bordered">
                     <thead class="thead-primary">
                     <tr class="text-center">
-{{--                        <th scope="col" class="text-center check-box-width-50">--}}
-{{--                            <input type="checkbox" class="form-check-input check-all tic-check check-all" name="check-all"--}}
-{{--                                   id="check-all">--}}
-{{--                            <label for="check-all" class="mt-3"></label>--}}
-{{--                        </th>--}}
                         <th scope="col">@lang('ID')</th>
                         <th scope="col">@lang('Name')</th>
                         <th scope="col">@lang('Category')</th>
@@ -30,45 +18,25 @@
                     <tbody>
                     @foreach($apiServiceLists as $service)
                         <tr>
-{{--                            <td class="text-center check-box-width-50">--}}
-{{--                                <input type="checkbox" id="chk-{{$service->service}}"--}}
-{{--                                       class="form-check-input row-tic tic-check row-tic-{{$service->service}}"--}}
-{{--                                       name="check" value="{{ $service->service }}">--}}
-{{--                                <label for="chk-{{$service->service}}"></label>--}}
-{{--                            </td>--}}
                             <td class="text-center">{{$service['service']}}</td>
                             <td class="text-center">
-                                <a href="javascript:void(0)" data-container="body"  data-toggle="popover" data-placement="top" data-content="{{$service['name']}}">
-                                    {{\Str::limit($service['name'], 30)}}
-                                </a></td>
-                            <td class="text-center">{{ $service['category'] }}</td>
+                                {{\Str::limit($service['name'], 30)}}
+                            </td>
+                            <td class="text-center">{{$service['category']}}</td>
                             <td class="text-center">
                                 {{ $service['rate'] }}
                             </td>
                             <td class="text-center">
                                 <div class="dropdown show">
-{{--                                    <a class="dropdown-toggle" href="javascript:void(0)" id="dropdownMenuLink" data-toggle="dropdown"--}}
-{{--                                       aria-haspopup="true" aria-expanded="false">--}}
-{{--                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>--}}
-{{--                                    </a>--}}
-                                    <a href="javascript:void(0)" class="dropdown-item import-single import-single-ashab" data-toggle="modal"
+                                    <a href="javascript:void(0)" class="dropdown-item import-single import-single-ashab"
+                                       data-toggle="modal"
                                        data-target="#importMoldalSer"
                                        data-price="{{$service['rate']}}"
                                        data-name="{{$service['name']}}"
+                                       data-min="{{$service['min']}}"
+                                       data-max="{{$service['max']}}"
                                        data-route="{{ route('admin.import-custom-api.services',['id'=>$service['service'],'name'=>$service['name'],'category'=>$service['category'],'rate'=>$service['rate'], 'provider'=>$provider->id]) }}">
                                         <i class="fas fa-plus text-success pr-2"></i> @lang('Import Service')</a>
-{{--                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">--}}
-{{--                                        <a href="javascript:void(0)" class="dropdown-item import-single" data-toggle="modal"--}}
-{{--                                           data-target="#importModal"--}}
-{{--                                           data-route="{{ route('admin.api.service.import',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate,'min'=>$service->min,'max'=>$service->max,'dripfeed'=>$service->dripfeed, 'provider'=>$provider->id]) }}">--}}
-{{--                                            <i class="fas fa-plus text-success pr-2"></i> @lang('Add Service')</a>--}}
-{{--                                        <a href="javascript:void(0)" class="dropdown-item import-single import-single-ashab" data-toggle="modal"--}}
-{{--                                           data-target="#importMoldalSer"--}}
-{{--                                           data-price="{{$service->rate}}"--}}
-{{--                                           data-route="{{ route('admin.import-custom-api.services',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate, 'provider'=>$provider->id]) }}">--}}
-{{--                                            <i class="fas fa-plus text-success pr-2"></i> @lang('Import Service')</a>--}}
-{{--                                        <a href="{{route('admin.import-custom-api.services',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate,'min'=>$service->min,'max'=>$service->max,'dripfeed'=>$service->dripfeed, 'provider'=>$provider->id])}}" class="dropdown-item import-single"><i class="fas fa-plus text-success pr-2"></i> @lang('Import Service')</a>--}}
-{{--                                    </div>--}}
                                 </div>
                             </td>
                         </tr>
@@ -93,16 +61,18 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label>@lang('Name')</label>
-                            <input id="name" type="text" class="form-control square" readonly
+                            <input id="name" type="text" class="form-control square"
                                    value="">
 
                         </div>
                         <div class="form-group">
                             <label>@lang('Select Category')</label>
-                            <select class="form-control" id="category_id" name="category_id" onchange="showExtraField()">
+                            <select class="form-control" id="category_id" name="category_id"
+                                    onchange="showExtraField()" required>
                                 <option disabled value="" selected hidden>@lang('Select Category')</option>
                                 @foreach($categories as $key=>$categorie)
-                                    <option value="{{ $categorie->id  }}" id="{{$categorie->type}}_{{$key}}">@lang($categorie->category_title)</option>
+                                    <option value="{{ $categorie->id  }}"
+                                            id="{{$categorie->type}}_{{$key}}">@lang($categorie->category_title)</option>
                                 @endforeach
                             </select>
                         </div>
@@ -110,7 +80,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>@lang('Minimum Amount')</label>
-                                    <input type="number" class="form-control square" name="min_amount"
+                                    <input type="number" class="form-control square" name="min_amount" id="min_amount"
                                            value="{{ old('min_amount',1) }}">
                                     @if($errors->has('min_amount'))
                                         <div class="error text-danger">@lang($errors->first('min_amount')) </div>
@@ -118,7 +88,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>@lang('Price')</label>
-                                    <input id="price" type="text" class="form-control square" name="price" placeholder="0.00"
+                                    <input id="price" type="text" class="form-control square" name="price"
+                                           placeholder="0.00"
                                            value="{{ old('price') }}">
                                     @if($errors->has('price'))
                                         <div class="error text-danger">@lang($errors->first('price')) </div>
@@ -137,7 +108,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>@lang('Maximum Amount')</label>
-                                    <input type="number" class="form-control square" name="max_amount"
+                                    <input type="number" class="form-control square" name="max_amount" id="max_amount"
                                            value="{{ old('max_amount',500) }}">
                                     @if($errors->has('max_amount'))
                                         <div class="error text-danger">@lang($errors->first('max_amount')) </div>
@@ -145,10 +116,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label>@lang('Agent Commission Rate')</label>
-                                    <input type="text" class="form-control square" name="agent_commission_rate" placeholder="0"
+                                    <input type="text" class="form-control square" name="agent_commission_rate"
+                                           placeholder="0"
                                            value="{{ old('agent_commission_rate') }}">
                                     @if($errors->has('agent_commission_rate'))
-                                        <div class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
+                                        <div
+                                            class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
                                     @endif
                                 </div>
                                 <div class="row">
@@ -157,7 +130,8 @@
                                             <label class="d-block">@lang('Status')</label>
                                             <div class="custom-switch-btn">
                                                 <input type='hidden' value='1' name='service_status'>
-                                                <input type="checkbox" name="service_status" class="custom-switch-checkbox"
+                                                <input type="checkbox" name="service_status"
+                                                       class="custom-switch-checkbox"
                                                        id="service_status" value="0">
                                                 <label class="custom-switch-checkbox-label" for="service_status">
                                                     <span class="custom-switch-checkbox-inner"></span>
@@ -171,7 +145,8 @@
                                             <label class="d-block">@lang('Available')</label>
                                             <div class="custom-switch-btn">
                                                 <input type='hidden' value='1' name='is_available'>
-                                                <input type="checkbox" name="is_available" class="custom-switch-checkbox"
+                                                <input type="checkbox" name="is_available"
+                                                       class="custom-switch-checkbox"
                                                        id="is_available" value="0">
                                                 <label class="custom-switch-checkbox-label" for="is_available">
                                                     <span class="custom-switch-checkbox-inner"></span>
@@ -185,7 +160,8 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label " for="fieldone">@lang('Description')</label>
-                            <textarea class="form-control" rows="4" placeholder="@lang('Description') " name="description"></textarea>
+                            <textarea class="form-control" rows="4" placeholder="@lang('Description') "
+                                      name="description"></textarea>
 
                             @if($errors->has('description'))
                                 <div class="error text-danger">@lang($errors->first('description')) </div>
@@ -307,6 +283,16 @@
                 let name = $(this).data('name');
                 var nameInput = document.getElementById('name')
                 nameInput.value = name
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let min = $(this).data('min');
+                var minInput = document.getElementById('min_amount')
+                minInput.value = min
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let max = $(this).data('max');
+                var maxInput = document.getElementById('max_amount')
+                maxInput.value = max
             });
             $(document).on('click', '.import-multiple', function () {
                 let route = $(this).data('route');
