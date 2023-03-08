@@ -189,6 +189,7 @@ class OrderController extends Controller
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
             //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
+
                 $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'] ,$req['player_name']);
                 if($service->api_provider_id==1) {
                     if (isset($apidata['orderid'])) {
@@ -206,7 +207,7 @@ class OrderController extends Controller
                         $order->status_description = "order: {$apidata['orderId']}";
                         $order->api_order_id = $apidata['orderId'];
                     } else {
-                            return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
+                            return back()->with('error', $apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
                 }
