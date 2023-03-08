@@ -17,6 +17,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserPriceRange;
 use App\Services\PointsService;
+use CoinGate\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -176,7 +177,6 @@ class OrderController extends Controller
             }
 
 
-
             $order = new Order();
             $order->user_id = $user->id;
             $order->category_id = $req['category'];
@@ -189,14 +189,27 @@ class OrderController extends Controller
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
             //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
-                $apidata = $this->placeOrderFromCustomApiProvider($service,$quantity,$req['link']);
-                if (isset($apidata['orderid'])) {
-                    $order->status_description = "order: {$apidata['orderid']}";
-                    $order->api_order_id = $apidata['orderid'];
-                } else {
-                    if (isset($apidata['result']) && $apidata['result'] == 'error')
-                        return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
-                    // $order->status_description = "error: {$apidata['message']}";
+
+                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'] ,$req['player_name']);
+                if($service->api_provider_id==1) {
+                    if (isset($apidata['orderid'])) {
+                        $order->status_description = "order: {$apidata['orderid']}";
+                        $order->api_order_id = $apidata['orderid'];
+                    } else {
+                        if (isset($apidata['result']) && $apidata['result'] == 'error')
+                            return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
+                        // $order->status_description = "error: {$apidata['message']}";
+                    }
+                }
+                elseif ($service->api_provider_id==2)
+                {
+                    if ($apidata['code']==1) {
+                        $order->status_description = "order: {$apidata['orderId']}";
+                        $order->api_order_id = $apidata['orderId'];
+                    } else {
+                            return back()->with('error', $apidata['status'])->withInput();
+                        // $order->status_description = "error: {$apidata['message']}";
+                    }
                 }
             }
             ////////////////////// End  place Order from custom provider ////////////////////////////
@@ -342,8 +355,7 @@ class OrderController extends Controller
                 }
             }
 
-        }
-        else {
+        } else {
             return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
         }
     }
@@ -498,8 +510,7 @@ class OrderController extends Controller
                                 $orderM->status = trans('canceled');
                             }
 
-                        }
-                        else {
+                        } else {
                             $orderM->reason = "Order quantity should be minimum {$serviceid->min_amount} and maximum {$serviceid->max_amount}";
                             $orderM->status = trans('canceled');
                         }
@@ -561,18 +572,20 @@ class OrderController extends Controller
 
     }
 
-    public function placeOrderFromCustomApiProvider($service,$quantity,$playerId){
+    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId,$playerName=null)
+    {
         $apiproviderdata = ApiProvider::find($service->api_provider_id);
-        $order_token = (string) Str::orderedUuid();
-        $ch = curl_init();
+        if ($apiproviderdata->id == 1) {
+            $order_token = (string)Str::orderedUuid();
+            $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://private-anon-4f7942c0cb-as7abcard.apiary-proxy.com/api/v1/createOrder/");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch, CURLOPT_URL, "https://private-anon-4f7942c0cb-as7abcard.apiary-proxy.com/api/v1/createOrder/");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, TRUE);
 
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
 
-        $fields = <<<EOT
+            $fields = <<<EOT
 {
   "items": [
     {
@@ -586,19 +599,30 @@ class OrderController extends Controller
   "orderToken": "{$order_token}"
 }
 EOT;
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json",
-            "Authorization: Bearer ".$apiproviderdata->api_key
-        ));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $apiproviderdata->api_key
+            ));
 
-        $response = curl_exec($ch);
-        $info = curl_getinfo($ch);
-        curl_close($ch);
+            $response = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
 
 // var_dump($info["http_code"]);
 // dd($response);
-        return json_decode($response,true);
+        }elseif ($apiproviderdata->id==2)
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername={$playerName}");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            $response = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+//            $response='{"Code": 1, "Status": "1 - عملية التحويل تمت بنجاح", "OrderId": 123, "PlayerNumber": "123456", "PlayerName": "PlayerName", "BalanceBefor": 10, "BalanceAfter": 9.5, "Value1": 1, "Value2":-0.5}';
+        }
+        return json_decode($response, true);
     }
 }
