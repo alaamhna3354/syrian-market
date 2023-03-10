@@ -203,11 +203,11 @@ class OrderController extends Controller
                 }
                 elseif ($service->api_provider_id==2)
                 {
-                    if ($apidata['code']==1) {
+                    if (isset($apidata['code']) && $apidata['code']==1) {
                         $order->status_description = "order: {$apidata['orderId']}";
                         $order->api_order_id = $apidata['orderId'];
                     } else {
-                            return back()->with('error', $apidata['status'])->withInput();
+                            return back()->with('error',"error".@$apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
                 }
@@ -615,7 +615,7 @@ EOT;
         }elseif ($apiproviderdata->id==2)
         {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername={$playerName}");
+            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=".str_replace(' ', '%20', $playerName));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, TRUE);
             $response = curl_exec($ch);

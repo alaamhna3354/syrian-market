@@ -152,7 +152,7 @@ class ApiController extends Controller
             $category = $req['category'];
             $player_id = $req['player'];
             if ($category && $player_id) {
-                $player_name = $this->serviceController->getPlayerName($category, $player_id);
+                $player_name = (new CustomProviderController)->getPlayerName($player_id,$category);
                 return $player_name;
             }
             return response()->json(['errors' => $validator->errors()], 422);
