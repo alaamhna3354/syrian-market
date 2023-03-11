@@ -190,8 +190,8 @@ class OrderController extends Controller
             //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
 
-                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'] ,$req['player_name']);
-                if($service->api_provider_id==1) {
+                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'], $req['player_name']);
+                if ($service->api_provider_id == 1) {
                     if (isset($apidata['orderid'])) {
                         $order->status_description = "order: {$apidata['orderid']}";
                         $order->api_order_id = $apidata['orderid'];
@@ -200,14 +200,12 @@ class OrderController extends Controller
                             return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
-                }
-                elseif ($service->api_provider_id==2)
-                {
-                    if (isset($apidata['code']) && $apidata['code']==1) {
+                } elseif ($service->api_provider_id == 2) {
+                    if (isset($apidata['code']) && $apidata['code'] == 1) {
                         $order->status_description = "order: {$apidata['orderId']}";
                         $order->api_order_id = $apidata['orderId'];
                     } else {
-                            return back()->with('error',"error".@$apidata['status'])->withInput();
+                        return back()->with('error', "error" . @$apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
                 }
@@ -572,7 +570,7 @@ class OrderController extends Controller
 
     }
 
-    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId,$playerName=null)
+    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId, $playerName = null)
     {
         $apiproviderdata = ApiProvider::find($service->api_provider_id);
         if ($apiproviderdata->id == 1) {
@@ -584,12 +582,29 @@ class OrderController extends Controller
             curl_setopt($ch, CURLOPT_HEADER, TRUE);
 
             curl_setopt($ch, CURLOPT_POST, TRUE);
-
-            $fields = <<<EOT
+            if ($service->api_service_params == 'amount') {
+                $fields = <<<EOT
+            {
+         "items": [
+          {
+             "denomination_id": $service->api_service_id,
+            "qty": 1,
+            "amount": $quantity
+           }
+          ],
+          "args": {
+            "playerid": $playerId
+          },
+          "orderToken": "{$order_token}"
+        }
+        EOT;
+            } else {
+                $fields = <<<EOT
 {
   "items": [
     {
       "denomination_id": $service->api_service_id,
+
       "qty": $quantity
     }
   ],
@@ -599,6 +614,8 @@ class OrderController extends Controller
   "orderToken": "{$order_token}"
 }
 EOT;
+            }
+
             curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -612,10 +629,9 @@ EOT;
 
 // var_dump($info["http_code"]);
 // dd($response);
-        }elseif ($apiproviderdata->id==2)
-        {
+        } elseif ($apiproviderdata->id == 2) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=".str_replace(' ', '%20', $playerName));
+            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url . "RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=" . str_replace(' ', '%20', $playerName));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, TRUE);
             $response = curl_exec($ch);

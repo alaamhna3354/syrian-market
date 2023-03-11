@@ -48,22 +48,21 @@
                                     <a href="{{route('admin.import-custom-api-services-by-category',[$service['id'],$provider,isset($service['details']['customAmount']['minAmount']) ? $service['details']['customAmount']['minAmount'] : 0,isset($service['details']['customAmount']['maxAmount']) ? $service['details']['customAmount']['maxAmount'] : '0'])}}"
                                        class="dropdown-item">
                                         <i class="fas fa-plus text-success pr-2"></i> @lang('Get Services')</a>
-                                </div>
-                                @if(isset($service['details']['customAmount']['status']) && $service['details']['customAmount']['status']==true)
-                                <td class="text-center">
-                                    <div class="dropdown show">
+
+                                    @if(isset($service['details']['customAmount']['status']) && $service['details']['customAmount']['status']==true)
                                         <a href="javascript:void(0)" class="dropdown-item import-single import-single-ashab"
                                            data-toggle="modal"
                                            data-target="#importMoldalSer"
                                            data-price="{{$service['details']['customAmount']['unitPrice']}}"
                                            data-name="{{$service['name']}}"
-                                           data-min="{{$service['details']['customAmount']['min']}}"
-                                           data-max="{{$service['details']['customAmount']['max']}}"
-                                           data-route="{{ route('admin.import-custom-api.services',['id'=>$service['service'],'name'=>$service['name'],'category'=>$service['category'],'rate'=>$service['rate'], 'provider'=>$provider->id]) }}">
-                                            <i class="fas fa-plus text-success pr-2"></i> @lang('Import Service')</a>
-                                    </div>
-                                </td>
-                                @endif()
+                                           data-min="{{$service['details']['customAmount']['minAmount'] ?? 0 }}"
+                                           data-max="{{$service['details']['customAmount']['maxAmount'] ?? 0 }}"
+                                           data-route="{{ route('admin.import-custom-api.services',['id'=>$service['id'],'name'=>$service['name'],'category'=>@$service['name'],'rate'=>$service['details']['customAmount']['unitPrice'], 'provider'=>$provider->id]) }}">
+                                            <i class="fas fa-plus text-success pr-2"></i> @lang('Custom amount')</a>
+
+
+                                    @endif()
+                                </div>
                             </td>
                         </tr>
                     @endforeach

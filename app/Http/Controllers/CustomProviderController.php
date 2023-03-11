@@ -143,6 +143,7 @@ class CustomProviderController extends Controller
                 $service->api_provider_price = $req['rate'];
                 $service->description = $req['description'];
                 $service->points = isset($req['points']) ? $req['points'] : 0;
+                $service->api_service_params=$req['api_service_params'] ?? null;
                 DB::beginTransaction();
                 $service->save();
                 DB::commit();
