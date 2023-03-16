@@ -48,7 +48,7 @@ class UpdateApiOrdersStatus extends Command
             ->get();
         $ashabOrdersIDs = $ashabOrders->pluck('api_order_id');
         if(isset($ashabOrdersIDs))
-        $this->updateAs7abOrders($ashabOrdersIDs);
+            $this->updateAs7abOrders($ashabOrdersIDs);
         $lordOrders = Order::whereNotNull('api_order_id')
             ->where('created_at', '>', now()->subMinutes(10))
             ->whereHas('service', function ($q) {
@@ -57,7 +57,7 @@ class UpdateApiOrdersStatus extends Command
             ->get();
         $lordOrdersIDs = $lordOrders->pluck('api_order_id');
         if(isset($lordOrdersIDs))
-        $this->updateLordOrders($lordOrdersIDs);
+            $this->updateLordOrders($lordOrdersIDs);
         Log::channel('cronjob')->info($ashabOrdersIDs . '  ' . $lordOrdersIDs);
         return true;
     }
@@ -73,16 +73,16 @@ class UpdateApiOrdersStatus extends Command
             "Content-Type: application/json",
             "Authorization: Bearer " . $as7abprovider->api_key
         ));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode('"orderIds":' . $ashabOrdersIDs));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["orderIds" => $ashabOrdersIDs]));
         $response = curl_exec($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
         $orderStatus = json_decode($response, true);
         if (isset($orderStatus['orders'])) {
-            foreach ($orderStatus['orders'] as $order) {
-                $order = Order::where('api_order_id', '=', $order['ID'])->get();
-                if ($order && $order->status != $order['order_status'])
-                    $order->update(['status' => $order['order_status']]);
+            foreach ($orderStatus['orders'] as $remoteOrder) {
+                $order = Order::where('api_order_id', '=', $remoteOrder['ID'])->first();
+                if ($order && $this->mapAs7abOrderStatus($remoteOrder['order_status']) != $order->status )
+                    $order->update(['status' => $this->mapAs7abOrderStatus($remoteOrder['order_status'])]);
             }
         }
     }
@@ -111,6 +111,20 @@ class UpdateApiOrdersStatus extends Command
             return "processing";
 
         elseif ($status == 3)
+            return "completed";
+
+        elseif ($status == 1)
+            return "canceled";
+
+        else
+            return "canceled";
+    }
+    public function mapAs7abOrderStatus($status)
+    {
+        if ($status =='processing')
+            return "processing";
+
+        elseif ($status == 'completed')
             return "completed";
 
         elseif ($status == 1)

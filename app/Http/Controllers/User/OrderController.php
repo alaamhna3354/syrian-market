@@ -592,7 +592,7 @@ class OrderController extends Controller
            }
           ],
           "args": {
-            "playerid": $playerId
+            "playerid": "{$playerId}"
           },
           "orderToken": "{$order_token}"
         }
@@ -608,7 +608,7 @@ class OrderController extends Controller
     }
   ],
   "args": {
-    "playerid": $playerId
+    "playerid": "{$playerId}"
   },
   "orderToken": "{$order_token}"
 }
