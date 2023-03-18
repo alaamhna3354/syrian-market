@@ -19,14 +19,15 @@ class CustomProviderController extends Controller
     private $provider;
 
     const getPlayerNameUrl = '/getPlayerName/';
-    const getProductsUrl='/products/';
+    const getProductsUrl = '/products/';
+
     /**
      * CustomProviderController constructor.
      * @param $provider
      */
     public function __construct()
     {
-        $this->provider = ApiProvider::where('is_custom',1)->first();
+        $this->provider = ApiProvider::where('is_custom', 1)->first();
     }
 
     /**
@@ -36,26 +37,26 @@ class CustomProviderController extends Controller
      */
     public function index()
     {
-        $api_providers = ApiProvider::where('is_custom',1)->orderBy('id','DESC')->get();
+        $api_providers = ApiProvider::where('is_custom', 1)->orderBy('id', 'DESC')->get();
         return view('admin.pages.api_providers.show', compact('api_providers'));
     }
 
-    public function getPlayerName($playerId,$game)
+    public function getPlayerName($playerId, $game)
     {
-        $provider =ApiProvider::find(1);
+        $provider = ApiProvider::find(1);
         $header = array(
             "Content-Type: application/json",
-            "Authorization: Bearer ".$provider->api_key
+            "Authorization: Bearer " . $provider->api_key
         );
-        $url = $provider->url . self::getPlayerNameUrl.'?playerid='.$playerId.'&game='.$game;
-        $ashabResponse = $this->ashabCurl($url,$header);
-        if ($ashabResponse){
-            if ($ashabResponse['result'] == 'success'){
+        $url = $provider->url . self::getPlayerNameUrl . '?playerid=' . $playerId . '&game=' . $game;
+        $ashabResponse = $this->ashabCurl($url, $header);
+        if ($ashabResponse) {
+            if ($ashabResponse['result'] == 'success') {
                 return $ashabResponse['playername'];
-            }else{
+            } else {
                 return 'error';
             }
-        }else{
+        } else {
             return 'error';
         }
     }
@@ -71,36 +72,43 @@ class CustomProviderController extends Controller
         }
 
         $provider = ApiProvider::find($request->api_provider_id);
-        $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
-        $header = array(
-            "Content-Type: application/json",
-            "Authorization: Bearer ".$provider->api_key
-        );
-        $url = $provider->url . self::getProductsUrl;
-        $ashabResponse = $this->ashabCurl($url,$header);
-        if ($ashabResponse['result'] == 'success'){
-            $apiServiceLists = $ashabResponse['products'];
-            return view('admin.pages.services.show-custom-api-category', compact('apiServiceLists','provider','categories'));
-        }else{
-            return back()->with('error', trans($ashabResponse['message']))->withInput();
-        }
+        if ($provider->is_custom == 1) {
+            $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
+            $header = array(
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $provider->api_key
+            );
+            $url = $provider->url . self::getProductsUrl;
+            $ashabResponse = $this->ashabCurl($url, $header);
+            if ($ashabResponse['result'] == 'success') {
+                $apiServiceLists = $ashabResponse['products'];
+                return view('admin.pages.services.show-custom-api-category', compact('apiServiceLists', 'provider', 'categories'));
+            } else {
+                return back()->with('error', trans($ashabResponse['message']))->withInput();
+            }
+        } else {
+            $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->get();
+            $apiServiceLists = json_decode($apiLiveData);
 
+            return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider'));
+        }
     }
 
-    public function getApiServicesByCategory($category_id,ApiProvider $provider,$min,$max){
+    public function getApiServicesByCategory($category_id, ApiProvider $provider, $min, $max)
+    {
         $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
-        $url = $provider->url .self::getProductsUrl.$category_id;
+        $url = $provider->url . self::getProductsUrl . $category_id;
         $header = array(
             "Content-Type: application/json",
-            "Authorization: Bearer ".$provider->api_key
+            "Authorization: Bearer " . $provider->api_key
         );
-        $result = $this->ashabCurl($url,$header);
+        $result = $this->ashabCurl($url, $header);
         $services = collect();
         $category_name = $result['name'];
-        foreach ($result['products'] as $item){
+        foreach ($result['products'] as $item) {
             $services->add($item);
         }
-        $servicesForCategory = $services->map(function ($service) use ($category_name,$min,$max){
+        $servicesForCategory = $services->map(function ($service) use ($category_name, $min, $max) {
             return [
                 'service' => $service['denomination_id'],
                 'name' => $service['product_name'],
@@ -113,24 +121,25 @@ class CustomProviderController extends Controller
             ];
         });
         $apiServiceLists = $servicesForCategory;
-        return view('admin.pages.services.show-custom-api-services', compact('apiServiceLists','provider','categories'));
+        return view('admin.pages.services.show-custom-api-services', compact('apiServiceLists', 'provider', 'categories'));
     }
 
-    public function importApiService(Request $request){
+    public function importApiService(Request $request)
+    {
         try {
             $req = $request->all();
             $category = Category::find($req['category_id']);
             $services = Service::all();
             $existService = 0;
-            foreach($services as $service):
-                if($service->api_provider_id == $req['provider'] && $service->api_service_id == $req['id']):
+            foreach ($services as $service):
+                if ($service->api_provider_id == $req['provider'] && $service->api_service_id == $req['id']):
                     $existService = 1;
                 endif;
             endforeach;
-            if($existService != 1):
+            if ($existService != 1):
                 $service = new Service();
                 $service->service_title = $req['name'];
-                $service->category_id =$category->id;
+                $service->category_id = $category->id;
                 $service->min_amount = $req['min_amount'];
                 $service->max_amount = $req['max_amount'];
                 $service->agent_commission_rate = isset($req['agent_commission_rate']) ? $req['agent_commission_rate'] : 0;
@@ -143,7 +152,7 @@ class CustomProviderController extends Controller
                 $service->api_provider_price = $req['rate'];
                 $service->description = $req['description'];
                 $service->points = isset($req['points']) ? $req['points'] : 0;
-                $service->api_service_params=$req['api_service_params'] ?? null;
+                $service->api_service_params = $req['api_service_params'] ?? null;
                 DB::beginTransaction();
                 $service->save();
                 DB::commit();
@@ -151,7 +160,7 @@ class CustomProviderController extends Controller
             else:
                 return redirect()->route('admin.service.show')->with('success', 'Already Have this service');
             endif;
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
             return back()->with('error', trans('Sorry There Are An Error'));
         }
@@ -160,13 +169,14 @@ class CustomProviderController extends Controller
 
     public function getProducts()
     {
-        $apiLiveData = Curl::to($this->provider['url'].$this::getProductsUrl)->withData(['key'=>$this->provider['api_key']])->get();
+        $apiLiveData = Curl::to($this->provider['url'] . $this::getProductsUrl)->withData(['key' => $this->provider['api_key']])->get();
         $products = json_decode($apiLiveData);
 
-        return view('admin.pages.services.show-api-services', compact('apiServiceLists','provider'));
+        return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider'));
     }
 
-    public function ashabCurl($url,$header){
+    public function ashabCurl($url, $header)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -175,6 +185,6 @@ class CustomProviderController extends Controller
         curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $result = curl_exec($ch);
         curl_close($ch);
-        return json_decode($result,true);
+        return json_decode($result, true);
     }
 }

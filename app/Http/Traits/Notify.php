@@ -24,7 +24,6 @@ trait Notify
     public function mail($user, $templateKey = null, $params = [], $subject = null, $requestMessage = null)
     {
         $basic = (object) config('basic');
-
         if ($basic->email_notification != 1) {
             return false;
         }

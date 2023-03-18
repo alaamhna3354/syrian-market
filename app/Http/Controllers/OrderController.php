@@ -246,7 +246,6 @@ class OrderController extends Controller
 
     public function statusChange(Request $request)
     {
-
         $req = $request->all();
         $order = Order::find($request->id);
         $user = $order->users;
