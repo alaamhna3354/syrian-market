@@ -16,6 +16,7 @@ use App\Models\UserServiceRate;
 use Dompdf\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\DateTime;
@@ -151,8 +152,9 @@ class ApiController extends Controller
         elseif (strtolower($req['action']) == 'player') {
             $category = $req['category'];
             $player_id = $req['player'];
+            $game=Category::findorfail($category);
             if ($category && $player_id) {
-                $player_name = $this->serviceController->getPlayerName($category, $player_id);
+                $player_name = (new CustomProviderController)->getPlayerName($player_id,$game);
                 return $player_name;
             }
             return response()->json(['errors' => $validator->errors()], 422);
@@ -238,6 +240,33 @@ class ApiController extends Controller
                 $order->runs = isset($request['runs']) && !empty($request['runs']) ? $request['runs'] : null;
                 $order->interval = isset($request['interval']) && !empty($request['interval']) ? $request['interval'] : null;
 
+//////////////////////   place Order from custom provider ////////////////////////////
+                if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
+
+                    $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $request['link']);
+                    if($service->api_provider_id==1) {
+                        if (isset($apidata['orderid'])) {
+                            $order->status_description = "order: {$apidata['orderid']}";
+                            $order->api_order_id = $apidata['orderid'];
+                        } else {
+                            if (isset($apidata['result']) && $apidata['result'] == 'error')
+                                return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
+                            // $order->status_description = "error: {$apidata['message']}";
+                        }
+                    }
+                    elseif ($service->api_provider_id==2)
+                    {
+                        if (isset($apidata['code']) && $apidata['code']==1) {
+                            $order->status_description = "order: {$apidata['orderId']}";
+                            $order->api_order_id = $apidata['orderId'];
+                        } else {
+                            return back()->with('error',"error".@$apidata['status'])->withInput();
+                            // $order->status_description = "error: {$apidata['message']}";
+                        }
+                    }
+                }
+                ////////////////////// End  place Order from custom provider ////////////////////////////
+                ///
                 if ($service->category->type == 'CODE') {
                     $serviceCode = $service->service_code->where('is_used', 0)->first();
                     if ($serviceCode != null) {
@@ -386,5 +415,60 @@ class ApiController extends Controller
                 ->where('user_id',$user->id)->first();
         $price = ($userRate) ? ($userRate->price): $service->price;
         return $price;
+    }
+
+    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId,$playerName=null)
+    {
+        $apiproviderdata = ApiProvider::find($service->api_provider_id);
+        if ($apiproviderdata->id == 1) {
+            $order_token = (string)Str::orderedUuid();
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://private-anon-4f7942c0cb-as7abcard.apiary-proxy.com/api/v1/createOrder/");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+
+            $fields = <<<EOT
+{
+  "items": [
+    {
+      "denomination_id": $service->api_service_id,
+      "qty": $quantity
+    }
+  ],
+  "args": {
+    "playerid": $playerId
+  },
+  "orderToken": "{$order_token}"
+}
+EOT;
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $apiproviderdata->api_key
+            ));
+
+            $response = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+
+// var_dump($info["http_code"]);
+// dd($response);
+        }elseif ($apiproviderdata->id==2)
+        {
+            $playerName= (new CustomProviderController)->getPlayerName($playerId,$service->category->slug);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=".str_replace(' ', '%20', $playerName));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            $response = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+//            $response='{"Code": 1, "Status": "1 - عملية التحويل تمت بنجاح", "OrderId": 123, "PlayerNumber": "123456", "PlayerName": "PlayerName", "BalanceBefor": 10, "BalanceAfter": 9.5, "Value1": 1, "Value2":-0.5}';
+        }
+        return json_decode($response, true);
     }
 }

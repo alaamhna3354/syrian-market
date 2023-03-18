@@ -30,7 +30,8 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                <a href="javascript:void(0)" data-container="body"  data-toggle="popover" data-placement="top" data-content="{{$service['name']}}">
+                                <a href="javascript:void(0)" data-container="body" data-toggle="popover"
+                                   data-placement="top" data-content="{{$service['name']}}">
                                     {{\Str::limit($service['name'], 30)}}
                                 </a></td>
                             <td class="text-center">
@@ -44,10 +45,23 @@
                             </td>
                             <td class="text-center">
                                 <div class="dropdown show">
-
-                                    <a href="{{route('admin.import-custom-api-services-by-category',[$service['id'],$provider,isset($service['details']['customAmount']['minAmount']) ? $service['details']['customAmount']['minAmount'] : 0,isset($service['details']['customAmount']['maxAmount']) ? $service['details']['customAmount']['maxAmount'] : '0'])}}" class="dropdown-item">
+                                    <a href="{{route('admin.import-custom-api-services-by-category',[$service['id'],$provider,isset($service['details']['customAmount']['minAmount']) ? $service['details']['customAmount']['minAmount'] : 0,isset($service['details']['customAmount']['maxAmount']) ? $service['details']['customAmount']['maxAmount'] : '0'])}}"
+                                       class="dropdown-item">
                                         <i class="fas fa-plus text-success pr-2"></i> @lang('Get Services')</a>
 
+                                    @if(isset($service['details']['customAmount']['status']) && $service['details']['customAmount']['status']==true)
+                                        <a href="javascript:void(0)" class="dropdown-item import-single import-single-ashab"
+                                           data-toggle="modal"
+                                           data-target="#importMoldalSer"
+                                           data-price="{{$service['details']['customAmount']['unitPrice']}}"
+                                           data-name="{{$service['name']}}"
+                                           data-min="{{$service['details']['customAmount']['minAmount'] ?? 0 }}"
+                                           data-max="{{$service['details']['customAmount']['maxAmount'] ?? 0 }}"
+                                           data-route="{{ route('admin.import-custom-api.services',['id'=>$service['id'],'name'=>$service['name'],'category'=>@$service['name'],'rate'=>$service['details']['customAmount']['unitPrice'], 'provider'=>$provider->id]) }}">
+                                            <i class="fas fa-plus text-success pr-2"></i> @lang('Custom amount')</a>
+
+
+                                    @endif()
                                 </div>
                             </td>
                         </tr>
@@ -56,9 +70,173 @@
                 </table>
             </div>
         </div>
+        <div class="modal fade" id="importMoldalSer" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">@lang('Service Import Confirm')</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="" method="post" id="importForm">
+                        @csrf
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>@lang('Name')</label>
+                                <input id="name" type="text" class="form-control square"
+                                       value="">
+
+                            </div>
+                            <div class="form-group">
+                                <label>@lang('Select Category')</label>
+                                <select class="form-control" id="category_id" name="category_id"
+                                        onchange="showExtraField()" required>
+                                    <option disabled value="" selected hidden>@lang('Select Category')</option>
+                                    @foreach($categories as $key=>$categorie)
+                                        <option value="{{ $categorie->id  }}"
+                                                id="{{$categorie->type}}_{{$key}}">@lang($categorie->category_title)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>@lang('Minimum Amount')</label>
+                                        <input type="number" class="form-control square" name="min_amount"
+                                               id="min_amount"
+                                               value="{{ old('min_amount',1) }}">
+                                        @if($errors->has('min_amount'))
+                                            <div class="error text-danger">@lang($errors->first('min_amount')) </div>
+                                        @endif
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@lang('Price')</label>
+                                        <input id="price" type="text" class="form-control square" name="price"
+                                               placeholder="0.00"
+                                               value="{{ old('price') }}">
+                                        @if($errors->has('price'))
+                                            <div class="error text-danger">@lang($errors->first('price')) </div>
+                                        @endif
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@lang('Points')</label>
+                                        <input type="number" class="form-control square" name="points" placeholder="0"
+                                               value="{{ old('points') }}">
+                                        @if($errors->has('points'))
+                                            <div class="error text-danger">@lang($errors->first('points')) </div>
+                                        @endif
+                                    </div>
+                                    <input type="text" name="api_service_params" value="amount" hidden="hidden">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>@lang('Maximum Amount')</label>
+                                        <input type="number" class="form-control square" name="max_amount"
+                                               id="max_amount"
+                                               value="{{ old('max_amount',500) }}">
+                                        @if($errors->has('max_amount'))
+                                            <div class="error text-danger">@lang($errors->first('max_amount')) </div>
+                                        @endif
+                                    </div>
+                                    <div class="form-group">
+                                        <label>@lang('Agent Commission Rate')</label>
+                                        <input type="text" class="form-control square" name="agent_commission_rate"
+                                               placeholder="0"
+                                               value="{{ old('agent_commission_rate') }}">
+                                        @if($errors->has('agent_commission_rate'))
+                                            <div
+                                                class="error text-danger">@lang($errors->first('agent_commission_rate')) </div>
+                                        @endif
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group ">
+                                                <label class="d-block">@lang('Status')</label>
+                                                <div class="custom-switch-btn">
+                                                    <input type='hidden' value='1' name='service_status'>
+                                                    <input type="checkbox" name="service_status"
+                                                           class="custom-switch-checkbox"
+                                                           id="service_status" value="0">
+                                                    <label class="custom-switch-checkbox-label" for="service_status">
+                                                        <span class="custom-switch-checkbox-inner"></span>
+                                                        <span class="custom-switch-checkbox-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group ">
+                                                <label class="d-block">@lang('Available')</label>
+                                                <div class="custom-switch-btn">
+                                                    <input type='hidden' value='1' name='is_available'>
+                                                    <input type="checkbox" name="is_available"
+                                                           class="custom-switch-checkbox"
+                                                           id="is_available" value="0">
+                                                    <label class="custom-switch-checkbox-label" for="is_available">
+                                                        <span class="custom-switch-checkbox-inner"></span>
+                                                        <span class="custom-switch-checkbox-switch"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label " for="fieldone">@lang('Description')</label>
+                                <textarea class="form-control" rows="4" placeholder="@lang('Description') "
+                                          name="description"></textarea>
+
+                                @if($errors->has('description'))
+                                    <div class="error text-danger">@lang($errors->first('description')) </div>
+                                @endif
+                            </div>
+                            <p>@lang('Are you really want to Import Service')</p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal"><span><i
+                                        class="fas fa-power-off"></i> @lang('Cancel')</span></button>
+                            <button type="submit" class="btn btn-primary"><span><i
+                                        class="fas fa-save"></i> @lang('Confirm Import')</span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @push('js')
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '.import-single', function () {
+                let route = $(this).data('route');
+                $('#importForm').attr('action', route);
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let price = $(this).data('price');
+                var priceInput = document.getElementById('price')
+                priceInput.value = price
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let name = $(this).data('name');
+                var nameInput = document.getElementById('name')
+                nameInput.value = name
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let min = $(this).data('min');
+                var minInput = document.getElementById('min_amount')
+                minInput.value = min
+            });
+            $(document).on('click', '.import-single-ashab', function () {
+                let max = $(this).data('max');
+                var maxInput = document.getElementById('max_amount')
+                maxInput.value = max
+            });
+        });
+    </script>
 
 @endpush
 

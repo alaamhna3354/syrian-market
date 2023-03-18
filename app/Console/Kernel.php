@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\BlockIoIPN;
 use App\Console\Commands\Cron;
 use App\Console\Commands\DowngradeUsersLevel;
+use App\Console\Commands\UpdateApiOrdersStatus;
 use App\Models\Gateway;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -17,8 +18,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        BlockIoIPN::class,
-        DowngradeUsersLevel::class
+        DowngradeUsersLevel::class,
+        UpdateApiOrdersStatus::class
     ];
 
     /**
@@ -31,11 +32,12 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $blockIoGateway = Gateway::where(['code' => 'blockio', 'status' => 1])->count();
-        if ($blockIoGateway == 1) {
-            $schedule->command('blockIo:ipn')->everyThirtyMinutes();
-        }
-        $schedule->command('downgrade:users_level')->hourly();
+//        $blockIoGateway = Gateway::where(['code' => 'blockio', 'status' => 1])->count();
+//        if ($blockIoGateway == 1) {
+//            $schedule->command('blockIo:ipn')->everyThirtyMinutes();
+//        }
+        //$schedule->command('downgrade:users_level')->hourly();
+        $schedule->command('update:order_status')->everyMinute();
     }
 
     /**

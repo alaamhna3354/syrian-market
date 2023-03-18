@@ -4,8 +4,6 @@
 @endsection
 @section('content')
     @include('admin.pages.order.partials.search-bar')
-
-
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0 shadow">
         <div class="card-body">
 
@@ -59,7 +57,7 @@
                                 {{--@lang('Start counter'):--}}
                                 {{--<br>--}}
                                 <span
-                                        onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional($order->service)->category->category_title)')">
+                                        onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional(@$order->service)->category->category_title)')">
                                     <i class="fa fa-copy" style="font-size: 25px;"></i>
                                 </span>
                             </td>
