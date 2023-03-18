@@ -20,6 +20,7 @@ use App\Services\PointsService;
 use CoinGate\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Ixudra\Curl\Facades\Curl;
@@ -205,6 +206,16 @@ class OrderController extends Controller
                     if (isset($apidata['code']) && $apidata['code']==1) {
                         $order->status_description = "order: {$apidata['orderId']}";
                         $order->api_order_id = $apidata['orderId'];
+                    } else {
+                        return back()->with('error',"error".@$apidata['status'])->withInput();
+                        // $order->status_description = "error: {$apidata['message']}";
+                    }
+                }
+                elseif ($service->api_provider_id==3)
+                {
+                    if (isset($apidata['status']) && $apidata['status']=="success") {
+                        $order->status_description = "order: {$apidata['order']}";
+                        $order->api_order_id = $apidata['order'];
                     } else {
                         return back()->with('error',"error".@$apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
@@ -636,6 +647,37 @@ EOT;
             $info = curl_getinfo($ch);
             curl_close($ch);
 //            $response='{"Code": 1, "Status": "1 - عملية التحويل تمت بنجاح", "OrderId": 123, "PlayerNumber": "123456", "PlayerName": "PlayerName", "BalanceBefor": 10, "BalanceAfter": 9.5, "Value1": 1, "Value2":-0.5}';
+        }
+        else
+        {
+            $this->base_url = $apiproviderdata->url;
+            $params = [
+                'key' => $apiproviderdata->api_key,
+                'action' => 'add',
+                'service' => $service->api_service_id,
+                'link' => $playerId,
+                'quantity' => $quantity,
+                'runs' => 1,
+                'interval' => 1
+
+            ];
+            $response=Curl::to($this->base_url)
+                ->withData($params)->post();
+//            $url = $this->base_url;
+//            curl_setopt($ch, CURLOPT_URL, $url);
+//            curl_setopt($ch, CURLOPT_POST, 1);
+//            curl_setopt($ch, CURLOPT_HEADER, 0);
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+//            $response = curl_exec($ch);
+//            dd($response);
+//            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//            if ($httpcode!=200) {
+//                Log::info($httpcode);
+//                Log::info(curl_getinfo($ch));
+//                Log::info(json_decode($response, True));
+//            }
         }
         return json_decode($response, true);
     }

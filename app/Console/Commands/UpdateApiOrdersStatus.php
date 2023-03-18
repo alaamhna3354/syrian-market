@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Ixudra\Curl\Facades\Curl;
 
 class UpdateApiOrdersStatus extends Command
 {
@@ -59,7 +60,17 @@ class UpdateApiOrdersStatus extends Command
         $lordOrdersIDs = $lordOrders->pluck('api_order_id');
         if (isset($lordOrdersIDs))
             $this->updateLordOrders($lordOrdersIDs);
-        Log::channel('cronjob')->info($ashabOrdersIDs . '  ' . $lordOrdersIDs);
+
+        $msaderOrders = Order::whereNotNull('api_order_id')
+            ->where('created_at', '>', now()->subMinutes(10))
+            ->whereHas('service', function ($q) {
+                $q->where('api_provider_id', 3);
+            })
+            ->get();
+        $msaderOrders = $msaderOrders->pluck('api_order_id');
+        if (isset($msaderOrders))
+            $this->updateMsaderOrders($msaderOrders);
+        Log::channel('cronjob')->info($ashabOrdersIDs . '  ' . $lordOrdersIDs. '  '.$msaderOrders);
         return true;
     }
 
@@ -159,5 +170,27 @@ class UpdateApiOrdersStatus extends Command
         $order->status = $status;
         $order->updated_by = $order->service->api_provider->name ?? trans('Remote provider');
         $order->save();
+    }
+
+    public function updateMsaderOrders($msaderOrdersIDs)
+    {
+        $msaderProvider = ApiProvider::find(3);
+        $this->base_url = $msaderProvider->url;
+        $params = [
+            'key' => $msaderProvider->api_key,
+            'action' => 'orders',
+            'orders' => json_encode($msaderOrdersIDs)
+        ];
+        $response=Curl::to($this->base_url)->withData($params)->post();
+        $orderStatus = json_decode($response, true);
+//        Log::channel('cronjob')->info($response);
+        if (isset($orderStatus[0]['order'])) {
+            foreach ($orderStatus as $remoteOrder) {
+                $order = Order::where('api_order_id', '=', $remoteOrder['order'])->first();
+                if ($order && $remoteOrder['status'] != $order->status) {
+                    $order->update(['status' => $remoteOrder['status']]);
+                }
+            }
+        }
     }
 }

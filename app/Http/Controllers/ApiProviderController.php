@@ -241,6 +241,8 @@ class ApiProviderController extends Controller
         if($insertCat == 1):
             $cat = new Category();
             $cat->category_title = $req['category'];
+            $cat->type = 'BALANCE';
+            $cat->special_field = 'الرابط';
             $cat->status = 1;
             $cat->save();
         endif;
@@ -261,12 +263,12 @@ class ApiProviderController extends Controller
             $service->service_status = 1;
             $service->api_provider_id = $req['provider'];
             $service->api_service_id = $req['id'];
-            $service->drip_feed = $req['dripfeed'];
+            $service->drip_feed = $req['dripfeed'] ?? 0 ;
             $service->api_provider_price = $req['rate'];
             $service->save();
-            return redirect()->route('admin.service.show');
+            return redirect()->route('admin.service.show')->with('success', 'Added succussfuly');
         else:
-            return redirect()->route('admin.service.show')->with('success', 'Already Have this service');
+            return redirect()->route('admin.service.show')->with('error', 'Already Have this service');
         endif;
 
     }
@@ -292,6 +294,8 @@ class ApiProviderController extends Controller
             if($insertCat == 1):
                 $cat = new Category();
                 $cat->category_title = $apiService->category;
+                $cat->type = 'BALANCE';
+                $cat->special_field = 'الرابط';
                 $cat->status = 1;
                 $cat->save();
             endif;
@@ -312,7 +316,7 @@ class ApiProviderController extends Controller
                 $service->service_status = 1;
                 $service->api_provider_id = $req['provider'];
                 $service->api_service_id = $apiService->service;
-                $service->drip_feed = $apiService->dripfeed;
+                $service->drip_feed = $apiService->dripfeed ?? 0;
                 $service->api_provider_price = $apiService->rate;
                 $service->save();
             endif;

@@ -43,8 +43,8 @@
                                 </a></td>
                             <td class="text-center">{{ $service->category }}</td>
                             <td class="text-center">
-                            <span
-                                class="badge badge-pill {{ $service->dripfeed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->dripfeed == 0 ? 'Inactive' : 'Active' }}</span>
+{{--                            <span--}}
+{{--                                class="badge badge-pill {{ $service->dripfeed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->dripfeed == 0 ? 'Inactive' : 'Active' }}</span>--}}
                             </td>
                             <td class="text-center">
                                 <div class="dropdown show">
@@ -55,7 +55,7 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a href="javascript:void(0)" class="dropdown-item import-single" data-toggle="modal"
                                            data-target="#importMoldal"
-                                           data-route="{{ route('admin.api.service.import',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate,'min'=>$service->min,'max'=>$service->max,'dripfeed'=>$service->dripfeed, 'provider'=>$provider->id]) }}">
+                                           data-route="{{ route('admin.api.service.import',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate,'min'=>$service->min,'max'=>$service->max,'dripfeed'=>0, 'provider'=>$provider->id]) }}">
                                             <i class="fas fa-plus text-success pr-2"></i> @lang('Add Service')</a>
                                     </div>
                                 </div>

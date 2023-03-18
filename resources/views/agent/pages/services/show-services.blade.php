@@ -130,7 +130,7 @@
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
                         <input type="text" name="link"
-                               placeholder="@lang('add') {{$category->special_field}}">
+                               placeholder="{{$category->special_field}}" required>
                     </div>
                 @else
                     <input type="hidden" name="link" value="">

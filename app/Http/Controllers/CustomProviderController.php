@@ -87,7 +87,7 @@ class CustomProviderController extends Controller
                 return back()->with('error', trans($ashabResponse['message']))->withInput();
             }
         } else {
-            $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->get();
+            $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->post();
             $apiServiceLists = json_decode($apiLiveData);
 
             return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider'));
