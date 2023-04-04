@@ -82,6 +82,15 @@
 
                     <div class="modal-body">
                         <div class="form-group">
+                            <label>@lang('Select Category')</label>
+                            <select class="form-control" name="category_id">
+                                <option  selected>@lang('Select Category')</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->category_title }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>@lang('Select Percentage Increase')</label>
                             <select class="form-control" name="price_percentage_increase">
                                 <option value="100" selected>@lang('100%')</option>

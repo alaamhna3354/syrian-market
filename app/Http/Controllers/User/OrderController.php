@@ -164,7 +164,7 @@ class OrderController extends Controller
         }
 
         $basic = (object)config('basic');
-        if ($service->category->type == 'CODE' || $service->category->type == '5SIM')
+        if ($service->category->type == 'CODE' || $service->category->type == '5SIM' || $service->category->type == 'NUMBER')
             $quantity = 1;
         else
             $quantity = $request->quantity;
@@ -172,15 +172,15 @@ class OrderController extends Controller
         if (($service->min_amount <= $quantity && $service->max_amount >= $quantity) || ($service->min_amount == 0 && $service->max_amount == 0)) {
             $userRate = ($service->user_rate) ?? $service->price;
             $price = round(($quantity * $userRate), 2);
+            if($service->category->type == 'NUMBER')
+                $price = $price / 1000;
             $user = Auth::user();
             if ($user->balance < $price) {
                 return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
-
-
             $order = new Order();
             $order->user_id = $user->id;
-            $order->category_id = $req['category'];
+            $order->category_id = @$service->category->id;
             $order->service_id = $req['service'];
             $order->link = $req['link'];
             $order->quantity = $req['quantity'];
@@ -223,7 +223,6 @@ class OrderController extends Controller
                 }
             }
             ////////////////////// End  place Order from custom provider ////////////////////////////
-
             if ($service->category->type == 'CODE') {
                 $serviceCode = $service->service_code->where('is_used', 0)->first();
                 if ($serviceCode != null) {
@@ -233,7 +232,6 @@ class OrderController extends Controller
             } elseif ($service->category->type == 'GAME') {
                 $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
             } elseif ($service->category->type == '5SIM') {
-
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);
                 if ($codes == 0)
                     return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
@@ -242,6 +240,12 @@ class OrderController extends Controller
                     $order->order_id_api = $codes['id'];
                     $order->status = 'code-waiting';
                 }
+            }
+            elseif ($service->category->type == 'NUMBER')
+            {
+                $order->code = $apidata['link'];
+                $order->order_id_api = $apidata['order'];
+                $order->status = 'code-waiting';
             }
 
             $order->save();
@@ -298,7 +302,7 @@ class OrderController extends Controller
 
 ////////////////////////            End change Price Range     /////////////////////////////
 
-            if ($service->category->type != '5SIM') {
+            if ($service->category->type != '5SIM' && $service->category->type != 'NUMBER') {
                 $user->balance -= $price;
                 $user->save();
                 $transaction = new Transaction();
@@ -318,7 +322,6 @@ class OrderController extends Controller
                     $commision->order_id = $order->id;
                     $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
                     $commision->save();
-
                 }
             }
             $msg = [
@@ -542,7 +545,6 @@ class OrderController extends Controller
 
     public function finish5SImOrder($id, $result)
     {
-
         $order = Order::find($id);
         $user = $order->user;
         if ($user->balance < $order->price) {
@@ -552,7 +554,7 @@ class OrderController extends Controller
         $user->balance -= $order->price;
         $user->save();
         $order->status = 'completed';
-        $order->verify = $result['sms'][0]['code'];
+        $order->verify = $result['sms'][0]['code'] ?? $result['smsCode'] ?? ' ';
         $order->save();
 
         //Create Transaction
@@ -655,7 +657,7 @@ EOT;
                 'key' => $apiproviderdata->api_key,
                 'action' => 'add',
                 'service' => $service->api_service_id,
-                'link' => $playerId,
+                'link' => @$playerId,
                 'quantity' => $quantity,
                 'runs' => 1,
                 'interval' => 1
@@ -663,6 +665,7 @@ EOT;
             ];
             $response=Curl::to($this->base_url)
                 ->withData($params)->post();
+//            $response ='{"status":"success","order":37,"link":"15793308141"}';
 //            $url = $this->base_url;
 //            curl_setopt($ch, CURLOPT_URL, $url);
 //            curl_setopt($ch, CURLOPT_POST, 1);
