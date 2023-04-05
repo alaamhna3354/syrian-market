@@ -2,7 +2,6 @@
 @section('title',__('Orders'))
 @section('content')
 
-
     <div class="container px-3 user-service-list order-list">
         <div class="row my-3 justify-content-between">
             <div class="col-md-12">
@@ -12,7 +11,7 @@
                 </ol>
 
                 <div class="card my-3">
-                    <div class="card-body" >
+                    <div class="card-body">
                         <form action="{{ route('agent.order.search') }}" method="get">
                             <div class="row">
                                 <div class="col-md-3">
@@ -66,7 +65,7 @@
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <button style="padding: 12px 15px;margin: 0;"
-                                        type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
+                                                type="submit" class="btn waves-effect waves-light w-100 btn-primary"><i
                                                 class="fas fa-search"></i> @lang('Search')</button>
                                     </div>
                                 </div>
@@ -154,14 +153,14 @@
                                     <th scope="col">@lang('Verify')</th>
                                     {{--<th scope="col">@lang('Remains')</th>--}}
                                     <th scope="col">@lang('Status')</th>
-                                    <th scope="col" >@lang('Note')</th>
+                                    <th scope="col">@lang('Note')</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($orders as $key => $order)
                                     <tr>
                                         <td data-label="@lang('Order ID')"> {{$order->id}} </td>
-                                        <td  data-label="@lang('Order Details')" class="un-td">
+                                        <td data-label="@lang('Order Details')" class="un-td">
                                             <h5>@lang(optional($order->service)->service_title)</h5>
                                             <span> @lang('Link') : @lang($order->link) </span>
                                             <br>
@@ -175,30 +174,39 @@
                                             <span id="{{$order->id}}">
                                             @if($order->verify )
                                                     {{ $order->verify }}
-                                                @elseif(isset($order->category->type) && $order->category->type =='5SIM')
-                                                    <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})" ></i>
+                                                @elseif(isset($order->category->type) && ($order->category->type =='5SIM' || $order->category->type =='NUMBER'))
+                                                    <i class="fas fa-sync-alt" onclick="checksms({{ $order->id }})"></i>
                                                 @endif
-                                            </span >
+                                            </span>
                                         </td>
                                         {{--<td data-label="@lang('Remains')">@lang($order->remains ?? 'N/A' )</td>--}}
                                         <td data-label="@lang('Status')">
-                                            @if($order->status=='Awaiting') <span
-                                                class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
-                                            @elseif($order->status == 'pending') <span
-                                                class="badge badge-pill badge-info">{{trans('Pending')}}</span>
-                                            @elseif($order->status == 'processing') <span
-                                                class="badge badge-pill badge-info">{{trans('Processing')}}</span>
-                                            @elseif($order->status == 'progress') <span
-                                                class="badge badge-pill badge-warning">{{trans('In progress')}}</span>
-                                            @elseif($order->status == 'completed') <span
-                                                class="badge badge-pill badge-success">{{trans('Completed')}}</span>
-                                            @elseif($order->status == 'partial') <span
-                                                class="badge badge-pill badge-warning">{{trans('Partial')}}</span>
-                                            @elseif($order->status == 'canceled') <span
-                                                class="badge badge-pill badge-danger">{{trans('Canceled')}}</span>
-                                            @elseif($order->status == 'refunded') <span
-                                                class="badge badge-pill badge-danger">{{trans('Refunded')}}</span>
-                                            @elseif($order->status == 'code-waiting') <span
+                                            @if($order->status=='Awaiting')
+                                                <span
+                                                    class="badge badge-pill badge-danger">{{trans('Awaiting')}}</span>
+                                            @elseif($order->status == 'pending')
+                                                <span
+                                                    class="badge badge-pill badge-info">{{trans('Pending')}}</span>
+                                            @elseif($order->status == 'processing')
+                                                <span
+                                                    class="badge badge-pill badge-info">{{trans('Processing')}}</span>
+                                            @elseif($order->status == 'progress')
+                                                <span
+                                                    class="badge badge-pill badge-warning">{{trans('In progress')}}</span>
+                                            @elseif($order->status == 'completed')
+                                                <span
+                                                    class="badge badge-pill badge-success">{{trans('Completed')}}</span>
+                                            @elseif($order->status == 'partial')
+                                                <span
+                                                    class="badge badge-pill badge-warning">{{trans('Partial')}}</span>
+                                            @elseif($order->status == 'canceled')
+                                                <span
+                                                    class="badge badge-pill badge-danger">{{trans('Canceled')}}</span>
+                                            @elseif($order->status == 'refunded')
+                                                <span
+                                                    class="badge badge-pill badge-danger">{{trans('Refunded')}}</span>
+                                            @elseif($order->status == 'code-waiting')
+                                                <span
                                                     class="badge badge-pill badge-danger">{{trans('Waiting For Code')}}</span>
                                             @endif
 
@@ -206,8 +214,8 @@
                                         <td data-label="@lang('Note')">
 
 
-                                        @if(optional($order->service)->service_status == 1)
-                                            <!-- <button type="button"
+                                            @if(optional($order->service)->service_status == 1)
+                                                <!-- <button type="button"
                                                         class="btn btn-sm btn-success  orderBtn" data-toggle="modal"
                                                         data-target="#description" id="details"
                                                         data-service_id="{{$order->service_id}}"
@@ -231,7 +239,7 @@
                                 </tbody>
                             </table>
                         </div>
-                         {{ $orders->appends($_GET)->links() }}
+                        {{ $orders->appends($_GET)->links() }}
 
                     </div>
                 </div>
@@ -317,16 +325,17 @@
             {{--document.location.href=url;--}}
             $.ajax({
                 type: 'GET',
-                url:  url,
+                url: url,
                 // url : url.replace(':id', $id),
                 // data: "id=" + $id , //laravel checks for the CSRF token in post requests
 
                 success: function (data) {
-                    if(data!='0')
-                    {
-                        $('#'+$id).text(data)
+                    console.log(data);
+                    if (data != '0') {
+                        $('#' + $id).text(data)
+                    } else {
+                        alert('تأكد من طلب الرمز ثم اعد المحاولة')
                     }
-                    else {alert('تأكد من طلب الرمز ثم اعد المحاولة')}
                 }
             });
 

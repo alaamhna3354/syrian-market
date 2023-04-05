@@ -56,7 +56,7 @@
                         </div>
                         @endif
                     </div>
-                    <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
+                    <div class="price" data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
                         <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
                         <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
@@ -89,7 +89,7 @@
             <div class="row">
                 <div class="col-12  mb-2">
                     <label for="">@lang('quantity')</label>
-                    <input type="number" name="quantity" class="quantity" value="1">
+                    <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000" value="1000" @else value="1" @endif>
 
                 </div>
                 <div class="col-12  mb-2">
@@ -117,7 +117,7 @@
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
                         <input type="text" name="link"
-                               placeholder="@lang('add') {{$category->special_field}}">
+                               placeholder="{{$category->special_field}}" required>
                     </div>
                 @else
                     <input type="hidden" name="link" value="">

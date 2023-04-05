@@ -14,7 +14,8 @@
                             <div class="image-input ">
                                 <label for="image-upload" id="image-label"><i class="fas fa-upload"></i></label>
                                 <input type="file" name="image" placeholder="Choose image" id="image">
-                                <img id="image_preview_container" class="preview-image" src="{{ getFile(config('location.default')) }}"
+                                <img id="image_preview_container" class="preview-image"
+                                     src="{{ getFile(config('location.default')) }}"
                                      alt="preview image">
                             </div>
 
@@ -25,24 +26,27 @@
 
                     </div>
                     <div class="col-sm-6 col-md-8">
-                            <div class="form-group">
-                                <label>@lang('Select Type')</label>
-                                <select class="form-control" id="type" name="type" onchange="showExtraField()">
-                                    <option disabled value="" selected hidden>@lang('Select Type')</option>
+                        <div class="form-group">
+                            <label>@lang('Select Type')</label>
+                            <select class="form-control" id="type" name="type" onchange="showExtraField()">
+                                <option disabled value="" selected hidden>@lang('Select Type')</option>
 
-                                        <option value="GAME">@lang('GAME')</option>
-                                    <option value="CODE">@lang('CODE')</option>
-                                    <option value="BALANCE">@lang('BALANCE')</option>
-                                    <option value="5SIM">@lang('5SIM')</option>
+                                <option value="GAME">@lang('GAME')</option>
+                                <option value="CODE">@lang('CODE')</option>
+                                <option value="BALANCE">@lang('BALANCE')</option>
+                                <option value="5SIM">@lang('5SIM')</option>
+                                <option value="SMM">@lang('SMM')</option>
+                                <option value="NUMBER">@lang('NUMBER')</option>
 
-                                </select>
-                                @if($errors->has('type'))
-                                    <div class="error text-danger">@lang($errors->first('type')) </div>
-                                @endif
-                            </div>
+                            </select>
+                            @if($errors->has('type'))
+                                <div class="error text-danger">@lang($errors->first('type')) </div>
+                            @endif
+                        </div>
                         <div class="form-group ">
                             <label>@lang('Category Title')</label>
-                            <input type="text" name="category_title" value="{{old('category_title')}}"  class="form-control form-control-sm">
+                            <input type="text" name="category_title" value="{{old('category_title')}}"
+                                   class="form-control form-control-sm">
                             <div class="invalid-feedback">@lang('Please fill in the category title')</div>
 
 
@@ -52,7 +56,8 @@
                         </div>
                         <div class="form-group">
                             <label for="category_description">@lang('Category Description')</label>
-                            <textarea class="form-control" id="category_description" rows="3" name="category_description">{{old('category_description')}}</textarea>
+                            <textarea class="form-control" id="category_description" rows="3"
+                                      name="category_description">{{old('category_description')}}</textarea>
                             <div class="invalid-feedback">@lang('Please fill in the category description')</div>
 
                             @error('category_description')
@@ -61,7 +66,9 @@
                         </div>
                         <div class="form-group" id="extra-field" style="display: none">
                             <label>@lang('Special Field')</label>
-                            <input type="text" name="special_field" value="{{old('special_field')}}"  class="form-control form-control-sm" placeholder="@lang('Insert Special Field Name')">
+                            <input type="text" name="special_field" value="{{old('special_field')}}"
+                                   class="form-control form-control-sm"
+                                   placeholder="@lang('Insert Special Field Name')">
                             <div class="invalid-feedback">@lang('Please fill in the category title')</div>
 
 
@@ -73,7 +80,8 @@
                             <label class="d-block">@lang('Status')</label>
                             <div class="custom-switch-btn w-md-25">
                                 <input type='hidden' value='1' name='status'>
-                                <input type="checkbox" name="status" class="custom-switch-checkbox" id="status" value = "0"  >
+                                <input type="checkbox" name="status" class="custom-switch-checkbox" id="status"
+                                       value="0">
                                 <label class="custom-switch-checkbox-label" for="status">
                                     <span class="custom-switch-checkbox-inner"></span>
                                     <span class="custom-switch-checkbox-switch"></span>
@@ -84,7 +92,9 @@
                             @enderror
                         </div>
                         <div class="submit-btn-wrapper mt-md-5 text-center text-md-left">
-                            <button type="submit" class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3"><span>@lang('Add Category')</span> </button>
+                            <button type="submit"
+                                    class="btn waves-effect waves-light btn-rounded btn-primary btn-block mt-3">
+                                <span>@lang('Add Category')</span></button>
                         </div>
                     </div>
                 </div>
@@ -93,18 +103,19 @@
     </div>
 @endsection
 @push('js')
-     <script>
-         function showExtraField(){
-             var opt = document.getElementById('type').value;
-             if (opt == "BALANCE" ){
-               $('#extra-field').attr('style','display : block;')
+    <script>
+        function showExtraField() {
+            var opt = document.getElementById('type').value;
+            if (opt == "BALANCE") {
+                $('#extra-field').attr('style', 'display : block;')
 
-             }else {
-                 $('#extra-field').attr('style','display : none;')
-             }
-             console.log(opt)
-         }
-         "use strict";
+            } else {
+                $('#extra-field').attr('style', 'display : none;')
+            }
+            console.log(opt)
+        }
+
+        "use strict";
         $(document).ready(function (e) {
             $('#type').select2({
                 selectOnClose: true
@@ -115,7 +126,7 @@
                 }
             });
 
-            $('#image').on('change',function(){
+            $('#image').on('change', function () {
                 let reader = new FileReader();
                 reader.onload = (e) => {
                     $('#image_preview_container').attr('src', e.target.result);
@@ -123,26 +134,26 @@
                 reader.readAsDataURL(this.files[0]);
             });
 
-            $('#upload_image_form').on('submit',function(e) {
+            $('#upload_image_form').on('submit', function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 $.ajax({
-                    type:'POST',
+                    type: 'POST',
                     url: "{{ url('photo')}}",
                     data: formData,
-                    cache:false,
+                    cache: false,
                     contentType: false,
                     processData: false,
                     success: (data) => {
-                    this.reset();
-                    alert('Image has been uploaded successfully');
+                        this.reset();
+                        alert('Image has been uploaded successfully');
                     },
-                    error: function(data){
-                    console.log(data);
+                    error: function (data) {
+                        console.log(data);
                     }
                 });
             });
         });
-     </script>
+    </script>
 @endpush
 

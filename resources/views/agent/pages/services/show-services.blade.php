@@ -55,7 +55,7 @@
                             </div>
                         @endif
                     </div>
-                    <div class="price" data-price=" {{$service->price}} {{config('basic.currency_symbol')}}">
+                    <div class="price" data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
                         <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
                         <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
@@ -86,12 +86,11 @@
         <form class="form" method="post" action="{{route('user.order.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                @if($category->type == "5SIM" || $category->type == "CODE")
+                @if($category->type == "5SIM" || $category->type == "CODE" || $category->type == "NUMBER")
                     <div class="col-12  mb-2">
                         <label for="">@lang('quantity')</label>
                         <input type="number"  class="quantity" value="1" readonly>
                         <input type="hidden" name="quantity" value="1">
-
                     </div>
                     <div class="col-12  mb-2">
                         <label for="">@lang('Total')</label>
@@ -100,7 +99,7 @@
                 @else
                     <div class="col-12  mb-2">
                         <label for="">@lang('quantity')</label>
-                        <input type="number" name="quantity" class="quantity">
+                        <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000" value="1000" @endif>
 
                     </div>
                     <div class="col-12  mb-2">
@@ -130,7 +129,7 @@
                     <div class="col-12 col-sm-10">
                         <label for="special_field">{{$category->special_field}}</label>
                         <input type="text" name="link"
-                               placeholder="@lang('add') {{$category->special_field}}">
+                               placeholder="{{$category->special_field}}" required>
                     </div>
                 @else
                     <input type="hidden" name="link" value="">

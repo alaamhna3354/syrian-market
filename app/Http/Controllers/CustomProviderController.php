@@ -70,7 +70,7 @@ class CustomProviderController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-
+    $categories =Category::all();
         $provider = ApiProvider::find($request->api_provider_id);
         if ($provider->is_custom == 1) {
             $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
@@ -80,17 +80,17 @@ class CustomProviderController extends Controller
             );
             $url = $provider->url . self::getProductsUrl;
             $ashabResponse = $this->ashabCurl($url, $header);
-            if ($ashabResponse['result'] == 'success') {
+            if (isset($ashabResponse['result']) && $ashabResponse['result'] == 'success') {
                 $apiServiceLists = $ashabResponse['products'];
                 return view('admin.pages.services.show-custom-api-category', compact('apiServiceLists', 'provider', 'categories'));
             } else {
-                return back()->with('error', trans($ashabResponse['message']))->withInput();
+                return back()->with('error', trans(@$ashabResponse['message']))->withInput();
             }
         } else {
-            $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->get();
+            $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->post();
             $apiServiceLists = json_decode($apiLiveData);
 
-            return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider'));
+            return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider','categories'));
         }
     }
 
