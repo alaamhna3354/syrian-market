@@ -6,6 +6,7 @@ use App\Models\ApiProvider;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Service;
+use App\Services\PointsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Ixudra\Curl\Facades\Curl;
@@ -421,7 +422,7 @@ class ApiProviderController extends Controller
             if (isset($response['status']) && $response['status'] == 'success') {
                 $code = $response['smsCode'];
                 if (isset($code)) {
-                    $res = (new OrderController())->finish5SImOrder($order, $response);
+                    $res = (new OrderController(new PointsService()))->finish5SImOrder($order->id, $response);
                 }
                 return $code;
             } else return '0';
