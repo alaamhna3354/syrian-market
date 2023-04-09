@@ -577,7 +577,7 @@ class OrderController extends Controller
     public function finish5SImOrder($id, $result)
     {
         $order = Order::find($id);
-        $user = $order->user;
+        $user = $order->users;
         if ($user->balance < $order->price) {
             $notify[] = ['error', 'Insufficient balance. Please deposit and try again!'];
             return back()->withNotify($notify);
@@ -609,7 +609,7 @@ class OrderController extends Controller
             $commision->save();
 
         }
-        return $result['sms'][0]['code'];
+        return $result['sms'][0]['code'] ?? $result['smsCode'];
 //        $notify[] = ['success', 'Successfully placed your order!'];
 //        return back()->withNotify($notify);
 

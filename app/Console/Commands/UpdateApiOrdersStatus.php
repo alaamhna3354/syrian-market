@@ -187,7 +187,7 @@ class UpdateApiOrdersStatus extends Command
         if (isset($orderStatus[0]['order'])) {
             foreach ($orderStatus as $remoteOrder) {
                 $order = Order::where('api_order_id', '=', $remoteOrder['order'])->first();
-                if ($order && $remoteOrder['status'] != $order->status) {
+                if ($order && $remoteOrder['status'] != $order->status && $order->category->type != "NUMBER") {
                     $order->update(['status' => $remoteOrder['status']]);
                 }
             }
