@@ -166,7 +166,6 @@ class OrderController extends Controller
             $price = round(($quantity * $userRate), 2);
             if ($service->category->type == 'SMM')
                 $price = $price / 1000;
-            $user = Auth::user();
             if ($user->balance < $price) {
                 if ($apiUser)
                     return response()->json(['errors' => ['message' => trans("Insufficient balance.")]], 422);
