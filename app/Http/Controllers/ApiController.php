@@ -162,8 +162,7 @@ class ApiController extends Controller
         //Add
         elseif (strtolower($req['action']) == 'add') {
             $validator = Validator::make($req, [
-                'service' => 'required',
-                'link' => 'required'
+                'service' => 'required'
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiProviderController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CustomProviderController;
 use App\Http\Traits\Notify;
 use App\Models\AgentCommissionRate;
 use App\Models\ApiProvider;
@@ -49,7 +50,6 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with(['users', 'service'])->latest()->where('user_id', Auth::id())->paginate();
-//        dd($orders);
         return view('user.pages.order.show', compact('orders'));
     }
 
@@ -184,7 +184,6 @@ class OrderController extends Controller
             $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
             //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
-
                 $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'], @$req['player_name']);
                 if ($service->api_provider_id == 1) {
                     if (isset($apidata['orderid'])) {
@@ -670,6 +669,7 @@ EOT;
 // var_dump($info["http_code"]);
 // dd($response);
         } elseif ($apiproviderdata->id == 2) {
+            $playerName= (new CustomProviderController)->getPlayerName($playerId,$service->category->slug);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url . "RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=" . str_replace(' ', '%20', $playerName));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
