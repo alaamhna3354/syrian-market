@@ -131,17 +131,12 @@ class OrderController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $apiUser = null)
     {
-//        $req = Purify::clean($request->all());
         $req = $request->all();
-//        dd($req);
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
             'service' => 'required|integer|min:1|not_in:0',
-//            'link' => 'required',
-//            'quantity' => 'required|integer',
-//            'check' => 'required',
         ];
 
         $service = Service::userRate()->findOrFail($request->service);
@@ -151,18 +146,15 @@ class OrderController extends Controller
                 return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
             }
         }
-
-        $user = Auth::user();
+        $user = $apiUser ? $apiUser : Auth::user();
         if ($user != null) {
             if (!($service->price != null && $service->price != 0)) {
                 $user_range = $user->priceRange;
                 $range = $service->service_price_ranges()->where('price_range_id', $user_range->id)->first();
                 $service->price = $range->price;
                 $service->agent_commission_rate = $range->agent_commission_rate;
-
             }
         }
-
         $basic = (object)config('basic');
         if ($service->category->type == 'CODE' || $service->category->type == '5SIM' || $service->category->type == 'NUMBER')
             $quantity = 1;
@@ -172,11 +164,13 @@ class OrderController extends Controller
         if (($service->min_amount <= $quantity && $service->max_amount >= $quantity) || ($service->min_amount == 0 && $service->max_amount == 0)) {
             $userRate = ($service->user_rate) ?? $service->price;
             $price = round(($quantity * $userRate), 2);
-            if($service->category->type == 'NUMBER')
+            if ($service->category->type == 'SMM')
                 $price = $price / 1000;
-            $user = Auth::user();
             if ($user->balance < $price) {
-                return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
+                if ($apiUser)
+                    return response()->json(['errors' => ['message' => trans("Insufficient balance.")]], 422);
+                else
+                    return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
             $order = new Order();
             $order->user_id = $user->id;
@@ -191,33 +185,38 @@ class OrderController extends Controller
             //////////////////////   place Order from custom provider ////////////////////////////
             if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
 
-                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'] ,@$req['player_name']);
-                if($service->api_provider_id==1) {
+                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'], @$req['player_name']);
+                if ($service->api_provider_id == 1) {
                     if (isset($apidata['orderid'])) {
                         $order->status_description = "order: {$apidata['orderid']}";
                         $order->api_order_id = $apidata['orderid'];
                     } else {
-                        return back()->with('error', trans("This service is currently unavailable, try again later ."))->withInput();
+                        if ($apiUser)
+                            return response()->json(['errors' => ['message' => trans("This service is currently unavailable, try again later.")]], 422);
+                        else
+                            return back()->with('error', trans("This service is currently unavailable, try again later."))->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
-                }
-                elseif ($service->api_provider_id==2)
-                {
-                    if (isset($apidata['code']) && $apidata['code']==1) {
+                } elseif ($service->api_provider_id == 2) {
+                    if (isset($apidata['code']) && $apidata['code'] == 1) {
                         $order->status_description = "order: {$apidata['orderId']}";
                         $order->api_order_id = $apidata['orderId'];
                     } else {
-                        return back()->with('error',"error".@$apidata['status'])->withInput();
+                        if ($apiUser)
+                            return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
+                        else
+                            return back()->with('error', "error" . @$apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
-                }
-                elseif ($service->api_provider_id==3)
-                {
-                    if (isset($apidata['status']) && $apidata['status']=="success") {
+                } elseif ($service->api_provider_id == 3) {
+                    if (isset($apidata['status']) && $apidata['status'] == "success") {
                         $order->status_description = "order: {$apidata['order']}";
                         $order->api_order_id = $apidata['order'];
                     } else {
-                        return back()->with('error',"error".@$apidata['status'])->withInput();
+                        if ($apiUser)
+                            return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
+                        else
+                            return back()->with('error', "error" . @$apidata['status'])->withInput();
                         // $order->status_description = "error: {$apidata['message']}";
                     }
                 }
@@ -234,15 +233,16 @@ class OrderController extends Controller
             } elseif ($service->category->type == '5SIM') {
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);
                 if ($codes == 0)
-                    return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
+                    if ($apiUser)
+                        return response()->json(['errors' => ['message' => trans("حاول لاحقا او تواصل مع مدير الموقع")]], 422);
+                    else
+                        return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
                 else {
                     $order->code = $codes['phone'];
                     $order->order_id_api = $codes['id'];
                     $order->status = 'code-waiting';
                 }
-            }
-            elseif ($service->category->type == 'NUMBER')
-            {
+            } elseif ($service->category->type == 'NUMBER') {
                 $order->code = $apidata['link'];
                 $order->order_id_api = $apidata['order'];
                 $order->status = 'code-waiting';
@@ -324,6 +324,12 @@ class OrderController extends Controller
                     $commision->save();
                 }
             }
+            $result['status'] = 'success';
+            $result['order'] = $order->id;
+            $result['code'] = $order->code;
+            $result['details'] = $order->details;
+            $result['order_status']=$order->status;
+            $result['price']= $order->price;
             $msg = [
                 'username' => $user->username,
                 'price' => $price,
@@ -343,33 +349,57 @@ class OrderController extends Controller
                     $order->status = "completed";
                     $order->save();
                     if ($user->is_agent == 1 && $user->is_approved == 1) {
-                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                        if ($apiUser)
+                            return response()->json($result, 200);
+                        else
+                            return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                     } else {
-                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
+                        if ($apiUser)
+                            return response()->json($result, 200);
+                        else
+                            return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                     }
 
 //                    return back()->with('success', trans('Your order has been submitted'));
                 } else {
-                    return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
+                    if ($apiUser)
+                        return response()->json(['errors' => ['message' => trans("No Code Available ,Please Contact with Support To Order Code.")]], 422);
+                    else
+                        return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
                 }
             } elseif ($service->category->type == '5SIM') {
                 if ($user->is_agent == 1 && $user->is_approved == 1) {
-                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                    if ($apiUser)
+                        return response()->json($result, 200);
+                    else
+                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                 } else {
-                    return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
+                    if ($apiUser)
+                        return response()->json($result, 200);
+                    else
+                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
 
             } else {
 
                 if ($user->is_agent == 1 && $user->is_approved == 1) {
-                    return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
+                    if ($apiUser)
+                        return response()->json($result, 200);
+                    else
+                        return redirect(route('agent.order.index'))->with('success', trans('Your order has been submitted'));
                 } else {
-                    return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
+                    if ($apiUser)
+                        return response()->json($result, 200);
+                    else
+                        return redirect(route('user.order.index'))->with('success', trans('Your order has been submitted'));
                 }
             }
 
         } else {
-            return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
+            if ($apiUser)
+                return response()->json(['errors' => ['message' => "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}"]], 422);
+            else
+                return back()->with('error', "Order quantity should be minimum {$service->min_amount} and maximum {$service->max_amount}")->withInput();
         }
     }
 
@@ -546,7 +576,7 @@ class OrderController extends Controller
     public function finish5SImOrder($id, $result)
     {
         $order = Order::find($id);
-        $user = $order->user;
+        $user = $order->users;
         if ($user->balance < $order->price) {
             $notify[] = ['error', 'Insufficient balance. Please deposit and try again!'];
             return back()->withNotify($notify);
@@ -578,13 +608,13 @@ class OrderController extends Controller
             $commision->save();
 
         }
-        return $result['sms'][0]['code'];
+        return $result['sms'][0]['code'] ?? $result['smsCode'];
 //        $notify[] = ['success', 'Successfully placed your order!'];
 //        return back()->withNotify($notify);
 
     }
 
-    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId,$playerName=null)
+    public function placeOrderFromCustomApiProvider($service, $quantity, $playerId, $playerName = null)
     {
         $apiproviderdata = ApiProvider::find($service->api_provider_id);
         if ($apiproviderdata->id == 1) {
@@ -639,19 +669,16 @@ EOT;
 
 // var_dump($info["http_code"]);
 // dd($response);
-        }elseif ($apiproviderdata->id==2)
-        {
+        } elseif ($apiproviderdata->id == 2) {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url."RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=".str_replace(' ', '%20', $playerName));
+            curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url . "RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=" . str_replace(' ', '%20', $playerName));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, TRUE);
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
             curl_close($ch);
 //            $response='{"Code": 1, "Status": "1 - عملية التحويل تمت بنجاح", "OrderId": 123, "PlayerNumber": "123456", "PlayerName": "PlayerName", "BalanceBefor": 10, "BalanceAfter": 9.5, "Value1": 1, "Value2":-0.5}';
-        }
-        else
-        {
+        } else {
             $this->base_url = $apiproviderdata->url;
             $params = [
                 'key' => $apiproviderdata->api_key,
@@ -663,7 +690,7 @@ EOT;
                 'interval' => 1
 
             ];
-            $response=Curl::to($this->base_url)
+            $response = Curl::to($this->base_url)
                 ->withData($params)->post();
 //            $response ='{"status":"success","order":37,"link":"15793308141"}';
 //            $url = $this->base_url;

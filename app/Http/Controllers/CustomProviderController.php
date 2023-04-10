@@ -70,7 +70,7 @@ class CustomProviderController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-    $categories =Category::all();
+        $categories = Category::all();
         $provider = ApiProvider::find($request->api_provider_id);
         if ($provider->is_custom == 1) {
             $categories = Category::orderBy('id', 'DESC')->where('status', 1)->get();
@@ -90,7 +90,7 @@ class CustomProviderController extends Controller
             $apiLiveData = Curl::to($provider['url'])->withData(['key' => $provider['api_key'], 'action' => 'services'])->post();
             $apiServiceLists = json_decode($apiLiveData);
 
-            return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider','categories'));
+            return view('admin.pages.services.show-api-services', compact('apiServiceLists', 'provider', 'categories'));
         }
     }
 

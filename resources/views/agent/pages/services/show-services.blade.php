@@ -55,7 +55,8 @@
                             </div>
                         @endif
                     </div>
-                    <div class="price" data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
+                    <div class="price"
+                         data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
                         <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
                         <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
@@ -89,7 +90,7 @@
                 @if($category->type == "5SIM" || $category->type == "CODE" || $category->type == "NUMBER")
                     <div class="col-12  mb-2">
                         <label for="">@lang('quantity')</label>
-                        <input type="number"  class="quantity" value="1" readonly>
+                        <input type="number" class="quantity" value="1" readonly>
                         <input type="hidden" name="quantity" value="1">
                     </div>
                     <div class="col-12  mb-2">
@@ -99,7 +100,8 @@
                 @else
                     <div class="col-12  mb-2">
                         <label for="">@lang('quantity')</label>
-                        <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000" value="1000" @endif>
+                        <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000"
+                               value="1000" @endif>
 
                     </div>
                     <div class="col-12  mb-2">
@@ -112,8 +114,8 @@
                     <div class=" col-10  mb-2">
                         <label for="player_number">@lang('Player number')</label>
                         <input type="text" name="link" id="player_number" placeholder="" required
-                        oninvalid="setCustomValidity('أدخل رقم اللاعب من فضلك ')"
-                        onchange="try{setCustomValidity('')}catch(e){}">
+                               oninvalid="setCustomValidity('أدخل رقم اللاعب من فضلك ')"
+                               onchange="try{setCustomValidity('')}catch(e){}">
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أدخل رقم اللاعب من فضلك')</div>
                     </div>
@@ -166,22 +168,21 @@
 @endsection
 @push('js')
     <script>
- "use strict";
+        "use strict";
         var itemSelected = false;
         // fun 1
-        $(".get-name").on("click", function() {
+        $(".get-name").on("click", function () {
             var category_id = $('.inp-hid-catg').val();
             var player_number = $('#player_number').val();
-            if(player_number == ""){
+            if (player_number == "") {
                 $('.vald-player-number').addClass('active');
-            }
-            else{
+            } else {
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url: '/get-player-name/' +player_number + '/' + category_id ,
-                    type:"GET",
-                    success:function(response){
+                    url: '/get-player-name/' + player_number + '/' + category_id,
+                    type: "GET",
+                    success: function (response) {
                         console.log(response);
                         $('#player_name').val(response);
                         $(".get-name").removeClass('fa-spinner active');
@@ -190,103 +191,99 @@
             }
         });
         // fun 2
-        $("#player_number").on("keyup", function() {
-            if(player_number != ""){
+        $("#player_number").on("keyup", function () {
+            if (player_number != "") {
                 $('.vald-player-number').removeClass('active');
-            }
-            else{
+            } else {
                 $('.vald-player-number').addClass('active');
             }
         });
         // fun 3
-        $(".myInput").on("keyup", function() {
+        $(".myInput").on("keyup", function () {
             var value = this.value.toLowerCase().trim();
-            $(".it").show().filter(function() {
+            $(".it").show().filter(function () {
                 return $(this).attr("data-title").toLowerCase().trim().indexOf(value) == -1;
             }).hide();
         });
 
         $('#cards-services .item').on('click', function (event) {
-            if($(this).hasClass("disable")){
+            if ($(this).hasClass("disable")) {
                 event.preventDefault();
             }
-            // else if($(this).hasClass("active")){
-            //     $(this).removeClass('active');
-            //     $('.chosen-item').removeClass('active');
-            //     $('#cards-services .item').removeClass('un-active');
-            //     $(".total").val('0');
-            //     $('.quantity').val('0');
-            //     itemSelected = false;
-            //     $('#btn-add').addClass('disble');
-            //     $('#btn-add').attr("disabled","");
+                // else if($(this).hasClass("active")){
+                //     $(this).removeClass('active');
+                //     $('.chosen-item').removeClass('active');
+                //     $('#cards-services .item').removeClass('un-active');
+                //     $(".total").val('0');
+                //     $('.quantity').val('0');
+                //     itemSelected = false;
+                //     $('#btn-add').addClass('disble');
+                //     $('#btn-add').attr("disabled","");
             // }
-            else{
+            else {
                 $('#cards-services .item').removeClass('active');
                 $('#cards-services .item').addClass('un-active');
                 $(this).addClass('active');
                 $('.chosen-item').addClass('active');
-                var name =  $(this).children(`.name`).attr("data-name");
-                var price =  $(this).children(`.price`).attr("data-price").replace('$','');
+                var name = $(this).children(`.name`).attr("data-name");
+                var price = $(this).children(`.price`).attr("data-price").replace('$', '');
                 // get & set id
-                var id =  $(this).children(`.name`).attr("data-id");
+                var id = $(this).children(`.name`).attr("data-id");
                 $('.inp-hid-serv').val(id);
 
                 $(".name-val").html(name);
                 $(".price-val").html(`${price}$`);
-                if($('.quantity').val() > 1){
-                $(".total").val(` ${price * $('.quantity').val()} $`);
+                if ($('.quantity').val() > 1) {
+                    $(".total").val(` ${price * $('.quantity').val()} $`);
 
-                }
-                else{
+                } else {
                     $(".total").val(` ${price} $`);
                     $('.quantity').val('1');
                 }
                 // $('.quantity').val('1');
                 $('.quantity-val').html('1');
-                $(".quantity").keyup(function(){
-                    var valu =  $(this).val();
+                $(".quantity").keyup(function () {
+                    var valu = $(this).val();
                     $(".quantity-val").html(valu);
-                    $(".total").val(`${valu*price}$`);
-                    $(".price-val").html(`${valu*price}$`);
+                    $(".total").val(`${valu * price}$`);
+                    $(".price-val").html(`${valu * price}$`);
                 });
                 itemSelected = true;
-                if($('.agree').is(':checked')){
+                if ($('.agree').is(':checked')) {
                     $('#btn-add').removeClass('disble');
                     $('#btn-add').removeAttr("disabled");
                     $("#checklabel").html(`نعم قمت بتأكيد الطلب`);
-                    $("#checklabel").css("color","#fff");
-                    }
+                    $("#checklabel").css("color", "#fff");
+                }
             }
 
             event.preventDefault();
         });
-         // fun 4
-         $('.agree').on('click', function (event) {
-           if(itemSelected ){
-            if (!$('.agree').is(':checked')) {
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
+        // fun 4
+        $('.agree').on('click', function (event) {
+            if (itemSelected) {
+                if (!$('.agree').is(':checked')) {
+                    $('#btn-add').addClass('disble');
+                    $('#btn-add').attr("disabled", "");
+                } else {
+                    $('#btn-add').removeClass('disble');
+                    $('#btn-add').removeAttr("disabled");
+                }
+            } else {
+                if (itemSelected == false) {
+                    $("#checklabel").html(`يجب عليك أختيار باقة`);
+                    $("#checklabel").css("color", "red");
+                }
             }
-            else{
-                $('#btn-add').removeClass('disble');
-                $('#btn-add').removeAttr("disabled");
-            }
-           }
-           else{
-            if(itemSelected == false){
-                $("#checklabel").html(`يجب عليك أختيار باقة`);
-                $("#checklabel").css("color","red");
-            }
-           }
         });
         // fun 5
         $('#btn-add').on('click', function (event) {
-            setTimeout(function() {
-                if(itemSelected && $("#player_number").val().length > 0 ){
-                $('#btn-add').addClass('disble');
-                $('#btn-add').attr("disabled","");
-            }
-                }, 10);
+            setTimeout(function () {
+                if (itemSelected && $("#player_number").val().length > 0) {
+                    $('#btn-add').addClass('disble');
+                    $('#btn-add').attr("disabled", "");
+                }
+            }, 10);
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}

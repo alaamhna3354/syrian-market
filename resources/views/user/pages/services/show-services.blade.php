@@ -33,7 +33,7 @@
 
     <div class="contain-cards-order services">
         <h3 class="text-white">@lang('Add Order') <a href="{{ route('user.service.show') }}"><i
-                        class="fa fa-arrow-right"></i></a></h3>
+                    class="fa fa-arrow-right"></i></a></h3>
         <div class="search">
             <input type="text" class="myInput">
             <button class="btn">@lang('Search')</button>
@@ -48,15 +48,16 @@
                             <img src="{{asset($themeTrue.'imgs/tumile.png')}}" alt="user">
                         </div>
                         @if($service->points>0)
-                        <div class="points">
-                            <span>  {{$service->points}}</span>
-                            <div class="desc">
-                               {{$service->points }} @lang('Point')
+                            <div class="points">
+                                <span>  {{$service->points}}</span>
+                                <div class="desc">
+                                    {{$service->points }} @lang('Point')
+                                </div>
                             </div>
-                        </div>
                         @endif
                     </div>
-                    <div class="price" data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
+                    <div class="price"
+                         data-price=" {{$category ->type == "SMM"? $service->price /1000 : $service->price}} {{config('basic.currency_symbol')}}">
                         <span>  {{$service->price}} {{config('basic.currency_symbol')}}</span>
                         <span>‎₺{{$service->price * config('basic.exchange_rate')}}</span>
                     </div>
@@ -89,7 +90,8 @@
             <div class="row">
                 <div class="col-12  mb-2">
                     <label for="">@lang('quantity')</label>
-                    <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000" value="1000" @else value="1" @endif>
+                    <input type="number" name="quantity" class="quantity" @if($category->type == "SMM") min="1000"
+                           value="1000" @else value="1" @endif>
 
                 </div>
                 <div class="col-12  mb-2">
@@ -130,8 +132,8 @@
                     <div class="chosen-item">
                         <span>
     <img
-            src="{{asset($themeTrue.'imgs/tumile.png')}}"
-            alt="user"
+        src="{{asset($themeTrue.'imgs/tumile.png')}}"
+        alt="user"
     > x<span class="quantity-val"></span></span>
                         <span class="name-val"></span>
                         <span class="price-val"></span>
@@ -162,12 +164,11 @@
             var player_number = $('#player_number').val();
             if (player_number == "") {
                 $('.vald-player-number').addClass('active');
-            }
-            else {
+            } else {
                 $('#player_name').val('please wait');
                 $(".get-name").addClass('fa-spinner active');
                 $.ajax({
-                    url: '/get-player-name/' +player_number + '/' + category_id ,
+                    url: '/get-player-name/' + player_number + '/' + category_id,
                     type: "GET",
                     success: function (response) {
                         console.log(response);
@@ -181,8 +182,7 @@
         $("#player_number").on("keyup", function () {
             if (player_number != "") {
                 $('.vald-player-number').removeClass('active');
-            }
-            else {
+            } else {
                 $('.vald-player-number').addClass('active');
             }
         });
@@ -198,15 +198,15 @@
             if ($(this).hasClass("disable")) {
                 event.preventDefault();
             }
-            // else if($(this).hasClass("active")){
-            //     $(this).removeClass('active');
-            //     $('.chosen-item').removeClass('active');
-            //     $('#cards-services .item').removeClass('un-active');
-            //     $(".total").val('0');
-            //     $('.quantity').val('0');
-            //     itemSelected = false;
-            //     $('#btn-add').addClass('disble');
-            //     $('#btn-add').attr("disabled","");
+                // else if($(this).hasClass("active")){
+                //     $(this).removeClass('active');
+                //     $('.chosen-item').removeClass('active');
+                //     $('#cards-services .item').removeClass('un-active');
+                //     $(".total").val('0');
+                //     $('.quantity').val('0');
+                //     itemSelected = false;
+                //     $('#btn-add').addClass('disble');
+                //     $('#btn-add').attr("disabled","");
             // }
             else {
                 $('#cards-services .item').removeClass('active');
@@ -224,8 +224,7 @@
                 if ($('.quantity').val() > 1) {
                     $(".total").val(` ${price * $('.quantity').val()} $`);
 
-                }
-                else {
+                } else {
                     $(".total").val(` ${price} $`);
                     $('.quantity').val('1');
                 }
@@ -254,13 +253,11 @@
                 if (!$('.agree').is(':checked')) {
                     $('#btn-add').addClass('disble');
                     $('#btn-add').attr("disabled", "");
-                }
-                else {
+                } else {
                     $('#btn-add').removeClass('disble');
                     $('#btn-add').removeAttr("disabled");
                 }
-            }
-            else {
+            } else {
                 if (itemSelected == false) {
                     $("#checklabel").html(`يجب عليك أختيار باقة`);
                     $("#checklabel").css("color", "red");

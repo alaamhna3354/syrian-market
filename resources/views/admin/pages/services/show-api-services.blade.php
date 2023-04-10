@@ -5,9 +5,10 @@
     <div class="card card-primary m-0 m-md-4 my-4 m-md-0">
         <div class="card-body">
             <h4 class="card-title mb-3">
-                <a href="javascript:void(0)" class="import-multiple btn btn-primary text-white float-right" data-toggle="modal"
-                                       data-target="#importMultipleMoldal"
-                                       data-route="{{ route('admin.api.service.import.multi',['provider'=>$provider->id]) }}">
+                <a href="javascript:void(0)" class="import-multiple btn btn-primary text-white float-right"
+                   data-toggle="modal"
+                   data-target="#importMultipleMoldal"
+                   data-route="{{ route('admin.api.service.import.multi',['provider'=>$provider->id]) }}">
                     <span><i class="fas fa-plus text-white pr-2"></i> @lang('Add Bulk Service')</span>
                 </a>
             </h4>
@@ -16,7 +17,8 @@
                     <thead class="thead-primary">
                     <tr class="text-center">
                         <th scope="col" class="text-center check-box-width-50">
-                            <input type="checkbox" class="form-check-input check-all tic-check check-all" name="check-all"
+                            <input type="checkbox" class="form-check-input check-all tic-check check-all"
+                                   name="check-all"
                                    id="check-all">
                             <label for="check-all" class="mt-3"></label>
                         </th>
@@ -38,22 +40,25 @@
                             </td>
                             <td class="text-center">{{$service->service}}</td>
                             <td class="text-center">
-                                <a href="javascript:void(0)" data-container="body"  data-toggle="popover" data-placement="top" data-content="{{$service->name}}">
+                                <a href="javascript:void(0)" data-container="body" data-toggle="popover"
+                                   data-placement="top" data-content="{{$service->name}}">
                                     {{\Str::limit($service->name, 30)}}
                                 </a></td>
                             <td class="text-center">{{ $service->category }}</td>
                             <td class="text-center">
-{{--                            <span--}}
-{{--                                class="badge badge-pill {{ $service->dripfeed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->dripfeed == 0 ? 'Inactive' : 'Active' }}</span>--}}
+                                {{--                            <span--}}
+                                {{--                                class="badge badge-pill {{ $service->dripfeed == 0 ? 'badge-danger' : 'badge-success' }}">{{ $service->dripfeed == 0 ? 'Inactive' : 'Active' }}</span>--}}
                             </td>
                             <td class="text-center">
                                 <div class="dropdown show">
-                                    <a class="dropdown-toggle" href="javascript:void(0)" id="dropdownMenuLink" data-toggle="dropdown"
+                                    <a class="dropdown-toggle" href="javascript:void(0)" id="dropdownMenuLink"
+                                       data-toggle="dropdown"
                                        aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <a href="javascript:void(0)" class="dropdown-item import-single" data-toggle="modal"
+                                        <a href="javascript:void(0)" class="dropdown-item import-single"
+                                           data-toggle="modal"
                                            data-target="#importMoldal"
                                            data-route="{{ route('admin.api.service.import',['id'=>$service->service,'name'=>$service->name,'category'=>$service->category,'rate'=>$service->rate,'min'=>$service->min,'max'=>$service->max,'dripfeed'=>0, 'provider'=>$provider->id]) }}">
                                             <i class="fas fa-plus text-success pr-2"></i> @lang('Add Service')</a>
@@ -84,7 +89,7 @@
                         <div class="form-group">
                             <label>@lang('Select Category')</label>
                             <select class="form-control" name="category_id">
-                                <option  selected>@lang('Select Category')</option>
+                                <option selected>@lang('Select Category')</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->category_title }} </option>
                                 @endforeach

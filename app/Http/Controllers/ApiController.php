@@ -49,7 +49,7 @@ class ApiController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $actionList = ['balance', 'services', 'add', 'status', 'orders', 'categories', 'player','check_sms','sync_orders'];
+        $actionList = ['balance', 'services', 'add', 'status', 'orders', 'categories', 'player','smscode','sync_orders'];
         if (!in_array($req['action'], $actionList)) {
             return response()->json(['errors' => ['action' => trans("Invalid request action")]], 422);
         }
@@ -168,11 +168,11 @@ class ApiController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            $result = $this->placeOrder($req, $user);
+            $result = app('App\Http\Controllers\User\OrderController')->store($request, $user);
             return $result;
         }
         //Check SMS
-        elseif (strtolower($req['action']) == 'check_sms') {
+        elseif (strtolower($req['action']) == 'smscode') {
             $validator = Validator::make($req, [
                 'order' => 'required'
             ]);
@@ -468,6 +468,22 @@ EOT;
             $info = curl_getinfo($ch);
             curl_close($ch);
 //            $response='{"Code": 1, "Status": "1 - عملية التحويل تمت بنجاح", "OrderId": 123, "PlayerNumber": "123456", "PlayerName": "PlayerName", "BalanceBefor": 10, "BalanceAfter": 9.5, "Value1": 1, "Value2":-0.5}';
+        }
+        else
+        {
+            $this->base_url = $apiproviderdata->url;
+            $params = [
+                'key' => $apiproviderdata->api_key,
+                'action' => 'add',
+                'service' => $service->api_service_id,
+                'link' => @$playerId,
+                'quantity' => $quantity,
+                'runs' => 1,
+                'interval' => 1
+
+            ];
+            $response=Curl::to($this->base_url)
+                ->withData($params)->post();
         }
         return json_decode($response, true);
     }
