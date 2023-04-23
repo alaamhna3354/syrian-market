@@ -421,7 +421,7 @@ class ApiProviderController extends Controller
             $response = json_decode($response, 1);
             if (isset($response['status']) && $response['status'] == 'success') {
                 $code = $response['smsCode'];
-                if (isset($code)) {
+                if (isset($code) && $order->status != 'completed') {
                     $res = (new OrderController(new PointsService()))->finish5SImOrder($order->id, $response);
                 }
                 return $code;

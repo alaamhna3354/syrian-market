@@ -81,6 +81,7 @@ class UpdateApiOrdersStatus extends Command
         curl_setopt($ch, CURLOPT_URL, $as7abprovider->url . "bulkOrderStatus/");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
             "Authorization: Bearer " . $as7abprovider->api_key

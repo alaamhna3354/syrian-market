@@ -140,10 +140,16 @@ class OrderController extends Controller
         ];
 
         $service = Service::userRate()->findOrFail($request->service);
+        if (!$service) {
+            return response()->json(['errors' => ['message' => trans("Invalid Service")]], 422);
+        }
         if ($service->category->type == 'CODE') {
             $serviceCode = $service->service_code->where('is_used', 0)->first();
             if ($serviceCode == null) {
-                return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
+                if ($apiUser)
+                    return response()->json(['errors' => ['message' => trans("No Code Available ,Please Contact with Support To Order Code.")]], 422);
+                else
+                    return back()->with('error', trans("No Code Available ,Please Contact with Support To Order Code."))->withInput();
             }
         }
         $user = $apiUser ? $apiUser : Auth::user();
@@ -228,7 +234,7 @@ class OrderController extends Controller
                 }
 
             } elseif ($service->category->type == 'GAME') {
-                $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . $req['player_name'] . trans(', and Service Id is ') . $req['service'];
+                $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . @$req['player_name'] . trans(', and Service Id is ') . $req['service'];
             } elseif ($service->category->type == '5SIM') {
                 $codes = (new ApiProviderController)->fivesim($service->api_service_params);
                 if ($codes == 0)
@@ -246,7 +252,6 @@ class OrderController extends Controller
                 $order->order_id_api = $apidata['order'];
                 $order->status = 'code-waiting';
             }
-
             $order->save();
 
 ////////////////////////            change Price Range     /////////////////////////////
@@ -327,8 +332,8 @@ class OrderController extends Controller
             $result['order'] = $order->id;
             $result['code'] = $order->code;
             $result['details'] = $order->details;
-            $result['order_status']=$order->status;
-            $result['price']= $order->price;
+            $result['order_status'] = $order->status;
+            $result['price'] = $order->price;
             $msg = [
                 'username' => $user->username,
                 'price' => $price,
@@ -620,9 +625,10 @@ class OrderController extends Controller
             $order_token = (string)Str::orderedUuid();
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, "https://private-anon-4f7942c0cb-as7abcard.apiary-proxy.com/api/v1/createOrder/");
+            curl_setopt($ch, CURLOPT_URL, "https://as7abcard.com/api/v1/createOrder/");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             if ($service->api_service_params == 'amount') {
                 $fields = <<<EOT
             {
@@ -665,11 +671,12 @@ EOT;
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
             curl_close($ch);
+            Log::channel('cronjob')->info($response);
 
 // var_dump($info["http_code"]);
 // dd($response);
         } elseif ($apiproviderdata->id == 2) {
-            $playerName= (new CustomProviderController)->getPlayerName($playerId,$service->category->slug);
+            $playerName = (new CustomProviderController)->getPlayerName($playerId, $service->category->slug);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $apiproviderdata->url . "RequestOrder?API={$apiproviderdata->api_key}&productId={$service->api_service_id}&amount=$quantity&playernumber=$playerId&playername=" . str_replace(' ', '%20', $playerName));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
