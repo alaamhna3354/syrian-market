@@ -339,9 +339,9 @@ class OrderController extends Controller
                 } else
                     DB::rollback();
                 if ($apiUser)
-                    return response()->json(['errors' => ['message' => trans("حاول لاحقا او تواصل مع مدير الموقع")]], 422);
+                    return response()->json(['errors' => ['message' => trans("يرجى التواصل مع مدير الموقع")]], 422);
                 else
-                    return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
+                    return back()->with('error', trans("يرجى التواصل مع مدير الموقع"))->withInput();
             }
             $result['status'] = 'success';
             $result['order'] = $order->id;
@@ -754,7 +754,7 @@ EOT;
     public function sendOrderErrorNotification($order)
     {
         $msg = [
-            'username' => $order->user->username,
+            'username' => $order->users->username,
             'price' => $order->price,
             'currency' => 'نتبه يوجد خطأ في الطلب وتم تنفيذه على المزود البعيد يجب استرجاع الطلب من المزود البعيد او خصم قيمة الطلب بشكل يدوي من المسخدم '
         ];

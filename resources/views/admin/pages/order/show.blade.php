@@ -34,7 +34,7 @@
                     </thead>
                     <tbody>
                     @foreach($orders as $order)
-                        <tr>
+                        <tr @if($order->agree ==1) style="background: red" @endif>
                             {{--<td class="text-center">--}}
                             {{--<input type="checkbox" id="chk-{{ $order->id }}"--}}
                             {{--class="form-check-input row-tic tic-check"--}}

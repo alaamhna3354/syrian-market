@@ -11,13 +11,13 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
-
                         <div class="form-group">
                             <label class="control-label" for="category_id">@lang('Category')</label>
                             <select class="form-control" id="category" name="category_id" disabled>
                                 @foreach($categories as $category)
                                     <option
-                                            value="{{$category->id}}" {{ ($order->category_id == $category->id) ? 'selected' : ''}}>{{ $category->category_title  }}</option>
+                                            value="{{$category->id}}" {{ ($order->category_id == $category->id) ? 'selected' : ''}}>{{ $category->category_title  }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -48,12 +48,10 @@
                                    placeholder="start counter" class="form-control" disabled>
                             <div class="invalid-feedback">@lang('Please fill in the link')</div>
                         </div>
-
                         <div class="form-group ">
                             <label>@lang('Status Description')</label>
                             <textarea class="form-control" disabled>{{ $order->status_description }}</textarea>
                         </div>
-
                     </div>
                     <div class="col-md-6">
                         <div class="form-group ">
@@ -61,7 +59,6 @@
                             <input type="text" name="link" value="{{ old('link',$order->link) }}"
                                    placeholder="www.example.com/your_profile_identity" class="form-control">
                         </div>
-
                         <div class="form-group ">
                             <label>@lang('Interval')</label>
                             <input type="number" name="interval" value="{{ old('interval',$order->interval) }}"
@@ -73,7 +70,6 @@
                             <input type="number" name="remains" value="{{ old('remains',$order->remains) }}"
                                    placeholder="remains" class="form-control">
                         </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -82,7 +78,6 @@
                                            value="{{ old('start_counter',$order->start_counter) }}">
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>@lang('API Order ID')</label>
@@ -91,8 +86,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="form-group">
                             <label>@lang('Change Status')</label>
                             <select class="form-control" id="status" name="status">
@@ -125,17 +118,12 @@
                             <label>@lang('Note')</label>
                             <textarea class="form-control" name="reason">{{ $order->reason }}</textarea>
                         </div>
-
                     </div>
-
                 </div>
-
                 <div class="submit-btn-wrapper mt-md-5 text-center text-md-left">
-
                     <button type="submit" class=" btn  btn-primary btn-block mt-3">
                         <span>@lang('Submit')</span></button>
                 </div>
-
             </form>
 
         </div>
