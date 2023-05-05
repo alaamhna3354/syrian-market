@@ -21,6 +21,7 @@ use App\Services\PointsService;
 use CoinGate\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -178,155 +179,169 @@ class OrderController extends Controller
                 else
                     return back()->with('error', trans("Insufficient balance in your wallet."))->withInput();
             }
-            $order = new Order();
-            $order->user_id = $user->id;
-            $order->category_id = @$service->category->id;
-            $order->service_id = $req['service'];
-            $order->link = $req['link'];
-            $order->quantity = $req['quantity'];
-            $order->status = 'processing';
-            $order->price = $price;
-            $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
-            $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
-            //////////////////////   place Order from custom provider ////////////////////////////
-            if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
-                $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'], @$req['player_name']);
-                if ($service->api_provider_id == 1) {
-                    if (isset($apidata['orderid'])) {
-                        $order->status_description = "order: {$apidata['orderid']}";
-                        $order->api_order_id = $apidata['orderid'];
-                    } else {
+            DB::beginTransaction();
+            try {
+                $order = $this->createNewOrder($req, $user, $service, $price);
+                //////////////////////   place Order from custom provider ////////////////////////////
+                if (isset($service->api_provider_id) && $service->api_provider_id != 0) {
+                    $apidata = $this->placeOrderFromCustomApiProvider($service, $quantity, $req['link'], @$req['player_name']);
+                    if ($service->api_provider_id == 1) {
                         if ($apiUser)
-                            return response()->json(['errors' => ['message' => trans("This service is currently unavailable, try again later.")]], 422);
-                        else
-                            return back()->with('error', trans("This service is currently unavailable, try again later."))->withInput();
-                        // $order->status_description = "error: {$apidata['message']}";
-                    }
-                } elseif ($service->api_provider_id == 2) {
-                    if (isset($apidata['code']) && $apidata['code'] == 1) {
-                        $order->status_description = "order: {$apidata['orderId']}";
-                        $order->api_order_id = $apidata['orderId'];
-                    } else {
-                        if ($apiUser)
-                            return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
-                        else
-                            return back()->with('error', "error" . @$apidata['status'])->withInput();
-                        // $order->status_description = "error: {$apidata['message']}";
-                    }
-                } elseif ($service->api_provider_id == 3) {
-                    if (isset($apidata['status']) && $apidata['status'] == "success") {
-                        $order->status_description = "order: {$apidata['order']}";
-                        $order->api_order_id = $apidata['order'];
-                    } else {
-                        if ($apiUser)
-                            return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
-                        else
-                            return back()->with('error', "error" . @$apidata['status'])->withInput();
-                        // $order->status_description = "error: {$apidata['message']}";
+                            Log::channel('cronjob')->info(json_encode($apidata));
+                        if (isset($apidata['orderid'])) {
+                            $order->status_description = "order: {$apidata['orderid']}";
+                            $order->api_order_id = $apidata['orderid'];
+                        } else {
+                            if ($apiUser)
+                                return response()->json(['errors' => ['message' => trans("This service is currently unavailable, try again later.")]], 422);
+                            else
+                                return back()->with('error', trans("This service is currently unavailable, try again later."))->withInput();
+                            // $order->status_description = "error: {$apidata['message']}";
+                        }
+                    } elseif ($service->api_provider_id == 2) {
+                        if (isset($apidata['code']) && $apidata['code'] == 1) {
+                            $order->status_description = "order: {$apidata['orderId']}";
+                            $order->api_order_id = $apidata['orderId'];
+                        } else {
+                            if ($apiUser)
+                                return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
+                            else
+                                return back()->with('error', "error" . @$apidata['status'])->withInput();
+                            // $order->status_description = "error: {$apidata['message']}";
+                        }
+                    } elseif ($service->api_provider_id == 3) {
+                        if (isset($apidata['status']) && $apidata['status'] == "success") {
+                            $order->status_description = "order: {$apidata['order']}";
+                            $order->api_order_id = $apidata['order'];
+                        } else {
+                            if ($apiUser)
+                                return response()->json(['errors' => ['message' => @$apidata['status']]], 422);
+                            else
+                                return back()->with('error', "error" . @$apidata['status'])->withInput();
+                            // $order->status_description = "error: {$apidata['message']}";
+                        }
                     }
                 }
-            }
-            ////////////////////// End  place Order from custom provider ////////////////////////////
-            if ($service->category->type == 'CODE') {
-                $serviceCode = $service->service_code->where('is_used', 0)->first();
-                if ($serviceCode != null) {
-                    $order->code = trans('Service code is : ') . $serviceCode->code . trans(', and id is ') . $serviceCode->id;
-                }
+                ////////////////////// End  place Order from custom provider ////////////////////////////
+                if ($service->category->type == 'CODE') {
+                    $serviceCode = $service->service_code->where('is_used', 0)->first();
+                    if ($serviceCode != null) {
+                        $order->code = trans('Service code is : ') . $serviceCode->code . trans(', and id is ') . $serviceCode->id;
+                    }
 
-            } elseif ($service->category->type == 'GAME') {
-                $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . @$req['player_name'] . trans(', and Service Id is ') . $req['service'];
-            } elseif ($service->category->type == '5SIM') {
-                $codes = (new ApiProviderController)->fivesim($service->api_service_params);
-                if ($codes == 0)
-                    if ($apiUser)
-                        return response()->json(['errors' => ['message' => trans("حاول لاحقا او تواصل مع مدير الموقع")]], 422);
-                    else
-                        return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
-                else {
-                    $order->code = $codes['phone'];
-                    $order->order_id_api = $codes['id'];
+                } elseif ($service->category->type == 'GAME') {
+                    $order->details = trans('Player Id is : ') . "<span id='number' style=\"color:blue\" onclick='copy(" . $req['link'] . ")' >" . $req['link'] . "</span>" . trans(', and Name is ') . @$req['player_name'] . trans(', and Service Id is ') . $req['service'];
+                } elseif ($service->category->type == '5SIM') {
+                    $codes = (new ApiProviderController)->fivesim($service->api_service_params);
+                    if ($codes == 0)
+                        if ($apiUser)
+                            return response()->json(['errors' => ['message' => trans("حاول لاحقا او تواصل مع مدير الموقع")]], 422);
+                        else
+                            return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
+                    else {
+                        $order->code = $codes['phone'];
+                        $order->order_id_api = $codes['id'];
+                        $order->status = 'code-waiting';
+                    }
+                } elseif ($service->category->type == 'NUMBER') {
+                    $order->code = $apidata['link'];
+                    $order->order_id_api = $apidata['order'];
                     $order->status = 'code-waiting';
                 }
-            } elseif ($service->category->type == 'NUMBER') {
-                $order->code = $apidata['link'];
-                $order->order_id_api = $apidata['order'];
-                $order->status = 'code-waiting';
-            }
-            $order->save();
+
+                $order->save();
 
 ////////////////////////            change Price Range     /////////////////////////////
-            if ($user->is_const_price_range == 0) {
-                $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
+                if ($user->is_const_price_range == 0) {
+                    $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
 //                dd($lastUserPriceRange);
-                if ($lastUserPriceRange != null) {
-                    $lastUserPriceRange->total += $price;
-                    $lastUserPriceRange->save();
-                } else {
-                    $total = $price;
-                    $userPriceRange = new UserPriceRange();
-                    $userPriceRange->user_id = $user->id;
-                    $userPriceRange->price_range_id = $user->price_range_id;
-                    $userPriceRange->price_range_type = '+';
-                    $userPriceRange->total = $total;
-                    $userPriceRange->save();
-                }
-                $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
-                $current_user_price_range = $user->priceRange;
-                $nextPriceRange = PriceRange::find($current_user_price_range->id + 1);
-                if ($nextPriceRange != null) {
-                    if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount) {
+                    if ($lastUserPriceRange != null) {
+                        $lastUserPriceRange->total += $price;
+                        $lastUserPriceRange->save();
+                    } else {
+                        $total = $price;
                         $userPriceRange = new UserPriceRange();
                         $userPriceRange->user_id = $user->id;
                         $userPriceRange->price_range_id = $user->price_range_id;
                         $userPriceRange->price_range_type = '+';
-                        $userPriceRange->total = 0;
+                        $userPriceRange->total = $total;
                         $userPriceRange->save();
-                        $user->price_range_id = $nextPriceRange->id;
-                        $user->save();
+                    }
+                    $lastUserPriceRange = UserPriceRange::where('user_id', $user->id)->orderBy('id', 'desc')->first();
+                    $current_user_price_range = $user->priceRange;
+                    $nextPriceRange = PriceRange::find($current_user_price_range->id + 1);
+                    if ($nextPriceRange != null) {
+                        if ($lastUserPriceRange->total >= $nextPriceRange->min_total_amount) {
+                            $userPriceRange = new UserPriceRange();
+                            $userPriceRange->user_id = $user->id;
+                            $userPriceRange->price_range_id = $user->price_range_id;
+                            $userPriceRange->price_range_type = '+';
+                            $userPriceRange->total = 0;
+                            $userPriceRange->save();
+                            $user->price_range_id = $nextPriceRange->id;
+                            $user->save();
 
-                        $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
-                            'thisLevel' => $nextPriceRange->name,
-                            'lastLevel' => $current_user_price_range->name,
+                            $this->sendMailSms($user, 'CHANGE_USER_LEVEL', [
+                                'thisLevel' => $nextPriceRange->name,
+                                'lastLevel' => $current_user_price_range->name,
 
-                        ]);
-                        $msg = [
-                            'username' => $user->username,
-                            'level' => $nextPriceRange->name,
-                            'status' => "promoted"
-                        ];
-                        $action = [
-                            "link" => route('admin.user-edit', $user->id),
-                            "icon" => "fas fa-plus text-white"
-                        ];
-                        $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
-                        $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                            ]);
+                            $msg = [
+                                'username' => $user->username,
+                                'level' => $nextPriceRange->name,
+                                'status' => "promoted"
+                            ];
+                            $action = [
+                                "link" => route('admin.user-edit', $user->id),
+                                "icon" => "fas fa-plus text-white"
+                            ];
+                            $this->adminPushNotification('CHANGE_LEVEL', $msg, $action);
+                            $this->userPushNotification($user, 'CHANGE_LEVEL', $msg, $action);
+                        }
                     }
                 }
-            }
 
 ////////////////////////            End change Price Range     /////////////////////////////
 
-            if ($service->category->type != '5SIM' && $service->category->type != 'NUMBER') {
-                $user->balance -= $price;
-                $user->save();
-                $transaction = new Transaction();
-                $transaction->user_id = $user->id;
-                $transaction->trx_type = '-';
-                $transaction->amount = $price;
-                $transaction->remarks = 'Place order';
-                $transaction->trx_id = strRandom();
-                $transaction->charge = 0;
-                $transaction->save();
-                if ($service->points > 0)
-                    $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' . $service->category->category_title . ' > ' . $service->id . ' QTY ' . $order->quantity, $order->id);
-                if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
-                    $commision = new AgentCommissionRate();
-                    $rate = $service->agent_commission_rate;
-                    $commision->user_id = $user->parent->id;
-                    $commision->order_id = $order->id;
-                    $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
-                    $commision->save();
+                if ($service->category->type != '5SIM' && $service->category->type != 'NUMBER') {
+                    $user->balance -= $price;
+                    $user->save();
+                    $transaction = new Transaction();
+                    $transaction->user_id = $user->id;
+                    $transaction->trx_type = '-';
+                    $transaction->amount = $price;
+                    $transaction->remarks = 'Place order';
+                    $transaction->trx_id = strRandom() .'_' . $order->id;
+                    $transaction->charge = 0;
+                    $transaction->save();
+                    $order->balance_after = $user->balance;
+                    $order->transaction_id = $transaction->id;
+                    $order->save();
+                    if ($service->points > 0)
+                        $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' . $service->category->category_title . ' > ' . $service->id . ' QTY ' . $order->quantity, $order->id);
+                    if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
+                        $commision = new AgentCommissionRate();
+                        $rate = $service->agent_commission_rate;
+                        $commision->user_id = $user->parent->id;
+                        $commision->order_id = $order->id;
+                        $commision->commission_rate = ($service->price * $rate / 100) * $quantity;
+                        $commision->save();
+                    }
                 }
+                DB::commit();
+            } catch (\Exception $e) {
+                if ($order->api_order_id) {
+                    $order->agree = 1;
+                    $order->reason = $e->getMessage();
+                    $order->save();
+                    DB::commit();
+                    $this->sendOrderErrorNotification($order);
+                } else
+                    DB::rollback();
+                if ($apiUser)
+                    return response()->json(['errors' => ['message' => trans("حاول لاحقا او تواصل مع مدير الموقع")]], 422);
+                else
+                    return back()->with('error', trans("حاول لاحقا او تواصل مع مدير الموقع"))->withInput();
             }
             $result['status'] = 'success';
             $result['order'] = $order->id;
@@ -699,6 +714,7 @@ EOT;
             ];
             $response = Curl::to($this->base_url)
                 ->withData($params)->post();
+            Log::channel('cronjob')->info($response);
 //            $response ='{"status":"success","order":37,"link":"15793308141"}';
 //            $url = $this->base_url;
 //            curl_setopt($ch, CURLOPT_URL, $url);
@@ -717,5 +733,35 @@ EOT;
 //            }
         }
         return json_decode($response, true);
+    }
+
+    public function createNewOrder($req, $user, $service, $price)
+    {
+        $order = new Order();
+        $order->user_id = $user->id;
+        $order->category_id = @$service->category->id;
+        $order->service_id = $req['service'];
+        $order->link = $req['link'];
+        $order->quantity = $req['quantity'];
+        $order->status = 'processing';
+        $order->price = $price;
+        $order->runs = isset($req['runs']) && !empty($req['runs']) ? $req['runs'] : null;
+        $order->interval = isset($req['interval']) && !empty($req['interval']) ? $req['interval'] : null;
+        $order->balance_before = $user->balance;
+        return $order;
+    }
+
+    public function sendOrderErrorNotification($order)
+    {
+        $msg = [
+            'username' => $order->user->username,
+            'price' => $order->price,
+            'currency' => 'نتبه يوجد خطأ في الطلب وتم تنفيذه على المزود البعيد يجب استرجاع الطلب من المزود البعيد او خصم قيمة الطلب بشكل يدوي من المسخدم '
+        ];
+        $action = [
+            "link" => route('admin.order.edit', $order->id),
+            "icon" => "fas fa-cart-plus text-white"
+        ];
+        $this->adminPushNotification('ORDER_CREATE', $msg, $action);
     }
 }
