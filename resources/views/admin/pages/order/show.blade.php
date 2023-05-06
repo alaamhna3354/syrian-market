@@ -20,10 +20,11 @@
                         <th scope="col" style="width: 10%">@lang('User')</th>
                         <th scope="col" style="width: 15%">@lang('Order Details')</th>
                         <th scope="col" style="width: 15%">@lang('Service Details')</th>
-                        <th scope="col" style="width: 15%">@lang('Codes')</th>
+                        <th scope="col" style="width: 10%">@lang('Codes')</th>
                         <th scope="col" style="width: 15%">@lang('Details')</th>
                         <th scope="col" style="width: 10%">@lang('Created')</th>
                         <th scope="col" style="width: 10%">@lang('Status')</th>
+                        <th scope="col" style="width: 10%">@lang('Balance')</th>
                         <th scope="col" style="width: 10%">@lang('Execution Time')</th>
                         @if(auth()->user()->role=='Super' || auth()->user()->role=='Admin')
                             <th scope="col" style="width: 10%">@lang('Executed By')</th>
@@ -33,7 +34,7 @@
                     </thead>
                     <tbody>
                     @foreach($orders as $order)
-                        <tr>
+                        <tr @if($order->agree ==1) style="background: red" @endif>
                             {{--<td class="text-center">--}}
                             {{--<input type="checkbox" id="chk-{{ $order->id }}"--}}
                             {{--class="form-check-input row-tic tic-check"--}}
@@ -57,7 +58,7 @@
                                 {{--@lang('Start counter'):--}}
                                 {{--<br>--}}
                                 <span
-                                        onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional(@$order->service)->category->category_title)')">
+                                    onclick="copy('{{$order->service->service_title}} \n @lang('Link'): @lang($order->link)\n @lang('Quantity'): @lang($order->quantity)  \n @lang('Category'): @lang(optional(@$order->service)->category->category_title)')">
                                     <i class="fa fa-copy" style="font-size: 25px;"></i>
                                 </span>
                             </td>
@@ -75,26 +76,40 @@
                             <td data-label="@lang('Details')">{!!  $order->details!!}</td>
                             <td data-label="@lang('Created')">{{dateTime($order->created_at , 'd M Y, h:i A')}} </td>
                             <td data-label="@lang('Status')">
-                                @if($order->status=='awaiting') <span
+                                @if($order->status=='awaiting')
+                                    <span
                                         class="badge badge-pill badge-warning">{{'Awaiting'}}</span>
-                                @elseif($order->status == 'pending') <span
+                                @elseif($order->status == 'pending')
+                                    <span
                                         class="badge badge-pill badge-info">{{'Pending'}}</span>
-                                @elseif($order->status == 'processing') <span
+                                @elseif($order->status == 'processing')
+                                    <span
                                         class="badge badge-pill badge-info">{{'Processing'}}</span>
-                                @elseif($order->status == 'progress') <span
+                                @elseif($order->status == 'progress')
+                                    <span
                                         class="badge badge-pill badge-warning">{{'In progress'}}</span>
-                                @elseif($order->status == 'completed') <span
+                                @elseif($order->status == 'completed')
+                                    <span
                                         class="badge badge-pill badge-success">{{'Completed'}}</span>
-                                @elseif($order->status == 'partial') <span
+                                @elseif($order->status == 'partial')
+                                    <span
                                         class="badge badge-pill badge-warning">{{'Partial'}}</span>
-                                @elseif($order->status == 'canceled') <span
+                                @elseif($order->status == 'canceled')
+                                    <span
                                         class="badge badge-pill badge-danger">{{'Canceled'}}</span>
-                                @elseif($order->status == 'refunded') <span
+                                @elseif($order->status == 'refunded')
+                                    <span
                                         class="badge badge-pill badge-danger">{{'Refunded'}}</span>
-                                @elseif($order->status == 'code-waiting') <span
+                                @elseif($order->status == 'code-waiting')
+                                    <span
                                         class="badge badge-pill badge-danger">{{'Waiting for Code'}}</span>
                                 @endif
                             </td>
+                            @if($order->balance_before)
+                                <td data-label="@lang('Balance')">@lang('Before :'){{$order->balance_before }} <br>
+                                    @lang('After :'){{$order->balance_after }}
+                                </td>
+                            @endif
                             <td data-label="@lang('Execution Time')">{{$order->execution_time ? $order->execution_time. ' '. __('Second') : ' '}} </td>
                             @if(auth()->user()->role=='Super' || auth()->user()->role=='Admin')
                                 <td data-label="@lang('Executed by')">{{ @$order->admin->name }} </td>
@@ -108,8 +123,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <a class="dropdown-item"
                                            href="{{ route('admin.order.edit',[$order->id]) }}"><i
-                                                    class="fa fa-edit text-warning pr-2"
-                                                    aria-hidden="true"></i> @lang('Edit')
+                                                class="fa fa-edit text-warning pr-2"
+                                                aria-hidden="true"></i> @lang('Edit')
                                         </a>
                                         <a href="javascript:void(0)" class="dropdown-item status-change"
                                            data-toggle="modal"

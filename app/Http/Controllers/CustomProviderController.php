@@ -51,7 +51,7 @@ class CustomProviderController extends Controller
         $url = $provider->url . self::getPlayerNameUrl . '?playerid=' . $playerId . '&game=' . $game;
         $ashabResponse = $this->ashabCurl($url, $header);
         if ($ashabResponse) {
-            if ($ashabResponse['result'] == 'success') {
+            if (isset($ashabResponse['result']) && $ashabResponse['result'] == 'success') {
                 return $ashabResponse['playername'];
             } else {
                 return 'error';

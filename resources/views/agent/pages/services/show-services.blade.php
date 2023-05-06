@@ -133,6 +133,16 @@
                         <input type="text" name="link"
                                placeholder="{{$category->special_field}}" required>
                     </div>
+                    @elseif($category->type == "SMM")
+                     <div class=" col-10  mb-2">
+                        <label for="player_number">الرابط</label>
+                        <input type="text" name="link"  placeholder="" required
+                               oninvalid="setCustomValidity('أدخل رابط الحساب ')"
+                               onchange="try{setCustomValidity('')}catch(e){}">
+                        <div class="vald-player-number"></div>
+                        <div class="vald-player-number">@lang('أخل رابط الحساب من فضلك')</div>
+                    </div>
+                   
                 @else
                     <input type="hidden" name="link" value="">
                 @endif

@@ -685,6 +685,7 @@ class HomeController extends Controller
         $basic = (object)config('basic');
         $finish = 0 ;
         $is_first_level = 0;
+         $move_to_next =1;
         if ($thisLevel->id == 1){
             $is_first_level = 1;
         }
