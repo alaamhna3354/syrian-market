@@ -9,38 +9,35 @@
     <section id="policy">
         <div class="container">
             <h4 class="h4 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.1s">@lang(@$title)</h4>
-
         </div>
-
-
         <!--API DETAILS-->
         <div class="container ">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card api-details">
+                    <div class="card api-details" style="background-color: #0b0b0b">
                         <div class="card-header">
 
-                            <h5 class="card-title text-white">@lang('API DETAILS')</h5>
+                            <h5 class="card-title text-white">API DETAILS</h5>
                         </div>
                         <div class="card-body content">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h6>@lang('API URL')</h6>
+                                    <h6>API URL</h6>
                                     <p>{{ route('userApiKey') }}</p>
                                 </div>
                                 <div class="col-sm-12">
-                                    <h6>@lang('API KEY')</h6>
+                                    <h6> API KEY </h6>
                                     <p>
-                                        @lang('Your API Key')
+                                         Your API Key
                                     </p>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h6>@lang('HTTP METHOD')</h6>
-                                    <p>@lang('POST')</p>
+                                    <h6> HTTP METHOD </h6>
+                                    <p> POST </p>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h6>@lang('RESPONSE FORMAT')</h6>
-                                    <p>@lang('JSON')</p>
+                                    <h6> RESPONSE FORMAT </h6>
+                                    <p> JSON </p>
                                 </div>
                             </div>
                         </div>
@@ -54,61 +51,51 @@
         <div class="container ">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card api-details mb-0">
+                    <div class="card api-details mb-0" style="background-color: #0b0b0b">
                         <div class="card-header">
 
-                        <h5 class="card-title text-white">@lang('PLACE NEW ORDER')</h5>
+                        <h5 class="card-title text-white"> PLACE NEW ORDER </h5>
                         </div>
                         <div class="card-body content">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('key')</h6>
-                                    <p>@lang('Your API key')</p>
+                                    <h6 class="text-lowercase"> key </h6>
+                                    <p> Your API key </p>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('action')</h6>
+                                    <h6 class="text-lowercase"> action </h6>
                                     <p>
-                                        @lang('add')
+                                         add
                                     </p>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('service')</h6>
-                                    <p>@lang('Service ID')</p>
+                                    <h6 class="text-lowercase"> service </h6>
+                                    <p> Service ID </p>
                                 </div>
                                 <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('link')</h6>
-                                    <p>@lang('Link to page')</p>
+                                    <h6 class="text-lowercase"> link </h6>
+                                    <p> Link to page,player name or account number </p>
+                                    <p>if null keep it -1</p>
                                 </div>
 
                                 <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('quantity')</h6>
-                                    <p>@lang('Needed quantity')</p>
+                                    <h6 class="text-lowercase"> quantity </h6>
+                                    <p> Needed quantity </p>
                                 </div>
-
-                                <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('runs')
-                                        <small class="text-muted">@lang('(optional)')</small>
-                                    </h6>
-                                    <p>@lang('Runs to deliver')</p>
-                                </div>
-
-                                <div class="col-sm-3">
-                                    <h6 class="text-lowercase">@lang('interval')
-                                        <small class="text-muted">@lang('(optional)')</small>
-                                    </h6>
-                                    <p>@lang('Interval in minutes')</p>
-                                </div>
-
 
                             </div>
                         </div>
                     </div>
                     <div class="api-code mt-2 mb-5">
                         <p class="text-success">//Example response</p>
-                        <pre class="text-white">
+                        <pre class="text">
 {
     "status": "success",
-    "order": 116
+    "order": 12,
+    "code": null,
+    "details": null,
+    "order_status": "processing",
+    "price": 0.32
 }
 </pre>
                     </div>
@@ -122,26 +109,26 @@
         <div class="container ">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card api-details mb-0">
+                    <div class="card api-details mb-0" style="background-color: #0b0b0b">
                         <div class="card-header">
 
-                        <h5 class="card-title text-white">@lang('STATUS ORDER')</h5>
+                        <h5 class="card-title text-white"> STATUS ORDER </h5>
                         </div>
                         <div class="card-body content">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('key')</h6>
-                                    <p>@lang('Your API key')</p>
+                                    <h6 class="text-lowercase"> key </h6>
+                                    <p> Your API key </p>
                                 </div>
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('action')</h6>
+                                    <h6 class="text-lowercase"> action </h6>
                                     <p>
-                                        @lang('status')
+                                         status
                                     </p>
                                 </div>
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('order')</h6>
-                                    <p>@lang('Order ID')</p>
+                                    <h6 class="text-lowercase"> order </h6>
+                                    <p> Order ID </p>
                                 </div>
 
 
@@ -151,13 +138,14 @@
 
                     <div class="api-code mt-2 mb-5">
                         <p class="text-success">//Example response</p>
-                        <pre class="text-white">
+                        <pre class="text">
 {
-    "status": "processing",
-    "charge": "3.60",
-    "start_count": 0,
-    "remains": 0,
-    "currency": "BDT"
+    "status": "completed",
+    "currency": "USD",
+    "order": 33200,
+    "code": "12899088888",
+    "details": null,
+    "price": 1
 }
 </pre>
                     </div>
@@ -168,90 +156,90 @@
 
 
 
-        <!--MULTIPLE STATUS ORDER-->
-        <div class="container ">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card api-details mb-0">
-                        <div class="card-header">
+{{--        <!--MULTIPLE STATUS ORDER-->--}}
+{{--        <div class="container ">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-md-12">--}}
+{{--                    <div class="card api-details mb-0" style="background-color: #0b0b0b">--}}
+{{--                        <div class="card-header">--}}
 
-                        <h5 class="card-title text-white">@lang('MULTIPLE STATUS ORDER')</h5>
-                        </div>
-                        <div class="card-body content">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('key')</h6>
-                                    <p>@lang('Your API key')</p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('action')</h6>
-                                    <p>
-                                        @lang('status')
-                                    </p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('orders')</h6>
-                                    <p>@lang('Order IDs separated by comma (array data)')</p>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="api-code mt-2 mb-5">
-                        <p class="text-danger">//Response (error)</p>
-                        <pre class="text-white">{
-    "errors": {
-        "key": ["The key field is required."],
-        "action": ["The action field is required."]
-    }
-}</pre>
+{{--                        <h5 class="card-title text-white"> MULTIPLE STATUS ORDER </h5>--}}
+{{--                        </div>--}}
+{{--                        <div class="card-body content">--}}
+{{--                            <div class="row">--}}
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <h6 class="text-lowercase"> key </h6>--}}
+{{--                                    <p> Your API key </p>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <h6 class="text-lowercase"> action </h6>--}}
+{{--                                    <p>--}}
+{{--                                         status--}}
+{{--                                    </p>--}}
+{{--                                </div>--}}
+{{--                                <div class="col-sm-4">--}}
+{{--                                    <h6 class="text-lowercase"> orders </h6>--}}
+{{--                                    <p> Order IDs separated by comma (array data) </p>--}}
+{{--                                </div>--}}
 
 
-                        <p class="text-success">//response (result)</p>
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                        <pre class="text-white">[
-    {
-        "order": 116,
-        "status": "processing",
-        "charge": "3.60",
-        "start_count": 0,
-        "remains": 0
-    },
-    {
-        "order": 117,
-        "status": "processing",
-        "charge": null,
-        "start_count": 0,
-        "remains": 0
-    }
-]</pre>
-                    </div>
+{{--                    <div class="api-code mt-2 mb-5">--}}
+{{--                        <p class="text-danger">//Response (error)</p>--}}
+{{--                        <pre class="text-white">{--}}
+{{--    "errors": {--}}
+{{--        "key": ["The key field is required."],--}}
+{{--        "action": ["The action field is required."]--}}
+{{--    }--}}
+{{--}</pre>--}}
 
-                </div>
-            </div>
-        </div>
+
+{{--                        <p class="text-success">//response (result)</p>--}}
+
+{{--                        <pre class="text-white">[--}}
+{{--    {--}}
+{{--        "order": 116,--}}
+{{--        "status": "processing",--}}
+{{--        "charge": "3.60",--}}
+{{--        "start_count": 0,--}}
+{{--        "remains": 0--}}
+{{--    },--}}
+{{--    {--}}
+{{--        "order": 117,--}}
+{{--        "status": "processing",--}}
+{{--        "charge": null,--}}
+{{--        "start_count": 0,--}}
+{{--        "remains": 0--}}
+{{--    }--}}
+{{--]</pre>--}}
+{{--                    </div>--}}
+
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
 
         <!--SERVICE LIST-->
         <div class="container ">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card api-details mb-0">
+                    <div class="card api-details mb-0" style="background-color: #0b0b0b">
                         <div class="card-header">
-                        <h5 class="card-title text-white">@lang('SERVICE LIST')</h5>
+                        <h5 class="card-title text-white"> SERVICE LIST </h5>
                         </div>
                         <div class="card-body content">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('key')</h6>
-                                    <p>@lang('Your API key')</p>
+                                    <h6 class="text-lowercase"> key </h6>
+                                    <p> Your API key </p>
                                 </div>
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('action')</h6>
+                                    <h6 class="text-lowercase"> action </h6>
                                     <p>
-                                        @lang('services')
+                                         services
                                     </p>
                                 </div>
 
@@ -261,31 +249,47 @@
 
                     <div class="api-code mt-2 mb-5">
                         <p class="text-success">//Example response</p>
-                        <pre class="text-white">[
-    {
-        "service": 1,
-        "name": "🙋‍♂️ Followers [Ultra-High Quality Profiles]",
-        "category": "🥇 [VIP]\r\n",
-        "rate": "4.80",
-        "min": 100,
-        "max": 10000
+                        <pre class="text">[
+   {
+        "service": 12,
+        "name": "325 UC",
+        "category": "pubg",
+        "category_id": {
+            "id": 1,
+            "category_title": "pubg",
+            "category_description": "لعبة بوبجي العالمية",
+            "image": "62cdeeaabe8021657663146.jpeg",
+            "status": "1",
+            "type": "GAME",
+            "special_field": null,
+            "sort": null,
+            "slug": "pubg"
+        },
+        "rate": "4.19",
+        "min": 1,
+        "max": 500,
+        "is_available": 1
     },
     {
-        "service": 11,
-        "name": "🧨 Instagram Power Comments (100k+ Accounts) ➡️ [3 Comments]",
-        "category": "💬 Instagram - Verified / Power Comments [ Own Service ]",
-        "rate": "0.60",
-        "min": 500,
-        "max": 5000
+        "service": 13,
+        "name": "660 UC",
+        "category": "pubg",
+        "category_id": {
+            "id": 1,
+            "category_title": "pubg",
+            "category_description": "لعبة بوبجي العالمية",
+            "image": "62cdeeaabe8021657663146.jpeg",
+            "status": "1",
+            "type": "GAME",
+            "special_field": null,
+            "sort": null,
+            "slug": "pubg"
+        },
+        "rate": "8.3",
+        "min": 1,
+        "max": 500,
+        "is_available": 1
     },
-    {
-        "service": 52,
-        "name": "🎙️ Facebook Live Stream Views ➡️ [ 120 Min ]",
-        "category": "🔵 Facebook - Live Stream Views\r\n",
-        "rate": "57.60",
-        "min": 50,
-        "max": 2000
-    }
 ]</pre>
                     </div>
 
@@ -298,21 +302,21 @@
         <div class="container ">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card api-details mb-0">
+                    <div class="card api-details mb-0" style="background-color: #0b0b0b">
                         <div class="card-header">
 
-                        <h5 class="card-title text-white">@lang('USER BALANCE')</h5>
+                        <h5 class="card-title text-white"> USER BALANCE </h5>
                         </div>
                         <div class="card-body content">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('key')</h6>
-                                    <p>@lang('Your API key')</p>
+                                    <h6 class="text-lowercase"> key </h6>
+                                    <p> Your API key </p>
                                 </div>
                                 <div class="col-sm-4">
-                                    <h6 class="text-lowercase">@lang('action')</h6>
+                                    <h6 class="text-lowercase"> action </h6>
                                     <p>
-                                        @lang('balance')
+                                         balance
                                     </p>
                                 </div>
 
@@ -322,7 +326,7 @@
 
                     <div class="api-code mt-2 mb-5">
                         <p class="text-success">//Example response</p>
-                        <pre class="text-white">
+                        <pre class="text">
 {
   "status": "success",
   "balance": "0.03",

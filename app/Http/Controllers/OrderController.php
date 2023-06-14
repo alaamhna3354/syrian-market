@@ -352,19 +352,19 @@ class OrderController extends Controller
         $dateSearch = $request->datetrx;
         $date = preg_match("/^[0-9]{2,4}\-[0-9]{1,2}\-[0-9]{1,2}$/", $dateSearch);
         $transaction = Transaction::with('user')->orderBy('id', 'DESC')
-            ->when($search['transaction_id'], function ($query) use ($search) {
+            ->when(@$search['transaction_id'], function ($query) use ($search) {
                 return $query->where('trx_id', 'LIKE', "%{$search['transaction_id']}%");
             })
-            ->when($search['user_name'], function ($query) use ($search) {
+            ->when(@$search['user_name'], function ($query) use ($search) {
                 return $query->whereHas('user', function ($q) use ($search) {
                     $q->where('email', 'LIKE', "%{$search['user_name']}%")
                         ->orWhere('username', 'LIKE', "%{$search['user_name']}%");
                 });
             })
-            ->when($search['remark'], function ($query) use ($search) {
+            ->when(@$search['remark'], function ($query) use ($search) {
                 return $query->where('remarks', 'LIKE', "%{$search['remark']}%");
             })
-            ->when($date == 1, function ($query) use ($dateSearch) {
+            ->when(@$date == 1, function ($query) use ($dateSearch) {
                 return $query->whereDate("created_at", $dateSearch);
             })
             ->paginate(config('basic.paginate'));

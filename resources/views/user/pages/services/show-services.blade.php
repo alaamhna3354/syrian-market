@@ -130,7 +130,7 @@
                         <div class="vald-player-number"></div>
                         <div class="vald-player-number">@lang('أخل رابط الحساب من فضلك')</div>
                     </div>
-                    
+
                 @else
                     <input type="hidden" name="link" value="">
                 @endif
@@ -280,8 +280,9 @@
                 if (itemSelected && $("#player_number").val().length != 0) {
                     $('#btn-add').addClass('disble');
                     $('#btn-add').attr("disabled", "");
+                    $('#agree').attr("disabled", "");
                 }
-            }, 10);
+            },2);
         });
         {{--"use strict";--}}
         {{--$(document).on('click', '#details', function () {--}}

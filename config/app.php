@@ -237,7 +237,7 @@ return [
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-
+        'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
 
     ],
 

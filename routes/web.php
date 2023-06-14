@@ -543,7 +543,7 @@ Route::get('/language/{code?}', 'FrontendController@language')->name('language')
 Route::get('/blog-details/{slug}/{id}', 'FrontendController@blogDetails')->name('blogDetails');
 Route::get('/blog', 'FrontendController@blog')->name('blog');
 
-Route::get('/', 'FrontendController@index')->name('home');
+Route::get('/', 'Auth\LoginController@showLoginForm')->name('home');
 Route::get('/about', 'FrontendController@about')->name('about');
 Route::get('/services', 'FrontendController@services')->name('services');
 Route::get('/service-search', 'FrontendController@serviceSearch')->name('service.search');

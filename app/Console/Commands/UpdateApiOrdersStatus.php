@@ -62,7 +62,7 @@ class UpdateApiOrdersStatus extends Command
             $this->updateLordOrders($lordOrdersIDs);
 
         $msaderOrders = Order::whereNotNull('api_order_id')
-            ->where('created_at', '>', now()->subMinutes(10))
+            ->where('created_at', '>', now()->subMinutes(25))
             ->whereHas('service', function ($q) {
                 $q->where('api_provider_id', 3);
             })
@@ -172,6 +172,7 @@ class UpdateApiOrdersStatus extends Command
         $order->status = $status;
         $order->updated_by = $order->service->api_provider->name ?? trans('Remote provider');
         $order->save();
+        // Log::channel('cronjob')->info($order->id);
     }
 
     public function updateMsaderOrders($msaderOrdersIDs)
@@ -181,16 +182,16 @@ class UpdateApiOrdersStatus extends Command
         $params = [
             'key' => $msaderProvider->api_key,
             'action' => 'orders',
-            'orders' => json_encode($msaderOrdersIDs)
+            'orders' => $msaderOrdersIDs->implode(',')
         ];
         $response=Curl::to($this->base_url)->withData($params)->post();
         $orderStatus = json_decode($response, true);
-//        Log::channel('cronjob')->info($response);
         if (isset($orderStatus[0]['order'])) {
             foreach ($orderStatus as $remoteOrder) {
                 $order = Order::where('api_order_id', '=', $remoteOrder['order'])->first();
-                if ($order && $remoteOrder['status'] != $order->status && $order->category->type != "NUMBER") {
-                    $order->update(['status' => $remoteOrder['status']]);
+                if ($order && $remoteOrder['status'] != $order->status ) {
+                    $this->statusChange($order,$remoteOrder['status']);
+
                 }
             }
         }
