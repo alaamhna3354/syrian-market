@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Traits\Notify;
 use App\Mail\SendMail;
+use App\Models\ApiProvider;
 use App\Models\Category;
 use App\Models\Content;
 use App\Models\ContentDetails;
@@ -14,7 +15,9 @@ use App\Models\PriceRange;
 use App\Models\Service;
 use App\Models\Subscriber;
 use App\Models\Template;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Ixudra\Curl\Facades\Curl;
 use Stevebauman\Purify\Facades\Purify;

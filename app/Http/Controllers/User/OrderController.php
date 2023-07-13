@@ -134,6 +134,8 @@ class OrderController extends Controller
      */
     public function store(Request $request, $apiUser = null)
     {
+         if ($this->validDelayBetweenOrders($request, $apiUser ?? Auth::user()) == false)
+            return back()->with('error', trans("حاول بعد 60 ثانية من فضلك"))->withInput();
         $req = $request->all();
         $rules = [
             'category' => 'required|integer|min:1|not_in:0',
@@ -317,7 +319,7 @@ class OrderController extends Controller
                     $order->balance_after = $user->balance;
                     $order->transaction_id = $transaction->id;
                     $order->save();
-                    if ($service->points > 0)
+                    if (isset($service->points) && $service->points > 0)
                         $ptrx = $this->pointService->earnPoints('Buy', $service->points * $order->quantity, 'Earn ' . $service->points * $order->quantity . ' for buying ' . $service->category->category_title . ' > ' . $service->id . ' QTY ' . $order->quantity, $order->id);
                     if ($user->user_id != null && $user->parent->is_agent == 1 && $user->parent->is_approved == 1) {
                         $commision = new AgentCommissionRate();
@@ -339,7 +341,7 @@ class OrderController extends Controller
                 } else
                     DB::rollback();
                 if ($apiUser)
-                    return response()->json(['errors' => ['message' => trans("يرجى التواصل مع مدير الموقع")]], 422);
+                    return response()->json(['errors' => ['message' => trans("يرجى التواصل مع مدير الموقع" . $e)]], 422);
                 else
                     return back()->with('error', trans("يرجى التواصل مع مدير الموقع"))->withInput();
             }
@@ -763,5 +765,14 @@ EOT;
             "icon" => "fas fa-cart-plus text-white"
         ];
         $this->adminPushNotification('ORDER_CREATE', $msg, $action);
+    }
+
+      public function validDelayBetweenOrders($request, $user)
+    {
+        $lastOrder = Order::where('user_id', $user->id)
+            ->where('created_at', '>', now()->subSeconds(60))->latest()->first();
+        if ($lastOrder && $lastOrder->service_id == $request->service)
+            return false;
+        else return true;
     }
 }

@@ -76,7 +76,6 @@ class ServiceController extends Controller
     }
     public function service($id)
     {
-//dd($id);
         $category=Category::find($id);
         $services=Service::where('category_id', $id)->where('service_status',1)->get();
         $user = Auth::user();
