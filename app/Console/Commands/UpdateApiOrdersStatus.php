@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\User\OrderController as OrderController;
 use App\Models\ApiProvider;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Services\PointsService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Str;
 
 class UpdateApiOrdersStatus extends Command
 {
@@ -62,7 +65,7 @@ class UpdateApiOrdersStatus extends Command
             $this->updateLordOrders($lordOrdersIDs);
 
         $msaderOrders = Order::whereNotNull('api_order_id')
-            ->where('created_at', '>', now()->subMinutes(25))
+            ->where('created_at', '>', now()->subMinutes(10))
             ->whereHas('service', function ($q) {
                 $q->where('api_provider_id', 3);
             })
@@ -172,7 +175,6 @@ class UpdateApiOrdersStatus extends Command
         $order->status = $status;
         $order->updated_by = $order->service->api_provider->name ?? trans('Remote provider');
         $order->save();
-        // Log::channel('cronjob')->info($order->id);
     }
 
     public function updateMsaderOrders($msaderOrdersIDs)
@@ -182,15 +184,27 @@ class UpdateApiOrdersStatus extends Command
         $params = [
             'key' => $msaderProvider->api_key,
             'action' => 'orders',
-            'orders' => $msaderOrdersIDs->implode(',')
+            'orders' => json_encode($msaderOrdersIDs)
         ];
+        //  Log::channel('cronjob')->info($params[orders]);
         $response=Curl::to($this->base_url)->withData($params)->post();
         $orderStatus = json_decode($response, true);
+//        Log::channel('cronjob')->info($response);
         if (isset($orderStatus[0]['order'])) {
             foreach ($orderStatus as $remoteOrder) {
                 $order = Order::where('api_order_id', '=', $remoteOrder['order'])->first();
                 if ($order && $remoteOrder['status'] != $order->status ) {
-                    $this->statusChange($order,$remoteOrder['status']);
+                   if ($order->category->type != "NUMBER")
+                        $this->statusChange($order, $remoteOrder['status']);
+                    else {
+                         Log::channel('cronjob')->info($remoteOrder['status']. " number ".$order->id );
+                        if ($remoteOrder['status'] == 'completed')
+                           { if (Str::contains($remoteOrder['description'], 'smscode'))
+                                $res = (new OrderController(new PointsService()))
+                                    ->finish5SImOrder($order->id, ['smsCode' =>  $remoteOrder['description']]);}
+                            else
+                                $this->statusChange($order, $remoteOrder['status']);
+                    }
 
                 }
             }

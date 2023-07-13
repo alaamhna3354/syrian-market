@@ -197,17 +197,22 @@ class FrontendController extends Controller
 
     public function faq()
     {
-        $msaderOrders = Order::whereNotNull('api_order_id')
-            ->where('created_at', '>', now()->subMinutes(25))
-            ->whereHas('service', function ($q) {
-                $q->where('api_provider_id', 3);
+        $templateSection = ['faq'];
+        $data['templates'] = Template::templateMedia()->whereIn('section_name', $templateSection)->get()->groupBy('section_name');
+
+        $contentSection = ['faq'];
+        $data['contentDetails'] = ContentDetails::select('id', 'content_id', 'description', 'created_at')
+            ->whereHas('content', function ($query) use ($contentSection) {
+                return $query->whereIn('name', $contentSection);
             })
-            ->get();
-        $msaderOrders = $msaderOrders->pluck('api_order_id');
-        if (isset($msaderOrders))
-            $this->updateMsaderOrders($msaderOrders);
-        Log::channel('cronjob')->info($msaderOrders);
-        return true;
+            ->with(['content:id,name',
+                'content.contentMedia' => function ($q) {
+                    $q->select(['content_id', 'description']);
+                }])
+            ->get()->groupBy('content.name');
+
+        $data['increment'] = 1;
+        return view($this->theme . 'faq', $data);
     }
 
     public function contact()
@@ -325,129 +330,5 @@ class FrontendController extends Controller
             ->where('status', 1)
             ->paginate(12);
         return view($this->theme . 'shop', $data);
-    }
-
-    public function updateAs7abOrders($ashabOrdersIDs)
-    {
-        $as7abprovider = ApiProvider::find(1);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $as7abprovider->url . "/bulkOrderStatus/");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json",
-            "Authorization: Bearer " . $as7abprovider->api_key
-        ));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["orderIds" => $ashabOrdersIDs]));
-        $response = curl_exec($ch);
-
-        $info = curl_getinfo($ch);
-        curl_close($ch);
-        $orderStatus = json_decode($response, true);
-        if (isset($orderStatus['orders'])) {
-            foreach ($orderStatus['orders'] as $remoteOrder) {
-                $order = Order::where('api_order_id', '=', $remoteOrder['ID'])->first();
-                if ($order && $this->mapAs7abOrderStatus($remoteOrder['order_status']) != $order->status) {
-                    $this->statusChange($order,$this->mapAs7abOrderStatus($remoteOrder['order_status']));
-                }
-            }
-        }
-    }
-
-    public function updateLordOrders($lordOrdersIDs)
-    {
-        $lordProvider = ApiProvider::find(2);
-        foreach ($lordOrdersIDs as $OrderId) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_URL, $lordProvider->url . "OrderStatus?API=" . $lordProvider->api_key . "&orderId=" . $OrderId);
-            $response = curl_exec($ch);
-            $info = curl_getinfo($ch);
-            curl_close($ch);
-            $remoteOrder = json_decode($response, true);
-            if(isset($remoteOrder['status']) && isset($remoteOrder['code']) && $remoteOrder['code'] ==1)
-            {
-                $order = Order::where('api_order_id', $OrderId)->first();
-                if ($order && $this->mapLordOrderStatus($remoteOrder['status']) != $order->status)
-                    $this->statusChange($order,$this->mapLordOrderStatus($remoteOrder['status']));
-            }
-        }
-    }
-
-    public function mapLordOrderStatus($status)
-    {
-        if ($status == 0)
-            return "processing";
-        elseif ($status == 3)
-            return "completed";
-        elseif ($status == 1)
-            return "refunded";
-        else
-            return "canceled";
-    }
-
-    public function mapAs7abOrderStatus($status)
-    {
-        if ($status == 'processing')
-            return "processing";
-        elseif ($status == 'completed')
-            return "completed";
-        elseif ($status == 1)
-            return "canceled";
-        else
-            return "refunded";
-    }
-
-    public function statusChange(Order $order, $status)
-    {
-        $user = $order->users;
-        if ($status == 'refunded') {
-            if ($order->status != 'refunded') {
-                $user->balance += $order->price;
-                $transaction1 = new Transaction();
-                $transaction1->user_id = $user->id;
-                $transaction1->trx_type = '+';
-                $transaction1->amount = $order->price;
-                $transaction1->remarks = 'استرجاع الرصيد بعد تحويل حالة الطلب الى مسترجع';
-                $transaction1->trx_id = strRandom();
-                $transaction1->charge = 0;
-                if ($order->service->points > 0)
-                    $user = $this->pointsService->refundPoints('Refund Order', $order->id, $user);
-                if ($user->save()) {
-                    $transaction1->save();
-                }
-            }
-        }
-        if ($status == 'completed' && $order->status == 'processing')
-            $order->execution_time = $order->created_at->diffInSeconds(now());
-        $order->status = $status;
-        $order->updated_by = $order->service->api_provider->name ?? trans('Remote provider');
-        $order->save();
-        // Log::channel('cronjob')->info($order->id);
-    }
-
-    public function updateMsaderOrders($msaderOrdersIDs)
-    {
-        $msaderProvider = ApiProvider::find(3);
-        $this->base_url = $msaderProvider->url;
-        $params = [
-            'key' => $msaderProvider->api_key,
-            'action' => 'orders',
-            'orders' => $msaderOrdersIDs->implode(',')
-        ];
-        $response=Curl::to($this->base_url)->withData($params)->post();
-        $orderStatus = json_decode($response, true);
-        if (isset($orderStatus[0]['order'])) {
-            foreach ($orderStatus as $remoteOrder) {
-                $order = Order::where('api_order_id', '=', $remoteOrder['order'])->first();
-                if ($order && $remoteOrder['status'] != $order->status && $order->category->type !="NUMBER") {
-                    if($order->category->type =="SMM" && $remoteOrder["status"] == "canceled")
-                        $remoteOrder["status"] = "refunded";
-                    $this->statusChange($order,$remoteOrder['status']);
-                }
-            }
-        }
     }
 }

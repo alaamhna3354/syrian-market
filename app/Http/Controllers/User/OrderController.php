@@ -134,7 +134,7 @@ class OrderController extends Controller
      */
     public function store(Request $request, $apiUser = null)
     {
-        if ($this->validDelayBetweenOrders($request, $apiUser ?? Auth::user()) == false)
+         if ($this->validDelayBetweenOrders($request, $apiUser ?? Auth::user()) == false)
             return back()->with('error', trans("حاول بعد 60 ثانية من فضلك"))->withInput();
         $req = $request->all();
         $rules = [
@@ -313,7 +313,7 @@ class OrderController extends Controller
                     $transaction->trx_type = '-';
                     $transaction->amount = $price;
                     $transaction->remarks = 'Place order';
-                    $transaction->trx_id = strRandom() . '_' . $order->id;
+                    $transaction->trx_id = strRandom() .'_' . $order->id;
                     $transaction->charge = 0;
                     $transaction->save();
                     $order->balance_after = $user->balance;
@@ -767,7 +767,7 @@ EOT;
         $this->adminPushNotification('ORDER_CREATE', $msg, $action);
     }
 
-    public function validDelayBetweenOrders($request, $user)
+      public function validDelayBetweenOrders($request, $user)
     {
         $lastOrder = Order::where('user_id', $user->id)
             ->where('created_at', '>', now()->subSeconds(60))->latest()->first();
